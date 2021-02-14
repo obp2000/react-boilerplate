@@ -1,0 +1,20 @@
+import React from 'react'
+import renderer from 'react-test-renderer'
+import {Provider} from 'react-redux'
+import {ConnectedRouter} from 'connected-react-router'
+import configureStore from '../../Store'
+import Customers from '../Customers'
+jest.mock('../../loading_spinner.gif', () => 'loading_spinner.gif')
+
+test('Customers', () => {
+  const {store, history} = configureStore()
+  const component = renderer.create(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Customers/>
+      </ConnectedRouter>
+    </Provider>
+  );
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});

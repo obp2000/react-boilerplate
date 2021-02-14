@@ -1,0 +1,44 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": "> 1%"
+        },
+	"corejs": "3.x",
+        "useBuiltIns": "entry",
+	"forceAllTransforms": true
+      }
+    ],
+    "@babel/react"
+  ],
+  "plugins": [
+    "syntax-dynamic-import",
+    [
+      "transform-class-properties",
+      {
+        "spec": true
+      }
+    ],
+    [
+      "react-hot-loader/babel"
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "@babel/env",
+        "@babel/react"
+	
+	
+      ],
+      "plugins": [
+        "transform-export-extensions"
+      ]
+
+    }
+  }
+
+}
