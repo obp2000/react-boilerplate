@@ -55,9 +55,7 @@ class Order extends React.Component {
 		getOrderAction(id)
 	}
 
-	render = () => < ReduxOrderForm { ...this.props
-	}
-	/>
+	render = () => <ReduxOrderForm {...this.props} />
 }
 
 const mapStateToProps = (state, {

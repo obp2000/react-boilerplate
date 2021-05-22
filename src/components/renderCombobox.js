@@ -1,5 +1,7 @@
 import React from 'react'
 import Combobox from 'react-widgets/lib/Combobox'
+import WidgetErrors from './WidgetErrors'
+import WidgetMessages from './WidgetMessages'
 
 const renderCombobox = ({
   input,
@@ -11,11 +13,7 @@ const renderCombobox = ({
   onToggle,
   onSelect,
   inputProps,
-  meta: {
-    touched,
-    error,
-    warning
-  },
+  meta,
   isFetching
 }) => <>
   {isFetching ? <Combobox busy /> :
@@ -31,15 +29,9 @@ const renderCombobox = ({
       onToggle={onToggle}
       onSelect={onSelect}
       inputProps={inputProps}
-      messages={
-        {emptyList: 'Не найдено'}
-      }
+      messages={WidgetMessages}
     />}
-    {touched && ((error && <div>
-        <small className="text-danger" role="alert">
-          {error}
-        </small>
-      </div>) || (warning && <div>{warning}</div>))}
+  <WidgetErrors {...meta} />
 </>
 
 export default renderCombobox

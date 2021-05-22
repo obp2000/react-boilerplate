@@ -1,7 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {FieldArray, Field} from 'redux-form'
-import {Form, Badge, Table, Button} from 'reactstrap'
+import {
+    FieldArray,
+    Field
+} from 'redux-form'
+import {
+    Form,
+    Badge,
+    Table,
+    Button
+} from 'reactstrap'
 import Loader from 'react-loader'
 import SubmitButton from '../Shared/SubmitButton'
 import BackButton from '../Shared/BackButton'
@@ -12,12 +20,17 @@ import TextField from '../Shared/TextField'
 import OrderItems from '../order_items/OrderItems'
 
 import NumberField from '../Shared/NumberField'
-import {SamplesWeight} from '../samples/Consts'
+import {
+    SamplesWeight
+} from '../samples/Consts'
 
 // import GetPostCostButton from '../post_cost/GetPostCostButton'
 import Gift from '../gifts/Gift'
 // import PacketSelect from '../post_packets/PacketSelect'
-import {Packets, PacketWeight} from '../post_packets/Consts'
+import {
+    Packets,
+    PacketWeight
+} from '../post_packets/Consts'
 import dropdownListComponent from '../renderDropdownList'
 
 const OrderForm = ({
@@ -30,6 +43,7 @@ const OrderForm = ({
     pindex,
     city,
     address,
+    name,
     post_cost_with_packet,
     post_discount,
     hasPostDiscount,
@@ -67,7 +81,7 @@ const OrderForm = ({
                     </div>
                 </div>
                 <div>
-                    <div className="form-group row">
+                    <div className="form-row">
                         <label className="col-sm-1 col-form-label">Заказчик:</label>
                         <div className="col-sm-7">
                             <Field name='customer' 
@@ -80,24 +94,28 @@ const OrderForm = ({
                             />
                         </div>
                     </div>
-                    <div className="form-group row">
-                        <div className="col-sm-1 col-form-label">
+                    <div className="form-row">
+                        <div className="col-sm-1">
+                            ФИО:
+                        </div>
+                        <div className="col-sm-5">
+                            {name}
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <label className="col-sm-1">
                             Адрес:
-                        </div>
-                        <div className="col-sm-7">
-                            {address}
-                        </div>
-                        <div className="col-sm-4">
-                            Индекс: {pindex}
-                            / {city}
+                        </label>
+                        <div className="col-sm-9">
+                            {pindex} {city} {address}
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div className="form-group row">
-                        <div className="col-sm-1 col-form-label">
+                    <div className="form-row">
+                        <label className="col-sm-1 col-form-label">
                             Доставка:
-                        </div>
+                        </label>
                         <div className="col-sm-2">
                             <Field name='delivery_type' 
                                    component='select'>

@@ -1,5 +1,7 @@
 import React from 'react'
 import DropdownList from 'react-widgets/lib/DropdownList'
+import WidgetErrors from './WidgetErrors'
+import WidgetMessages from './WidgetMessages'
 
 const renderDropdownList = ({
   input,
@@ -11,9 +13,12 @@ const renderDropdownList = ({
   onToggle,
   onSelect,
   normalize,
-  // messages
-}) => <DropdownList
-  filter
+  inputProps,
+  meta,
+  isFetching
+}) => <>
+<DropdownList
+  filter='contains'
   {...input}
   data={data}
   valueField={valueField}
@@ -25,9 +30,9 @@ const renderDropdownList = ({
   onToggle={onToggle}
   onSelect={onSelect}
   normalize={normalize}
-  // messages={messages}
-  messages={{emptyFilter: 'Не найдено', 
-             emptyList: 'Не найдено'}}
+  messages={WidgetMessages}
   />
+  <WidgetErrors {...meta} />
+</>
 
 export default renderDropdownList

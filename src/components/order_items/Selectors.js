@@ -12,8 +12,7 @@ const weight = (amount = 0, density = 0, width = 0) => amount * density * width 
 
 const cost = (amount = 0, price = 0) => amount * price
 
-const OrderItemSelector = index => state =>
-    formValueSelector('order')(state, 'order_items')[index]
+const OrderItemSelector = index => state => formValueSelector('order')(state, 'order_items')[index]
 
 export const order_item_sum = ({
     price = initOrderItem.price,

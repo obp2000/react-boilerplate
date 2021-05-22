@@ -47,9 +47,7 @@ class Customer extends React.Component {
         getCustomerAction(id, accessToken)
     }
 
-    render = () => < ReduxCustomerForm { ...this.props
-    }
-    />
+    render = () => <ReduxCustomerForm {...this.props} />
 }
 
 const mapStateToProps = (state, {

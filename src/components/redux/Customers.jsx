@@ -151,11 +151,25 @@ const extract_data = ({
   data
 }) => data
 
-const extract_customers = ({
-  data: {
-    results = []
-  } = {}
+const extract_results = ({
+  results
 }) => results
+
+// const extract_customers3 = ({
+//   data: {
+//     results = []
+//   } = {}
+// }) => results
+
+// const extract_customers = ({
+//   data
+// }) => {
+//   const {
+//     results = []
+//   } = data
+//   // console.log('customers:', results)
+//   return results
+// }
 
 const getCustomers = (page, term, accessToken) => axios.get(`${base_url}/`, {
     params: {
@@ -194,7 +208,7 @@ const searchCustomers = (term, accessToken) => axios.get(`${base_url}/`, {
     ...tokenHeaders(accessToken)
   })
   .catch(error_handler)
-  .then(extract_customers)
+  .then(extract_data).then(extract_results)
 
 // Async actions:
 
@@ -247,15 +261,20 @@ export const deleteCustomerAction = (id, accessToken) => dispatch => {
   }
 }
 
-export const onSearchCustomer = (value) => (dispatch, getState) => {
+export const onSearchCustomer = value => (dispatch, getState) => {
   const {
     auth: {
       accessToken
     }
   } = getState()
-  if (accessToken && typeof(value) == 'string' && value.length > 0) {
-    dispatch(requestSearchCustomers())
-    searchCustomers(value, accessToken)
-      .then(search_customers => dispatch(receiveSearchCustomers(search_customers)))
+  if (accessToken) {
+    // alert(accessToken)
+    if (typeof(value) == 'string' && value.length > 0) {
+      dispatch(requestSearchCustomers())
+      searchCustomers(value, accessToken)
+        .then(search_customers => dispatch(receiveSearchCustomers(search_customers)))
+    }
+  } else {
+    alert('sssssssss')
   }
 }

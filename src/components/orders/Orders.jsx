@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {
+    Link
+} from 'react-router-dom'
 import Loader from 'react-loader'
 import Order from './Order'
 import Pagination from '../Pagination/Pagination'
@@ -8,9 +10,9 @@ import Pagination from '../Pagination/Pagination'
 const Orders = ({
     results,
     totalCount,
-    totalPages, 
-    search, 
-    page, 
+    totalPages,
+    search,
+    page,
     isFetching,
     deleteOrderAction
 }) => <Loader loaded={!isFetching}>

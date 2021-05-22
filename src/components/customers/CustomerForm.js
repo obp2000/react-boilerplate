@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {
-    Form, 
+    Form,
     Field
 } from 'redux-form'
 import Loader from 'react-loader'
@@ -12,17 +12,17 @@ import FormRow from './FormRow'
 import comboboxComponent from '../renderCombobox'
 
 const CustomerForm = ({
-        handleSubmit,
-        onSubmit,
-        submitting,
-        invalid,
-        pristine,
-        isFetching,
-        goBack,
-        pindex,
-        cities,
-        onChangeCity
-    }) => <Loader loaded={!isFetching}>
+    handleSubmit,
+    onSubmit,
+    submitting,
+    invalid,
+    pristine,
+    isFetching,
+    goBack,
+    pindex,
+    cities,
+    onChangeCity
+}) => <Loader loaded={!isFetching}>
         <Form onSubmit={handleSubmit(onSubmit)} className="form-horizontal">
             <h4>Покупатель</h4>
             <div className="col-sm-12 text-right">

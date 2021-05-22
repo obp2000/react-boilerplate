@@ -78,8 +78,9 @@ const order_sum = ({
 	order_items = []
 }) => {
 	const {
-		city: city1  = initCity,
-		address = ''
+		city: city1 = initCity,
+		address = '',
+		name
 	} = customer || initCustomer
 	const {
 		pindex = '',
@@ -95,6 +96,7 @@ const order_sum = ({
 		pindex,
 		city,
 		address,
+		name,
 		post_cost_with_packet: post_cost_with_packet(post_cost, packet),
 		post_discount: post_discount(cost, post_cost, packet),
 		post_cost_with_packet_and_post_discount: post_cost_with_packet_and_post_discount(cost, post_cost, packet),
