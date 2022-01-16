@@ -1,20 +1,25 @@
-import {
-	createSelector
-} from 'reselect'
-import {
-	formValueSelector
-} from 'redux-form'
-import {
-	initCity
-} from '../redux/Cities'
+import createDecorator from 'final-form-calculate'
 
-const FormValues = state => formValueSelector('customer')(state, 'city.pindex')
+// import { createSelector } from 'reselect'
+// import { formValueSelector } from 'redux-form'
+// import {	initCity} from '../redux/Cities'
 
-const calc = pindex => ({
-	pindex
-})
+// const FormValues = state => formValueSelector('customer')(state, 'city.pindex')
 
-export const CustomerSelector = createSelector(
-	FormValues,
-	calc
+// const calc = pindex => ({
+//     pindex
+// })
+
+// export const CustomerSelector = createSelector(
+//     FormValues,
+//     calc
+// )
+
+export const calculator = createDecorator(
+  {
+    field: 'city',
+    updates: {
+      pindex: ({pindex}) => pindex
+    }
+  }
 )

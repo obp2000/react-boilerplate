@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { Form } from 'react-final-form'
 import SearchField from '../Shared/SearchField'
 
+import { validate } from './Validators'
+
 const SearchForm = ({
-        handleSubmit,
         onSubmit,
-        submitting,
-        invalid,
-        pristine
-    }) => <form onSubmit={handleSubmit(onSubmit)} className="form-inline my-2 my-lg-0">
+    }) =>
+    <Form name={'search'}
+          validate={validate}
+          onSubmit={onSubmit}
+          // enableReinitialize={true}
+          >
+      {({ handleSubmit, submitting, invalid, pristine }) => (
+        <form onSubmit={handleSubmit} className="form-inline my-2 my-lg-0">
             <SearchField name='term' label='Поиск'/>
             <button className="btn btn-outline-success my-2 my-sm-0"
                 type="submit"
@@ -16,13 +22,10 @@ const SearchForm = ({
                 Поиск
             </button>
           </form>
-
+      )}
+    </Form>
 
 SearchForm.propTypes = {
-    submitting: PropTypes.bool.isRequired,
-    invalid: PropTypes.bool.isRequired,
-    pristine: PropTypes.bool.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired
 }
 

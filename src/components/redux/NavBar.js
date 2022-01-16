@@ -1,7 +1,4 @@
-import {
-  createAction,
-  createReducer
-} from 'redux-act'
+import { createAction, createReducer } from 'redux-act'
 
 export const toggleModal = createAction()
 export const closeModal = createAction()

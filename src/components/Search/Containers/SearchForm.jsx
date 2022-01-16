@@ -1,31 +1,15 @@
-import {
-    reduxForm
-} from 'redux-form'
-import {
-    connect
-} from 'react-redux'
-import {
-    push
-} from 'connected-react-router'
+import { connect } from 'react-redux'
+// import { push } from 'connected-react-router'
 import SearchForm from '../SearchForm'
+// import { mapSearchStateToProps } from '../../redux/mappers'
+import { submitAction } from '../../redux/Search'
 
-const validate = ({
-    term
-}) => {
-    const errors = {}
-    const blankErrorText = ''
-    if (!term) {
-        errors.term = blankErrorText
-    }
-    return errors
-}
-
-const onSubmit = ({
-    term
-}, dispatch, {
-    table
-}) => dispatch(push(`/${table}?term=${term}`))
-    // dispatch(push('/' + table + '?term=' + decodeURIComponent(term)))
+// const onSubmit = ({
+//     term
+// }, dispatch, {
+//     table
+// }) => dispatch(push(`/${table}?term=${term}`))
+// dispatch(push('/' + table + '?term=' + decodeURIComponent(term)))
 
 const mapStateToProps = ({
     router: {
@@ -39,13 +23,12 @@ const mapStateToProps = ({
 }) => ({
     initialValues: {
         term: decodeURIComponent(term)
-        // term
-    },
+    }
 })
 
-export default connect(mapStateToProps)(reduxForm({
-    form: 'search',
-    validate,
-    onSubmit,
-    // enableReinitialize: true
-})(SearchForm))
+export const mapDispatchToProps = (dispatch, { table }) =>
+    ({
+        onSubmit: ({ term }) => dispatch(submitAction(term, table))
+    })
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchForm)

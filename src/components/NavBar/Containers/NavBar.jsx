@@ -1,33 +1,26 @@
-import {
-	connect
-} from 'react-redux'
-import {
-	toggleModal,
-	toggleLogin
-} from '../../redux/NavBar'
+import { connect } from 'react-redux'
+import { toggleModal, toggleLogin } from '../../redux/NavBar'
 import NavBar from '../NavBar'
-import {
-	signOut
-} from '../../redux/auth'
+import { signOut } from '../../redux/auth'
 
 const mapStateToProps = ({
-	auth: {
-		isAuthenticated,
-		accessToken
-	},
-	navBar: {
-		modal,
-		login
-	}
+    auth: {
+        isAuthenticated,
+        accessToken
+    },
+    navBar: {
+        modal,
+        login
+    }
 }) => ({
-	isAuthenticated,
-	accessToken,
-	login,
-	modal
+    isAuthenticated,
+    accessToken,
+    login,
+    modal
 })
 
 export default connect(mapStateToProps, {
-	toggleModal,
-	toggleLogin,
-	signOut
+    toggleModal,
+    toggleLogin,
+    signOut
 })(NavBar)

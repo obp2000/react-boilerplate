@@ -29,11 +29,13 @@ const renderField = ({
             defaultValue={defaultValue}
             normalize={normalize}
             step={step}
-            style={style}/> 
-            {touched && ((error && <div>
-            <small className="text-danger" role="alert">
-                {error}
-            </small></div>) || (warning && <div>{warning}</div>))}
+            style={style}/>
+            {touched && ((error &&
+                <div>
+                    <small className="text-danger" role="alert">
+                        {error}
+                    </small>
+                </div>) || (warning && <div>{warning}</div>))}
     </div>
 )
 

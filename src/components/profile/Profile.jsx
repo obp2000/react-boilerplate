@@ -19,7 +19,7 @@ const Profile = ({name, email, username}) => {
             </div>
             <div className="row">
                 <div className="col-sm-2">
-                    Ник: 
+                    Ник:
                 </div>
                 <div className="col-sm-8">{username}</div>
             </div>

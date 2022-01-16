@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DeleteButton from '../Shared/DeleteButton'
 
-const Product = ({
+const ProductRow = ({
     id,
     name,
     price,
@@ -14,7 +14,8 @@ const Product = ({
     dollar_rate,
     created_at,
     updated_at,
-    deleteProductAction
+    accessToken,
+    deleteObjectAction
 }) => {
     return <tr>
         <th scope="row">{id}</th>
@@ -28,12 +29,12 @@ const Product = ({
             <Link to={'/products/' + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
         </td>
         <td>
-            <DeleteButton action={() => deleteProductAction(id)} />
+            <DeleteButton action={() => deleteObjectAction(id, accessToken)} />
         </td>
     </tr>
 }
 
-Product.propTypes = {
+ProductRow.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string.isRequired,
     image_url: PropTypes.string,
@@ -48,10 +49,11 @@ Product.propTypes = {
     weight_for_count: PropTypes.number,
     length_for_count: PropTypes.string,
     weight: PropTypes.string,
-    deleteProductAction: PropTypes.func
+    accessToken: PropTypes.string,
+    deleteObjectAction: PropTypes.func
 }
 
-Product.defaultProps = {
+ProductRow.defaultProps = {
     id: 0,
     name: '',
     image_url: '',
@@ -68,4 +70,4 @@ Product.defaultProps = {
     weight: 0
 }
 
-export default Product
+export default ProductRow

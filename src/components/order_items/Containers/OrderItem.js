@@ -1,24 +1,16 @@
-import {
-	connect
-} from 'react-redux'
+import { connect } from 'react-redux'
 import OrderItem from '../OrderItem'
-import {
-	OrderItemSumSelector
-} from '../Selectors'
-import {
-	onChangeProduct,
-	onSelectProduct
-} from '../../redux/Products'
+// import { OrderItemSumSelector } from '../Selectors'
 
 const mapStateToProps = (state, {
-		index
-	}) =>
-	({
-		products: state.products,
-		...OrderItemSumSelector(index)(state)
-	})
+    index,
+    fields,
+    _destroy
+}) => ({
+    // row_number: index + 1,
+    row_class_name: (_destroy == true) ? 'd-none' : 'd-flex',
+    deleteOrderItemAction: () => fields.remove(index),
+    // ...OrderItemSumSelector(index)(state)
+})
 
-export default connect(mapStateToProps, {
-	onChangeProduct,
-	onSelectProduct
-})(OrderItem)
+export default connect(mapStateToProps)(OrderItem)

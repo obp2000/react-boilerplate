@@ -1,74 +1,63 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-    Form,
-    Field
-} from 'redux-form'
+// import { Form, Field } from 'redux-form'
+import { Form } from 'react-final-form'
 import Loader from 'react-loader'
 import SubmitButton from '../Shared/SubmitButton'
-import BackButton from '../Shared/BackButton'
+import BackButton from '../Shared/Containers/BackButton'
 import TextField from '../Shared/TextField'
 import FormRow from './FormRow'
-import comboboxComponent from '../renderCombobox'
+import CityField from '../cities/Containers/CityField'
+
+import { validate } from './Validators'
+import { calculator } from './Selectors'
 
 const CustomerForm = ({
-    handleSubmit,
     onSubmit,
-    submitting,
-    invalid,
-    pristine,
+    initialValues,
     isFetching,
-    goBack,
-    pindex,
-    cities,
-    onChangeCity
 }) => <Loader loaded={!isFetching}>
-        <Form onSubmit={handleSubmit(onSubmit)} className="form-horizontal">
+    <Form name={'customer'}
+          validate={validate}
+          onSubmit={onSubmit}
+          decorators={[calculator]}
+          // enableReinitialize={true}
+          initialValues={initialValues}>
+      {({ handleSubmit, submitting, invalid, pristine }) => (
+        <form onSubmit={handleSubmit} className="form-horizontal">
             <h4>Покупатель</h4>
             <div className="col-sm-12 text-right">
-                <BackButton goBack={goBack}/>
+                <BackButton />
                 &nbsp;
                 <SubmitButton submitDisabled={submitting || invalid || pristine}/>
             </div>
             <FormRow label='Id'>
                 <TextField name="id" readOnly={true}/>
             </FormRow>
-            <FormRow label='Ник'>
+            <FormRow label='Ник' strong_label>
                 <TextField name="nick" label="Ник"/>
             </FormRow>
-            <FormRow label='ФИО'>
+            <FormRow label='ФИО' strong_label>
                 <TextField name="name" label="ФИО"/>
             </FormRow>
-            <FormRow label='Город'> 
-                <Field name='city' 
-                       component={comboboxComponent} 
-                       data={cities.results}
-                       textField='city' 
-                       valueField='pindex' 
-                       isFetching={cities.isFetching}
-                       onChange={onChangeCity}
-                />
+            <FormRow label='Город' strong_label>
+                <CityField />
             </FormRow>
             <FormRow label='Индекс'>
-                {pindex}
+                <TextField name="pindex" readOnly={true}/>
             </FormRow>
             <FormRow label='Адрес'>
                 <TextField name="address" label="Адрес"/>
             </FormRow>
-        </Form>
+        </form>
+      )}
+    </Form>
     </Loader>
 
 CustomerForm.propTypes = {
-    submitting: PropTypes.bool.isRequired,
-    invalid: PropTypes.bool.isRequired,
-    pristine: PropTypes.bool.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
+    initialValues: PropTypes.object,
     isFetching: PropTypes.bool.isRequired,
-    goBack: PropTypes.func.isRequired,
-    pindex: PropTypes.string,
-    onChangeCity: PropTypes.func,
-    cities: PropTypes.object
 }
 
 export default CustomerForm

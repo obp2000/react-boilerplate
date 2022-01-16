@@ -16,6 +16,7 @@ import cities from './Cities'
 import navBar from './NavBar'
 import postCost from './PostCost'
 import delivery_types from './DeliveryTypes'
+import user from './Users'
 
 const rootReducer = (history) => combineReducers({
 	router: connectRouter(history),
@@ -23,6 +24,7 @@ const rootReducer = (history) => combineReducers({
 	products,
 	orders,
 	cities,
+	user,
 	form: formReducer,
 	auth,
 	// authDialog,

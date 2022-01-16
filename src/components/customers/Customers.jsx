@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import Loader from 'react-loader'
-import {Link} from 'react-router-dom'
-import Customer from './Customer'
+import { Link } from 'react-router-dom'
+import CustomerRow from './Containers/CustomerRow'
 import Pagination from '../Pagination/Pagination'
 import SearchForm from '../Search/Containers/SearchForm'
 
-const Customers = ({results, 
-                    totalCount, 
-                    totalPages, 
-                    search, 
-                    page, 
-                    isFetching, 
-                    accessToken,
-                    deleteCustomerAction}) => <Loader loaded={!isFetching}>
+const Customers = ({
+    results,
+    totalCount,
+    totalPages,
+    search,
+    page,
+    isFetching
+}) => <Loader loaded={!isFetching}>
       <div>
           <div className="row">
               <div className="col-sm-7">
@@ -38,8 +38,7 @@ const Customers = ({results,
               </tr>
           </thead>
           <tbody>
-            {results.map((customer, index) => <Customer {...customer} 
-                accessToken={accessToken} key={index} deleteCustomerAction={deleteCustomerAction}/>)}
+            {results.map((customer, index) => <CustomerRow {...customer} key={index} />)}
           </tbody>
         </table>
         <Pagination {...{table: 'customers', totalPages, page, search}} />
@@ -47,18 +46,16 @@ const Customers = ({results,
 </Loader>
 
 Customers.propTypes = {
-  results: PropTypes.array.isRequired,
-  totalCount: PropTypes.number,
-  totalPages: PropTypes.number,
-  search: PropTypes.string,
-  page: PropTypes.number,
-  isFetching: PropTypes.bool,
-  accessToken: PropTypes.string,
-  deleteCustomerAction: PropTypes.func
+    results: PropTypes.array.isRequired,
+    totalCount: PropTypes.number,
+    totalPages: PropTypes.number,
+    search: PropTypes.string,
+    page: PropTypes.number,
+    isFetching: PropTypes.bool,
 }
 
 Customers.defaultProps = {
-  results: []
+    results: []
 }
 
 export default Customers

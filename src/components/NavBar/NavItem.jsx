@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 const NavItem = ({
-	children, 
-	placement, 
+	children,
+	placement,
 	className
 }) => {
     const _className = 'nav-item' + (className

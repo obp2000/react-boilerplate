@@ -1,5 +1,3 @@
-import {
-	notBlank
-} from '../Shared/Validators'
+import { notBlank } from '../Shared/Validators'
 
 export const validate = (values) => notBlank(values, ['customer'])

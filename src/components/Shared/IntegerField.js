@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Field} from 'redux-form'
+// import {Field} from 'redux-form'
+import { Field } from 'react-final-form'
 import renderField from '../RenderField'
 
-const NumberField = ({name, 
-                      label, 
-                      readOnly, 
-                      parse, 
-                      defaultValue, 
-                      format, 
+const NumberField = ({name,
+                      label,
+                      readOnly,
+                      parse,
+                      defaultValue,
+                      format,
                       normalize}) => <Field
     name={name}
     type="number"

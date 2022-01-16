@@ -1,16 +1,11 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-    Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-const PageItem = ({label, pathname, className, search}) => <li className={className}>
-        <Link
-            to={{
-            pathname,
-            search
-            }} 
-            className="page-link">{label}
+const PageItem = ({ label, pathname, className, search }) =>
+    <li className={className}>
+        <Link to={{ pathname, search }} className="page-link">
+            {label}
         </Link>
     </li>
 

@@ -1,97 +1,72 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-    FieldArray,
-    Field
-} from 'redux-form'
-import {
-    Form,
-    Badge,
-    Table,
-    Button
-} from 'reactstrap'
+import { Form } from 'react-final-form'
+import arrayMutators from 'final-form-arrays'
+import { FieldArray } from 'react-final-form-arrays'
+import { Badge, Table } from 'reactstrap'
 import Loader from 'react-loader'
 import SubmitButton from '../Shared/SubmitButton'
-import BackButton from '../Shared/BackButton'
+import BackButton from '../Shared/Containers/BackButton'
 // import CustomerCombobox from '../customers/Containers/CustomerCombobox'
 import TextField from '../Shared/TextField'
-// import DeliveryTypesCombobox from '../delivery_types/Containers/DeliveryTypesCombobox'
-// import DeliveryTypesSelect from '../delivery_types/Containers/DeliveryTypesSelect'
-import OrderItems from '../order_items/OrderItems'
-
 import NumberField from '../Shared/NumberField'
-import {
-    SamplesWeight
-} from '../samples/Consts'
-
-// import GetPostCostButton from '../post_cost/GetPostCostButton'
+import IntegerField from '../Shared/IntegerField'
+import OrderItems from '../order_items/OrderItems'
+import { SamplesWeight } from '../samples/Consts'
 import Gift from '../gifts/Gift'
-// import PacketSelect from '../post_packets/PacketSelect'
-import {
-    Packets,
-    PacketWeight
-} from '../post_packets/Consts'
-import dropdownListComponent from '../renderDropdownList'
+import { PacketWeight } from '../post_packets/Consts'
+import CustomerField from '../customers/Containers/CustomerField'
+import DeliveryTypeField from './Containers/DeliveryTypeField'
+import PostCostButton from './Containers/PostCostButton'
+import PostPacketField from '../post_packets/PostPacketField'
+
+import { validate } from './Validators'
+import { order_calculator } from './Selectors'
+import { order_items_calculator } from '../order_items/Selectors'
 
 const OrderForm = ({
-    submitting,
-    invalid,
-    pristine,
-    handleSubmit,
     onSubmit,
+    initialValues,
     isFetching,
-    pindex,
-    city,
-    address,
-    name,
-    post_cost_with_packet,
-    post_discount,
-    hasPostDiscount,
-    post_cost_with_packet_and_post_discount,
-    cost_with_postal_and_post_discount,
-    needGift,
-    tolalWeight,
-    // accessToken,
-    goBack,
-    getPostCost,
-    onSearchCustomer,
-    customers,
-    delivery_types,
-    // initialValues: {id},
+
     id,
+    pindex,
+    tolalWeight,
     created_at,
-    count,
-    amount,
-    cost,
-    weight
-}) => <Form onSubmit={handleSubmit(onSubmit)} className="form-horizontal">
+    // accessToken,
+}) => <Form
+        name={'order'}
+        validate={validate}
+        onSubmit={onSubmit}
+        mutators={{
+        // potentially other mutators could be merged here
+        ...arrayMutators
+        }}
+        decorators={[order_calculator, order_items_calculator]}
+        // enableReinitialize={true}
+        initialValues={initialValues}>
+      {({ handleSubmit, submitting, invalid, pristine, touched }) => (
+        <form onSubmit={handleSubmit} className="form-horizontal">
                 <br/>
                 <div className='row'>
                     <div className="col-sm-6">
                         <h4>Заказ&nbsp;
                             <Badge color="primary">
-                                № {id || ' Новый'} от {created_at}
+                                № {id || ' Новый' } от {created_at}
                             </Badge>
                         </h4>
                     </div>
                     <div className="col-sm-6 text-right">
-                        <BackButton goBack={goBack}/>
+                        <BackButton />
                         &nbsp;
                         <SubmitButton submitDisabled={submitting || invalid || pristine}/>
                     </div>
                 </div>
                 <div>
                     <div className="form-row">
-                        <label className="col-sm-1 col-form-label">Заказчик:</label>
+                        <label className="col-sm-1 col-form-label font-weight-bold">Заказчик:</label>
                         <div className="col-sm-7">
-                            <Field name='customer' 
-                                   component={dropdownListComponent} 
-                                   data={customers.search_customers}
-                                   textField='nick' 
-                                   valueField='id' 
-                                   isFetching={customers.isFetching} 
-                                   onSearch={onSearchCustomer}
-                            />
+                            <CustomerField />
                         </div>
                     </div>
                     <div className="form-row">
@@ -99,7 +74,7 @@ const OrderForm = ({
                             ФИО:
                         </div>
                         <div className="col-sm-5">
-                            {name}
+                            <TextField name="customer_name" readOnly/>
                         </div>
                     </div>
                     <div className="form-row">
@@ -107,7 +82,9 @@ const OrderForm = ({
                             Адрес:
                         </label>
                         <div className="col-sm-9">
-                            {pindex} {city} {address}
+                            <TextField name="pindex" readOnly/>
+                            <TextField name="city" readOnly/>
+                            <TextField name="customer_address" readOnly/>
                         </div>
                     </div>
                 </div>
@@ -117,15 +94,7 @@ const OrderForm = ({
                             Доставка:
                         </label>
                         <div className="col-sm-2">
-                            <Field name='delivery_type' 
-                                   component='select'>
-                                <option value="" />
-                                {delivery_types.results.map((delivery_type, index) => 
-                                    <option key={index} value={delivery_type.value}>
-                                        {delivery_type.label}
-                                    </option>)
-                                }
-                            </Field>
+                            <DeliveryTypeField />
                         </div>
                         <div className="col-sm-6">
                             <TextField name="address" label="Адрес доставки"/>
@@ -136,19 +105,28 @@ const OrderForm = ({
                     <FieldArray name="order_items" component={OrderItems}/>
                     <tfoot className="thead-light">
                         <tr className="d-flex">
-                            <td scope="col" className="col-1">{count}</td>
-                            <td scope="col" className="col-6">Итого</td>
                             <td scope="col" className="col-1"></td>
-                            <td scope="col" className="col-1 text-right">{amount.toFixed(2)}</td>
-                            <td scope="col" className="col-1 text-right"><strong>{cost.toFixed(2)}</strong></td>
-                            <td scope="col" className="col-1 text-right">{weight.toFixed(0)}</td>
+                            <td scope="col" className="col-6">
+                                <TextField name="total_text" readOnly/>
+                            </td>
+                            <td scope="col" className="col-1"></td>
+                            <td scope="col" className="col-1 text-right">
+                                <IntegerField name="order_items_amount" readOnly />
+                            </td>
+                            <td scope="col" className="col-1 text-right">
+                                <strong>
+                                    <IntegerField name="order_items_cost" readOnly />
+                                </strong>
+                            </td>
+                            <td scope="col" className="col-1 text-right">
+                                <IntegerField name="order_items_weight" readOnly />
+                            </td>
                             <td scope="col" className="col-1"></td>
                         </tr>
-                    </tfoot>        
+                    </tfoot>
                 </Table>
                 <Table size="sm" responsive bordered hover>
                         <tbody>
-                            {needGift && <Gift/>}
                             <tr className='d-flex'>
                                 <td className="col-sm-9">
                                     Образцы
@@ -163,12 +141,7 @@ const OrderForm = ({
                                     Почтовый пакет
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <Field name="packet"
-                                           component={dropdownListComponent}
-                                           data={Packets} 
-                                           defaultValue={0}
-                                           // parse={(value) => parseInt(value || 0)}                
-                                    />
+                                   <PostPacketField />
                                 </td>
                                 <td className="col-sm-1 text-right">
                                     {PacketWeight}
@@ -177,16 +150,11 @@ const OrderForm = ({
                             <tr className='d-flex'>
                                 <td className="col-sm-9">
                                     Тариф Почты России&nbsp;
-                                    <Button onClick={() => getPostCost(pindex, tolalWeight)}
-                                            type="button"
-                                            color="primary"
-                                            outline
-                                            size="sm"
-                                            disabled={!pindex || !tolalWeight}>Рассчитать</Button>
+                                    <PostCostButton pindex={pindex} tolalWeight={tolalWeight} />
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <NumberField name='post_cost' 
-                                                 label="Тариф Почты" 
+                                    <NumberField name='post_cost'
+                                                 label="Тариф Почты"
                                                  parse={(value) => parseInt(value || 0)}
                                                  // format={(value) => parseInt(value || 0)}
                                                  />
@@ -198,26 +166,28 @@ const OrderForm = ({
                                     Тариф Почты России + пакет
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    {post_cost_with_packet.toFixed(2)}
+                                    <NumberField name="post_cost_with_packet" readOnly />
                                 </td>
                                 <td className="col-sm-1 text-right">
                                 </td>
                             </tr>
-                            {hasPostDiscount && <tr className='d-flex'>
+                            {true && <tr className='d-flex'>
                                 <td className="col-sm-9">
                                     Скидка на почтовые
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    -{post_discount.toFixed(2)}
+                                    <NumberField name="post_discount" readOnly />
                                 </td>
                                 <td className="col-sm-1"></td>
                             </tr>}
                             <tr className='d-flex'>
                                 <td className="col-sm-9">
-                                    Почтовые {hasPostDiscount && 'с учетом скидки'}
+                                    Почтовые {true && 'с учетом скидки'}
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <strong>{post_cost_with_packet_and_post_discount.toFixed(2)}</strong>
+                                    <strong>
+                                    <NumberField name="post_cost_with_packet_and_post_discount" readOnly />
+                                    </strong>
                                 </td>
                                 <td className="col-sm-1 text-right">
                                 </td>
@@ -227,61 +197,31 @@ const OrderForm = ({
                                     <strong>Итого</strong>
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <strong>{cost_with_postal_and_post_discount.toFixed(2)}</strong>
+                                    <strong>
+                                    <NumberField name="cost_with_postal_and_post_discount" readOnly />
+                                    </strong>
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <strong>{tolalWeight.toFixed(0)}</strong>
+                                    <strong>
+                                        <NumberField name="tolalWeight" readOnly />
+                                    </strong>
                                 </td>
                             </tr>
                         </tbody>
                 </Table>
                 <hr/>
-            </Form>
+        </form>
+        )}
+    </Form>
 
 
 OrderForm.propTypes = {
-    submitting: PropTypes.bool,
-    invalid: PropTypes.bool,
-    pristine: PropTypes.bool,
-    handleSubmit: PropTypes.func,
     onSubmit: PropTypes.func,
     isFetching: PropTypes.bool,
     id: PropTypes.string,
-    created_at: PropTypes.string,
     pindex: PropTypes.string,
-    city: PropTypes.string,
-    address: PropTypes.string,
-    // PacketWeight: PropTypes.number,
-    post_cost_with_packet: PropTypes.number,
-    post_discount: PropTypes.number,
-    hasPostDiscount: PropTypes.bool,
-    needGift: PropTypes.bool,
-    post_cost_with_packet_and_post_discount: PropTypes.number,
-    cost_with_postal_and_post_discount: PropTypes.number,
     // accessToken: PropTypes.string,
-    getPostCost: PropTypes.func.isRequired,
-    onSearchCustomer: PropTypes.func.isRequired,
-    customers: PropTypes.object,
-    delivery_types: PropTypes.object,
-    count: PropTypes.number,
-    amount: PropTypes.number,
-    cost: PropTypes.number,
-    weight: PropTypes.number
-}
-
-OrderForm.defaultProps = {
-    created_at: '',
-    address: '',
-    post_cost_with_packet: 0,
-    post_discount: 0,
-    hasPostDiscount: false,
-    needGift: false,
-    post_cost_with_packet_and_post_discount: 0,
-    cost_with_postal_and_post_discount: 0,
-    count: 0,
-    amount: 0,
-    cost: 0,
-    weight: 0
-}
+    // delivery_types: PropTypes.object,
+ }
 
 export default OrderForm

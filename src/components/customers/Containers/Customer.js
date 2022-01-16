@@ -1,37 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-    connect
-} from 'react-redux'
-import {
-    goBack
-} from 'connected-react-router'
-import {
-    reduxForm
-} from 'redux-form'
-import CustomerForm from '../CustomerForm'
-import {
-    CustomerSelector
-} from '../Selectors'
-import {
-    getCustomerAction,
-    onSubmit,
-    onSubmitSuccess
-} from '../../redux/Customers'
-import {
-    onChangeCity
-} from '../../redux/Cities'
-import {
-    validate
-} from '../Validators'
-
-const ReduxCustomerForm = reduxForm({
-    form: 'customer',
-    validate,
-    onSubmit,
-    onSubmitSuccess,
-    enableReinitialize: true
-})(CustomerForm)
+import { connect } from 'react-redux'
+import FormTemplate from '../CustomerForm'
+// import { CustomerSelector } from '../Selectors'
+import { getObjectAction, onSubmit } from '../../redux/Customers'
+import { mapObjectStateToProps } from '../../redux/mappers'
 
 class Customer extends React.Component {
     constructor(props) {
@@ -42,43 +15,15 @@ class Customer extends React.Component {
         const {
             id,
             accessToken,
-            getCustomerAction
+            getObjectAction
         } = this.props
-        getCustomerAction(id, accessToken)
+        getObjectAction(id, accessToken)
     }
 
-    render = () => <ReduxCustomerForm {...this.props} />
+    render = () => <FormTemplate {...this.props} />
 }
 
-const mapStateToProps = (state, {
-    match: {
-        params: {
-            id
-        }
-    }
-}) => {
-    const {
-        customers: {
-            customer,
-            isFetching
-        },
-        auth: {
-            accessToken
-        },
-        cities
-    } = state
-    return {
-        id,
-        accessToken,
-        initialValues: customer,
-        isFetching,
-        cities,
-        ...CustomerSelector(state)
-    }
-}
-
-export default connect(mapStateToProps, {
-    getCustomerAction,
-    goBack,
-    onChangeCity
+export default connect(mapObjectStateToProps('customers'), {
+    getObjectAction,
+    onSubmit
 })(Customer)

@@ -1,9 +1,9 @@
 import React from 'react'
-import DropdownList from 'react-widgets/lib/DropdownList'
+import DropdownList from 'react-widgets/DropdownList'
 import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 
-const renderDropdownList = ({
+const renderDropdownList1 = ({
   input,
   data,
   valueField,
@@ -13,7 +13,6 @@ const renderDropdownList = ({
   onToggle,
   onSelect,
   normalize,
-  inputProps,
   meta,
   isFetching
 }) => <>
@@ -34,5 +33,61 @@ const renderDropdownList = ({
   />
   <WidgetErrors {...meta} />
 </>
+
+// const renderDropdownList_w = ({
+//   input,
+//   textField,
+//   filter,
+//   isFetching,
+//   meta,
+//   onSearch,
+//   normalize
+// }) => <>
+//         <DropdownList
+//           {...input}
+//           textField={textField}
+//           data={meta.data}
+//           filter={filter}
+//           onSearch={onSearch}
+//           normalize={normalize}
+//           messages={WidgetMessages}
+//           busy={isFetching}
+//         />
+
+//         <WidgetErrors {...meta} />
+//       </>
+
+const renderDropdownList = ({
+  input,
+  meta,
+  isFetching,
+  filter,
+  children,
+  render,
+  dataKey,
+  textField,
+  onSearch,
+  renderValue,
+  defaultValue
+}) => <>
+        <DropdownList
+          {...input}
+          name={input.name}
+          value={input.value}
+          data={meta.data}
+          busy={isFetching}
+          messages={WidgetMessages}
+          filter={filter}
+          children={children}
+          render={render}
+          dataKey={dataKey}
+          textField={textField}
+          onSearch={onSearch}
+          renderValue={renderValue}
+          defaultValue={defaultValue}
+          // popupTransition={false}
+        />
+        <WidgetErrors {...meta} />
+      </>
 
 export default renderDropdownList

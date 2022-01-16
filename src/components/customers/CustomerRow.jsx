@@ -4,14 +4,14 @@ import {Link} from 'react-router-dom'
 // import DeleteCustomerButton from './Containers/DeleteCustomerButton'
 import DeleteButton from '../Shared/DeleteButton'
 
-const Customer = ({
+const CustomerRow = ({
     id,
     nick,
     name,
     created_at,
     updated_at,
     accessToken,
-    deleteCustomerAction
+    deleteObjectAction
 }) => <tr>
     <td>{id}</td>
     <td>{nick}</td>
@@ -22,11 +22,11 @@ const Customer = ({
         <Link to={"/customers/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
     </td>
     <td>
-        <DeleteButton action={() => deleteCustomerAction(id, accessToken)} />
+        <DeleteButton action={() => deleteObjectAction(id, accessToken)} />
     </td>
 </tr>
 
-Customer.propTypes = {
+CustomerRow.propTypes = {
     id: PropTypes.number,
     nick: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -34,10 +34,10 @@ Customer.propTypes = {
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
     accessToken: PropTypes.string,
-    deleteCustomerAction: PropTypes.func
+    deleteObjectAction: PropTypes.func
 }
 
-Customer.defaultProps = {
+CustomerRow.defaultProps = {
     id: 0,
     nick: '',
     name: '',
@@ -46,4 +46,4 @@ Customer.defaultProps = {
     updated_at: ''
 }
 
-export default Customer
+export default CustomerRow

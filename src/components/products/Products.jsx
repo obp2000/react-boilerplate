@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Loader from 'react-loader'
-import Product from './Product'
+import ProductRow from './Containers/ProductRow'
 import Pagination from '../Pagination/Pagination'
 import SearchForm from '../Search/Containers/SearchForm'
 
-const Products = ({results, 
-                   totalCount, 
-                   totalPages, 
-                   search, 
-                   page,
-                   isFetching, 
-                   deleteProductAction}) => <Loader loaded={!isFetching}>
+const Products = ({
+    results,
+    totalCount,
+    totalPages,
+    search,
+    page,
+    isFetching,
+}) => <Loader loaded={!isFetching}>
             <div>
                 <div className="row">
                     <div className="col-sm-7">
@@ -43,7 +44,7 @@ const Products = ({results,
                         </tr>
                     </thead>
                     <tbody>
-                        {results.map((product, index) => <Product {...product} key={index} deleteProductAction={deleteProductAction} />)}
+                        {results.map((product, index) => <ProductRow {...product} key={index} />)}
                     </tbody>
                 </table>
                 <Pagination {...{table: 'products', totalPages, page, search}} />
@@ -57,7 +58,6 @@ Products.propTypes = {
     search: PropTypes.string,
     page: PropTypes.number,
     isFetching: PropTypes.bool,
-    deleteProductAction: PropTypes.func
 }
 
 Products.defaultProps = {

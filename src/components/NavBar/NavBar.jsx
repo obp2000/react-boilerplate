@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {
-    Modal, 
-    ModalHeader, 
+    Modal,
+    ModalHeader,
     ModalBody
 } from 'reactstrap'
 import NavLink from './NavLink'
@@ -51,13 +51,13 @@ const NavBar = ({
                     <NavLink to='/orders' text='Заказы'/>
                 </NavItem>
                 {isAuthenticated && <NavItem>
-                    <NavLink to='/profile' text='Профиль'/>
+                    <NavLink to='/user/' text='Профиль'/>
                 </NavItem>}
                 <NavItem>
-                    <a className="nav-link" style={{cursor: 'pointer' }} 
+                    <a className="nav-link" style={{cursor: 'pointer' }}
                        onClick={isAuthenticated ? () => signOut(accessToken) : toggleModal}>
                         {isAuthenticated ? 'Выйти' : 'Вход/Регистрация'}
-                    </a>                    
+                    </a>
                 </NavItem>
             </ul>
         </div>

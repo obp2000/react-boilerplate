@@ -23,6 +23,7 @@ import Profile from './profile/Containers/Profile'
 import PrivateRoute from './privateRoute'
 import RegisterForm from './auth/Containers/RegisterForm'
 import LoginForm from './auth/Containers/LoginForm'
+import User from './users/Containers/User'
 // import Pagination from './Pagination/Containers/Pagination'
 
 const Layout = ({history}) => {
@@ -42,7 +43,8 @@ const Layout = ({history}) => {
             <Route exact path="/customers/pages/:page" component={Customers}/>
             <Route exact path="/customers" component={Customers}/>
             <Route path="/customers/:id" component={Customer}/>
-            <PrivateRoute exact path="/profile" component={Profile}/>
+            <Route path="/user/" component={User}/>
+            // <PrivateRoute exact path="/user/" component={Profile}/>
       </Switch>
      </div>
   </ConnectedRouter>

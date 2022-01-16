@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Field} from 'redux-form'
+// import {Field} from 'redux-form'
+import { Field } from 'react-final-form'
+// import { Field } from 'react-final-form'
 import renderField from '../RenderField'
 
 const TextField = ({name, label, readOnly}) => <Field

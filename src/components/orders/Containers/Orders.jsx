@@ -1,83 +1,75 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-  connect
-} from 'react-redux'
+import { connect } from 'react-redux'
 import Template from '../Orders'
-import {
-  getOrdersAction,
-  deleteOrderAction
-} from '../../redux/Orders'
+import { getObjectsAction } from '../../redux/Orders'
+import { mapCollectionStateToProps } from '../../redux/mappers'
 
-class Orders extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  componentDidMount() {
-    const {
-      page,
-      term,
-      getOrdersAction
-    } = this.props
-    getOrdersAction(page, term)
-  }
-
-  componentDidUpdate({
-    page: prevPage,
-    term: prevTerm
-  }) {
-    const {
-      page,
-      term,
-      getOrdersAction
-    } = this.props
-    if (page !== prevPage || term !== prevTerm) {
-      getOrdersAction(page, term)
+class CollectionComponent extends React.Component {
+    constructor(props) {
+        super(props)
     }
-  }
 
-  render = () => <Template {...this.props}/>
+    componentDidMount() {
+        const {
+            accessToken,
+            page,
+            term,
+            getObjectsAction
+        } = this.props
+        getObjectsAction(page, term, accessToken)
+    }
 
-  // static propTypes = {
-  //   getOrdersAction: PropTypes.func.isRequired,
-  //   page: PropTypes.string,
-  //   term: PropTypes.string
-  // }
+    componentDidUpdate({
+        page: prevPage,
+        term: prevTerm
+    }) {
+        const {
+            accessToken,
+            page,
+            term,
+            getObjectsAction
+        } = this.props
+        if (page !== prevPage || term !== prevTerm) {
+            getObjectsAction(page, term, accessToken)
+        }
+    }
+
+    render = () => <Template {...this.props}/>
 }
 
-const mapStateToProps = ({
-  orders: {
-    results,
-    totalCount,
-    totalPages,
-    isFetching
-  },
-  router: {
-    location: {
-      query: {
-        term = ''
-      },
-      search
-    }
-  }
-}, {
-  match: {
-    params: {
-      page = 1
-    }
-  }
-}) => ({
-  results,
-  totalCount,
-  totalPages,
-  isFetching,
-  page: parseInt(page),
-  term,
-  search
-})
+export default connect(mapCollectionStateToProps('orders'), {
+    getObjectsAction
+})(CollectionComponent)
 
-export default connect(mapStateToProps, {
-  getOrdersAction,
-  deleteOrderAction
-})(Orders)
+// const mapStateToProps = ({
+//   orders: {
+//     results,
+//     totalCount,
+//     totalPages,
+//     isFetching
+//   },
+//   router: {
+//     location: {
+//       query: {
+//         term = ''
+//       },
+//       search
+//     }
+//   }
+// }, {
+//   match: {
+//     params: {
+//       page = 1
+//     }
+//   }
+// }) => ({
+//   results,
+//   totalCount,
+//   totalPages,
+//   isFetching,
+//   page: parseInt(page),
+//   term,
+//   search
+// })
+

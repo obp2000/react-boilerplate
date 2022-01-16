@@ -1,87 +1,45 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-  connect
-} from 'react-redux'
+import { connect } from 'react-redux'
 import Template from '../Customers'
-import {
-  getCustomersAction,
-  deleteCustomerAction
-} from '../../redux/Customers'
+import { getObjectsAction } from '../../redux/Customers'
+import { mapCollectionStateToProps } from '../../redux/mappers'
 
-class Customers extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  componentDidMount() {
-    const {
-      accessToken,
-      getCustomersAction,
-      page,
-      term
-    } = this.props
-    if (accessToken) {
-      getCustomersAction(page, term, accessToken)
+class CollectionComponent extends React.Component {
+    constructor(props) {
+        super(props)
     }
-  }
 
-  componentDidUpdate({
-    page: prevPage,
-    term: prevTerm
-  }) {
-    const {
-      accessToken,
-      getCustomersAction,
-      page,
-      term
-    } = this.props
-    if (accessToken && (page !== prevPage || term !== prevTerm)) {
-      getCustomersAction(page, term, accessToken)
+    componentDidMount() {
+        const {
+            accessToken,
+            getObjectsAction,
+            page,
+            term
+        } = this.props
+        if (accessToken) {
+            getObjectsAction(page, term, accessToken)
+        }
     }
-  }
 
-  render = () => <Template { ...this.props} />
+    componentDidUpdate({
+        page: prevPage,
+        term: prevTerm
+    }) {
+        const {
+            getObjectsAction,
+            page,
+            term,
+            accessToken
+        } = this.props
+        if (accessToken && (page !== prevPage || term !== prevTerm)) {
+            getObjectsAction(page, term, accessToken)
+        }
+    }
+
+    render = () => <Template { ...this.props} />
 }
 
-const mapStateToProps = ({
-  customers: {
-    results,
-    totalCount,
-    totalPages,
-    isFetching,
-    page: loadedPage,
-    term: loadedTerm
-  },
-  auth: {
-    accessToken
-  },
-  router: {
-    location: {
-      query: {
-        term = ''
-      },
-      search
-    }
-  }
-}, {
-  match: {
-    params: {
-      page = 1
-    }
-  }
-}) => ({
-  results,
-  totalCount,
-  totalPages,
-  isFetching,
-  page: parseInt(page),
-  term,
-  search,
-  accessToken
-})
-
-export default connect(mapStateToProps, {
-  getCustomersAction,
-  deleteCustomerAction
-})(Customers)
+export default connect(mapCollectionStateToProps('customers'), {
+    getObjectsAction
+})(CollectionComponent)

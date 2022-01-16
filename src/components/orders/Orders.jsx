@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-    Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Loader from 'react-loader'
-import Order from './Order'
+import OrderRow from './Containers/OrderRow'
 import Pagination from '../Pagination/Pagination'
 
 const Orders = ({
@@ -14,7 +12,6 @@ const Orders = ({
     search,
     page,
     isFetching,
-    deleteOrderAction
 }) => <Loader loaded={!isFetching}>
             <div>
             <h3>Заказы ({totalCount})</h3>
@@ -33,7 +30,7 @@ const Orders = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {results.map((order, index) => <Order {...order} key={index} deleteOrderAction={deleteOrderAction}/>)}
+                    {results.map((order, index) => <OrderRow {...order} key={index} />)}
                 </tbody>
             </table>
             <Pagination {...{table: 'orders', totalPages, page, search}} />
@@ -47,7 +44,6 @@ Orders.propTypes = {
     search: PropTypes.string,
     page: PropTypes.number,
     isFetching: PropTypes.bool,
-    deleteOrderAction: PropTypes.func
 }
 
 Orders.defaultProps = {

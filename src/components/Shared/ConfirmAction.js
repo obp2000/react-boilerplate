@@ -5,5 +5,4 @@ const ConfirmAction = (action, text) => e => {
 	}
 }
 
-
 export default ConfirmAction

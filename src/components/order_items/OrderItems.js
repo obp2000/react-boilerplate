@@ -2,9 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {Table} from 'reactstrap'
 import OrderItem from './Containers/OrderItem'
-import {
-    initOrderItem
-} from '../redux/Orders'
+import { addOrderItemAction } from '../redux/Orders'
 
 const OrderItems = ({
     fields
@@ -18,7 +16,7 @@ const OrderItems = ({
                     <th scope="col" className="col-1">Стоимость, руб.</th>
                     <th scope="col" className="col-1">Вес, гр.</th>
                     <th scope="col" className="col-1">
-                        <button onClick={() => fields.push(initOrderItem)}
+                        <button onClick={addOrderItemAction(fields)}
                                 type="button"
                                 className="btn btn-outline-primary btn-sm">
                             Добавить
@@ -27,7 +25,7 @@ const OrderItems = ({
                 </tr>
             </thead>
             <tbody>
-                {fields.map((order_item_name, index) => 
+                {fields.map((order_item_name, index) =>
                     <OrderItem key={index} {...{order_item_name, fields, index}}/>)}
             </tbody>
         </>

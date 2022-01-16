@@ -1,6 +1,9 @@
 import React from 'react'
 import Layout from './Layout'
-import 'react-widgets/dist/css/react-widgets.css'
+// import 'react-widgets/dist/css/react-widgets.css'
+// import "react-widgets/styles.css"
+import "react-widgets/scss/styles.scss"
+import '../styles/App.css'
 import {Provider} from 'react-redux'
 import {hot} from 'react-hot-loader'
 import configureStore, {history} from './Store'

@@ -1,37 +1,63 @@
 import React from 'react'
-import Combobox from 'react-widgets/lib/Combobox'
+import Combobox from 'react-widgets/Combobox'
 import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 
-const renderCombobox = ({
-  input,
-  data,
-  valueField,
-  textField,
-  defaultValue,
-  normalize,
-  onToggle,
-  onSelect,
-  inputProps,
-  meta,
-  isFetching
-}) => <>
-  {isFetching ? <Combobox busy /> :
-    <Combobox
+const renderCombobox1 = ({
+    input,
+    data,
+    dataKey,
+    textField,
+    onChange,
+    meta,
+    defaultValue,
+    normalize,
+    onToggle,
+    isFetching,
+    filter
+}) => < > {
+    isFetching ? <Combobox busy /> : <Combobox
       {...input}
       data={data}
-      valueField={valueField}
+      dataKey={dataKey}
       textField={textField}
-      onChange={input.onChange}
-      onBlur={() => input.onBlur()}
+      onChange={(event, value) => console.log('event: ', event)}
       defaultValue={defaultValue}
       normalize={normalize}
       onToggle={onToggle}
-      onSelect={onSelect}
-      inputProps={inputProps}
       messages={WidgetMessages}
-    />}
-  <WidgetErrors {...meta} />
-</>
+      filter={filter}
+    />
+}
+<WidgetErrors {...meta} /> <
+/>
+
+const renderCombobox = ({
+    input,
+    dataKey,
+    textField,
+    filter,
+    isFetching,
+    meta,
+    onChange,
+    normalize
+}) => <> {
+        isFetching ? <Combobox busy /> :
+        <Combobox
+          {...input}
+          name={input.name}
+          defaultValue={input.value}
+          textField={textField}
+          data={meta.data}
+          filter={filter}
+          onChange={onChange}
+
+          normalize={normalize}
+          messages={WidgetMessages}
+        />
+      }
+
+    <WidgetErrors {...meta} />
+    </>
 
 export default renderCombobox

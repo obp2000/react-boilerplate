@@ -1,93 +1,58 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-	connect
-} from 'react-redux'
-import {
-	push,
-	goBack
-} from 'connected-react-router'
-import {
-	reduxForm
-} from 'redux-form'
-import OrderForm from '../OrderForm'
-import {
-	OrderSumSelector
-} from '../Selectors'
-import {
-	getDeliveryTypesAction
-} from '../../redux/DeliveryTypes'
-import {
-	getOrderAction,
-	onSubmit,
-	onSubmitSuccess
-} from '../../redux/Orders'
-import {
-	getPostCost
-} from '../../redux/PostCost'
-import {
-	onSearchCustomer
-} from '../../redux/Customers'
-import {
-	validate
-} from '../Validators'
+import { connect } from 'react-redux'
+import FormTemplate from '../OrderForm'
+// import { OrderSumSelector } from '../Selectors'
+import { getObjectAction, onSubmit } from '../../redux/Orders'
+import { mapObjectStateToProps } from '../../redux/mappers'
 
-const ReduxOrderForm = reduxForm({
-	form: 'order',
-	validate,
-	onSubmit,
-	onSubmitSuccess,
-	enableReinitialize: true
-})(OrderForm)
+// const ReduxForm = setReduxForm()(FormTemplate)
 
 class Order extends React.Component {
-	constructor(props) {
-		super(props)
-	}
+    constructor(props) {
+        super(props)
+    }
 
-	componentDidMount() {
-		const {
-			id,
-			getDeliveryTypesAction,
-			getOrderAction
-		} = this.props
-		getDeliveryTypesAction()
-		getOrderAction(id)
-	}
+    componentDidMount() {
+        const {
+            id,
+            getObjectAction,
+            accessToken
+        } = this.props
+        getObjectAction(id, accessToken)
+    }
 
-	render = () => <ReduxOrderForm {...this.props} />
+    render = () => <FormTemplate {...this.props} />
 }
 
-const mapStateToProps = (state, {
-	match: {
-		params: {
-			id
-		}
-	}
-}) => {
-	const {
-		orders: {
-			order,
-			isFetching
-		},
-		customers,
-		delivery_types
-	} = state
-	return {
-		id,
-		initialValues: order,
-		created_at: order.created_at,
-		isFetching,
-		customers,
-		delivery_types,
-		...OrderSumSelector(state)
-	}
-}
-
-export default connect(mapStateToProps, {
-	getOrderAction,
-	getDeliveryTypesAction,
-	getPostCost,
-	onSearchCustomer,
-	goBack
+export default connect(mapObjectStateToProps('orders'), {
+    getObjectAction,
+    onSubmit
 })(Order)
+
+// const mapStateToProps = (state, {
+//     match: {
+//         params: {
+//             id
+//         }
+//     }
+// }) => {
+//     const {
+//         orders: {
+//             order,
+//             isFetching
+//         },
+//     } = state
+//     return {
+//         id,
+//         initialValues: order,
+//         isFetching,
+//         ...OrderSumSelector(state)
+//     }
+// }
+
+// export default connect(mapStateToProps, {
+//     getObjectAction,
+//     getPostCost,
+//     goBack
+// })(Order)
