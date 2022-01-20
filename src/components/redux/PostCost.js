@@ -1,78 +1,115 @@
-import {
-	createAction,
-	createReducer
-} from 'redux-act'
+import { createAction, createReducer } from 'redux-act'
 import fetchJsonp from 'fetch-jsonp'
+// import axios from 'axios'
 import querystring from 'querystring'
-import {
-	change
-} from 'redux-form'
-import {
-	BASE_URL,
-	PARAMS
-} from '../post_cost/Postcalc'
+import { errorHandler } from './ErrorHandlers'
 
-const requestPostCost = createAction()
-const receivePostCost = createAction()
+const reducer_actions = {}
+
+const requestPostCost = createAction('requestPostCost')
+const successPostCost = createAction('successPostCost')
+const failedPostCost = createAction('failedPostCost')
 
 const initialState = {
-	post_cost: 0
+    post_cost: null,
+    isFetching: false,
+    loaded: false,
+    errors: null
 }
 
-const reduceRequestPostCost = (state) => ({
-	...state,
-	isFetching: true
-})
+reducer_actions[requestPostCost] = (state) =>
+    ({
+        ...state,
+        isFetching: true,
+        loaded: false,
+        errors: null
+    })
 
-const reduceReceivePostCost = (state, post_cost) => ({
-	...state,
-	post_cost,
-	isFetching: false
-})
+reducer_actions[successPostCost] = (state, post_cost) =>
+    ({
+        ...state,
+        post_cost,
+        isFetching: false,
+        loaded: true,
+        errors: null
+    })
 
-const postCost = createReducer({
-		[requestPostCost]: reduceRequestPostCost,
-		[receivePostCost]: reduceReceivePostCost,
-	},
-	initialState
-)
+reducer_actions[failedPostCost] = (state, errors) =>
+    ({
+        ...state,
+        post_cost: null,
+        isFetching: false,
+        loaded: false,
+        errors
+    })
+
+const postCost = createReducer(reducer_actions, initialState)
 
 export default postCost
 
 // Server requests:
 
-const error_handler = e => console.log(`Error: ${e}`)
+const POST_BASE_URL = "http://test.postcalc.ru"
 
-const extract_post_cost = ({
-	Отправления: {
-		ЦеннаяПосылка: {
-			Тариф
-		}
-	}
-}) => parseInt(Тариф)
+const PARAMS = {
+    f: 'Иваново',
+    o: 'json',
+    st: 'localhost',
+    ml: 'obp2000@mail.ru',
+    key: 'test'
+}
 
-const full_url = (pindex, weight) => [BASE_URL,
-	querystring.stringify({
-		t: pindex,
-		w: weight,
-		...PARAMS
-	})
+const full_url = (pindex, weight) => [POST_BASE_URL,
+    querystring.stringify({
+        t: pindex,
+        w: weight,
+        ...PARAMS
+    })
 ].join('/?')
 
-const getCost = (pindex, weight) => fetchJsonp(full_url(pindex, weight))
-	.catch(error_handler)
-	.then(response => response.json())
-	.then(json => extract_post_cost(json))
 
 // Async actions:
 
-export const getPostCost = (pindex, weight) => dispatch => {
-	if (weight && pindex) {
-		dispatch(requestPostCost())
-		return getCost(pindex, weight)
-			.then(post_cost => {
-				dispatch(change('order', 'post_cost', post_cost))
-				dispatch(receivePostCost(post_cost))
-			})
-	}
-}	
+// export const getPostCost1 = (pindex, weight) => dispatch => {
+//     if (weight && pindex) {
+//         dispatch(requestPostCost())
+//         return fetchJsonp(full_url(pindex, weight))
+//             // .then(response => response.json())
+//             .then(({
+//                 Отправления: {
+//                     ЦеннаяПосылка: {
+//                         Тариф
+//                     } = {}
+//                 } = {}
+//             }) => {
+//                 dispatch(change('order', 'post_cost', parseInt(Тариф)))
+//                 dispatch(successPostCost(parseInt(Тариф)))
+
+//             })
+//             .catch(errorHandler(dispatch, failedPostCost))
+//     }
+// }
+
+export const getPostCost1 = (pindex, weight) => {
+    if (weight && pindex) {
+        return fetchJsonp(full_url(pindex, weight))
+            .then(response => response.json())
+            .then(({
+                Отправления: {
+                    ЦеннаяПосылка: {
+                        Тариф
+                    } = {}
+                } = {}
+            }) => parseInt(Тариф))
+            .catch(e => {
+                console.log(e)
+                alert(e.message)
+            })
+    }
+}
+
+export const getPostCost = (pindex, weight) => {
+    try {
+        getPostCost1(pindex, weight)
+    } catch (e) {}
+}

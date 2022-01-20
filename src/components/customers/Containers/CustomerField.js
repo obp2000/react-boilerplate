@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../CustomerField'
 import { onSearchCustomer } from '../../redux/Customers'

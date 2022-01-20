@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Form } from 'react-final-form'
-import Error from '../Error'
-import EmailField from '../Shared/EmailField'
-import TextField from '../Shared/TextField'
-import PasswordField from '../Shared/PasswordField'
+import { Form, Field } from 'react-final-form'
+import renderField from '../Shared/RenderField'
+import Errors from '../Errors'
 import SubmitButton from '../Shared/SubmitButton'
 
 import { validateLogin } from './Validators'
@@ -18,14 +16,14 @@ const LoginForm = ({
         >
         {({ handleSubmit, submitting, invalid, pristine, submitError }) => (
             <form onSubmit={handleSubmit} className="form-horizontal">
-                {submitError && <Error errors={submitError}/>}
+                {submitError && <Errors errors={submitError}/>}
                 <div className="form-group row">
                     <label className="col-sm-3 col-form-label offset-sm-1" htmlFor="username">
                         Имя пользователя
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <TextField name="username" required={true}/>
+                        <Field name="username" component={renderField} required={true}/>
                     </div>
                 </div>
                 <div className="form-group row">
@@ -34,7 +32,8 @@ const LoginForm = ({
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <PasswordField name="password" required={true}/>
+                        <Field name="password" type="password" className="validate"
+                            component={renderField} required/>
                     </div>
                 </div>
                 <div className="form-group row">

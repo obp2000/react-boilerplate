@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import CustomerRow from './Containers/CustomerRow'
 import Pagination from '../Pagination/Pagination'
 import SearchForm from '../Search/Containers/SearchForm'
+import Errors from '../Errors'
 
 const Customers = ({
     results,
@@ -12,9 +13,11 @@ const Customers = ({
     totalPages,
     search,
     page,
-    isFetching
+    isFetching,
+    errors
 }) => <Loader loaded={!isFetching}>
       <div>
+          {errors && <Errors errors={errors}/>}
           <div className="row">
               <div className="col-sm-7">
                   <h3>Покупатели ({totalCount})</h3>
@@ -52,6 +55,7 @@ Customers.propTypes = {
     search: PropTypes.string,
     page: PropTypes.number,
     isFetching: PropTypes.bool,
+    errors: PropTypes.array
 }
 
 Customers.defaultProps = {

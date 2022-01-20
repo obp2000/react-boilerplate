@@ -3,7 +3,7 @@ import {
     invalidEmail,
     shortPassword,
     invalidPasswordConfirmation
-} from '../Texts'
+} from './Texts'
 
 export const notBlank = (values, fields) =>
     fields.reduce((errors, field) => {

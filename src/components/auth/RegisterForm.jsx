@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Form } from 'react-final-form'
-import EmailField from '../Shared/EmailField'
-import PasswordField from '../Shared/PasswordField'
-import TextField from '../Shared/TextField'
+import { Form, Field } from 'react-final-form'
+import renderField from '../Shared/RenderField'
 import SubmitButton from '../Shared/SubmitButton'
-import Error from '../Error'
+import Errors from '../Errors'
 
 import { validateRegister } from './Validators'
 
@@ -18,14 +16,14 @@ const RegisterForm = ({
         >
         {({ handleSubmit, submitting, invalid, pristine, submitError }) => (
             <form onSubmit={handleSubmit} className="form-horizontal">
-                {submitError && <Error errors={submitError}/>}
+                {submitError && <Errors errors={submitError}/>}
                 <div className="form-group row">
                     <label className="col-sm-3 col-form-label offset-sm-1" htmlFor="username">
                         Имя пользователя
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <TextField name="username" required={true}/>
+                        <Field name="username" component={renderField} required/>
                         <small className="form-text text-muted">
                             Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.
                         </small>
@@ -37,7 +35,24 @@ const RegisterForm = ({
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <EmailField name="email" required={true}/>
+                        <Field type="email" name="email" component={renderField}
+                            className="validate" required/>
+                    </div>
+                </div>
+                <div className="form-group row">
+                    <label className="col-sm-3 col-form-label offset-sm-1" htmlFor="first_name">
+                        Имя
+                    </label>
+                    <div className="col-sm-8">
+                        <Field name="first_name" component={renderField} />
+                    </div>
+                </div>
+                <div className="form-group row">
+                    <label className="col-sm-3 col-form-label offset-sm-1" htmlFor="last_name">
+                        Фамилия
+                    </label>
+                    <div className="col-sm-8">
+                        <Field name="last_name" component={renderField} />
                     </div>
                 </div>
                 <div className="form-group row">
@@ -46,7 +61,8 @@ const RegisterForm = ({
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <PasswordField name="password1" required={true}/>
+                        <Field name="password1" type="password" className="validate"
+                            component={renderField} required/>
                         <small className="form-text text-muted">
                             <ul>
                                 <li>Пароль не должен быть слишком похож на другую вашу личную информацию.</li>
@@ -63,7 +79,8 @@ const RegisterForm = ({
                         <span className="asteriskField">*</span>
                     </label>
                     <div className="col-sm-8">
-                        <PasswordField name="password2" required={true}/>
+                        <Field name="password2" type="password" className="validate"
+                            component={renderField} required/>
                         <small className="form-text text-muted">
                             Для подтверждения введите, пожалуйста, пароль ещё раз.
                         </small>

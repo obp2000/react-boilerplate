@@ -4,12 +4,6 @@ import Template from '../CityField'
 import { onChangeCity } from '../../redux/Cities'
 import { mapCollectionStateToProps } from '../../redux/mappers'
 
-const mapStateToProps = ({
-    cities: {
-        results,
-        isFetching
-    }}) => ({results, isFetching})
-
-export default connect(mapStateToProps, {
+export default connect(mapCollectionStateToProps('cities'), {
     onChangeCity
 })(Template)

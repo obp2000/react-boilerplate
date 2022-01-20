@@ -14,7 +14,6 @@ const ProductRow = ({
     dollar_rate,
     created_at,
     updated_at,
-    accessToken,
     deleteObjectAction
 }) => {
     return <tr>
@@ -29,7 +28,7 @@ const ProductRow = ({
             <Link to={'/products/' + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
         </td>
         <td>
-            <DeleteButton action={() => deleteObjectAction(id, accessToken)} />
+            <DeleteButton action={() => deleteObjectAction(id)} />
         </td>
     </tr>
 }
@@ -49,7 +48,6 @@ ProductRow.propTypes = {
     weight_for_count: PropTypes.number,
     length_for_count: PropTypes.string,
     weight: PropTypes.string,
-    accessToken: PropTypes.string,
     deleteObjectAction: PropTypes.func
 }
 

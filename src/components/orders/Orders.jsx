@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import Loader from 'react-loader'
 import OrderRow from './Containers/OrderRow'
 import Pagination from '../Pagination/Pagination'
+import SearchForm from '../Search/Containers/SearchForm'
+import Errors from '../Errors'
 
 const Orders = ({
     results,
@@ -12,9 +14,18 @@ const Orders = ({
     search,
     page,
     isFetching,
+    errors
 }) => <Loader loaded={!isFetching}>
-            <div>
-            <h3>Заказы ({totalCount})</h3>
+        <div>
+            {errors && <Errors errors={errors}/>}
+            <div className="row">
+                <div className="col-sm-7">
+                  <h3>Заказы ({totalCount})</h3>
+                </div>
+                <div className="col-sm-5">
+                  <SearchForm table='orders'/>
+                </div>
+            </div>
             <table className="table table-sm table-striped table-bordered table-hover">
                 <thead className="thead-light">
                     <tr>
@@ -44,6 +55,7 @@ Orders.propTypes = {
     search: PropTypes.string,
     page: PropTypes.number,
     isFetching: PropTypes.bool,
+    errors: PropTypes.array
 }
 
 Orders.defaultProps = {

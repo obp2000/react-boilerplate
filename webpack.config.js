@@ -1,7 +1,7 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 
-const entry = "./src/index.js"
+const entry = "./src/index.jsx"
 
 const output = {
     path: path.join(__dirname, "/dist"),

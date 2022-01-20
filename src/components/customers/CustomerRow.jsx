@@ -10,7 +10,6 @@ const CustomerRow = ({
     name,
     created_at,
     updated_at,
-    accessToken,
     deleteObjectAction
 }) => <tr>
     <td>{id}</td>
@@ -22,7 +21,7 @@ const CustomerRow = ({
         <Link to={"/customers/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
     </td>
     <td>
-        <DeleteButton action={() => deleteObjectAction(id, accessToken)} />
+        <DeleteButton action={() => deleteObjectAction(id)} />
     </td>
 </tr>
 
@@ -33,7 +32,6 @@ CustomerRow.propTypes = {
     address: PropTypes.string,
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
-    accessToken: PropTypes.string,
     deleteObjectAction: PropTypes.func
 }
 

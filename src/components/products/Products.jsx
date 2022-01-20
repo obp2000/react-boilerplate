@@ -5,6 +5,7 @@ import Loader from 'react-loader'
 import ProductRow from './Containers/ProductRow'
 import Pagination from '../Pagination/Pagination'
 import SearchForm from '../Search/Containers/SearchForm'
+import Errors from '../Errors'
 
 const Products = ({
     results,
@@ -13,8 +14,10 @@ const Products = ({
     search,
     page,
     isFetching,
+    errors
 }) => <Loader loaded={!isFetching}>
             <div>
+                {errors && <Errors errors={errors}/>}
                 <div className="row">
                     <div className="col-sm-7">
                         <h3>Ткани ({totalCount})</h3>
@@ -58,6 +61,7 @@ Products.propTypes = {
     search: PropTypes.string,
     page: PropTypes.number,
     isFetching: PropTypes.bool,
+    errors: PropTypes.array
 }
 
 Products.defaultProps = {

@@ -1,4 +1,4 @@
-import { initCity } from './Cities'
+import { initObject as initCity } from './Cities'
 // import config from '../Config'
 
 import { CommonActions } from './common_actions2'

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
     Modal,
     ModalHeader,
@@ -11,16 +11,18 @@ import NavItem from './NavItem'
 // import Search from '../Search/Containers/Search'
 import LoginForm from '../auth/Containers/LoginForm'
 import RegisterForm from '../auth/Containers/RegisterForm'
+// import Errors from '../Errors'
 
 const NavBar = ({
-    isAuthenticated,
-    accessToken,
-    toggleModal,
-    signOut,
-    modal,
-    login,
-    toggleLogin
-}) => <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        isAuthenticated,
+        toggleModal,
+        signOut,
+        modal,
+        login,
+        toggleLogin,
+        errors
+    }) => <>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link to="/" className="navbar-brand">
             <span className="badge badge-secondary">Best C</span>
         </Link>
@@ -55,7 +57,7 @@ const NavBar = ({
                 </NavItem>}
                 <NavItem>
                     <a className="nav-link" style={{cursor: 'pointer' }}
-                       onClick={isAuthenticated ? () => signOut(accessToken) : toggleModal}>
+                       onClick={isAuthenticated ? signOut : toggleModal}>
                         {isAuthenticated ? 'Выйти' : 'Вход/Регистрация'}
                     </a>
                 </NavItem>
@@ -71,7 +73,8 @@ const NavBar = ({
                     : <RegisterForm/>}
                 <div className="row">
                     <div className="col-sm-10 offset-sm-1">
-                        <a className="nav-link" style={{cursor: 'pointer' }} onClick={toggleLogin}>
+                        <a className="nav-link" style={{cursor: 'pointer'}}
+                            onClick={toggleLogin}>
                             {login ? 'Регистрация' : 'Вход'}
                         </a>
                     </div>
@@ -79,15 +82,16 @@ const NavBar = ({
             </ModalBody>
         </Modal>
     </nav>
+    </>
 
-NavBar.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    toggleModal: PropTypes.func,
-    accessToken: PropTypes.string,
-    signOut: PropTypes.func,
-    modal: PropTypes.bool,
-    login: PropTypes.bool,
-    toggleLogin: PropTypes.func
-}
+    NavBar.propTypes = {
+        isAuthenticated: PropTypes.bool,
+        toggleModal: PropTypes.func,
+        signOut: PropTypes.func,
+        modal: PropTypes.bool,
+        login: PropTypes.bool,
+        toggleLogin: PropTypes.func,
+        // errors: PropTypes.array
+    }
 
 export default NavBar

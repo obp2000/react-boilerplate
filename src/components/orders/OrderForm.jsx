@@ -1,24 +1,21 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Form } from 'react-final-form'
+import { Form, Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
-import { Badge, Table } from 'reactstrap'
+import { Table } from 'reactstrap'
 import Loader from 'react-loader'
+import renderField from '../Shared/RenderField'
 import SubmitButton from '../Shared/SubmitButton'
 import BackButton from '../Shared/Containers/BackButton'
-// import CustomerCombobox from '../customers/Containers/CustomerCombobox'
-import TextField from '../Shared/TextField'
-import NumberField from '../Shared/NumberField'
-import IntegerField from '../Shared/IntegerField'
 import OrderItems from '../order_items/OrderItems'
-import { SamplesWeight } from '../samples/Consts'
-import Gift from '../gifts/Gift'
-import { PacketWeight } from '../post_packets/Consts'
+import { SamplesWeight, PostPacketWeight } from './Consts'
 import CustomerField from '../customers/Containers/CustomerField'
 import DeliveryTypeField from './Containers/DeliveryTypeField'
 import PostCostButton from './Containers/PostCostButton'
-import PostPacketField from '../post_packets/PostPacketField'
+import PostPacketField from './PostPacketField'
+import OrderNumber from './Containers/OrderNumber'
+import Errors from '../Errors'
 
 import { validate } from './Validators'
 import { order_calculator } from './Selectors'
@@ -28,12 +25,7 @@ const OrderForm = ({
     onSubmit,
     initialValues,
     isFetching,
-
-    id,
-    pindex,
-    tolalWeight,
-    created_at,
-    // accessToken,
+    errors
 }) => <Form
         name={'order'}
         validate={validate}
@@ -44,16 +36,15 @@ const OrderForm = ({
         }}
         decorators={[order_calculator, order_items_calculator]}
         // enableReinitialize={true}
-        initialValues={initialValues}>
-      {({ handleSubmit, submitting, invalid, pristine, touched }) => (
+        initialValues={{...initialValues, samples_weight: SamplesWeight, packet_weight: PostPacketWeight}}>
+      {({ handleSubmit, submitting, invalid, pristine, touched, submitError }) => (
         <form onSubmit={handleSubmit} className="form-horizontal">
+            {errors && <Errors errors={errors}/>}
                 <br/>
                 <div className='row'>
                     <div className="col-sm-6">
                         <h4>Заказ&nbsp;
-                            <Badge color="primary">
-                                № {id || ' Новый' } от {created_at}
-                            </Badge>
+                            <OrderNumber />
                         </h4>
                     </div>
                     <div className="col-sm-6 text-right">
@@ -74,7 +65,7 @@ const OrderForm = ({
                             ФИО:
                         </div>
                         <div className="col-sm-5">
-                            <TextField name="customer_name" readOnly/>
+                            <Field name="customer_name" component={renderField} readOnly/>
                         </div>
                     </div>
                     <div className="form-row">
@@ -82,9 +73,10 @@ const OrderForm = ({
                             Адрес:
                         </label>
                         <div className="col-sm-9">
-                            <TextField name="pindex" readOnly/>
-                            <TextField name="city" readOnly/>
-                            <TextField name="customer_address" readOnly/>
+                            <Field name="pindex" component={renderField} readOnly/>
+                            <Field name="city" component={renderField} readOnly/>
+                            <Field name="customer_address"
+                                component={renderField} readOnly/>
                         </div>
                     </div>
                 </div>
@@ -97,7 +89,8 @@ const OrderForm = ({
                             <DeliveryTypeField />
                         </div>
                         <div className="col-sm-6">
-                            <TextField name="address" label="Адрес доставки"/>
+                            <Field name="address" component={renderField}
+                                placeholder="Адрес доставки"/>
                         </div>
                     </div>
                 </div>
@@ -107,19 +100,23 @@ const OrderForm = ({
                         <tr className="d-flex">
                             <td scope="col" className="col-1"></td>
                             <td scope="col" className="col-6">
-                                <TextField name="total_text" readOnly/>
+                                <Field name="total_text"
+                                    component={renderField} readOnly/>
                             </td>
                             <td scope="col" className="col-1"></td>
                             <td scope="col" className="col-1 text-right">
-                                <IntegerField name="order_items_amount" readOnly />
+                                <Field name="order_items_amount" type="number"
+                                    component={renderField} readOnly />
                             </td>
                             <td scope="col" className="col-1 text-right">
                                 <strong>
-                                    <IntegerField name="order_items_cost" readOnly />
+                                    <Field name="order_items_cost" type="number"
+                                        component={renderField} readOnly />
                                 </strong>
                             </td>
                             <td scope="col" className="col-1 text-right">
-                                <IntegerField name="order_items_weight" readOnly />
+                                <Field name="order_items_weight" type="number"
+                                    component={renderField} readOnly />
                             </td>
                             <td scope="col" className="col-1"></td>
                         </tr>
@@ -133,7 +130,8 @@ const OrderForm = ({
                                 </td>
                                 <td className="col-sm-1 text-right"></td>
                                 <td className="col-sm-1 text-right">
-                                    {SamplesWeight}
+                                    <Field name="samples_weight" type="number"
+                                        component={renderField} readOnly />
                                 </td>
                             </tr>
                             <tr className='d-flex'>
@@ -144,19 +142,19 @@ const OrderForm = ({
                                    <PostPacketField />
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    {PacketWeight}
+                                    <Field name="packet_weight" type="number"
+                                        component={renderField} readOnly />
                                 </td>
                             </tr>
                             <tr className='d-flex'>
                                 <td className="col-sm-9">
                                     Тариф Почты России&nbsp;
-                                    <PostCostButton pindex={pindex} tolalWeight={tolalWeight} />
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <NumberField name='post_cost'
-                                                 label="Тариф Почты"
-                                                 parse={(value) => parseInt(value || 0)}
-                                                 // format={(value) => parseInt(value || 0)}
+                                    <Field name='post_cost' type="number"
+                                        component={renderField} placeholder="Тариф Почты"
+                                                 // parse={(value) => value.replace('ddd', '')}
+                                                 // format={(value) => (value + 'ddd')}
                                                  />
                                 </td>
                                 <td className="col-sm-1 text-right"></td>
@@ -166,7 +164,8 @@ const OrderForm = ({
                                     Тариф Почты России + пакет
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <NumberField name="post_cost_with_packet" readOnly />
+                                    <Field name="post_cost_with_packet" type="number"
+                                        component={renderField} readOnly />
                                 </td>
                                 <td className="col-sm-1 text-right">
                                 </td>
@@ -176,7 +175,8 @@ const OrderForm = ({
                                     Скидка на почтовые
                                 </td>
                                 <td className="col-sm-1 text-right">
-                                    <NumberField name="post_discount" readOnly />
+                                    <Field name="post_discount" type="number"
+                                        component={renderField} readOnly />
                                 </td>
                                 <td className="col-sm-1"></td>
                             </tr>}
@@ -186,7 +186,8 @@ const OrderForm = ({
                                 </td>
                                 <td className="col-sm-1 text-right">
                                     <strong>
-                                    <NumberField name="post_cost_with_packet_and_post_discount" readOnly />
+                                    <Field name="post_cost_with_packet_and_post_discount"
+                                        type="number" component={renderField} readOnly />
                                     </strong>
                                 </td>
                                 <td className="col-sm-1 text-right">
@@ -198,12 +199,14 @@ const OrderForm = ({
                                 </td>
                                 <td className="col-sm-1 text-right">
                                     <strong>
-                                    <NumberField name="cost_with_postal_and_post_discount" readOnly />
+                                    <Field name="cost_with_postal_and_post_discount"
+                                        type="number" component={renderField} readOnly />
                                     </strong>
                                 </td>
                                 <td className="col-sm-1 text-right">
                                     <strong>
-                                        <NumberField name="tolalWeight" readOnly />
+                                        <Field name="tolalWeight" type="number"
+                                            component={renderField} readOnly />
                                     </strong>
                                 </td>
                             </tr>
@@ -218,10 +221,7 @@ const OrderForm = ({
 OrderForm.propTypes = {
     onSubmit: PropTypes.func,
     isFetching: PropTypes.bool,
-    id: PropTypes.string,
-    pindex: PropTypes.string,
-    // accessToken: PropTypes.string,
-    // delivery_types: PropTypes.object,
- }
+    errors: PropTypes.array
+}
 
 export default OrderForm

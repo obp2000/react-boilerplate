@@ -1,8 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../DeliveryTypeField'
-// import { getDeliveryTypesAction } from '../../redux/DeliveryTypes'
-import { mapDeliveryTypesStateToProps } from '../../redux/mappers'
+
+const mapStateToProps = ({
+    orders: {
+        object: {
+            delivery_types = []
+        }
+    }
+}) => ({
+    delivery_types
+})
+
+export default connect(mapStateToProps)(Template)
 
 // class DeliveryTypeField extends React.Component {
 //     constructor(props) {
@@ -17,6 +27,5 @@ import { mapDeliveryTypesStateToProps } from '../../redux/mappers'
 //     }
 
 //     render = () => <Template {...this.props} />
-// }
 
-export default connect(mapDeliveryTypesStateToProps())(Template)
+// }

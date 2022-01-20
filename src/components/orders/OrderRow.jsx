@@ -7,25 +7,24 @@ const OrderRow = ({
     id,
     created_at,
     updated_at,
-    sum,
+    order_items_cost,
     customer: {
         nick = '',
         name = ''
     },
-    accessToken,
     deleteObjectAction
 }) => {
     return <tr>
         <th scope="row">{id}</th>
         <td>{`${nick} (${name})`}</td>
-        <td>{sum ? parseInt(sum, 0) : 0}</td>
+        <td>{order_items_cost}</td>
         <td>{created_at}</td>
         <td>{updated_at}</td>
         <td>
             <Link to={"/orders/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
         </td>
         <td>
-            <DeleteButton action={() => deleteObjectAction(id, accessToken)} />
+            <DeleteButton action={() => deleteObjectAction(id)} />
         </td>
     </tr>
 }
@@ -34,9 +33,8 @@ OrderRow.propTypes = {
     id: PropTypes.number,
     created_at: PropTypes.string,
     updated_at: PropTypes.string,
-    sum: PropTypes.number,
+    order_items_cost: PropTypes.number,
     customer: PropTypes.shape({ nick: PropTypes.string, name: PropTypes.string }),
-    accessToken: PropTypes.string,
     deleteObjectAction: PropTypes.func
 }
 

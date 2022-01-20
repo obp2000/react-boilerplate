@@ -1,91 +1,15 @@
-import {
-    createAction,
-    createReducer
-} from 'redux-act'
-import axios from 'axios'
-import config from '../Config'
+import { CommonActions } from './common_actions2'
 
-const requestSearchCities = createAction()
-const receiveSearchCities = createAction()
-
-export const initCity = {
+export const initObject = {
     city: '',
     pindex: ''
 }
 
-const initialState = {
-    results: [],
-    isFetching: false
-}
+const index_url = '/cities'
+const redirect_url = '/cities'
 
-const reduceRequestSearchCities = (state) => ({
-    ...state,
-    results: [],
-    isFetching: true
-})
+const Actions = new CommonActions({index_url, redirect_url, initObject})
 
-const reduceReceiveSearchCities = (state, results) => ({
-    ...state,
-    results,
-    isFetching: false
-})
+export const onChangeCity = Actions.searchObjectsAction()
 
-const cities = createReducer({
-        [requestSearchCities]: reduceRequestSearchCities,
-        [receiveSearchCities]: reduceReceiveSearchCities
-    },
-    initialState
-)
-
-export default cities
-
-// Server requests:
-
-const base_url = `${config.BACKEND}/api/cities`
-
-const error_handler = e => console.log(`Error: ${e}`)
-
-const extract_data = ({ data }) => data
-
-const searchCities = (term) => axios.get(`${base_url}/`, {
-        params: {
-            term
-        }
-    })
-    .catch(error_handler)
-    .then(extract_data)
-// .then((data) => console.log('data: ', data))
-
-// Async actions:
-
-export const onChangeCity = (value) => dispatch => {
-    // alert('sssss')
-    // console.log('obj: ', obj)
-    // console.log('value: ', value)
-    // console.log('value1: ', value1)
-    if (typeof(value) == 'string' && value.length > 0) {
-        dispatch(requestSearchCities())
-        return searchCities(value)
-            .then(results => dispatch(receiveSearchCities(results)))
-        // .then((data) => console.log('data: ', data))
-    }
-}
-
-
-// export const onSearchCustomer1 = value => (dispatch, getState) => {
-//     const {
-//         auth: {
-//             accessToken
-//         }
-//     } = getState()
-//     if (accessToken) {
-//         // alert(accessToken)
-//         if (typeof(value) == 'string' && value.length > 0) {
-//             dispatch(requestSearchCustomers())
-//             searchCustomers(value, accessToken)
-//                 .then(search_results => dispatch(receiveSearchCustomers(search_results)))
-//         }
-//     } else {
-//         alert('sssssssss')
-//     }
-// }
+export default Actions.getReducer()

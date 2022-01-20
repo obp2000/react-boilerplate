@@ -4,7 +4,8 @@ const mapCollectionState = (collection_name, {
         totalCount,
         totalPages,
         isFetching,
-        search_results
+        search_results,
+        errors
     },
     auth: {
         accessToken
@@ -25,7 +26,8 @@ const mapCollectionState = (collection_name, {
     accessToken,
     term,
     search,
-    search_results
+    search_results,
+    errors
 })
 
 const mapCollectionOwnProps = ({
@@ -50,44 +52,24 @@ const mapObjectOwnProps = ({
     }
 }) => ({ id })
 
-const mapObjectState = (collection_name, state) => {
-    const {
-        [collection_name]: {
-            object: initialValues,
-            isFetching
-        },
-        auth: {
-            accessToken
-        }
-    } = state
-    const { created_at } = initialValues || {}
-    return {
-        initialValues,
+const mapObjectState = (collection_name, {
+    [collection_name]: {
+        object: initialValues,
         isFetching,
-        accessToken,
-        created_at
-        // ...selector(state)
+        errors
+    },
+    auth: {
+        accessToken
     }
-}
+}) => ({
+    initialValues,
+    isFetching,
+    accessToken,
+    errors
+})
 
 export const mapObjectStateToProps = (collection_name, object_name) =>
     (state, ownProps) => ({
         ...mapObjectOwnProps(ownProps),
         ...mapObjectState(collection_name, state),
     })
-
-export const mapRowStateToProps = ({
-    auth: {
-        accessToken
-    }
-}) => ({ accessToken })
-
-export const mapDeliveryTypesStateToProps = () => ({
-    orders: {
-        object: {
-            delivery_types = []
-        }
-    }
-}) => ({
-    delivery_types
-})

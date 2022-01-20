@@ -1,18 +1,24 @@
 import { createAction, createReducer } from 'redux-act'
 import axios from 'axios'
-// import { SubmissionError } from 'redux-form'
-import { FORM_ERROR } from 'final-form'
 import { push } from 'connected-react-router'
 import config from '../Config'
 import { closeModal } from './NavBar'
+import { errorHandler, formErrorHandler } from './ErrorHandlers'
 
-const startAuthentication = createAction()
-const successAuthentication = createAction()
-const failAuthentication = createAction()
-const doSignout = createAction()
-const startRegister = createAction()
-const successRegister = createAction()
-const failRegister = createAction()
+const reducer_actions = {}
+
+const startAuthentication = createAction('startAuthentication')
+const successAuthentication = createAction('successAuthentication')
+const failedAuthentication = createAction('failedAuthentication')
+const startRegister = createAction('startRegister')
+const successRegister = createAction('successRegister')
+const failedRegister = createAction('failedRegister')
+const startSignout = createAction('startSignout')
+const successSignout = createAction('successSignout')
+const failedSignout = createAction('failedSignout')
+const requestUser = createAction('requestUser')
+const successReceiveUser = createAction('successReceiveUser')
+const failedReceiveUser = createAction('failedReceiveUser')
 
 export const tokenHeaders = (accessToken) => {
     return {
@@ -23,80 +29,120 @@ export const tokenHeaders = (accessToken) => {
     }
 }
 
+export const initUser = {
+    id: null,
+    username: null,
+    email: null,
+    first_name: null,
+    last_name: null,
+}
+
 const initialState = {
-    isFetching: false,
     isAuthenticated: false,
-    // client: null,
     accessToken: null,
-    // uid: null,
-    // expiry: null,
-    email: '',
-    // name: action.name,
-    username: '',
+    object: initUser,
+    isFetching: false,
+    loaded: false,
     errors: null
 }
 
-const reduceStartAuthentication = (state) => ({
-    ...state,
-    isFetching: true
-})
+reducer_actions[startAuthentication] = (state) =>
+    ({
+        ...state,
+        ...initialState,
+        isFetching: true
+    })
 
-const reduceSuccessAuthentication = (state, accessToken) => ({
-    ...state,
-    isFetching: false,
-    isAuthenticated: true,
-    errors: null,
-    accessToken,
-    // ...login_info
-    // uid: action.uid,
-    // client: action.client,
-    // accessToken,
-    // expiry: action.expiry,
-    // email,
-    // name: action.name,
-    // username,
-    // nickname: action.nickname,
-})
+reducer_actions[successAuthentication] = (state, accessToken) =>
+    ({
+        ...state,
+        isAuthenticated: true,
+        accessToken,
+        isFetching: false,
+        loaded: true,
+        errors: null
+    })
 
-const reduceFailAuthentication = (state, errors) => ({
-    ...state,
-    isFetching: false,
-    errors: errors
-})
+reducer_actions[failedAuthentication] = (state, errors) =>
+    ({
+        ...state,
+        ...initialState,
+        errors
+    })
 
-const reduceDoSignout = (state) => ({
-    ...state,
-    ...initialState
-})
+reducer_actions[startRegister] = (state) =>
+    ({
+        ...state,
+        ...initialState,
+        isFetching: true,
+    })
 
-const reduceStartRegister = (state) => ({
-    ...state,
-    isFetching: true
-})
+reducer_actions[successRegister] = (state) =>
+    ({
+        ...state,
+        isFetching: false,
+        loaded: false,
+        errors: null
+    })
 
-const reduceSuccessRegister = (state) => ({
-    ...state,
-    isFetching: false,
-    errors: null
-})
+reducer_actions[failedRegister] = (state, errors) =>
+    ({
+        ...state,
+        ...initialState,
+        errors
+    })
 
-const reduceFailRegister = (state, errors) => ({
-    ...state,
-    isFetching: false,
-    errors
-})
+reducer_actions[startSignout] = (state) =>
+    ({
+        ...state,
+        isFetching: true,
+        loaded: false,
+        errors: null
+    })
 
-const auth = createReducer({
-        [startAuthentication]: reduceStartAuthentication,
-        [successAuthentication]: reduceSuccessAuthentication,
-        [failAuthentication]: reduceFailAuthentication,
-        [doSignout]: reduceDoSignout,
-        [startRegister]: reduceStartRegister,
-        [successRegister]: reduceSuccessRegister,
-        [failRegister]: reduceFailRegister
-    },
-    initialState
-)
+reducer_actions[successSignout] = (state) =>
+    ({
+        ...state,
+        ...initialState,
+        loaded: true,
+    })
+
+reducer_actions[failedSignout] = (state, errors) =>
+    ({
+        ...state,
+        isFetching: false,
+        loaded: false,
+        errors
+    })
+
+reducer_actions[requestUser] = (state) =>
+    ({
+        ...state,
+        object: initUser,
+        isFetching: true,
+        loaded: false,
+        errors: null
+    })
+
+reducer_actions[successReceiveUser] = (state, object) =>
+    ({
+        ...state,
+        object,
+        isFetching: false,
+        loaded: true,
+        errors: null
+    })
+
+reducer_actions[failedReceiveUser] = (state, errors) =>
+    ({
+        ...state,
+        object: initUser,
+        isFetching: false,
+        loaded: false,
+        errors
+    })
+
+const auth = createReducer(reducer_actions, initialState)
 
 export default auth
 
@@ -104,70 +150,79 @@ export default auth
 
 const base_url = `${config.BACKEND}/api`
 
-const error_handler = e => console.log(`Error: ${e}`)
-
-// const extract_data = ({ data }) => data
-
-export const onSuccessLogin = dispatch => ({
-    data: {
-        key
-    }
-}) => {
-    dispatch(successAuthentication(key))
-    dispatch(closeModal())
-    return dispatch(push('/user/'))
-}
-
-export const onFailedLogin = dispatch => ({
-    response: {
-        data: {
-            non_field_errors
-        }
-    }
-}) => {
-    dispatch(failAuthentication(non_field_errors))
-    return {
-        [FORM_ERROR]: non_field_errors
-    }
-}
-
 export const onSubmitLogin = values => dispatch => {
     dispatch(startAuthentication())
     return axios.post(`${base_url}/login/`, values)
-        .then(onSuccessLogin(dispatch))
-        .catch(onFailedLogin(dispatch))
-}
-
-export const onSuccessRegister = dispatch => () => {
-    dispatch(successRegister())
-    dispatch(closeModal())
-    alert('Успешно зарегистрировались!')
-}
-
-export const onFailedRegister = dispatch => ({
-    response: {
-        data
-    }
-}) => {
-    dispatch(failRegister(data))
-    const reg_errors = Object.values(data).map(
-        field_errors => field_errors.join(' '))
-    return {
-        [FORM_ERROR]: reg_errors
-    }
+        .then(({
+            data: {
+                key
+            }
+        }) => {
+            dispatch(successAuthentication(key))
+            dispatch(closeModal())
+            return dispatch(push('/user/'))
+        })
+        .catch(formErrorHandler(dispatch, failedAuthentication))
 }
 
 export const onSubmitRegister = values => dispatch => {
     dispatch(startRegister())
     return axios.post(`${base_url}/register/`, values)
-        .then(onSuccessRegister(dispatch))
-        .catch(onFailedRegister(dispatch))
+        .then(() => {
+            dispatch(successRegister())
+            dispatch(closeModal())
+            alert('Успешно зарегистрировались!')
+        })
+        .catch(formErrorHandler(dispatch, failedRegister))
 }
 
-export const signOut = accessToken => dispatch =>
-    axios.post(`${base_url}/logout/`, null)
-    .then(() => dispatch(doSignout()))
-    .catch(error_handler)
+export const signOut = () => dispatch => {
+    dispatch(startSignout())
+    return axios.post(`${base_url}/logout/`)
+        .then(() => dispatch(successSignout()))
+        .catch(errorHandler(dispatch, failedSignout))
+}
+
+export const getObjectAction = accessToken => dispatch => {
+    dispatch(requestUser())
+    return axios.get(`${base_url}/user/`,
+            tokenHeaders(accessToken)
+        )
+        .then(({ data }) => dispatch(successReceiveUser(data)))
+        .catch(errorHandler(dispatch, failedReceiveUser))
+}
+
+// const onFailedGetObjectAction = dispatch => ({
+//     message,
+//     response: {
+//         data: {
+//             detail
+//         } = {}
+//     } = {}
+// }) => dispatch(failedReceiveUser([detail || message]))
+
+// const onFailedSignout = dispatch => ({
+//     message,
+//     response: {
+//         data: {
+//             detail
+//         } = {}
+//     } = {}
+// }) => dispatch(failedSignout([detail || message]))
+
+// const onFailedLogin1 = dispatch => ({
+//     message,
+//     response: {
+//         data: {
+//             non_field_errors
+//         } = {}
+//     } = {}
+// }) => {
+//     dispatch(failedAuthentication(non_field_errors || [message]))
+//     return {
+//         [FORM_ERROR]: non_field_errors
+//     }
+// }
 
 // const logout = (accessToken) => axios.post(`${base_url}/logout/`, null,
 //         tokenHeaders(accessToken))
