@@ -1,0 +1,6 @@
+
+-----------------------------------------------------------------
+  pg_upgrade run on Fri Jan 21 11:48:31 2022
+-----------------------------------------------------------------
+
+could not open version file "/var/lib/postgresql/13/main/PG_VERSION": Permission denied

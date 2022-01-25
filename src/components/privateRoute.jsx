@@ -4,7 +4,8 @@ import { Route, Redirect, withRouter } from 'react-router-dom'
 
 const RedirectToLogin = ({ location }) =>
     <Redirect to={{pathname: '/login',
-                   state: {from: location}}} />
+                   state: {from: location}}}
+    />
 
 const PrivateRoute = ({
         component: Component,
@@ -12,10 +13,10 @@ const PrivateRoute = ({
         ...rest
     }) =>
     <Route {...rest}
-      render={props => isAuthenticated ? <Component {...props} /> :
-      <RedirectToLogin {...props} />
-}
-/>
+      render={props => isAuthenticated ?
+        <Component {...props} /> :
+        <RedirectToLogin {...props} />}
+    />
 
 const mapStateToProps = ({
     auth: {

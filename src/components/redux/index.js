@@ -6,7 +6,7 @@ import customers from './Customers'
 import products from './Products'
 import orders from './Orders'
 import cities from './Cities'
-import navBar from './NavBar'
+// import navBar from './NavBar'
 // import postCost from './PostCost'
 // import delivery_types from './DeliveryTypes'
 // import user from './Users'
@@ -19,7 +19,7 @@ const rootReducer = (history) => combineReducers({
 	cities,
 	// form: formReducer,
 	auth,
-	navBar,
+	// navBar,
 	// postCost,
 	// delivery_types
 })

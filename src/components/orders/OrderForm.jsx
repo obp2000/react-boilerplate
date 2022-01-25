@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Form, Field } from 'react-final-form'
+import { Form as FormStrap, Row, Col, Card, CardBody, CardTitle, CardImg, Table } from 'reactstrap'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
-import { Table } from 'reactstrap'
 import Loader from 'react-loader'
-import renderField from '../Shared/RenderField'
+// import TdFormGroup from '../order_items/TdFormGroup'
+import TdInput from '../Shared/TdInput'
+import TdText from './TdText'
+// import FormGroup from './FormGroup'
+import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import SubmitButton from '../Shared/SubmitButton'
 import BackButton from '../Shared/Containers/BackButton'
 import OrderItems from '../order_items/OrderItems'
@@ -26,7 +30,9 @@ const OrderForm = ({
     initialValues,
     isFetching,
     errors
-}) => <Form
+}) => <Loader loaded={!isFetching}>
+
+    <Form
         name={'order'}
         validate={validate}
         onSubmit={onSubmit}
@@ -38,9 +44,8 @@ const OrderForm = ({
         // enableReinitialize={true}
         initialValues={{...initialValues, samples_weight: SamplesWeight, packet_weight: PostPacketWeight}}>
       {({ handleSubmit, submitting, invalid, pristine, touched, submitError }) => (
-        <form onSubmit={handleSubmit} className="form-horizontal">
+        <FormStrap onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-body rounded">
             {errors && <Errors errors={errors}/>}
-                <br/>
                 <div className='row'>
                     <div className="col-sm-6">
                         <h4>Заказ&nbsp;
@@ -53,170 +58,85 @@ const OrderForm = ({
                         <SubmitButton submitDisabled={submitting || invalid || pristine}/>
                     </div>
                 </div>
-                <div>
-                    <div className="form-row">
-                        <label className="col-sm-1 col-form-label font-weight-bold">Заказчик:</label>
-                        <div className="col-sm-7">
-                            <CustomerField />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="col-sm-1">
-                            ФИО:
-                        </div>
-                        <div className="col-sm-5">
-                            <Field name="customer_name" component={renderField} readOnly/>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <label className="col-sm-1">
-                            Адрес:
-                        </label>
-                        <div className="col-sm-9">
-                            <Field name="pindex" component={renderField} readOnly/>
-                            <Field name="city" component={renderField} readOnly/>
-                            <Field name="customer_address"
-                                component={renderField} readOnly/>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className="form-row">
-                        <label className="col-sm-1 col-form-label">
-                            Доставка:
-                        </label>
-                        <div className="col-sm-2">
-                            <DeliveryTypeField />
-                        </div>
-                        <div className="col-sm-6">
-                            <Field name="address" component={renderField}
-                                placeholder="Адрес доставки"/>
-                        </div>
-                    </div>
-                </div>
+                <Row>
+                    <Field name="customer" label='Заказчик' size={6} component={CustomerField}/>
+                    <Field name="customer_name" label="ФИО" size={6} disabled component={FloatingFormGroup} />
+                    <Field name="pindex" label="Индекс" size={2} disabled component={FloatingFormGroup} />
+                    <Field name="city" label="Город" size={2} disabled component={FloatingFormGroup} />
+                    <Field name="customer_address" label="Адрес" size={6} disabled component={FloatingFormGroup} />
+                    <Field name="delivery_type" label='Доставка' size={5} component={DeliveryTypeField}/>
+                    <Field name="address" label='Адрес доставки' size={6} component={FloatingFormGroup}/>
+                </Row>
+
                 <Table size="sm" responsive bordered hover>
                     <FieldArray name="order_items" component={OrderItems}/>
-                    <tfoot className="thead-light">
-                        <tr className="d-flex">
-                            <td scope="col" className="col-1"></td>
-                            <td scope="col" className="col-6">
-                                <Field name="total_text"
-                                    component={renderField} readOnly/>
+                    <tfoot>
+                        <tr>
+                            <Field name="total_text" colSpan={3} disabled
+                                component={TdInput} />
+                            <Field name="order_items_amount" type="number"
+                                disabled component={TdInput} />
+                            <Field name="order_items_cost" type="number"
+                                disabled component={TdInput} />
+                            <Field name="order_items_weight" type="number"
+                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <TdText label="Образцы" colSpan={5} />
+                            <Field name="samples_weight" type="number"
+                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <TdText label="Почтовый пакет" colSpan={4} />
+                            <td>
+                               <Field name="packet" size={7} component={PostPacketField}/>
                             </td>
-                            <td scope="col" className="col-1"></td>
-                            <td scope="col" className="col-1 text-right">
-                                <Field name="order_items_amount" type="number"
-                                    component={renderField} readOnly />
+                            <Field name="packet_weight" type="number"
+                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td colSpan={4}>
+                                Тариф Почты России
                             </td>
-                            <td scope="col" className="col-1 text-right">
-                                <strong>
-                                    <Field name="order_items_cost" type="number"
-                                        component={renderField} readOnly />
-                                </strong>
+                            <Field name="post_cost" label="Тариф Почты" type="number"
+                                    component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td colSpan={4}>
+                                Тариф Почты России + пакет
                             </td>
-                            <td scope="col" className="col-1 text-right">
-                                <Field name="order_items_weight" type="number"
-                                    component={renderField} readOnly />
+                            <Field name="post_cost_with_packet" type="number"
+                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td colSpan={4}>
+                                Скидка на почтовые
                             </td>
-                            <td scope="col" className="col-1"></td>
+                            <Field name="post_discount" type="number"
+                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td colSpan={4}>
+                                Почтовые с учетом скидки
+                            </td>
+                            <Field name="post_cost_with_packet_and_post_discount"
+                                type="number" disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td colSpan={4}>
+                                Итого
+                            </td>
+                            <Field name="cost_with_postal_and_post_discount"
+                                type="number" disabled component={TdInput} />
+                            <Field name="tolalWeight" type="number"
+                                disabled component={TdInput} />
                         </tr>
                     </tfoot>
                 </Table>
-                <Table size="sm" responsive bordered hover>
-                        <tbody>
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Образцы
-                                </td>
-                                <td className="col-sm-1 text-right"></td>
-                                <td className="col-sm-1 text-right">
-                                    <Field name="samples_weight" type="number"
-                                        component={renderField} readOnly />
-                                </td>
-                            </tr>
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Почтовый пакет
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                   <PostPacketField />
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <Field name="packet_weight" type="number"
-                                        component={renderField} readOnly />
-                                </td>
-                            </tr>
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Тариф Почты России&nbsp;
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <Field name='post_cost' type="number"
-                                        component={renderField} placeholder="Тариф Почты"
-                                                 // parse={(value) => value.replace('ddd', '')}
-                                                 // format={(value) => (value + 'ddd')}
-                                                 />
-                                </td>
-                                <td className="col-sm-1 text-right"></td>
-                            </tr>
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Тариф Почты России + пакет
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <Field name="post_cost_with_packet" type="number"
-                                        component={renderField} readOnly />
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                </td>
-                            </tr>
-                            {true && <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Скидка на почтовые
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <Field name="post_discount" type="number"
-                                        component={renderField} readOnly />
-                                </td>
-                                <td className="col-sm-1"></td>
-                            </tr>}
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    Почтовые {true && 'с учетом скидки'}
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <strong>
-                                    <Field name="post_cost_with_packet_and_post_discount"
-                                        type="number" component={renderField} readOnly />
-                                    </strong>
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                </td>
-                            </tr>
-                            <tr className='d-flex'>
-                                <td className="col-sm-9">
-                                    <strong>Итого</strong>
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <strong>
-                                    <Field name="cost_with_postal_and_post_discount"
-                                        type="number" component={renderField} readOnly />
-                                    </strong>
-                                </td>
-                                <td className="col-sm-1 text-right">
-                                    <strong>
-                                        <Field name="tolalWeight" type="number"
-                                            component={renderField} readOnly />
-                                    </strong>
-                                </td>
-                            </tr>
-                        </tbody>
-                </Table>
-                <hr/>
-        </form>
+        </FormStrap>
         )}
     </Form>
-
+</Loader>
 
 OrderForm.propTypes = {
     onSubmit: PropTypes.func,

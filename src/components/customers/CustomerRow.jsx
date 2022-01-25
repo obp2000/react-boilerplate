@@ -8,15 +8,20 @@ const CustomerRow = ({
     id,
     nick,
     name,
+    city,
+    pindex,
+    address,
     created_at,
     updated_at,
-    deleteObjectAction
+    deleteObjectAction,
 }) => <tr>
     <td>{id}</td>
     <td>{nick}</td>
     <td>{name}</td>
+    <td>{city && city.city}</td>
+    <td>{city && city.pindex}</td>
+    <td>{address}</td>
     <td>{created_at}</td>
-    <td>{updated_at}</td>
     <td>
         <Link to={"/customers/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
     </td>

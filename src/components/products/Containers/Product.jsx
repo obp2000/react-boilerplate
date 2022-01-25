@@ -6,8 +6,6 @@ import { ProductSelector } from '../Selectors'
 import { getObjectAction, onSubmit } from '../../redux/Products'
 import { mapObjectStateToProps } from '../../redux/mappers'
 
-// const ReduxForm = setReduxForm()(FormTemplate)
-
 class Product extends React.Component {
     constructor(props) {
         super(props)
@@ -27,8 +25,6 @@ class Product extends React.Component {
     }
 }
 
-export default connect(
-    mapObjectStateToProps('products'), {
-        getObjectAction,
-        onSubmit
-    })(Product)
+const mapStateToProps = mapObjectStateToProps('products')
+
+export default connect(mapStateToProps, { getObjectAction, onSubmit })(Product)

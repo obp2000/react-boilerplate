@@ -28,10 +28,10 @@ export class CollectionComponent extends React.Component {
         term: prevTerm
     }) {
         const {
-            accessToken,
             getObjectsAction,
             page,
-            term
+            term,
+            accessToken
         } = this.props
         if (accessToken && (page !== prevPage || term !== prevTerm)) {
             getObjectsAction(page, term, accessToken)

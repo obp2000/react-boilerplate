@@ -4,7 +4,12 @@ import WidgetErrors from './WidgetErrors'
 
 const renderField = ({input, meta, ...rest}) =>
     <>
-        <Input {...input} {...rest} />
+        <Input
+            {...input}
+            invalid={meta.touched && !!meta.error}
+            valid={meta.touched && !meta.error}
+            {...rest}
+        />
         <WidgetErrors {...meta} />
     </>
 

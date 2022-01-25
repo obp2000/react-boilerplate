@@ -43,6 +43,7 @@ export const getObjectsAction = Actions.getObjectsAction()
 export const getObjectAction = Actions.getObjectAction()
 export const onSubmit = Actions.onSubmitAction()
 export const deleteObjectAction = Actions.deleteObjectAction()
-export const onChangeProduct = Actions.searchObjectsAction()
+export const onSearch = Actions.searchObjectsAction()
+export const onBlur = Actions.clearSearchObjectsAction()
 
 export default Actions.getReducer()

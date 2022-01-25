@@ -8,7 +8,7 @@ const SearchForm = ({
         onSubmit,
     }) =>
     <Form name={'search'}
-          validate={validate}
+          // validate={validate}
           onSubmit={onSubmit}
           // enableReinitialize={true}
           >

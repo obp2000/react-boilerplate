@@ -17,6 +17,7 @@ class CollectionComponent extends React.Component {
             page,
             term
         } = this.props
+        console.log('componentDidMount')
         if (accessToken) {
             getObjectsAction(page, term, accessToken)
         }
@@ -32,12 +33,15 @@ class CollectionComponent extends React.Component {
             term,
             accessToken
         } = this.props
+        console.log('componentDidUpdate')
         if (accessToken && (page !== prevPage || term !== prevTerm)) {
             getObjectsAction(page, term, accessToken)
         }
     }
 
-    render = () => <Template { ...this.props} />
+    render() {
+        return <Template { ...this.props} />
+    }
 }
 
 export default connect(mapCollectionStateToProps('customers'), {

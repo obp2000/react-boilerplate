@@ -54,6 +54,7 @@ export class CommonActions {
         this.requestObject = createAction('requestObject')
         this.successReceiveObject = createAction('successReceiveObject')
         this.failedReceiveObject = createAction('failedReceiveObject')
+        this.setNewObject = createAction('setNewObject')
 
         this.requestUpdateObject = createAction('requestUpdateObject')
         this.successUpdateObject = createAction('successUpdateObject')
@@ -66,6 +67,7 @@ export class CommonActions {
         this.requestSearchObjects = createAction('requestSearchObjects')
         this.successSearchObjects = createAction('successSearchObjects')
         this.failedSearchObjects = createAction('failedSearchObjects')
+        this.clearSearchObjects = createAction('clearSearchObjects')
 
         this.reducer_actions[this.requestObjects] = (state) => ({
             ...state,
@@ -118,6 +120,12 @@ export class CommonActions {
                 isFetching: false,
                 loaded: false,
                 errors,
+            })
+
+        this.reducer_actions[this.setNewObject] = (state) =>
+            ({
+                ...state,
+                object: this.initObject,
             })
 
         this.reducer_actions[this.requestUpdateObject] = (state) =>
@@ -203,6 +211,12 @@ export class CommonActions {
                 errors
             })
 
+        this.reducer_actions[this.clearSearchObjects] = (state) =>
+            ({
+                ...state,
+                search_results: []
+            })
+
         this.reducer = createReducer(this.reducer_actions, this.initialState)
     }
 
@@ -262,7 +276,7 @@ export class CommonActions {
     getObjectAction = () => (id, accessToken) => dispatch => {
         if (accessToken) {
             if (id == 'new') {
-                return dispatch(this.successReceiveObject())
+                return dispatch(this.setNewObject())
             } else {
                 dispatch(this.requestObject())
                 return axios.get(`${this.base_url}/${id}`,
@@ -321,26 +335,27 @@ export class CommonActions {
                 accessToken
             }
         } = getState()
-        if (accessToken) {
-            if (typeof(term) == 'string' && term.length > 0) {
-                dispatch(this.requestSearchObjects())
-                return axios.get(`${this.base_url}/`, {
-                        params: {
-                            term: decodeURIComponent(term),
-                            page_size: 1000000
-                        },
-                        // ...tokenHeaders(accessToken)
-                    })
-                    .then(({
-                        data: {
-                            results
-                        }
-                    }) => dispatch(this.successSearchObjects(results)))
-                    .catch(errorHandler(dispatch, this.failedSearchObjects))
-            }
+        if (accessToken && typeof(term) == 'string' && term.length > 1) {
+            dispatch(this.requestSearchObjects())
+            return axios.get(`${this.base_url}/`, {
+                    params: {
+                        term: decodeURIComponent(term),
+                        page_size: 1000000
+                    },
+                    // ...tokenHeaders(accessToken)
+                })
+                .then(({
+                    data: {
+                        results
+                    }
+                }) => dispatch(this.successSearchObjects(results)))
+                .catch(errorHandler(dispatch, this.failedSearchObjects))
         }
     }
 
+    clearSearchObjectsAction = () => () => dispatch => {
+        dispatch(this.clearSearchObjects())
+    }
 
 
     // deleteObject = (id, accessToken) =>

@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../ProductField'
 import { mapCollectionStateToProps } from '../../redux/mappers'
-import { onChangeProduct } from '../../redux/Products'
+import { onSearch, onBlur } from '../../redux/Products'
 
 export default connect(mapCollectionStateToProps('products'), {
-    onChangeProduct
+    onSearch, onBlur
 })(Template)
 
 // const mapStateToProps = ({

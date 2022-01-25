@@ -1,9 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../CityField'
-import { onChangeCity } from '../../redux/Cities'
+import { onSearch, onBlur } from '../../redux/Cities'
 import { mapCollectionStateToProps } from '../../redux/mappers'
 
-export default connect(mapCollectionStateToProps('cities'), {
-    onChangeCity
-})(Template)
+const mapStateToProps = ({
+    cities: {
+        search_results,
+        isFetching
+    }
+}) => ({
+    search_results,
+    isFetching
+})
+
+export default connect(mapStateToProps, { onSearch, onBlur })(Template)

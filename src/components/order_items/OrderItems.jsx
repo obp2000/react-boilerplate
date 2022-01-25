@@ -1,26 +1,24 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Table} from 'reactstrap'
+import {Table, Button} from 'reactstrap'
 import OrderItem from './Containers/OrderItem'
 import { addOrderItemAction } from '../redux/Orders'
 
 const OrderItems = ({
     fields
 }) =>   <>
-            <thead className="thead-light">
-                <tr className="d-flex">
-                    <th scope="col" className="col-1">№ п/п</th>
-                    <th scope="col" className="col-6">Наименование</th>
-                    <th scope="col" className="col-1">Цена, руб.</th>
-                    <th scope="col" className="col-1">Метраж</th>
-                    <th scope="col" className="col-1">Стоимость, руб.</th>
-                    <th scope="col" className="col-1">Вес, гр.</th>
-                    <th scope="col" className="col-1">
-                        <button onClick={addOrderItemAction(fields)}
-                                type="button"
-                                className="btn btn-outline-primary btn-sm">
+            <thead>
+                <tr>
+                    <th scope='col'>№ п/п</th>
+                    <th scope='col'>Наименование</th>
+                    <th scope='col'>Цена, руб.</th>
+                    <th scope='col'>Метраж</th>
+                    <th scope='col'>Стоимость, руб.</th>
+                    <th scope='col'>Вес, гр.</th>
+                    <th scope='col'>
+                        <Button size='sm' outline onClick={addOrderItemAction(fields)}>
                             Добавить
-                        </button>
+                        </Button>
                     </th>
                 </tr>
             </thead>

@@ -1,4 +1,4 @@
-export const PriceCoeffs = [
+export const PriceCoeffs = ([
     1,
     1.5,
     1.6,
@@ -9,4 +9,4 @@ export const PriceCoeffs = [
     1.2,
     1.3,
     1.4
-]
+])

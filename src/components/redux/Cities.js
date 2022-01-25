@@ -10,6 +10,8 @@ const redirect_url = '/cities'
 
 const Actions = new CommonActions({index_url, redirect_url, initObject})
 
-export const onChangeCity = Actions.searchObjectsAction()
+export const onSearch = Actions.searchObjectsAction()
+
+export const onBlur = Actions.clearSearchObjectsAction()
 
 export default Actions.getReducer()

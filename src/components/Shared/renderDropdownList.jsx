@@ -7,15 +7,29 @@ const renderDropdownList = ({
   input,
   meta,
   ...rest
-}) => <>
-        <DropdownList
+}) => {
+    // let containerClassName
+    // if (meta.touched) {
+    //   if (meta.error) {
+    //     containerClassName = 'is-invalid'
+    //   } else {
+    //     containerClassName ='is-valid'
+    //   }
+    // }
+    // else {
+    //   containerClassName = 'form-control'
+    // }
+    return <>
+      <DropdownList
           {...input}
           data={meta.data}
           messages={WidgetMessages}
+          // containerClassName={containerClassName}
           {...rest}
         />
         <WidgetErrors {...meta} />
-      </>
+    </>
+    }
 
 export default renderDropdownList
 

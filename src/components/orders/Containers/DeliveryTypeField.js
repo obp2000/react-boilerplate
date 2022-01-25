@@ -5,11 +5,11 @@ import Template from '../DeliveryTypeField'
 const mapStateToProps = ({
     orders: {
         object: {
-            delivery_types = []
+            delivery_types: search_results = []
         }
     }
 }) => ({
-    delivery_types
+    search_results
 })
 
 export default connect(mapStateToProps)(Template)

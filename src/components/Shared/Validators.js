@@ -2,7 +2,8 @@ import {
     blankErrorText,
     invalidEmail,
     shortPassword,
-    invalidPasswordConfirmation
+    invalidPasswordConfirmation,
+    notIntegerText
 } from './Texts'
 
 export const notBlank = (values, fields) =>
@@ -36,3 +37,11 @@ export const validPasswordConfirmation = (values, password_field, password_confi
     }
     return error
 }
+
+export const isInteger = (values, fields) =>
+    fields.reduce((errors, field) => {
+        if (values[field] && !Number.isInteger(Number(values[field]))) {
+            errors[field] = notIntegerText
+        }
+        return errors
+    }, {})

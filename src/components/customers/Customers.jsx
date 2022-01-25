@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Loader from 'react-loader'
 import { Link } from 'react-router-dom'
+import { Table } from 'reactstrap'
 import CustomerRow from './Containers/CustomerRow'
 import Pagination from '../Pagination/Pagination'
 import SearchForm from '../Search/Containers/SearchForm'
@@ -15,9 +16,8 @@ const Customers = ({
     page,
     isFetching,
     errors
-}) => <Loader loaded={!isFetching}>
-      <div>
-          {errors && <Errors errors={errors}/>}
+}) => <div>
+        {errors && <Errors errors={errors}/>}
           <div className="row">
               <div className="col-sm-7">
                   <h3>Покупатели ({totalCount})</h3>
@@ -26,14 +26,17 @@ const Customers = ({
                   <SearchForm table='customers'/>
               </div>
           </div>
-        <table className="table table-sm table-striped table-bordered table-hover">
+        <Loader loaded={!isFetching}>
+        <Table size='sm' bordered striped hover className='table-secondary'>
           <thead className="thead-light">
               <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Ник</th>
                   <th scope="col">ФИО</th>
+                  <th scope="col">Город</th>
+                  <th scope="col">Индекс</th>
+                  <th scope="col">Адрес</th>
                   <th scope="col">Создан</th>
-                  <th scope="col">Обновлен</th>
                   <th scope="col">
                       <Link to="/customers/new" className="btn btn-outline-primary btn-sm">Новый</Link>
                   </th>
@@ -41,12 +44,13 @@ const Customers = ({
               </tr>
           </thead>
           <tbody>
-            {results.map((customer, index) => <CustomerRow {...customer} key={index} />)}
+              {results.map((customer, index) => <CustomerRow {...customer} key={index} />)}
           </tbody>
-        </table>
+        </Table>
+        </Loader>
         <Pagination {...{table: 'customers', totalPages, page, search}} />
       </div>
-</Loader>
+
 
 Customers.propTypes = {
     results: PropTypes.array.isRequired,

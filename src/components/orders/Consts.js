@@ -1,4 +1,4 @@
-export const PostPackets = [25, 27, 42, 50, 55, 72, 85]
+export const PostPackets = ([25, 27, 42, 50, 55, 72, 85])
 export const PostPacketWeight = 50
 export const SamplesWeight = 50
 export const GiftText = 'Подарок'

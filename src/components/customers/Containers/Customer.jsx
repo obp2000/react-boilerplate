@@ -17,11 +17,16 @@ class Customer extends React.Component {
             accessToken,
             getObjectAction
         } = this.props
+        // console.log('customer DidMount')
         getObjectAction(id, accessToken)
     }
 
-    render = () => <FormTemplate {...this.props} />
+    render() {
+        return <FormTemplate {...this.props} />
+    }
 }
+
+// const mapStateToProps = mapObjectStateToProps('customers')
 
 export default connect(mapObjectStateToProps('customers'), {
     getObjectAction,

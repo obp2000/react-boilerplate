@@ -2,7 +2,7 @@ import { createAction, createReducer } from 'redux-act'
 import axios from 'axios'
 import { push } from 'connected-react-router'
 import config from '../Config'
-import { closeModal } from './NavBar'
+// import { closeModal } from './NavBar'
 import { errorHandler, formErrorHandler } from './ErrorHandlers'
 
 const reducer_actions = {}
@@ -19,6 +19,9 @@ const failedSignout = createAction('failedSignout')
 const requestUser = createAction('requestUser')
 const successReceiveUser = createAction('successReceiveUser')
 const failedReceiveUser = createAction('failedReceiveUser')
+export const toggleModal = createAction('toggleModal')
+export const closeModal = createAction('closeModal')
+export const toggleLogin = createAction('toggleLogin')
 
 export const tokenHeaders = (accessToken) => {
     return {
@@ -41,6 +44,8 @@ const initialState = {
     isAuthenticated: false,
     accessToken: null,
     object: initUser,
+    // modal: false,
+    // login: true,
     isFetching: false,
     loaded: false,
     errors: null
@@ -140,6 +145,24 @@ reducer_actions[failedReceiveUser] = (state, errors) =>
         isFetching: false,
         loaded: false,
         errors
+    })
+
+reducer_actions[toggleModal] = (state) =>
+    ({
+        ...state,
+        modal: !state.modal
+    })
+
+reducer_actions[closeModal] = (state) =>
+    ({
+        ...state,
+        modal: false
+    })
+
+reducer_actions[toggleLogin] = (state) =>
+    ({
+        ...state,
+        login: !state.login
     })
 
 const auth = createReducer(reducer_actions, initialState)

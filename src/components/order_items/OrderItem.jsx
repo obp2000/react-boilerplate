@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Field } from 'react-final-form'
+import TdInput from '../Shared/TdInput'
 import renderField from '../Shared/RenderField'
 import DeleteButton from '../Shared/DeleteButton'
 import ProductField from '../products/Containers/ProductField'
@@ -10,30 +11,25 @@ const OrderItem = ({
     price,
     amount,
     index,
-    row_class_name,
+    // row_class_name,
     deleteOrderItemAction
-}) => <tr className={row_class_name}>
-        <th scope="row" className="col-sm-1">{index+1}</th>
-        <td className="col-sm-6">
-            <ProductField order_item_name={order_item_name}/>
+}) => <tr>
+        <th scope="row">
+            {index+1}
+        </th>
+        <td>
+            <Field name={`${order_item_name}.product`} label="Наименование"
+                component={ProductField} />
         </td>
-        <td className="col-sm-1">
-            <Field name={`${order_item_name}.price`} type="number"
-                component={renderField} placeholder="Цена"/>
-        </td>
-        <td className="col-sm-1">
-            <Field name={`${order_item_name}.amount`} type="number"
-                component={renderField} placeholder="Количество" step="0.1" />
-        </td>
-        <td className="col-sm-1 text-right">
-            <Field name={`${order_item_name}.cost`} type="number"
-                component={renderField} readOnly />
-        </td>
-        <td className="col-sm-1 text-right">
-            <Field name={`${order_item_name}.weight`} type="number"
-                component={renderField} readOnly />
-        </td>
-        <td className="col-sm-1">
+        <Field name={`${order_item_name}.price`} label="Цена"
+            type="number" step={1} component={TdInput} />
+        <Field name={`${order_item_name}.amount`} label="Количество"
+            type="number" step={0.1} component={TdInput} />
+        <Field name={`${order_item_name}.cost`} type="number"
+            disabled component={TdInput} />
+        <Field name={`${order_item_name}.weight`} type="number"
+            disabled component={TdInput} />
+        <td>
             <DeleteButton action={deleteOrderItemAction} />
         </td>
     </tr>
@@ -43,7 +39,7 @@ OrderItem.propTypes = {
     price: PropTypes.number,
     amount: PropTypes.number,
     index: PropTypes.number,
-    row_class_name: PropTypes.string,
+    // row_class_name: PropTypes.string,
     deleteOrderItemAction: PropTypes.func.isRequired
 }
 

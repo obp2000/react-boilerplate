@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
+import { Container } from 'reactstrap'
 // import {
 //   TransitionGroup,
 //   CSSTransition
@@ -22,7 +23,7 @@ import User from './users/Containers/User'
 
 const Layout = ({history}) => {
   return <ConnectedRouter history={history}>
-    <div className="container">
+    <Container className="bg-light border" fluid="sm">
       <NavBar/>
       <Route exact path="/" component={Products}/>
       <Route path="/signup" component={RegisterForm}/>
@@ -39,7 +40,7 @@ const Layout = ({history}) => {
             <Route path="/customers/:id" component={Customer}/>
             <PrivateRoute path="/user/" component={User}/>
       </Switch>
-     </div>
+     </Container>
   </ConnectedRouter>
 }
 
