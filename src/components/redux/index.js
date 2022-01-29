@@ -1,15 +1,11 @@
 import { combineReducers } from 'redux'
-// import { reducer as formReducer } from 'redux-form'
 import { connectRouter } from 'connected-react-router'
 import auth from './auth'
 import customers from './Customers'
 import products from './Products'
 import orders from './Orders'
 import cities from './Cities'
-// import navBar from './NavBar'
-// import postCost from './PostCost'
-// import delivery_types from './DeliveryTypes'
-// import user from './Users'
+import errors from './Errors'
 
 const rootReducer = (history) => combineReducers({
 	router: connectRouter(history),
@@ -17,11 +13,8 @@ const rootReducer = (history) => combineReducers({
 	products,
 	orders,
 	cities,
-	// form: formReducer,
 	auth,
-	// navBar,
-	// postCost,
-	// delivery_types
+	errors
 })
 
 export default rootReducer

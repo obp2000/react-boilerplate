@@ -7,7 +7,8 @@ import { Container } from 'reactstrap'
 //   TransitionGroup,
 //   CSSTransition
 // } from "react-transition-group"
-import NavBar from './NavBar/Containers/NavBar'
+import Errors from './Shared/Errors'
+import NavBar from './NavBar/NavBar'
 import Products from './products/Containers/Products'
 import Product from './products/Containers/Product'
 import Customers from './customers/Containers/Customers'
@@ -15,16 +16,17 @@ import Customer from './customers/Containers/Customer'
 import Orders from './orders/Containers/Orders'
 import Order from './orders/Containers/Order'
 // import Profile from './profile/Containers/Profile'
-import PrivateRoute from './privateRoute'
-import RegisterForm from './auth/Containers/RegisterForm'
-import LoginForm from './auth/Containers/LoginForm'
+import PrivateRoute from './Shared/privateRoute'
+import RegisterForm from './auth/RegisterForm'
+import LoginForm from './auth/LoginForm'
 import User from './users/Containers/User'
 // import Pagination from './Pagination/Containers/Pagination'
 
 const Layout = ({history}) => {
   return <ConnectedRouter history={history}>
-    <Container className="bg-light border" fluid="sm">
-      <NavBar/>
+    <Container className="container-xxl my-md-4 bd-layout">
+      <Route path="/" component={Errors} />
+      <Route path="/" component={NavBar} />
       <Route exact path="/" component={Products}/>
       <Route path="/signup" component={RegisterForm}/>
       <Route path="/login" component={LoginForm}/>
@@ -36,7 +38,7 @@ const Layout = ({history}) => {
             <Route exact path="/orders" component={Orders}/>
             <Route path="/orders/:id" component={Order}/>
             <Route exact path="/customers/pages/:page" component={Customers}/>
-            <Route exact path="/customers" component={Customers}/>
+            <Route exact path="/customers" component={Customers} />
             <Route path="/customers/:id" component={Customer}/>
             <PrivateRoute path="/user/" component={User}/>
       </Switch>

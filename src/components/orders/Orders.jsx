@@ -1,32 +1,38 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Table } from 'reactstrap'
 import Loader from 'react-loader'
-import OrderRow from './Containers/OrderRow'
+import OrderRow from './OrderRow'
 import Pagination from '../Pagination/Pagination'
-import SearchForm from '../Search/Containers/SearchForm'
-import Errors from '../Errors'
+import ObjectsPageHeader from '../Shared/ObjectsPageHeader'
+import { deleteObjectAction } from '../redux/ServerActions'
+import { Actions } from '../redux/Orders'
+import LinkToNew from '../Shared/LinkToNew'
 
-const Orders = ({
-    results,
-    totalCount,
-    totalPages,
-    search,
-    page,
-    isFetching,
-    errors
-}) => <Loader loaded={!isFetching}>
-        <div>
-            {errors && <Errors errors={errors}/>}
-            <div className="row">
-                <div className="col-sm-7">
-                  <h3>Заказы ({totalCount})</h3>
-                </div>
-                <div className="col-sm-5">
-                  <SearchForm table='orders'/>
-                </div>
-            </div>
-            <table className="table table-sm table-striped table-bordered table-hover">
+const Orders = props => {
+    const loaded = useSelector(({
+        orders: {
+            results = [],
+            totalCount,
+            isFetching,
+        },
+        auth: {
+            accessToken
+        }
+    }) => ({
+        results,
+        totalCount,
+        isFetching,
+        accessToken
+    }))
+    const dispatch = useDispatch()
+    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
+    return <Loader loaded={!loaded.isFetching}>
+        <>
+            <ObjectsPageHeader title='Заказы' totalCount={loaded.totalCount} />
+            <Table size='sm' bordered striped hover className='table-secondary'>
                 <thead className="thead-light">
                     <tr>
                         <th scope="col">Id</th>
@@ -34,32 +40,19 @@ const Orders = ({
                         <th scope="col">Сумма</th>
                         <th scope="col">Создана</th>
                         <th scope="col">Изменена</th>
-                        <th scope="col">
-                            <Link to="/orders/new" className="btn btn-outline-primary btn-sm">Новый</Link>
+                        <th scope="col" colSpan={2}>
+                            <LinkToNew {...props}/>
                         </th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {results.map((order, index) => <OrderRow {...order} key={index} />)}
+                    {loaded.results.map((order, key) =>
+                        <OrderRow {...{...order, deleteObject, key, ...props}} />)}
                 </tbody>
-            </table>
-            <Pagination {...{table: 'orders', totalPages, page, search}} />
-        </div>
+            </Table>
+            <Pagination {...props} />
+        </>
     </Loader>
-
-Orders.propTypes = {
-    results: PropTypes.array.isRequired,
-    totalCount: PropTypes.number,
-    totalPages: PropTypes.number,
-    search: PropTypes.string,
-    page: PropTypes.number,
-    isFetching: PropTypes.bool,
-    errors: PropTypes.array
-}
-
-Orders.defaultProps = {
-    results: []
 }
 
 export default Orders

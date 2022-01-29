@@ -1,21 +1,26 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Field } from 'react-final-form'
-import { FormGroup, Col } from 'reactstrap'
-import DropdownList from '../Shared/DropdownList'
-import Label from '../Shared/Label'
+import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
+import WrapInCol from '../Shared/WrapInCol'
 
-const DeliveryTypeField = params =>
-    <Col sm={params.size}>
-        <FormGroup row>
-            <Label {...{label_col_size: 2, ...params}} />
-            <Col>
-                <DropdownList {...{dataKey: 'id', textField: 'label', ...params}} />
-            </Col>
-        </FormGroup>
-    </Col>
+const DeliveryTypeField = DropdownListFormGroup({
+    label_col_size: 2,
+    dataKey: 'id',
+    textField: 'label'
+})
 
-export default DeliveryTypeField
+export default WrapInCol(DeliveryTypeField)
+
+// const DeliveryTypeField = params =>
+//     <Col sm={params.size}>
+//         <FormGroup row>
+//             <Label {...{label_col_size: 2, ...params}} />
+//             <Col>
+//                 <DropdownList {...{dataKey: 'id', textField: 'label', ...params}} />
+//             </Col>
+//         </FormGroup>
+//     </Col>
+
 
                 // <Label for={params.input.name} sm={2}>
                 //     {params.label}

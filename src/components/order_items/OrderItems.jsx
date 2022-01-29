@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Table, Button} from 'reactstrap'
-import OrderItem from './Containers/OrderItem'
+import OrderItem from './OrderItem'
 import { addOrderItemAction } from '../redux/Orders'
 
 const OrderItems = ({

@@ -1,69 +1,65 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Loader from 'react-loader'
-import { Link } from 'react-router-dom'
 import { Table } from 'reactstrap'
-import CustomerRow from './Containers/CustomerRow'
+import CustomerRow from './CustomerRow'
 import Pagination from '../Pagination/Pagination'
-import SearchForm from '../Search/Containers/SearchForm'
-import Errors from '../Errors'
+import ObjectsPageHeader from '../Shared/ObjectsPageHeader'
+import { deleteObjectAction } from '../redux/ServerActions'
+import { Actions } from '../redux/Customers'
+import LinkToNew from '../Shared/LinkToNew'
 
-const Customers = ({
-    results,
-    totalCount,
-    totalPages,
-    search,
-    page,
-    isFetching,
-    errors
-}) => <div>
-        {errors && <Errors errors={errors}/>}
-          <div className="row">
-              <div className="col-sm-7">
-                  <h3>Покупатели ({totalCount})</h3>
-              </div>
-              <div className="col-sm-5">
-                  <SearchForm table='customers'/>
-              </div>
-          </div>
-        <Loader loaded={!isFetching}>
-        <Table size='sm' bordered striped hover className='table-secondary'>
-          <thead className="thead-light">
-              <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Ник</th>
-                  <th scope="col">ФИО</th>
-                  <th scope="col">Город</th>
-                  <th scope="col">Индекс</th>
-                  <th scope="col">Адрес</th>
-                  <th scope="col">Создан</th>
-                  <th scope="col">
-                      <Link to="/customers/new" className="btn btn-outline-primary btn-sm">Новый</Link>
-                  </th>
-                  <th scope="col"></th>
-              </tr>
-          </thead>
-          <tbody>
-              {results.map((customer, index) => <CustomerRow {...customer} key={index} />)}
-          </tbody>
-        </Table>
-        </Loader>
-        <Pagination {...{table: 'customers', totalPages, page, search}} />
-      </div>
-
-
-Customers.propTypes = {
-    results: PropTypes.array.isRequired,
-    totalCount: PropTypes.number,
-    totalPages: PropTypes.number,
-    search: PropTypes.string,
-    page: PropTypes.number,
-    isFetching: PropTypes.bool,
-    errors: PropTypes.array
+const Customers = props => {
+    const loaded = useSelector(({
+        customers: {
+            results = [],
+            totalCount,
+            isFetching,
+        },
+        auth: {
+            accessToken
+        }
+    }) => ({
+        results,
+        totalCount,
+        isFetching,
+        accessToken
+    }))
+    // console.log('props ', props)
+    const dispatch = useDispatch()
+    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
+    return <>
+        <ObjectsPageHeader title='Покупатели' totalCount={loaded.totalCount} />
+        <Loader loaded={!loaded.isFetching } >
+            <Table size='sm' bordered striped hover className='table-secondary'>
+                  <thead className="thead-light">
+                      <tr>
+                          <th scope="col">Id</th>
+                          <th scope="col">Ник</th>
+                          <th scope="col">ФИО</th>
+                          <th scope="col">Город</th>
+                          <th scope="col">Индекс</th>
+                          <th scope="col">Адрес</th>
+                          <th scope="col">Создан</th>
+                          <th scope="col" colSpan={2}>
+                                <LinkToNew {...props}/>
+                          </th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {loaded.results.map((customer, key) =>
+                            <CustomerRow {...{...customer, deleteObject, key, ...props}} />)}
+                  </tbody>
+                </Table>
+                </Loader>
+                <Pagination { ...props } />
+        </>
 }
 
-Customers.defaultProps = {
-    results: []
-}
+// Customers.propTypes = {
+//     page: PropTypes.string,
+//     // deleteObjectAction: PropTypes.func.isRequired
+// }
 
 export default Customers

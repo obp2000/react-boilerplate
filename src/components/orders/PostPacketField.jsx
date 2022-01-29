@@ -1,41 +1,16 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { FormGroup, Col } from 'reactstrap'
-import DropdownList from '../Shared/DropdownList'
-import { PostPackets as search_results } from './Consts'
-import Label from '../Shared/Label'
+// import { PostPackets as search_results } from './Consts'
+import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
+import WrapInCol from '../Shared/WrapInCol'
 
-const PostPacketField = params =>
-    <Col sm={params.size}>
-            <FormGroup row>
-                <Label {...{label_col_size: 2, ...params}} />
-                <Col>
-                    <DropdownList {...{textField: 'name', search_results, ...params}} />
-                </Col>
-            </FormGroup>
-        </Col>
+const PostPacketField = DropdownListFormGroup({
+    label_col_size: 2,
+    dataKey: 'id',
+    textField: 'label'
+})
 
-export default PostPacketField
-
-
-                // <Label for={params.input.name} sm={2}>
-                //     {params.label}
-                // </Label>
-
-                    // <DropdownList
-                    //     {...input}
-                    //     id={input.name}
-                    //     placeholder={label}
-                    //     // dataKey='id'
-                    //     textField='name'
-                    //     data={PostPackets}
-                    //     filter={"contains"}
-                    //     invalid={(meta.touched && !!meta.error) ? 'true' : null}
-                    //     valid={(meta.touched && !meta.error) ? 'true' : null}
-                    //     messages={WidgetMessages}
-                    //     />
-                    // <WidgetErrors {...meta} />
-
+export default WrapInCol(PostPacketField)
 
 
 // const PostPacketField = ({ input: { name } }) =>

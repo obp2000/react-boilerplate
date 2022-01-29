@@ -1,19 +1,23 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { PaginationItem } from 'reactstrap'
 
-const PageItem = ({ label, pathname, className, search }) =>
-    <li className={className}>
-        <Link to={{ pathname, search }} className="page-link">
+const PageItem = ({
+        label,
+        to,
+        active,
+    }) =>
+    <PaginationItem active={active}>
+        <Link to={to} className="page-link">
             {label}
         </Link>
-    </li>
+    </PaginationItem>
 
 PageItem.propTypes = {
-    className: PropTypes.string,
     label: PropTypes.string,
-    pathname: PropTypes.string,
-    search: PropTypes.string
+    to: PropTypes.object,
+    active: PropTypes.bool,
 }
 
 export default PageItem

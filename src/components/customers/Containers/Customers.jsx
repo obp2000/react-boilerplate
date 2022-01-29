@@ -2,25 +2,27 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../Customers'
-import { getObjectsAction } from '../../redux/Customers'
-import { mapCollectionStateToProps } from '../../redux/mappers'
+import { getObjectsAction } from '../../redux/ServerActions'
+import { Actions } from '../../redux/Customers'
 
-class CollectionComponent extends React.Component {
+class Customers extends React.Component {
     constructor(props) {
         super(props)
     }
 
     componentDidMount() {
         const {
-            accessToken,
             getObjectsAction,
-            page,
-            term
+            match: {
+                params: {
+                    page
+                },
+                term = ''
+            }
         } = this.props
         console.log('componentDidMount')
-        if (accessToken) {
-            getObjectsAction(page, term, accessToken)
-        }
+        console.log('mount props ', this.props)
+        getObjectsAction(page, term)
     }
 
     componentDidUpdate({
@@ -29,21 +31,26 @@ class CollectionComponent extends React.Component {
     }) {
         const {
             getObjectsAction,
-            page,
-            term,
-            accessToken
+            // term,
+            match: {
+                params: {
+                    page
+                },
+                term = ''
+            }
         } = this.props
         console.log('componentDidUpdate')
-        if (accessToken && (page !== prevPage || term !== prevTerm)) {
-            getObjectsAction(page, term, accessToken)
+        console.log('update props ', this.props)
+        if (page !== prevPage || term !== prevTerm) {
+            getObjectsAction(page, term)
         }
     }
 
     render() {
-        return <Template { ...this.props} />
+        return <Template {...this.props} />
     }
 }
 
-export default connect(mapCollectionStateToProps('customers'), {
-    getObjectsAction
-})(CollectionComponent)
+export default connect(null, {
+    getObjectsAction: getObjectsAction(Actions),
+})(Customers)

@@ -26,20 +26,18 @@ export const needGift = order_items_cost => order_items_cost >= 2000
 export const tolalWeight = (order_items_weight, order_items_cost) => order_items_weight +
     PostPacketWeight + SamplesWeight + (needGift(order_items_cost) ? GiftWeight : 0)
 
-export const order_calculator = createDecorator({
+export const order_calculator = createDecorator(
+    {
         field: 'customer',
         updates: ({
             name: customer_name,
             address: customer_address,
-            city: {
-                pindex,
-                city
-            }
-        } = { city: {} }) => ({
+            city
+        }) => ({
             customer_name,
             customer_address,
-            pindex,
-            city
+            pindex: city && city.pindex,
+            city: city && city.city
         })
     }, {
         field: 'post_cost',

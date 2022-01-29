@@ -1,4 +1,4 @@
-import { CommonActions } from './common_actions2'
+import { CommonActions } from './CommonActions'
 import { initObject as initCustomer } from './Customers'
 import { initObject as initProduct } from './Products'
 
@@ -21,13 +21,14 @@ export const initOrderItem = {
     _destroy: false,
 }
 
-const Actions = new CommonActions({ index_url, redirect_url, initObject })
-
-export const getObjectsAction = Actions.getObjectsAction()
-export const getObjectAction = Actions.getObjectAction()
-export const onSubmit = Actions.onSubmitAction()
-export const deleteObjectAction = Actions.deleteObjectAction()
-export const onSearchOrder = Actions.searchObjectsAction()
+export const Actions = new CommonActions({ index_url, redirect_url, initObject })
 export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
 
 export default Actions.getReducer()
+
+
+// export const getObjectsAction = Actions.getObjectsAction()
+// export const getObjectAction = Actions.getObjectAction()
+// export const onSubmit = Actions.onSubmitAction()
+// export const deleteObjectAction = Actions.deleteObjectAction()
+// export const onSearchOrder = Actions.searchObjectsAction()

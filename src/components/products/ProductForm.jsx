@@ -1,74 +1,118 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Form, Field } from 'react-final-form'
-import { Form as FormStrap, Row, Col, Card, CardBody, CardTitle, CardImg } from 'reactstrap'
-// import FormGroup from './FormGroup'
+import { Form as FormStrap, Row, Col } from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import ImageFormGroup from '../Shared/ImageFormGroup'
 import Loader from 'react-loader'
 import FormHeader from '../Shared/FormHeader'
-import ImageCol from './ImageCol'
-import Errors from '../Errors'
-
+import ProductImage from './ProductImage'
 import { validate } from './Validators'
 import { calculator } from './Selectors'
 
-const ProductForm = ({
-        onSubmit,
-        initialValues,
+import { onSubmitAction } from '../redux/ServerActions'
+import { Actions } from '../redux/Products'
+
+const ProductForm = () => {
+    const loaded = useSelector(({
+        products: {
+            object,
+            isFetching,
+        },
+        auth: {
+            accessToken
+        }
+    }) => ({
+        object,
         isFetching,
-        errors
-    }) =>
-    <Form name={'product'}
+        accessToken
+    }))
+    const dispatch = useDispatch()
+    return <Form name={'product'}
         validate={validate}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
         decorators={[calculator]}
-        initialValues={initialValues}>
+        initialValues={loaded.object}>
         {({ handleSubmit, submitError, ...rest }) => (
             <FormStrap onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-body rounded" >
-                {errors && <Errors errors={errors}/>}
                 <FormHeader {...{title: 'Ткань', ...rest}}/>
                     <Row>
-                        <Field name="id" label="Id" size={2} disabled component={FloatingFormGroup} />
-                        <ImageCol image={initialValues.image} size={2} />
-                        <Field name="name" label="Название*" size={8} component={FloatingFormGroup} />
-                        <Field name="price"
-                            label="Цена, руб./м*"
-                            type='number'
-                            size={2}
-                            component={FloatingFormGroup}
-                            // format={(value) => value + 'руб./м'}
-                            // parse={(value) => value.replace('руб./м', '')}
-                            // formatOnBlur={true}
-                        />
-                        <Field name="price_pre" label="Цена до выкупа, руб./м" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="width" label="Ширина, см" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="density" label="Плотность, гр/м2" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="width_shop" label="Ширина для витрины, см" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="density_shop" label="Плотность для витрины, гр/м2" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="new_image" label="Фото" size={3} component={ImageFormGroup} />
-                        <Field name="dollar_price" label="Цена, $/кг" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="dollar_rate" label="Курс $" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="weight_for_count" label="Вес отреза, гр" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="length_for_count" label="Длина отреза, м" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="weight" label="Вес рулона, кг" type='number' size={2} component={FloatingFormGroup} />
-                        <Field name="prices" label="Себестоимость, руб./м" size={9} disabled component={FloatingFormGroup} />
-                        <Field name="density_for_count" label="Плотность отреза, гр/м2" size={3} disabled component={FloatingFormGroup} />
-                        <Field name="meters_in_roll" label="Метров в рулоне" size={2} disabled component={FloatingFormGroup} />
+                        <Col sm={2}>
+                            <Field name="id" label="Id"
+                                   disabled component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <ProductImage image={loaded.object.image} />
+                        </Col>
+                        <Col sm={8}>
+                            <Field name="name" label="Название*"
+                                   component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="price" label="Цена, руб./м*"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="price_pre" label="Цена до выкупа, руб./м"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="width" label="Ширина, см"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="density" label="Плотность, гр/м2"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="width_shop" label="Ширина для витрины, см"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="density_shop" label="Плотность для витрины, гр/м2"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={3}>
+                            <Field name="new_image" label="Фото"
+                                   component={ImageFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="dollar_price" label="Цена, $/кг"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="dollar_rate" label="Курс $"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="weight_for_count" label="Вес отреза, гр"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="length_for_count" label="Длина отреза, м"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="weight" label="Вес рулона, кг"
+                                   type='number' component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={9}>
+                            <Field name="prices" label="Себестоимость, руб./м"
+                                   disabled component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={3}>
+                            <Field name="density_for_count" label="Плотность отреза, гр/м2"
+                                   disabled component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="meters_in_roll" label="Метров в рулоне"
+                               disabled component={FloatingFormGroup} />
+                        </Col>
                     </Row>
-        </FormStrap>
+                </FormStrap>
     )}
     </Form>
-
-ProductForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    initialValues: PropTypes.object,
-    isFetching: PropTypes.bool.isRequired,
-    errors: PropTypes.array
-}
-
-ProductForm.defaultProps = {
-    initialValues: {}
 }
 
 export default ProductForm

@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { goBack } from 'connected-react-router'
 import { Button } from 'reactstrap'
 
-const BackButton = ({ goBack }) =>
-    <Button
+const BackButton = () => {
+	const dispatch = useDispatch()
+    return <Button
 		color = "primary"
 		outline size = "sm"
-		onClick={goBack}
+		onClick={() => dispatch(goBack())}
 	>
 		Назад
 	</Button>
-
-BackButton.propTypes = {
-    goBack: PropTypes.func.isRequired
 }
 
 export default BackButton

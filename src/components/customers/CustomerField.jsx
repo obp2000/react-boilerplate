@@ -1,21 +1,28 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { FormGroup, Col } from 'reactstrap'
-import DropdownList from '../Shared/DropdownList'
-import Label from '../Shared/Label'
+import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
+import WrapInCol from '../Shared/WrapInCol'
+import { Actions } from '../redux/Customers'
 
-const CustomerField = params =>
-    <Col sm={params.size}>
-        <FormGroup row>
-            <Label {...{label_col_size: 2, ...params}} />
-            <Col>
-                <DropdownList {...{textField: 'nick', ...params}} />
-            </Col>
-        </FormGroup>
-    </Col>
+const CustomerField = DropdownListFormGroup({
+    Actions,
+    selector: 'customers',
+    label_col_size: 2,
+    textField: 'nick',
+})
 
-export default CustomerField
+export default WrapInCol(CustomerField)
 
+
+// const CustomerField = params =>
+//     <Col sm={params.size}>
+//         <FormGroup row>
+//             <Label {...{label_col_size: 2, ...params}} />
+//             <Col>
+//                 <DropdownList {...{textField: 'nick', ...params}} />
+//             </Col>
+//         </FormGroup>
+//     </Col>
 
             // <Label for={params.input.name} sm={2}>
             //     {params.label}

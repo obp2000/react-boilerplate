@@ -61,11 +61,11 @@ const resolve = {
     }
 }
 
-const externals = {
-    'config': JSON.stringify({
-        BACKEND: "http://127.0.0.1:3000"
-    })
-}
+// const externals = {
+//     'config': JSON.stringify({
+//         BACKEND: "http://127.0.0.1:3000"
+//     })
+// }
 
 const html_settings = {
     // template: "./src/index.html",
@@ -101,7 +101,7 @@ module.exports = {
         ]
     },
     resolve,
-    externals,
+    // externals,
     plugins: [new HtmlWebpackPlugin(html_settings)],
     devtool
 }

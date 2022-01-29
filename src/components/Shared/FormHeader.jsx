@@ -1,26 +1,29 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { CardHeader, CardTitle } from 'reactstrap'
+import { Row, Col } from 'reactstrap'
 import SubmitButton from '../Shared/SubmitButton'
-import BackButton from '../Shared/Containers/BackButton'
+import BackButton from '../Shared/BackButton'
 
 const FormHeader = ({
         title,
         submitting,
         invalid,
-        pristine
+        pristine,
+        children
     }) =>
-    <CardHeader>
-        <CardTitle tag="h4">
+    <Row>
+        <Col sm={2}>
             <BackButton />
-            &nbsp;
-            {title}
-            &nbsp;
+        </Col>
+        <Col sm={6}>
+            <h4>
+                {title}{children}
+            </h4>
+        </Col>
+        <Col sm={2}>
             <SubmitButton submitDisabled={submitting || invalid || pristine}/>
-        </CardTitle>
-    </CardHeader>
-
-export default FormHeader
+        </Col>
+    </Row>
 
 FormHeader.propTypes = {
     title: PropTypes.string,
@@ -28,3 +31,5 @@ FormHeader.propTypes = {
     invalid: PropTypes.bool,
     pristine: PropTypes.bool
 }
+
+export default FormHeader

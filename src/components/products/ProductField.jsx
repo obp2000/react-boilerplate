@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import DropdownList from '../Shared/DropdownList'
+import { Actions } from '../redux/Products'
 
 const ProductField = params =>
-    <DropdownList {...{textField: 'name', ...params}} />
+    <DropdownList {...{
+        Actions,
+        selector: 'products',
+        textField: 'name',
+        ...params}} />
 
 export default ProductField
 

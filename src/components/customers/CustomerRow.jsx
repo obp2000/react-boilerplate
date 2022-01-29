@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
-// import DeleteCustomerButton from './Containers/DeleteCustomerButton'
 import DeleteButton from '../Shared/DeleteButton'
+import LinkToEdit from '../Shared/LinkToEdit'
 
 const CustomerRow = ({
     id,
@@ -13,7 +12,9 @@ const CustomerRow = ({
     address,
     created_at,
     updated_at,
-    deleteObjectAction,
+    // accessToken,
+    deleteObject,
+    ...rest
 }) => <tr>
     <td>{id}</td>
     <td>{nick}</td>
@@ -23,10 +24,10 @@ const CustomerRow = ({
     <td>{address}</td>
     <td>{created_at}</td>
     <td>
-        <Link to={"/customers/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
+        <LinkToEdit {...{id, ...rest}} />
     </td>
     <td>
-        <DeleteButton action={() => deleteObjectAction(id)} />
+        <DeleteButton action={() => deleteObject(id)} />
     </td>
 </tr>
 
@@ -37,7 +38,8 @@ CustomerRow.propTypes = {
     address: PropTypes.string,
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
-    deleteObjectAction: PropTypes.func
+    // accessToken: PropTypes.string,
+    deleteObject: PropTypes.func.isRequired
 }
 
 CustomerRow.defaultProps = {

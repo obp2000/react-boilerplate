@@ -1,4 +1,4 @@
-export const PriceCoeffs = ([
+export const PriceCoeffs = Object.freeze([
     1,
     1.5,
     1.6,

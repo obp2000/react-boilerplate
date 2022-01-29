@@ -1,4 +1,5 @@
 import { FORM_ERROR } from 'final-form'
+import { receiveErrors } from './Errors'
 
 export const errorHandler = (dispatch, failedAction) => e => {
     const {
@@ -7,7 +8,17 @@ export const errorHandler = (dispatch, failedAction) => e => {
             data = {}
         } = {}
     } = e
-    return dispatch(failedAction(Object.values(data).flat() || [message]))
+    // console.log('e: ', e)
+    let error_messsages = ['Ошибка!']
+    if (Object.keys(data).length != 0) {
+        error_messsages = Object.values(data).flat()
+    } else if (message) {
+        error_messsages = [message]
+    } else if (e.toJSON().message) {
+        error_messsages = [e.toJSON().message]
+    }
+    dispatch(receiveErrors(error_messsages))
+    return dispatch(failedAction())
 }
 
 // export const errorHandler1 = (dispatch, failedAction) => e => {
@@ -37,9 +48,12 @@ export const formErrorHandler = (dispatch, failedAction) => e => {
             data = {}
         } = {}
     } = e
-    dispatch(failedAction(Object.values(data).flat() || [message]))
+    // console.log('data: ', data )
+    const data_errors = Object.values(data).flat()
+    dispatch(failedAction(data_errors || [message]))
+    // dispatch(receiveErrors(data_errors || [message]))
     return {
-        [FORM_ERROR]: Object.values(data).flat()
+        [FORM_ERROR]: data_errors
     }
 }
 

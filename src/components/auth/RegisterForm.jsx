@@ -1,20 +1,20 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Form, Field } from 'react-final-form'
 import { Form as FormStrap } from 'reactstrap'
 import RowFormGroup from '../Shared/RowFormGroup'
 import { RegFormText } from './Consts'
 import SubmitButton from '../Shared/SubmitButton'
-import Errors from '../Errors'
-
+import Errors from '../Shared/Errors'
+import { onSubmitRegister } from '../redux/auth'
 import { validateRegister } from './Validators'
 
-const RegisterForm = ({
-        onSubmit
-    }) =>
-    <Form name='Register'
+const RegisterForm = () => {
+    const dispatch = useDispatch()
+    return <Form name='Register'
           validate={validateRegister}
-          onSubmit={onSubmit}
+          onSubmit={onSubmitRegister(dispatch)}
         >
         {({ handleSubmit, submitting, invalid, pristine, submitError }) => (
             <FormStrap onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-body rounded">
@@ -29,9 +29,6 @@ const RegisterForm = ({
             </FormStrap>
         )}
     </Form>
-
-RegisterForm.propTypes = {
-    handleSubmit: PropTypes.func,
 }
 
 export default RegisterForm

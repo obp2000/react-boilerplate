@@ -1,10 +1,9 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { connect } from 'react-redux'
 import FormTemplate from '../ProductForm'
-import { ProductSelector } from '../Selectors'
-import { getObjectAction, onSubmit } from '../../redux/Products'
-import { mapObjectStateToProps } from '../../redux/mappers'
+import { getObjectAction } from '../../redux/ServerActions'
+import { Actions } from '../../redux/Products'
 
 class Product extends React.Component {
     constructor(props) {
@@ -13,18 +12,22 @@ class Product extends React.Component {
 
     componentDidMount() {
         const {
-            id,
-            getObjectAction,
-            accessToken
+            match: {
+                params: {
+                    id
+                }
+            },
+            getObjectAction
         } = this.props
-        getObjectAction(id, accessToken)
+        // console.log(' DidMount')
+        getObjectAction(id)
     }
 
     render() {
-        return <FormTemplate {...this.props} />
+        return <FormTemplate />
     }
 }
 
-const mapStateToProps = mapObjectStateToProps('products')
-
-export default connect(mapStateToProps, { getObjectAction, onSubmit })(Product)
+export default connect(null, {
+    getObjectAction: getObjectAction(Actions),
+})(Product)

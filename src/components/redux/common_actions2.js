@@ -2,7 +2,8 @@ import { createAction, createReducer } from 'redux-act'
 import axios from 'axios'
 import { push } from 'connected-react-router'
 import { objectToFormData } from 'object-to-formdata'
-import config from '../Config'
+import BACKEND from 'config'
+// import config from '../Config'
 import { tokenHeaders } from './auth'
 import { errorHandler } from './ErrorHandlers'
 // import { FORM_ERROR } from 'final-form'
@@ -17,7 +18,7 @@ export class CommonActions {
         to_form_data,
         pre_submit_action
     }) {
-        this.base_url = `${config.BACKEND}/api${index_url}`
+        this.base_url = `${BACKEND}/api${index_url}`
         this.redirect_url = redirect_url
         this.initObject = initObject
         // this.FORM_ERROR = FORM_ERROR
@@ -299,10 +300,10 @@ export class CommonActions {
                 accessToken
             }
         } = getState()
+        console.log('accessToken: ', accessToken)
         if (accessToken) {
             if (this.pre_submit_action) { this.pre_submit_action(values) }
             const id = values.id
-            console.log('id: ', id)
             dispatch(this.requestUpdateObject())
             return axios({
                     url: `${this.base_url}/${ id ? id + '/' : ''}`,
@@ -315,13 +316,8 @@ export class CommonActions {
         }
     }
 
-    deleteObjectAction = () => id => (dispatch, getState) => {
-        const {
-            auth: {
-                accessToken
-            }
-        } = getState()
-        if (accessToken) {
+    deleteObjectAction = () => (id, accessToken) => dispatch => {
+         if (accessToken) {
             dispatch(this.requestDeleteObject())
             return axios.delete(`${this.base_url}/${id}`, tokenHeaders(accessToken))
                 .then(() => dispatch(this.successDeleteObject(id)))

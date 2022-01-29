@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import {
     Navbar,
     NavbarBrand,
@@ -8,56 +8,72 @@ import {
     Collapse,
     Nav,
     NavItem,
-    Button,
-    // Modal,
-    // ModalHeader,
-    // ModalTitle,
-    // ModalBody,
+    Badge
 } from 'reactstrap'
-// import Search from '../Search/Containers/Search'
 import NavItemWithLink from './NavItemWithLink'
-import AuthModal from '../auth/Containers/AuthModal'
+import AuthModal from '../auth/AuthModal'
+import AuthButton from '../auth/AuthButton'
+import SearchForm from '../Search/SearchForm'
+import { TableName } from '../Shared/BasePathname'
 // import Errors from '../Errors'
 
-const NavBar = ({
+const NavBar = props => {
+    const {
+        location: {
+            pathname
+        }
+    } = props
+    const loaded = useSelector(({
+        auth: {
+            isAuthenticated
+        }
+    }) => ({
         isAuthenticated,
-        signOut,
-        toggleModal,
-        // errors
-    }) => <>
-    <Navbar color="light" expand="md" light>
-        <NavbarBrand href="/">
-            Best&C
-        </NavbarBrand>
-        <NavbarToggler className="me-2"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation" />
-        <Collapse navbar id="navbarSupportedContent">
-            <Nav className="me-auto" navbar>
-                <NavItemWithLink to='/' label='Главная' />
-                <NavItemWithLink to='/products/' label='Ткани' />
-                <NavItemWithLink to='/customers/' label='Покупатели' />
-                <NavItemWithLink to='/orders/' label='Заказы' />
-                {isAuthenticated && <NavItemWithLink to='/user/' label='Профиль' />}
-                <NavItem>
-                    <Button size='sm' outline onClick={isAuthenticated ? signOut : toggleModal}>
-                        {isAuthenticated ? 'Выйти' : 'Вход/Регистрация'}
-                    </Button>
-                </NavItem>
-            </Nav>
-        </Collapse>
-    </Navbar>
-    <AuthModal />
+    }))
+    const table = TableName(pathname)
+    const dispatch = useDispatch()
+    return <>
+        <Navbar color="light" expand="md" light style={{backgroundColor: '#e3f2fd'}}>
+            <NavbarBrand href="/">
+                <h3>
+                    <Badge pill size='lg'>
+                        Best&C
+                    </Badge>
+                </h3>
+            </NavbarBrand>
+            <NavbarToggler className="me-2"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation" />
+            <Collapse navbar id="navbarContent">
+                <Nav className="me-auto" navbar>
+                    <NavItemWithLink {...{to: '/',
+                                          label: 'Главная',
+                                          table}} />
+                    <NavItemWithLink {...{to: '/products/',
+                                          label: 'Ткани',
+                                          table}} />
+                    <NavItemWithLink {...{to: '/customers/',
+                                          label: 'Покупатели',
+                                          table}} />
+                    <NavItemWithLink {...{to: '/orders/',
+                                          label: 'Заказы',
+                                          table}} />
+                    {loaded.isAuthenticated &&
+                        <NavItemWithLink {...{to: '/user/',
+                                             label: 'Профиль',
+                                             table}} />}
+                    <NavItem>
+                        <AuthButton />
+                    </NavItem>
+                </Nav>
+                <SearchForm {...props}/>
+            </Collapse>
+        </Navbar>
+        <AuthModal />
     </>
-
-NavBar.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    signOut: PropTypes.func,
-    toggleModal: PropTypes.func,
-    // errors: PropTypes.array
 }
 
 export default NavBar

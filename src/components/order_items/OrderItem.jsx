@@ -2,9 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Field } from 'react-final-form'
 import TdInput from '../Shared/TdInput'
-import renderField from '../Shared/RenderField'
 import DeleteButton from '../Shared/DeleteButton'
-import ProductField from '../products/Containers/ProductField'
+import ProductField from '../products/ProductField'
 
 const OrderItem = ({
     order_item_name,
@@ -12,7 +11,8 @@ const OrderItem = ({
     amount,
     index,
     // row_class_name,
-    deleteOrderItemAction
+    // deleteOrderItemAction,
+    fields
 }) => <tr>
         <th scope="row">
             {index+1}
@@ -30,7 +30,7 @@ const OrderItem = ({
         <Field name={`${order_item_name}.weight`} type="number"
             disabled component={TdInput} />
         <td>
-            <DeleteButton action={deleteOrderItemAction} />
+            <DeleteButton action={() => fields.remove(index)} />
         </td>
     </tr>
 
@@ -39,8 +39,9 @@ OrderItem.propTypes = {
     price: PropTypes.number,
     amount: PropTypes.number,
     index: PropTypes.number,
+    fields: PropTypes.object
     // row_class_name: PropTypes.string,
-    deleteOrderItemAction: PropTypes.func.isRequired
+    // deleteOrderItemAction: PropTypes.func.isRequired
 }
 
 export default OrderItem

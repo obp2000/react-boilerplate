@@ -1,32 +1,37 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { Table } from 'reactstrap'
 import Loader from 'react-loader'
-import ProductRow from './Containers/ProductRow'
+import ProductRow from './ProductRow'
 import Pagination from '../Pagination/Pagination'
-import SearchForm from '../Search/Containers/SearchForm'
-import Errors from '../Errors'
+import ObjectsPageHeader from '../Shared/ObjectsPageHeader'
+import { deleteObjectAction } from '../redux/ServerActions'
+import { Actions } from '../redux/Products'
+import LinkToNew from '../Shared/LinkToNew'
 
-const Products = ({
-    results,
-    totalCount,
-    totalPages,
-    search,
-    page,
-    isFetching,
-    errors
-}) => <Loader loaded={!isFetching}>
-            <div>
-                {errors && <Errors errors={errors}/>}
-                <div className="row">
-                    <div className="col-sm-7">
-                        <h3>Ткани ({totalCount})</h3>
-                    </div>
-                    <div className="col-sm-5">
-                        <SearchForm table='products'/>
-                    </div>
-                </div>
-                <table className="table table-sm table-striped table-bordered table-hover">
+const Products = props => {
+    const loaded = useSelector(({
+        products: {
+            results = [],
+            totalCount,
+            isFetching,
+        },
+        auth: {
+            accessToken
+        }
+    }) => ({
+        results,
+        totalCount,
+        isFetching,
+        accessToken
+    }))
+    const dispatch = useDispatch()
+    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
+    return <Loader loaded={!loaded.isFetching}>
+            <>
+                <ObjectsPageHeader title='Ткани' totalCount={loaded.totalCount} />
+                <Table size='sm' bordered striped hover className='table-secondary'>
                     <thead className="thead-light">
                         <tr>
                             <th scope="col">Id</th>
@@ -40,32 +45,20 @@ const Products = ({
                             <th scope="col">Себестоимость, руб./м</th> */}
                             <th scope="col">Создана</th>
                             <th scope="col">Изменена</th>
-                            <th scope="col">
-                                <Link to='/products/new' className="btn btn-outline-primary btn-sm">Новая</Link>
+                            <th scope="col" colSpan={2}>
+                                <LinkToNew {...props}/>
                             </th>
-                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {results.map((product, index) => <ProductRow {...product} key={index} />)}
+                        {loaded.results.map((product, key) => <ProductRow
+                            {...{...product, deleteObject, key, ...props}} />)
+                        }
                     </tbody>
-                </table>
-                <Pagination {...{table: 'products', totalPages, page, search}} />
-            </div>
+                </Table>
+                <Pagination {...props} />
+            </>
         </Loader>
-
-Products.propTypes = {
-    results: PropTypes.array.isRequired,
-    totalCount: PropTypes.number,
-    totalPages: PropTypes.number,
-    search: PropTypes.string,
-    page: PropTypes.number,
-    isFetching: PropTypes.bool,
-    errors: PropTypes.array
-}
-
-Products.defaultProps = {
-    results: []
 }
 
 export default Products

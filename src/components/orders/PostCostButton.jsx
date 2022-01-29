@@ -1,25 +1,27 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Button } from 'reactstrap'
+import { getPostCost_nw } from '../redux/PostCost'
 
 const PostCostButton = ({
-    getPostCost,
     pindex,
     tolalWeight
-}) => <Button
+}) => {
+    const dispatch = useDispatch()
+    return <Button
             name='post_cost_button'
-            // onClick = {() => getPostCost(pindex, tolalWeight) }
+            onClick = { getPostCost_nw(dispatch, pindex, tolalWeight) }
             type = "button"
             color = "primary"
             outline
             size = "sm"
-            disabled = {!pindex || !tolalWeight }
             >
             Рассчитать
         </Button>
+}
 
 PostCostButton.propTypes = {
-    getPostCost: PropTypes.func.isRequired,
     pindex: PropTypes.string,
     tolalWeight: PropTypes.number
 }

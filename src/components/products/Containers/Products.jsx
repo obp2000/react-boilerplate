@@ -1,23 +1,27 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../Products'
-import { getObjectsAction } from '../../redux/Products'
-import { mapCollectionStateToProps } from '../../redux/mappers'
+import { getObjectsAction } from '../../redux/ServerActions'
+import { Actions } from '../../redux/Products'
 
-class CollectionComponent extends React.Component {
+class Products extends React.Component {
     constructor(props) {
         super(props)
     }
 
     componentDidMount() {
         const {
-            accessToken,
-            page,
-            term,
-            getObjectsAction
+            getObjectsAction,
+            match: {
+                params: {
+                    page
+                },
+                term = ''
+            }
         } = this.props
-        getObjectsAction(page, term, accessToken)
+        console.log('componentDidMount')
+        getObjectsAction(page, term)
     }
 
     componentDidUpdate({
@@ -25,25 +29,25 @@ class CollectionComponent extends React.Component {
         term: prevTerm
     }) {
         const {
-            accessToken,
-            page,
-            term,
-            getObjectsAction
+            getObjectsAction,
+            match: {
+                params: {
+                    page
+                },
+                term = ''
+            }
         } = this.props
+        console.log('componentDidUpdate')
         if (page !== prevPage || term !== prevTerm) {
-            getObjectsAction(page, term, accessToken)
+            getObjectsAction(page, term)
         }
     }
 
-    render = () => <Template {...this.props} />
-
-    // static propTypes = {
-    //   getObjectsAction: PropTypes.func.isRequired,
-    //   page: PropTypes.number,
-    //   term: PropTypes.string
-    // }
+    render() {
+        return <Template {...this.props} />
+    }
 }
 
-export default connect(mapCollectionStateToProps('products'), {
-    getObjectsAction
-})(CollectionComponent)
+export default connect(null, {
+    getObjectsAction: getObjectsAction(Actions),
+})(Products)

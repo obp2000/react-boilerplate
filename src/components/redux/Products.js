@@ -1,4 +1,4 @@
-import { CommonActions } from './common_actions2'
+import { CommonActions } from './CommonActions'
 
 export const initObject = {
     id: null,
@@ -31,7 +31,7 @@ const pre_submit_action = values => {
     delete values.new_image
 }
 
-const Actions = new CommonActions({
+export const Actions = new CommonActions({
     index_url,
     redirect_url,
     initObject,
@@ -39,11 +39,11 @@ const Actions = new CommonActions({
     pre_submit_action
 })
 
-export const getObjectsAction = Actions.getObjectsAction()
-export const getObjectAction = Actions.getObjectAction()
-export const onSubmit = Actions.onSubmitAction()
-export const deleteObjectAction = Actions.deleteObjectAction()
-export const onSearch = Actions.searchObjectsAction()
-export const onBlur = Actions.clearSearchObjectsAction()
+// export const getObjectsAction = Actions.getObjectsAction()
+// export const getObjectAction = Actions.getObjectAction()
+// export const onSubmit = Actions.onSubmitAction()
+// export const deleteObjectAction = Actions.deleteObjectAction()
+// export const onSearch = Actions.searchObjectsAction()
+// export const onBlur = Actions.clearSearchObjectsAction()
 
 export default Actions.getReducer()

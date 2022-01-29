@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Form, Field } from 'react-final-form'
-import { Form as FormStrap, Row, Col, Card, CardBody, CardTitle, CardImg, Table } from 'reactstrap'
+import { Form as FormStrap, Row, Col, Table } from 'reactstrap'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
 import Loader from 'react-loader'
@@ -9,63 +10,71 @@ import Loader from 'react-loader'
 import TdInput from '../Shared/TdInput'
 import TdText from './TdText'
 // import FormGroup from './FormGroup'
-import FloatingFormGroup from '../Shared/FloatingFormGroup'
-import SubmitButton from '../Shared/SubmitButton'
-import BackButton from '../Shared/Containers/BackButton'
+import FloatingFormGroupCol from '../Shared/FloatingFormGroupCol'
+// import SubmitButton from '../Shared/SubmitButton'
 import OrderItems from '../order_items/OrderItems'
 import { SamplesWeight, PostPacketWeight } from './Consts'
-import CustomerField from '../customers/Containers/CustomerField'
-import DeliveryTypeField from './Containers/DeliveryTypeField'
-import PostCostButton from './Containers/PostCostButton'
+import CustomerField from '../customers/CustomerField'
+import DeliveryTypeField from './DeliveryTypeField'
+// import PostCostButton from './PostCostButton'
 import PostPacketField from './PostPacketField'
-import OrderNumber from './Containers/OrderNumber'
-import Errors from '../Errors'
-
+import OrderNumber from './OrderNumber'
+import FormHeader from '../Shared/FormHeader'
 import { validate } from './Validators'
 import { order_calculator } from './Selectors'
 import { order_items_calculator } from '../order_items/Selectors'
+import { onSubmitAction } from '../redux/ServerActions'
+import { Actions } from '../redux/Orders'
 
-const OrderForm = ({
-    onSubmit,
-    initialValues,
-    isFetching,
-    errors
-}) => <Loader loaded={!isFetching}>
-
+const OrderForm = () => {
+    const loaded = useSelector(({
+        orders: {
+            object,
+            isFetching,
+        },
+        auth: {
+            accessToken
+        }
+    }) => ({
+        object,
+        isFetching,
+        accessToken
+    }))
+    const dispatch = useDispatch()
+    return <Loader loaded={!loaded.isFetching}>
     <Form
         name={'order'}
         validate={validate}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
         mutators={{
-        // potentially other mutators could be merged here
         ...arrayMutators
         }}
         decorators={[order_calculator, order_items_calculator]}
-        // enableReinitialize={true}
-        initialValues={{...initialValues, samples_weight: SamplesWeight, packet_weight: PostPacketWeight}}>
-      {({ handleSubmit, submitting, invalid, pristine, touched, submitError }) => (
-        <FormStrap onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-body rounded">
-            {errors && <Errors errors={errors}/>}
-                <div className='row'>
-                    <div className="col-sm-6">
-                        <h4>Заказ&nbsp;
-                            <OrderNumber />
-                        </h4>
-                    </div>
-                    <div className="col-sm-6 text-right">
-                        <BackButton />
-                        &nbsp;
-                        <SubmitButton submitDisabled={submitting || invalid || pristine}/>
-                    </div>
-                </div>
+        initialValues={{...loaded.object,
+                           samples_weight: SamplesWeight,
+                           packet_weight: PostPacketWeight}}>
+      {({ handleSubmit, submitError, ...rest }) => (
+        <FormStrap onSubmit={handleSubmit}
+                   className="shadow p-3 mb-5 bg-body rounded">
+                <FormHeader {...rest}>
+                    <OrderNumber />
+                </FormHeader>
                 <Row>
-                    <Field name="customer" label='Заказчик' size={6} component={CustomerField}/>
-                    <Field name="customer_name" label="ФИО" size={6} disabled component={FloatingFormGroup} />
-                    <Field name="pindex" label="Индекс" size={2} disabled component={FloatingFormGroup} />
-                    <Field name="city" label="Город" size={2} disabled component={FloatingFormGroup} />
-                    <Field name="customer_address" label="Адрес" size={6} disabled component={FloatingFormGroup} />
-                    <Field name="delivery_type" label='Доставка' size={5} component={DeliveryTypeField}/>
-                    <Field name="address" label='Адрес доставки' size={6} component={FloatingFormGroup}/>
+                    <Field name="customer" label='Заказчик' size={6}
+                           component={CustomerField}/>
+                    <Field name="customer_name" label="ФИО" size={6}
+                           disabled component={FloatingFormGroupCol} />
+                    <Field name="pindex" label="Индекс" size={2}
+                           disabled component={FloatingFormGroupCol} />
+                    <Field name="city" label="Город" size={2} disabled
+                           component={FloatingFormGroupCol} />
+                    <Field name="customer_address" label="Адрес" size={6}
+                           disabled component={FloatingFormGroupCol} />
+                    <Field name="delivery_type" label='Доставка' size={5}
+                        search_results={loaded.object.delivery_types}
+                        component={DeliveryTypeField}/>
+                    <Field name="address" label='Адрес доставки' size={6}
+                           component={FloatingFormGroupCol}/>
                 </Row>
 
                 <Table size="sm" responsive bordered hover>
@@ -89,7 +98,9 @@ const OrderForm = ({
                         <tr>
                             <TdText label="Почтовый пакет" colSpan={4} />
                             <td>
-                               <Field name="packet" size={7} component={PostPacketField}/>
+                               <Field name="packet" size={8}
+                                      search_results={loaded.object.packets}
+                                      component={PostPacketField}/>
                             </td>
                             <Field name="packet_weight" type="number"
                                 disabled component={TdInput} />
@@ -98,8 +109,8 @@ const OrderForm = ({
                             <td colSpan={4}>
                                 Тариф Почты России
                             </td>
-                            <Field name="post_cost" label="Тариф Почты" type="number"
-                                    component={TdInput} />
+                            <Field name="post_cost" label="Тариф Почты"
+                                   type="number" component={TdInput} />
                         </tr>
                         <tr>
                             <td colSpan={4}>
@@ -137,11 +148,6 @@ const OrderForm = ({
         )}
     </Form>
 </Loader>
-
-OrderForm.propTypes = {
-    onSubmit: PropTypes.func,
-    isFetching: PropTypes.bool,
-    errors: PropTypes.array
 }
 
 export default OrderForm

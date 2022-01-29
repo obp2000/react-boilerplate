@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Link } from 'react-router-dom'
 import DeleteButton from '../Shared/DeleteButton'
+import LinkToEdit from '../Shared/LinkToEdit'
 
 const OrderRow = ({
     id,
@@ -12,7 +12,8 @@ const OrderRow = ({
         nick = '',
         name = ''
     },
-    deleteObjectAction
+    deleteObject,
+    ...rest
 }) => {
     return <tr>
         <th scope="row">{id}</th>
@@ -21,10 +22,10 @@ const OrderRow = ({
         <td>{created_at}</td>
         <td>{updated_at}</td>
         <td>
-            <Link to={"/orders/" + id} className="btn btn-outline-primary btn-sm">Редактировать</Link>
+            <LinkToEdit {...{id, ...rest}} />
         </td>
         <td>
-            <DeleteButton action={() => deleteObjectAction(id)} />
+            <DeleteButton action={() => deleteObject(id)} />
         </td>
     </tr>
 }
@@ -35,7 +36,7 @@ OrderRow.propTypes = {
     updated_at: PropTypes.string,
     order_items_cost: PropTypes.number,
     customer: PropTypes.shape({ nick: PropTypes.string, name: PropTypes.string }),
-    deleteObjectAction: PropTypes.func
+    deleteObject: PropTypes.func
 }
 
 export default OrderRow

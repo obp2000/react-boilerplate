@@ -70,25 +70,25 @@ const full_url = (pindex, weight) => [POST_BASE_URL,
 
 // Async actions:
 
-// export const getPostCost1 = (pindex, weight) => dispatch => {
-//     if (weight && pindex) {
-//         dispatch(requestPostCost())
-//         return fetchJsonp(full_url(pindex, weight))
-//             // .then(response => response.json())
-//             .then(({
-//                 Отправления: {
-//                     ЦеннаяПосылка: {
-//                         Тариф
-//                     } = {}
-//                 } = {}
-//             }) => {
-//                 dispatch(change('order', 'post_cost', parseInt(Тариф)))
-//                 dispatch(successPostCost(parseInt(Тариф)))
+export const getPostCost_nw = (dispatch, pindex, weight) => () => {
+    if (weight && pindex) {
+        dispatch(requestPostCost())
+        return fetchJsonp(full_url(pindex, weight))
+            // .then(response => response.json())
+            .then(({
+                Отправления: {
+                    ЦеннаяПосылка: {
+                        Тариф
+                    } = {}
+                } = {}
+            }) => {
+                dispatch(change('order', 'post_cost', parseInt(Тариф)))
+                dispatch(successPostCost(parseInt(Тариф)))
 
-//             })
-//             .catch(errorHandler(dispatch, failedPostCost))
-//     }
-// }
+            })
+            .catch(errorHandler(dispatch, failedPostCost))
+    }
+}
 
 export const getPostCost1 = (pindex, weight) => {
     if (weight && pindex) {

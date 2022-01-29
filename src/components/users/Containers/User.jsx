@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Template from '../User'
 import { getObjectAction } from '../../redux/auth'
-import { mapObjectStateToProps } from '../../redux/mappers'
 
 class User extends React.Component {
     constructor(props) {
@@ -12,28 +11,20 @@ class User extends React.Component {
 
     componentDidMount() {
         const {
-            accessToken,
             getObjectAction
         } = this.props
-        getObjectAction(accessToken)
+        getObjectAction()
     }
 
-    // componentDidUpdate({
-    //   page: prevPage,
-    //   term: prevTerm
-    // }) {
-    //   const {
-    //     page,
-    //     term,
-    //     getProductsAction
-    //   } = this.props
-    //   if (page !== prevPage || term !== prevTerm) {
-    //     getProductsAction(page, term)
-    //   }
-    // }
-
-    render = () => <Template {...this.props} />
+    render() {
+        return <Template />
+    }
 }
+
+export default connect(null, {
+    getObjectAction
+})(User)
+
 
 // const mapStateToProps = ({
 //     user: {
@@ -54,7 +45,3 @@ class User extends React.Component {
 //     username,
 //     isFetching
 // })
-
-export default connect(mapObjectStateToProps('auth'), {
-    getObjectAction
-})(User)

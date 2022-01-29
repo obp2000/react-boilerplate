@@ -32,11 +32,10 @@ export const order_items_calculator = createDecorator({
             const index = findIndex(name)
             const {
                 price,
-                product: {
-                    density,
-                    width
-                }
-            } = (order_items[index] || { product: {} })
+                product
+            } = order_items[index] //|| { product: {} })
+            const density = product && product.density
+            const width = product && product.width
             return {
                 [name.replace('.amount', '.cost')]: cost(value, price),
                 [name.replace('.amount', '.weight')]: weight(value, density, width),
@@ -54,7 +53,10 @@ export const order_items_calculator = createDecorator({
         }
     }, {
         field: /order_items\[\d+\]\.product/,
-        updates: ({ price, density, width } = {}, name, { order_items }) => {
+        updates: (product, name, { order_items }) => {
+            const price = product && product.price
+            const density = product && product.density
+            const width = product && product.width
             const index = findIndex(name)
             const { amount } = (order_items[index] || {})
             return {
