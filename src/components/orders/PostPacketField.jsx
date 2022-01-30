@@ -6,8 +6,8 @@ import WrapInCol from '../Shared/WrapInCol'
 
 const PostPacketField = DropdownListFormGroup({
     label_col_size: 2,
-    dataKey: 'id',
-    textField: 'label'
+    dataKey: 'value',
+    textField: 'display_name'
 })
 
 export default WrapInCol(PostPacketField)

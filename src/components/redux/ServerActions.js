@@ -33,6 +33,54 @@ export const getObjectsAction = actions => page => (dispatch, getState) => {
         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
 }
 
+const options = (choices_names = [], method_options) => choices_names.reduce(
+    (choices, names) => {
+        choices[names[0]] = method_options[names[1]].choices
+        return choices
+    }, {})
+
+const getNewObjectOptions = (dispatch, actions, accessToken) =>
+    axios.options(`${actions.base_url}/`, tokenHeaders(accessToken))
+    .then(({
+        data: {
+            actions: {
+                POST
+            }
+        }
+    }) => dispatch(actions.successReceiveObject({
+        ...actions.initObject,
+        ...options(actions.choices_names, POST),
+    })))
+    .catch(errorHandler(dispatch, actions.failedReceiveObject))
+
+const getExistingObject = (dispatch, actions, id, accessToken, method_options) =>
+    axios.get(`${actions.base_url}/${id}`,
+        tokenHeaders(accessToken)
+    )
+    .then(({ data }) => {
+        dispatch(actions.successReceiveObject({
+            ...data,
+            ...options(actions.choices_names, method_options)
+        }))
+        dispatch(clearErrors())
+    })
+    .catch(errorHandler(dispatch, actions.failedReceiveObject))
+
+const getExistingObjectWihOptions = (dispatch, actions, id, accessToken) => {
+    axios.options(`${actions.base_url}/${id}`,
+            tokenHeaders(accessToken)
+        )
+        .then(({
+            data: {
+                actions: {
+                    PUT
+                }
+            }
+        }) => getExistingObject(dispatch, actions, id, accessToken, PUT))
+        .catch(errorHandler(dispatch, actions.failedReceiveObject))
+
+}
+
 export const getObjectAction = actions => id => (dispatch, getState) => {
     const {
         auth: {
@@ -40,18 +88,19 @@ export const getObjectAction = actions => id => (dispatch, getState) => {
         }
     } = getState()
     if (accessToken) {
+        dispatch(actions.requestObject())
         if (id == 'new') {
-            return dispatch(actions.setNewObject())
+            if (actions.choices_names) {
+                return getNewObjectOptions(dispatch, actions, accessToken)
+            } else {
+                return dispatch(actions.successReceiveObject(actions.initObject))
+            }
         } else {
-            dispatch(actions.requestObject())
-            return axios.get(`${actions.base_url}/${id}`,
-                    tokenHeaders(accessToken)
-                )
-                .then(({ data }) => {
-                    dispatch(actions.successReceiveObject(data))
-                    dispatch(clearErrors())
-                })
-                .catch(errorHandler(dispatch, actions.failedReceiveObject))
+            if (actions.choices_names) {
+                return getExistingObjectWihOptions(dispatch, actions, id, accessToken)
+            } else {
+                return getExistingObject(dispatch, actions, id, accessToken)
+            }
         }
     }
 }

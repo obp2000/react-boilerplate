@@ -10,7 +10,8 @@ export class CommonActions {
         initObject = {},
         // initialState,
         to_form_data,
-        pre_submit_action
+        pre_submit_action,
+        choices_names
     }) {
         this.base_url = `${config.BACKEND}/api${index_url}`
         this.redirect_url = redirect_url
@@ -19,7 +20,7 @@ export class CommonActions {
         // this.initialState = initialState
         this.to_form_data = to_form_data
         this.pre_submit_action = pre_submit_action
-        // this.formErrorHandler = formErrorHandler
+        this.choices_names = choices_names
 
         this.init_objects_info = {
             results: [],

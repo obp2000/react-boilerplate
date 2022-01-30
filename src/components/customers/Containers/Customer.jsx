@@ -19,7 +19,7 @@ class Customer extends React.Component {
             },
             getObjectAction
         } = this.props
-        // console.log('customer DidMount')
+        console.log('customer DidMount')
         getObjectAction(id)
     }
 

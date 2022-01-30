@@ -8,7 +8,7 @@ export const errorHandler = (dispatch, failedAction) => e => {
             data = {}
         } = {}
     } = e
-    // console.log('e: ', e)
+    console.error('e: ', e)
     let error_messsages = ['Ошибка!']
     if (Object.keys(data).length != 0) {
         error_messsages = Object.values(data).flat()

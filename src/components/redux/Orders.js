@@ -4,6 +4,8 @@ import { initObject as initProduct } from './Products'
 
 const index_url = '/orders'
 const redirect_url = '/orders'
+const choices_names = [['delivery_types','delivery_type'],
+                       ['packets', 'packet']]
 
 const initObject = {
     post_cost: 0,
@@ -21,7 +23,10 @@ export const initOrderItem = {
     _destroy: false,
 }
 
-export const Actions = new CommonActions({ index_url, redirect_url, initObject })
+export const Actions = new CommonActions({ index_url,
+                                           redirect_url,
+                                           initObject,
+                                           choices_names })
 export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
 
 export default Actions.getReducer()

@@ -49,11 +49,11 @@ const CustomerForm = () => {
                                 component={FloatingFormGroup} />
                         </Col>
                         <Col sm={6}>
-                            <Field name="name" label="ФИО*"
+                            <Field name="name" label="ФИО"
                                 component={FloatingFormGroup} />
                         </Col>
                         <Col sm={6}>
-                            <Field name="city" label="Город*"
+                            <Field name="city" label="Город"
                                 component={CityField} />
                         </Col>
                         <Col sm={2}>
