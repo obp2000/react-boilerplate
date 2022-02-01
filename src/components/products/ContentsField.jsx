@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
-import WrapInCol from '../Shared/WrapInCol'
 
-const DeliveryTypeField = DropdownListFormGroup({
+const ContentsField = DropdownListFormGroup({
     label_col_size: 2,
     dataKey: 'value',
-    textField: 'display_name'
+    textField: 'display_name',
+    // listbox: true
 })
 
-export default WrapInCol(DeliveryTypeField)
+export default ContentsField

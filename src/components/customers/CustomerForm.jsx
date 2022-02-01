@@ -18,10 +18,12 @@ const CustomerForm = () => {
     const loaded = useSelector(({
         customers: {
             object,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         object,
@@ -36,6 +38,7 @@ const CustomerForm = () => {
             decorators={[calculator]}
             initialValues={loaded.object}>
             {({ handleSubmit, submitError, ...rest }) => (
+                <Loader loaded={!loaded.isFetching } >
                 <FormStrap onSubmit={handleSubmit}
                            className="shadow p-3 mb-5 bg-body rounded">
                     <FormHeader {...{title: 'Покупатель', ...rest}}/>
@@ -66,6 +69,7 @@ const CustomerForm = () => {
                         </Col>
                     </Row>
                 </FormStrap>
+                </Loader>
             )}
         </Form>
 }

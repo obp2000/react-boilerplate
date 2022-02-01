@@ -30,10 +30,12 @@ const OrderForm = () => {
     const loaded = useSelector(({
         orders: {
             object,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         object,
@@ -41,8 +43,7 @@ const OrderForm = () => {
         accessToken
     }))
     const dispatch = useDispatch()
-    return <Loader loaded={!loaded.isFetching}>
-    <Form
+    return <Form
         name={'order'}
         validate={validate}
         onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
@@ -54,6 +55,7 @@ const OrderForm = () => {
                            samples_weight: SamplesWeight,
                            packet_weight: PostPacketWeight}}>
       {({ handleSubmit, submitError, ...rest }) => (
+        <Loader loaded={!loaded.isFetching}>
         <FormStrap onSubmit={handleSubmit}
                    className="shadow p-3 mb-5 bg-body rounded">
                 <FormHeader {...rest}>
@@ -71,7 +73,7 @@ const OrderForm = () => {
                     <Field name="customer_address" label="Адрес" size={6}
                            disabled component={FloatingFormGroupCol} />
                     <Field name="delivery_type" label='Доставка' size={5}
-                        search_results={loaded.object.delivery_types}
+                        options={loaded.object.delivery_types}
                         component={DeliveryTypeField}/>
                     <Field name="address" label='Адрес доставки' size={6}
                            component={FloatingFormGroupCol}/>
@@ -99,7 +101,7 @@ const OrderForm = () => {
                             <TdText label="Почтовый пакет" colSpan={4} />
                             <td>
                                <Field name="packet" size={8}
-                                      search_results={loaded.object.packets}
+                                      options={loaded.object.packets}
                                       component={PostPacketField}/>
                             </td>
                             <Field name="packet_weight" type="number"
@@ -145,9 +147,9 @@ const OrderForm = () => {
                     </tfoot>
                 </Table>
         </FormStrap>
+        </Loader>
         )}
     </Form>
-</Loader>
 }
 
 export default OrderForm

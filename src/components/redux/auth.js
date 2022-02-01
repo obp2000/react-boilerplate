@@ -24,10 +24,11 @@ export const toggleModal = createAction('toggleModal')
 export const closeModal = createAction('closeModal')
 export const toggleLogin = createAction('toggleLogin')
 
-export const tokenHeaders = (accessToken) => {
+export const tokenHeaders = (accessToken, to_form_data ) => {
     return {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': to_form_data ?
+                'multipart/form-data' : 'application/json',
             'Authorization': `Token ${accessToken}`
         }
     }

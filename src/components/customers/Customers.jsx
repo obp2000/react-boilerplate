@@ -15,10 +15,12 @@ const Customers = props => {
         customers: {
             results = [],
             totalCount,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         results,

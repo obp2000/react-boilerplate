@@ -9,6 +9,7 @@ const FormHeader = ({
         submitting,
         invalid,
         pristine,
+        object,
         children
     }) =>
     <Row>
@@ -17,7 +18,7 @@ const FormHeader = ({
         </Col>
         <Col sm={6}>
             <h4>
-                {title}{children}
+                Id {object.id} {title}{children}
             </h4>
         </Col>
         <Col sm={2}>

@@ -15,10 +15,12 @@ const Products = props => {
         products: {
             results = [],
             totalCount,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         results,
@@ -28,11 +30,11 @@ const Products = props => {
     }))
     const dispatch = useDispatch()
     const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
-    return <Loader loaded={!loaded.isFetching}>
-            <>
-                <ObjectsPageHeader title='Ткани' totalCount={loaded.totalCount} />
-                <Table size='sm' bordered striped hover className='table-secondary'>
-                    <thead className="thead-light">
+    return <>
+            <ObjectsPageHeader title='Ткани' totalCount={loaded.totalCount} />
+            <Loader loaded={!loaded.isFetching}>
+            <Table size='sm' bordered striped hover className='table-secondary'>
+                <thead className="thead-light">
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Название</th>
@@ -56,9 +58,9 @@ const Products = props => {
                         }
                     </tbody>
                 </Table>
-                <Pagination {...props} />
-            </>
-        </Loader>
+            </Loader>
+            <Pagination {...props} />
+        </>
 }
 
 export default Products

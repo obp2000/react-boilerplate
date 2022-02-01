@@ -13,6 +13,7 @@ export class CommonActions {
         pre_submit_action,
         choices_names
     }) {
+        this.index_url = index_url
         this.base_url = `${config.BACKEND}/api${index_url}`
         this.redirect_url = redirect_url
         this.initObject = initObject
@@ -33,9 +34,6 @@ export class CommonActions {
         this.initialState = {
             ...this.init_objects_info,
             object: this.initObject,
-            search_results: [],
-            isFetching: false,
-            loaded: false,
         }
 
         this.reducer_actions = {}
@@ -51,64 +49,52 @@ export class CommonActions {
         this.failedReceiveObject = createAction('failedReceiveObject')
         this.setNewObject = createAction('setNewObject')
 
-        this.requestUpdateObject = createAction('requestUpdateObject')
+        // this.requestUpdateObject = createAction('requestUpdateObject')
         this.successUpdateObject = createAction('successUpdateObject')
-        this.failedUpdateObject = createAction('failedUpdateObject')
+        // this.failedUpdateObject = createAction('failedUpdateObject')
 
-        this.requestDeleteObject = createAction('requestDeleteObject')
+        // this.requestDeleteObject = createAction('requestDeleteObject')
         this.successDeleteObject = createAction('successDeleteObject')
-        this.failedDeleteObject = createAction('failedDeleteObject')
+        // this.failedDeleteObject = createAction('failedDeleteObject')
 
-        this.requestSearchObjects = createAction('requestSearchObjects')
-        this.successSearchObjects = createAction('successSearchObjects')
-        this.failedSearchObjects = createAction('failedSearchObjects')
-        this.clearSearchObjects = createAction('clearSearchObjects')
+        // this.requestSearchObjects = createAction('requestSearchObjects')
+        // this.successSearchObjects = createAction('successSearchObjects')
+        // this.failedSearchObjects = createAction('failedSearchObjects')
+        // this.clearSearchObjects = createAction('clearSearchObjects')
 
-        this.reducer_actions[this.requestObjects] = (state) => ({
+        this.reducer_actions[this.requestObjects] = state => ({
             ...state,
             ...this.init_objects_info,
-            isFetching: true,
-            loaded: false,
         })
 
         this.reducer_actions[this.successReceiveObjects] = (state, objects_info) =>
             ({
                 ...state,
                 ...objects_info,
-                isFetching: false,
-                loaded: true,
             })
 
         this.reducer_actions[this.failedReceiveObjects] = state =>
             ({
                 ...state,
                 ...this.init_objects_info,
-                isFetching: false,
-                loaded: false,
             })
 
         this.reducer_actions[this.requestObject] = state =>
             ({
                 ...state,
                 object: this.initObject,
-                isFetching: true,
-                loaded: false,
             })
 
         this.reducer_actions[this.successReceiveObject] = (state, object) =>
             ({
                 ...state,
                 object,
-                isFetching: false,
-                loaded: true,
             })
 
         this.reducer_actions[this.failedReceiveObject] = state =>
             ({
                 ...state,
                 object: this.initObject,
-                isFetching: false,
-                loaded: false,
             })
 
         this.reducer_actions[this.setNewObject] = state =>
@@ -117,12 +103,10 @@ export class CommonActions {
                 object: this.initObject,
             })
 
-        this.reducer_actions[this.requestUpdateObject] = state =>
-            ({
-                ...state,
-                isFetching: true,
-                loaded: false,
-            })
+        // this.reducer_actions[this.requestUpdateObject] = state =>
+        //     ({
+        //         ...state,
+        //     })
 
         this.reducer_actions[this.successUpdateObject] = (state, object, id) =>
             ({
@@ -133,72 +117,63 @@ export class CommonActions {
                     object
                 ],
                 totalCount: state.totalCount + (id ? 0 : 1),
-                isFetching: false,
-                loaded: true,
             })
 
-        this.reducer_actions[this.failedUpdateObject] = state =>
-            ({
-                ...state,
-                isFetching: false,
-                loaded: false,
-            })
+        // this.reducer_actions[this.failedUpdateObject] = state =>
+        //     ({
+        //         ...state,
+        //     })
 
-        this.reducer_actions[this.requestDeleteObject] = state =>
-            ({
-                ...state,
-                isFetching: true,
-                loaded: false,
-            })
+        // this.reducer_actions[this.requestDeleteObject] = state =>
+        //     ({
+        //         ...state,
+        //     })
 
         this.reducer_actions[this.successDeleteObject] = (state, id) =>
             ({
                 ...state,
                 results: this.exclude_from_results(state.results, id),
                 totalCount: state.totalCount - 1,
-                isFetching: false,
-                loaded: true,
             })
 
-        this.reducer_actions[this.failedDeleteObject] = state =>
-            ({
-                ...state,
-                isFetching: false,
-                loaded: false,
-            })
+        // this.reducer_actions[this.failedDeleteObject] = state =>
+        //     ({
+        //         ...state,
+        //     })
 
-        this.reducer_actions[this.requestSearchObjects] = state =>
-            ({
-                ...state,
-                search_results: [],
-                isFetching: true,
-                loaded: false,
-            })
+        // this.reducer_actions[this.requestSearchObjects] = state =>
+        //     ({
+        //         ...state,
+        //         search_results: [],
+        //         isFetching: true,
+        //         loaded: false,
+        //     })
 
-        this.reducer_actions[this.successSearchObjects] = (state, search_results) =>
-            ({
-                ...state,
-                search_results,
-                isFetching: false,
-                loaded: true,
-            })
+        // this.reducer_actions[this.successSearchObjects] = (state, search_results) =>
+        //     ({
+        //         ...state,
+        //         search_results,
+        //         isFetching: false,
+        //         loaded: true,
+        //     })
 
-        this.reducer_actions[this.failedSearchObjects] = state =>
-            ({
-                ...state,
-                search_results: [],
-                isFetching: false,
-                loaded: false,
-            })
+        // this.reducer_actions[this.failedSearchObjects] = state =>
+        //     ({
+        //         ...state,
+        //         search_results: [],
+        //         isFetching: false,
+        //         loaded: false,
+        //     })
 
-        this.reducer_actions[this.clearSearchObjects] = state =>
-            ({
-                ...state,
-                search_results: []
-            })
+        // this.reducer_actions[this.clearSearchObjects] = state =>
+        //     ({
+        //         ...state,
+        //         search_results: []
+        //     })
 
         this.reducer = createReducer(this.reducer_actions, this.initialState)
     }
 
+    getSearchPath = () => this.index_url
     getReducer = () => this.reducer
 }

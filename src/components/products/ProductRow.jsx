@@ -6,6 +6,11 @@ import LinkToEdit from '../Shared/LinkToEdit'
 const ProductRow = ({
     id,
     name,
+    product_type,
+    threads,
+    get_threads_display,
+    contents,
+    get_contents_display,
     price,
     weight,
     width,
@@ -19,7 +24,8 @@ const ProductRow = ({
 }) => {
     return <tr>
         <th scope="row">{id}</th>
-        <td>{name}</td>
+        <td>{[product_type && product_type.name, (threads != null) && get_threads_display,
+            (contents != null) && get_contents_display, name].join(' ')}</td>
         <td>{price}</td>
         <td>{width}</td>
         <td>{density}</td>
@@ -37,6 +43,11 @@ const ProductRow = ({
 ProductRow.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string.isRequired,
+    product_type: PropTypes.object,
+    threads: PropTypes.number,
+    get_threads_display: PropTypes.string,
+    contents: PropTypes.number,
+    get_contents_display: PropTypes.string,
     image_url: PropTypes.string,
     density: PropTypes.number,
     density_shop: PropTypes.number,

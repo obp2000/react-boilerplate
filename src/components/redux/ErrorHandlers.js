@@ -1,5 +1,6 @@
 import { FORM_ERROR } from 'final-form'
 import { receiveErrors } from './Errors'
+import { failedRequest } from './TempState'
 
 export const errorHandler = (dispatch, failedAction) => e => {
     const {
@@ -8,6 +9,7 @@ export const errorHandler = (dispatch, failedAction) => e => {
             data = {}
         } = {}
     } = e
+    dispatch(failedRequest())
     console.error('e: ', e)
     let error_messsages = ['Ошибка!']
     if (Object.keys(data).length != 0) {
@@ -17,8 +19,8 @@ export const errorHandler = (dispatch, failedAction) => e => {
     } else if (e.toJSON().message) {
         error_messsages = [e.toJSON().message]
     }
-    dispatch(receiveErrors(error_messsages))
-    return dispatch(failedAction())
+    failedAction && dispatch(failedAction())
+    return dispatch(receiveErrors(error_messsages))
 }
 
 // export const errorHandler1 = (dispatch, failedAction) => e => {

@@ -16,10 +16,12 @@ const Orders = props => {
         orders: {
             results = [],
             totalCount,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         results,
@@ -29,9 +31,9 @@ const Orders = props => {
     }))
     const dispatch = useDispatch()
     const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
-    return <Loader loaded={!loaded.isFetching}>
-        <>
+    return <>
             <ObjectsPageHeader title='Заказы' totalCount={loaded.totalCount} />
+            <Loader loaded={!loaded.isFetching}>
             <Table size='sm' bordered striped hover className='table-secondary'>
                 <thead className="thead-light">
                     <tr>
@@ -50,9 +52,9 @@ const Orders = props => {
                         <OrderRow {...{...order, deleteObject, key, ...props}} />)}
                 </tbody>
             </Table>
+            </Loader>
             <Pagination {...props} />
         </>
-    </Loader>
 }
 
 export default Orders

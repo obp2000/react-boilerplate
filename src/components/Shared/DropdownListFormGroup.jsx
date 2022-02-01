@@ -7,24 +7,15 @@ import Label from './Label'
 const DropdownListFormGroup = ({
         label_col_size,
         ...rest
-    }) => params =>
-        <FormGroup row>
+    }) => params => {
+        // console.log('params: ', params)
+        // console.log('rest: ', rest)
+        return <FormGroup row>
             <Label {...{label_col_size, ...params}} />
             <Col>
                 <DropdownList {...{...rest, ...params}} />
             </Col>
         </FormGroup>
+    }
 
 export default DropdownListFormGroup
-
-
-
-// const RowFormGroup = params =>
-//     <FormGroup row>
-//         <Label {...{label_col_size: 4, ...params}} />
-//         <Col>
-//             <Input {...params}/>
-//         </Col>
-//     </FormGroup>
-
-// export default RowFormGroup

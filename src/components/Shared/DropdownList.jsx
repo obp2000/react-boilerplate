@@ -1,65 +1,68 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import DropdownList from 'react-widgets/DropdownList'
+import Listbox from "react-widgets/Listbox"
 import { useSelector, useDispatch } from 'react-redux'
 import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
+import { invalid, valid } from './FieldStatus'
 
 import { searchObjectsAction, clearSearchObjectsAction } from '../redux/ServerActions'
 
 const DropdownListComp = ({
         input,
         meta,
-        search_results,
-        isFetching,
-        selector,
-        onSearch,
-        onBlur,
+        options: data = [],
+        label: placeholder,
+        isFieldFetching: busy,
+        search_path,
         Actions,
+        listbox,
+        form_text,
         ...rest
     }) => {
-    if (selector) {
+    let from_selector = {}
+    // console.log('data_dl: ', meta.data)
+    if (search_path) {
         const loaded = useSelector(({
-            [selector]: {
-                search_results,
-                isFetching,
+            temp_state: {
+                data,
+                isFieldFetching
             },
             auth: {
                 accessToken
             }
         }) => ({
-            search_results,
-            isFetching,
+            data,
+            isFieldFetching,
             accessToken
         }))
-        search_results = loaded.search_results
-        isFetching = loaded.isFetching
         const dispatch = useDispatch()
-        onSearch = searchObjectsAction(dispatch, Actions, loaded.accessToken)
-        onBlur = clearSearchObjectsAction(dispatch, Actions)
+        from_selector = {
+            data: loaded.data,
+            busy: loaded.isFieldFetching,
+            onSearch: searchObjectsAction(dispatch, search_path, loaded.accessToken),
+            onBlur: clearSearchObjectsAction(dispatch)}
     }
-
+    const WidgetComponent = listbox ? Listbox : DropdownList
 	return <>
-        <DropdownList
+        <WidgetComponent
             {...input}
             id={input.name}
-            data={search_results}
-            placeholder={rest.label}
-            dataKey={rest.dataKey}
-            textField={rest.textField}
-            onSearch={onSearch}
-            onBlur={onBlur}
-            renderListItem={rest.renderListItem}
+            data={data}
+            placeholder={placeholder}
             filter={"contains"}
-            busy={isFetching}
-            invalid={(meta.touched && !!meta.error) ? 'true' : null}
-            valid={(meta.touched && !meta.error) ? 'true' : null}
+            busy={busy}
+            invalid={invalid(meta)}
+            valid={valid(meta)}
             messages={WidgetMessages}
             // containerClassName={containerClassName}
+            {...rest}
+            {...from_selector}
         />
         <WidgetErrors {...meta} />
-        {rest.form_text && <FormTextList form_text={rest.form_text} />}
+        {form_text && <FormTextList form_text={form_text} />}
         </>
     }
 

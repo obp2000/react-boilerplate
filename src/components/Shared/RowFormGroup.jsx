@@ -13,25 +13,3 @@ const RowFormGroup = params =>
     </FormGroup>
 
 export default RowFormGroup
-
-		// <Label for={params.input.name} sm={4}>
-  //          	{params.label}
-  //       </Label>
-
-
-// FormGroupComp.propTypes = {
-//     label: PropTypes.string,
-//     form_text: PropTypes.array,
-//     size: PropTypes.number,
-// }
-
-		    // <Input
-		    //     {...input}
-		    //     id={input.name}
-		    //     placeholder={label}
-		    //     invalid={meta.touched && !!meta.error}
-		    //     valid={meta.touched && !meta.error}
-		    //     {...rest}
-		    // />
-	    	// <WidgetErrors {...meta} />
-	    	// {form_text && <FormTextList {...{form_text}} />}

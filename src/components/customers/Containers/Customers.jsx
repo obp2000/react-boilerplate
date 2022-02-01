@@ -20,8 +20,8 @@ class Customers extends React.Component {
                 term = ''
             }
         } = this.props
-        console.log('componentDidMount')
-        console.log('mount props ', this.props)
+        // console.log('componentDidMount')
+        // console.log('mount props ', this.props)
         getObjectsAction(page, term)
     }
 
@@ -39,8 +39,8 @@ class Customers extends React.Component {
                 term = ''
             }
         } = this.props
-        console.log('componentDidUpdate')
-        console.log('update props ', this.props)
+        // console.log('componentDidUpdate')
+        // console.log('update props ', this.props)
         if (page !== prevPage || term !== prevTerm) {
             getObjectsAction(page, term)
         }

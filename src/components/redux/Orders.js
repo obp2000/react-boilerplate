@@ -23,10 +23,22 @@ export const initOrderItem = {
     _destroy: false,
 }
 
+const pre_submit_action = values => {
+    (values.order_items || []).map((order_item, index) =>{
+        delete order_item.cost
+        delete order_item.weight
+    })
+    delete values.order_items_cost
+    delete values.order_items_weight
+    delete values.created_at
+    delete values.updated_at
+}
+
 export const Actions = new CommonActions({ index_url,
                                            redirect_url,
                                            initObject,
-                                           choices_names })
+                                           choices_names,
+                                           pre_submit_action })
 export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
 
 export default Actions.getReducer()

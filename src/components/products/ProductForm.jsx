@@ -5,12 +5,16 @@ import { Form, Field } from 'react-final-form'
 import { Form as FormStrap, Row, Col } from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import ImageFormGroup from '../Shared/ImageFormGroup'
+import SwitchFormGroup from '../Shared/SwitchFormGroup'
+import Input from '../Shared/Input'
+import ProductTypeField from './ProductTypeField'
+import ThreadsField from './ThreadsField'
+import ContentsField from './ContentsField'
 import Loader from 'react-loader'
 import FormHeader from '../Shared/FormHeader'
 import ProductImage from './ProductImage'
 import { validate } from './Validators'
 import { calculator } from './Selectors'
-
 import { onSubmitAction } from '../redux/ServerActions'
 import { Actions } from '../redux/Products'
 
@@ -18,10 +22,12 @@ const ProductForm = () => {
     const loaded = useSelector(({
         products: {
             object,
-            isFetching,
         },
         auth: {
             accessToken
+        },
+        temp_state: {
+            isFetching
         }
     }) => ({
         object,
@@ -35,19 +41,36 @@ const ProductForm = () => {
         decorators={[calculator]}
         initialValues={loaded.object}>
         {({ handleSubmit, submitError, ...rest }) => (
+            <Loader loaded={!loaded.isFetching } >
             <FormStrap onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-body rounded" >
-                <FormHeader {...{title: 'Ткань', ...rest}}/>
+                <FormHeader {...{title: 'Ткань', object: loaded.object, ...rest}}/>
+                    <Field name="id" label="Id" hidden component={Input} />
                     <Row>
-                        <Col sm={2}>
-                            <Field name="id" label="Id"
-                                   disabled component={FloatingFormGroup} />
-                        </Col>
                         <Col sm={2}>
                             <ProductImage image={loaded.object.image} />
                         </Col>
                         <Col sm={8}>
                             <Field name="name" label="Название*"
                                    component={FloatingFormGroup} />
+                        </Col>
+                        <Col sm={4}>
+                            <Field name="product_type" label="Тип"
+                                options={loaded.object.product_type_options}
+                                component={ProductTypeField} />
+                        </Col>
+                        <Col sm={4}>
+                            <Field name="threads" label='Нитей'
+                                options={loaded.object.threads_options}
+                                component={ThreadsField}/>
+                        </Col>
+                        <Col sm={4}>
+                            <Field name="contents" label='Состав'
+                                options={loaded.object.contents_options}
+                                component={ContentsField}/>
+                        </Col>
+                        <Col sm={2}>
+                            <Field name="fleece" label='Начес'
+                                type='checkbox' component={SwitchFormGroup}/>
                         </Col>
                         <Col sm={2}>
                             <Field name="price" label="Цена, руб./м*"
@@ -111,6 +134,7 @@ const ProductForm = () => {
                         </Col>
                     </Row>
                 </FormStrap>
+                </Loader>
     )}
     </Form>
 }

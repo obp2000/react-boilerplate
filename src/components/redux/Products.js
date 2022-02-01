@@ -22,21 +22,45 @@ const index_url = '/products'
 const redirect_url = '/products'
 const to_form_data = true
 const pre_submit_action = values => {
-    // console.log('values: ', values, typeof(values.image))
     if (values.new_image) {
         values.image = values.new_image
     } else {
         delete values.image
     }
     delete values.new_image
+    // if (values.threads) {
+    //     values.threads = values.threads.value
+    // }
+    // if (values.contents) {
+    //     values.contents = values.contents.value
+    // }
+    // if (values.product_type) {
+    //     values.product_type = values.product_type.id
+    // }
+    delete values.product_type_options
+    delete values.threads_options
+    delete values.get_threads_display
+    delete values.contents_options
+    delete values.get_contents_display
+    delete values.prices
+    delete values.density_for_count
+    delete values.meters_in_roll
+    delete values.created_at
+    delete values.updated_at
 }
+
+const choices_names = [
+    ['threads_options', 'threads'],
+    ['contents_options', 'contents']
+]
 
 export const Actions = new CommonActions({
     index_url,
     redirect_url,
     initObject,
     to_form_data,
-    pre_submit_action
+    pre_submit_action,
+    choices_names
 })
 
 // export const getObjectsAction = Actions.getObjectsAction()
