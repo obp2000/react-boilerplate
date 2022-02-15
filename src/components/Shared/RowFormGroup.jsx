@@ -6,7 +6,7 @@ import Label from './Label'
 
 const RowFormGroup = params =>
     <FormGroup row>
-    	<Label {...{label_col_size: 4, ...params}} />
+    	<Label {...params} label_col_size={4} />
         <Col>
         	<Input {...params}/>
 	    </Col>

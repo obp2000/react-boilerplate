@@ -6,24 +6,33 @@ import FormTextList from './FormTextList'
 import { invalid, valid } from './FieldStatus'
 
 const InputComp = ({
-	input,
-	meta,
-	label,
-	size,
-	form_text,
-	...rest
-	}) =>
-	<>
-		<Input
+    input,
+    meta,
+    options,
+    ...rest
+}) => {
+    let field = {}
+    if (options) {
+    	const field_options = options[input.name] || {}
+        field = { ...field_options,
+            	  readOnly: field_options.read_only,
+            	  placeholder: field_options.label
+        		}
+    } else {
+        field = { placeholder: rest.label }
+    }
+    return <>
+        <Input
 	        {...input}
+	        {...field}
 		    id={input.name}
-			placeholder={label}
 			invalid={invalid(meta)}
 			valid={valid(meta)}
 			{...rest}
 		/>
-		<WidgetErrors {...meta} />
-		{form_text && <FormTextList form_text={form_text} />}
-	</>
+		<WidgetErrors { ...meta } />
+		{rest.form_text && <FormTextList form_text={rest.form_text} />}
+    </>
+}
 
 export default InputComp

@@ -1,7 +1,13 @@
-import { CommonActions } from './CommonActions'
+import { createReducer } from 'redux-act'
+import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
+
 
 export const initObject = {
     id: null,
+    product_type: null,
+    threads: null,
+    contents: null,
+    fleece: null,
     name: '',
     price: null,
     density: null,
@@ -28,16 +34,12 @@ const pre_submit_action = values => {
         delete values.image
     }
     delete values.new_image
-    // if (values.threads) {
-    //     values.threads = values.threads.value
-    // }
-    // if (values.contents) {
-    //     values.contents = values.contents.value
-    // }
-    // if (values.product_type) {
-    //     values.product_type = values.product_type.id
-    // }
+    if (values.product_type) {
+        values.product_type_id = values.product_type
+        delete values.product_type
+    }
     delete values.product_type_options
+    delete values.get_product_type_display
     delete values.threads_options
     delete values.get_threads_display
     delete values.contents_options
@@ -47,12 +49,14 @@ const pre_submit_action = values => {
     delete values.meters_in_roll
     delete values.created_at
     delete values.updated_at
+    // console.log('values: ', values)
 }
 
-const choices_names = [
-    ['threads_options', 'threads'],
-    ['contents_options', 'contents']
-]
+// const choices_names = [
+//     ['product_type_options', 'product_type'],
+//     ['threads_options', 'threads'],
+//     ['contents_options', 'contents']
+// ]
 
 export const Actions = new CommonActions({
     index_url,
@@ -60,7 +64,7 @@ export const Actions = new CommonActions({
     initObject,
     to_form_data,
     pre_submit_action,
-    choices_names
+    // choices_names
 })
 
 // export const getObjectsAction = Actions.getObjectsAction()
@@ -70,4 +74,5 @@ export const Actions = new CommonActions({
 // export const onSearch = Actions.searchObjectsAction()
 // export const onBlur = Actions.clearSearchObjectsAction()
 
-export default Actions.getReducer()
+// export default Actions.getReducer()
+export default createReducer(Actions.getReducerActions(), Actions.getInitialState())

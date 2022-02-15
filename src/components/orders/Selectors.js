@@ -3,7 +3,7 @@ import { SamplesWeight, PostPacketWeight, GiftWeight } from './Consts'
 import { getPostCost } from '../redux/PostCost'
 
 export const post_cost_with_packet = (post_cost = 0, packet = 0) =>
-    (packet + Number(post_cost))
+    (Number(packet) + Number(post_cost))
 
 export const post_discount = (order_items_cost = 0, post_cost = 0, packet = 0) =>
     order_items_cost >= 1000 ?
@@ -15,7 +15,7 @@ export const post_cost_with_packet_and_post_discount =
         post_discount(order_items_cost, post_cost, packet))
 
 export const cost_with_postal_and_post_discount =
-    (order_items_cost = 0, post_cost = 0, packet = 0) => (order_items_cost +
+    (order_items_cost = 0, post_cost = 0, packet = 0) => (Number(order_items_cost) +
         post_cost_with_packet_and_post_discount(order_items_cost, post_cost, packet))
 
 const hasPostDiscount = (order_items_cost = 0, post_cost = 0, packet = 0) =>
@@ -23,41 +23,45 @@ const hasPostDiscount = (order_items_cost = 0, post_cost = 0, packet = 0) =>
 
 export const needGift = order_items_cost => order_items_cost >= 2000
 
-export const tolalWeight = (order_items_weight, order_items_cost) => order_items_weight +
+export const tolalWeight = (order_items_weight, order_items_cost) => Number(order_items_weight) +
     PostPacketWeight + SamplesWeight + (needGift(order_items_cost) ? GiftWeight : 0)
 
-export const order_calculator = createDecorator({
-        field: 'customer',
-        updates: customer => {
-            const {
-                name: customer_name,
-                address: customer_address,
-                city
-            } = customer || {}
-            return {
-                customer_name,
-                customer_address,
-                pindex: city && city.pindex,
-                city: city && city.city
-            }
-        }
-    }, {
+export const order_calculator = createDecorator(
+// {
+//         field: 'customer',
+//         updates: customer => {
+//             const {
+//                 name: customer_name,
+//                 address: customer_address,
+//                 city
+//             } = customer || {}
+//             return {
+//                 customer_name,
+//                 customer_address,
+//                 pindex: city && city.pindex,
+//                 city: city && city.city
+//             }
+//         }
+//     },
+    {
         field: 'post_cost',
         updates: (post_cost, name, { packet, order_items_cost }) => ({
-            post_cost_with_packet: post_cost_with_packet(post_cost, packet),
-            post_discount: post_discount(order_items_cost, post_cost, packet),
+            post_cost_with_packet: post_cost_with_packet(post_cost, packet).toFixed(2),
+            post_discount: post_discount(order_items_cost, post_cost, packet).toFixed(2),
             post_cost_with_packet_and_post_discount: post_cost_with_packet_and_post_discount(
-                order_items_cost, post_cost, packet),
-            cost_with_postal_and_post_discount: cost_with_postal_and_post_discount(order_items_cost, post_cost, packet)
+                order_items_cost, post_cost, packet).toFixed(2),
+            cost_with_postal_and_post_discount:
+                cost_with_postal_and_post_discount(order_items_cost, post_cost, packet).toFixed(2)
         })
     }, {
         field: 'packet',
         updates: (packet, name, { post_cost, order_items_cost }) => ({
-            post_cost_with_packet: post_cost_with_packet(post_cost, packet),
-            post_discount: post_discount(order_items_cost, post_cost, packet),
+            post_cost_with_packet: post_cost_with_packet(post_cost, packet).toFixed(2),
+            post_discount: post_discount(order_items_cost, post_cost, packet).toFixed(2),
             post_cost_with_packet_and_post_discount: post_cost_with_packet_and_post_discount(
-                order_items_cost, post_cost, packet),
-            cost_with_postal_and_post_discount: cost_with_postal_and_post_discount(order_items_cost, post_cost, packet)
+                order_items_cost, post_cost, packet).toFixed(2),
+            cost_with_postal_and_post_discount:
+                cost_with_postal_and_post_discount(order_items_cost, post_cost, packet).toFixed(2)
         })
     }, {
         field: 'address1',

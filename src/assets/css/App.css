@@ -6,3 +6,11 @@
 input.rw-detect-autofill {
     display: none;
 }
+
+input.rw-input {
+    max-width: 70px;
+}
+
+/*tr th {
+    max-width: 30px;
+}*/

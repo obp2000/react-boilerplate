@@ -38,8 +38,7 @@ const Customers = props => {
                   <thead className="thead-light">
                       <tr>
                           <th scope="col">Id</th>
-                          <th scope="col">Ник</th>
-                          <th scope="col">ФИО</th>
+                          <th scope="col">Имя</th>
                           <th scope="col">Город</th>
                           <th scope="col">Индекс</th>
                           <th scope="col">Адрес</th>

@@ -10,7 +10,7 @@ import {
 // import { initOrderItem } from '../redux/Orders'
 
 const weight = (amount = 0, density = 0, width = 0) =>
-    parseInt(amount * density * width / 100)
+    (amount * density * width / 100)
 
 const cost = (amount = 0, price = 0) => amount * price
 
@@ -21,7 +21,7 @@ const order_items_sum = (order_items, name) => (order_items || [])
         [name]: value
     }) => sum + Number(value || 0), 0)
 
-const order_items_count = (order_items) => (order_items || []).length
+const order_items_count = order_items => (order_items || []).length
 
 const total_text = (order_items_cost) => needGift(order_items_cost) ?
     'Итого - Нужен подарок!!!' : 'Итого'
@@ -37,18 +37,19 @@ export const order_items_calculator = createDecorator({
             const density = product && product.density
             const width = product && product.width
             return {
-                [name.replace('.amount', '.cost')]: cost(value, price),
-                [name.replace('.amount', '.weight')]: weight(value, density, width),
-                order_items_amount: order_items_sum(order_items, 'amount'),
+                [name.replace('.amount', '.cost')]: cost(value, price).toFixed(2),
+                [name.replace('.amount', '.weight')]:
+                    weight(value, density, width).toFixed(0),
+                order_items_amount: order_items_sum(order_items, 'amount').toFixed(2),
             }
         }
     }, {
         field: /order_items\[\d+\]\.price/,
-        updates: (value, name, { order_items }) => {
+        updates: (price, name, { order_items }) => {
             const index = findIndex(name)
             const { amount } = (order_items[index] || {})
             return {
-                [name.replace('.price', '.cost')]: cost(amount, value)
+                [name.replace('.price', '.cost')]: cost(amount, price).toFixed(2)
             }
         }
     }, {
@@ -61,33 +62,35 @@ export const order_items_calculator = createDecorator({
             const { amount } = (order_items[index] || {})
             return {
                 [name.replace('.product', '.price')]: price,
-                [name.replace('.product', '.weight')]: weight(amount, density, width)
+                [name.replace('.product', '.weight')]:
+                    weight(amount, density, width).toFixed(0)
             }
         }
     }, {
         field: /order_items\[\d+\]\.cost/,
         updates: (value, name, { order_items }) => ({
-            order_items_cost: order_items_sum(order_items, 'cost'),
+            order_items_cost: order_items_sum(order_items, 'cost').toFixed(2),
         })
     }, {
         field: /order_items\[\d+\]\.weight/,
         updates: (value, name, { order_items }) => ({
-            order_items_weight: order_items_sum(order_items, 'weight'),
+            order_items_weight: order_items_sum(order_items, 'weight').toFixed(0),
         })
     }, {
         field: 'order_items_cost',
         updates: (order_items_cost, name, { post_cost, packet, order_items_weight }) => ({
-            post_discount: post_discount(order_items_cost, post_cost, packet),
+            post_discount: post_discount(order_items_cost, post_cost, packet).toFixed(2),
             post_cost_with_packet_and_post_discount: post_cost_with_packet_and_post_discount(
-                order_items_cost, post_cost, packet),
-            cost_with_postal_and_post_discount: cost_with_postal_and_post_discount(order_items_cost, post_cost, packet),
+                order_items_cost, post_cost, packet).toFixed(2),
+            cost_with_postal_and_post_discount:
+                cost_with_postal_and_post_discount(order_items_cost, post_cost, packet).toFixed(2),
             total_text: total_text(order_items_cost),
-            tolalWeight: tolalWeight(order_items_weight, order_items_cost)
+            tolalWeight: tolalWeight(order_items_weight, order_items_cost).toFixed(0)
         })
     },{
         field: 'order_items_weight',
         updates: (order_items_weight, name, { order_items_cost }) => ({
-            tolalWeight: tolalWeight(order_items_weight, order_items_cost)
+            tolalWeight: tolalWeight(order_items_weight, order_items_cost).toFixed(0)
          })
     },
 

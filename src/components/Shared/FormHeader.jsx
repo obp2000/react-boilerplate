@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Row, Col } from 'reactstrap'
 import SubmitButton from '../Shared/SubmitButton'
 import BackButton from '../Shared/BackButton'
 
 const FormHeader = ({
-        title,
         submitting,
         invalid,
         pristine,
-        object,
+        id,
+        options,
         children
-    }) =>
-    <Row>
+    }) => <Row>
         <Col sm={2}>
             <BackButton />
         </Col>
         <Col sm={6}>
             <h4>
-                Id {object.id} {title}{children}
+                Id {id} {options.object_name}{children}
             </h4>
         </Col>
         <Col sm={2}>
@@ -27,10 +27,11 @@ const FormHeader = ({
     </Row>
 
 FormHeader.propTypes = {
-    title: PropTypes.string,
     submitting: PropTypes.bool.isRequired,
     invalid: PropTypes.bool,
-    pristine: PropTypes.bool
+    pristine: PropTypes.bool,
+    id: PropTypes.number,
+    options: PropTypes.object,
 }
 
 export default FormHeader

@@ -1,4 +1,5 @@
-import { CommonActions } from './CommonActions'
+import { createReducer } from 'redux-act'
+import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
 import { initObject as initCustomer } from './Customers'
 import { initObject as initProduct } from './Products'
 
@@ -24,10 +25,34 @@ export const initOrderItem = {
 }
 
 const pre_submit_action = values => {
+    if (values.customer) {
+        values.customer_id = values.customer.id
+        delete values.customer
+    }
     (values.order_items || []).map((order_item, index) =>{
         delete order_item.cost
         delete order_item.weight
+        delete order_item._destroy
+        if (order_item.product) {
+            order_item.product_id = order_item.product.id
+            delete order_item.product
+            // delete order_item.product.name
+            // delete order_item.product.get_product_type_display
+            // delete order_item.product.get_threads_display
+            // delete order_item.product.get_contents_display
+        }
     })
+    delete values.delivery_types
+    delete values.packets
+    delete values.samples_weight
+    delete values.packet_weight
+    delete values.post_cost_with_packet
+    delete values.post_discount
+    delete values.post_cost_with_packet_and_post_discount
+    delete values.cost_with_postal_and_post_discount
+    delete values.total_text
+    delete values.tolalWeight
+    delete values.order_items_amount
     delete values.order_items_cost
     delete values.order_items_weight
     delete values.created_at
@@ -41,7 +66,8 @@ export const Actions = new CommonActions({ index_url,
                                            pre_submit_action })
 export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
 
-export default Actions.getReducer()
+// export default Actions.getReducer()
+export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
 
 
 // export const getObjectsAction = Actions.getObjectsAction()

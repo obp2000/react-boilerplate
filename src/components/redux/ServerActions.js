@@ -44,11 +44,11 @@ export const getObjectsAction = actions => page => (dispatch, getState) => {
         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
 }
 
-const options = (choices_names = [], method_options) => choices_names.reduce(
-    (choices, names) => {
-        choices[names[0]] = method_options[names[1]].choices
-        return choices
-    }, {})
+// const options = (choices_names = [], method_options) => choices_names.reduce(
+//     (choices, names) => {
+//         choices[names[0]] = method_options[names[1]].choices
+//         return choices
+//     }, {})
 
 const getNewObjectOptions = (dispatch, actions, accessToken) => {
     dispatch(startRequest())
@@ -57,14 +57,19 @@ const getNewObjectOptions = (dispatch, actions, accessToken) => {
             data: {
                 actions: {
                     POST
-                }
+                },
+                name: object_name
             }
         }) => {
             dispatch(successRequest())
-            return dispatch(actions.successReceiveObject({
+            dispatch(actions.successReceiveObject(
+                {
                 ...actions.initObject,
-                ...options(actions.choices_names, POST),
-            }))
+                // ...options(actions.choices_names, {...POST, object_name}),
+                options: {...POST, object_name}
+                }
+            ))
+            dispatch(clearErrors())
         })
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
@@ -78,10 +83,13 @@ const getExistingObject = (dispatch, actions, id, accessToken, method_options) =
             data
         }) => {
             dispatch(successRequest())
-            dispatch(actions.successReceiveObject({
+            dispatch(actions.successReceiveObject(
+                {
                 ...data,
-                ...options(actions.choices_names, method_options)
-            }))
+                // ...options(actions.choices_names, method_options),
+                options: method_options
+                }
+            ))
             dispatch(clearErrors())
         })
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
@@ -96,13 +104,10 @@ const getExistingObjectWihOptions = (dispatch, actions, id, accessToken) => {
                 data: {
                     actions: {
                         PUT
-                    }
+                    },
+                    name: object_name
                 }
-            }) => {
-                // dispatch(successRequest())
-                return getExistingObject(dispatch, actions, id, accessToken, PUT)
-            }
-
+            }) => getExistingObject(dispatch, actions, id, accessToken, {...PUT, object_name})
         )
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
@@ -116,18 +121,13 @@ export const getObjectAction = actions => id => (dispatch, getState) => {
     if (accessToken) {
         dispatch(actions.requestObject())
         if (id == 'new') {
-            if (actions.choices_names) {
-                return getNewObjectOptions(dispatch, actions, accessToken)
-            } else {
-                return dispatch(actions.successReceiveObject(actions.initObject))
-            }
-        } else {
-            if (actions.choices_names) {
-                return getExistingObjectWihOptions(dispatch, actions, id, accessToken)
-            } else {
-                return getExistingObject(dispatch, actions, id, accessToken)
-            }
-        }
+            return getNewObjectOptions(dispatch, actions, accessToken)
+            // if (true) {
+            //     return getNewObjectOptions(dispatch, actions, accessToken)
+            // } else {
+            //     return dispatch(actions.successReceiveObject(actions.initObject))
+            // }
+        } else getExistingObjectWihOptions(dispatch, actions, id, accessToken)
     }
 }
 

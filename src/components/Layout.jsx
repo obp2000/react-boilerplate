@@ -24,7 +24,7 @@ import User from './users/Containers/User'
 
 const Layout = ({history}) => {
   return <ConnectedRouter history={history}>
-    <Container className="container-xxl my-md-4 bd-layout">
+    <Container fluid="sm" className="bg-light border">
       <Route path="/" component={Errors} />
       <Route path="/" component={NavBar} />
       <Route exact path="/" component={Products}/>

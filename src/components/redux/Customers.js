@@ -1,4 +1,5 @@
-import { CommonActions } from './CommonActions'
+import { createReducer } from 'redux-act'
+import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
 
 export const initCity = {
     city: '',
@@ -15,10 +16,11 @@ export const initObject = {
 const index_url = '/customers'
 const redirect_url = '/customers'
 const pre_submit_action = values => {
-    // if (values.city) {
-    //     values.city = values.city.id
-    // }
-    delete values.pindex
+    if (values.city) {
+        values.city_id = values.city.id
+        delete values.city
+    }
+    delete values.options
     delete values.created_at
     delete values.updated_at
 }
@@ -30,7 +32,7 @@ export const Actions = new CommonActions({
     pre_submit_action
 })
 
-export default Actions.getReducer()
+export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
 
 
 

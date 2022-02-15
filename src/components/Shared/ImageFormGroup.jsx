@@ -4,10 +4,10 @@ import { FormGroup } from 'reactstrap'
 import ImageInput from '../Shared/ImageInput'
 import Label from './Label'
 
-const ImageFormGroup = params =>
+const ImageFormGroup = props =>
 	<FormGroup floating>
-		<ImageInput {...params}/>
-		<Label {...params} />
+		<ImageInput {...props} />
+		<Label {...props} />
 	</FormGroup>
 
 export default ImageFormGroup

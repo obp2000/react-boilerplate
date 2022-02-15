@@ -11,7 +11,7 @@ const OrderItems = ({
                 <tr>
                     <th scope='col'>№ п/п</th>
                     <th scope='col'>Наименование</th>
-                    <th scope='col'>Цена, руб.</th>
+                    <th scope='col'>Цена, руб./м</th>
                     <th scope='col'>Метраж</th>
                     <th scope='col'>Стоимость, руб.</th>
                     <th scope='col'>Вес, гр.</th>

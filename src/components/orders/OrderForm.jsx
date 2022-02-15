@@ -6,18 +6,17 @@ import { Form as FormStrap, Row, Col, Table } from 'reactstrap'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
 import Loader from 'react-loader'
+// import { NumberPicker } from 'react-widgets'
 // import TdFormGroup from '../order_items/TdFormGroup'
 import TdInput from '../Shared/TdInput'
 import TdText from './TdText'
-// import FormGroup from './FormGroup'
-import FloatingFormGroupCol from '../Shared/FloatingFormGroupCol'
+import Input from '../Shared/Input'
+import FloatingFormGroup from '../Shared/FloatingFormGroup'
 // import SubmitButton from '../Shared/SubmitButton'
 import OrderItems from '../order_items/OrderItems'
 import { SamplesWeight, PostPacketWeight } from './Consts'
 import CustomerField from '../customers/CustomerField'
-import DeliveryTypeField from './DeliveryTypeField'
 // import PostCostButton from './PostCostButton'
-import PostPacketField from './PostPacketField'
 import OrderNumber from './OrderNumber'
 import FormHeader from '../Shared/FormHeader'
 import { validate } from './Validators'
@@ -25,6 +24,7 @@ import { order_calculator } from './Selectors'
 import { order_items_calculator } from '../order_items/Selectors'
 import { onSubmitAction } from '../redux/ServerActions'
 import { Actions } from '../redux/Orders'
+import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 
 const OrderForm = () => {
     const loaded = useSelector(({
@@ -58,91 +58,129 @@ const OrderForm = () => {
         <Loader loaded={!loaded.isFetching}>
         <FormStrap onSubmit={handleSubmit}
                    className="shadow p-3 mb-5 bg-body rounded">
-                <FormHeader {...rest}>
+                <FormHeader {...{object: loaded.object, ...rest}}>
                     <OrderNumber />
                 </FormHeader>
+                <Field name="id" label="Id" hidden component={Input} />
                 <Row>
-                    <Field name="customer" label='Заказчик' size={6}
-                           component={CustomerField}/>
-                    <Field name="customer_name" label="ФИО" size={6}
-                           disabled component={FloatingFormGroupCol} />
-                    <Field name="pindex" label="Индекс" size={2}
-                           disabled component={FloatingFormGroupCol} />
-                    <Field name="city" label="Город" size={2} disabled
-                           component={FloatingFormGroupCol} />
-                    <Field name="customer_address" label="Адрес" size={6}
-                           disabled component={FloatingFormGroupCol} />
-                    <Field name="delivery_type" label='Доставка' size={5}
-                        options={loaded.object.delivery_types}
-                        component={DeliveryTypeField}/>
-                    <Field name="address" label='Адрес доставки' size={6}
-                           component={FloatingFormGroupCol}/>
+                        <Field name="customer" label='Заказчик'
+                            component={CustomerField}/>
                 </Row>
-
+                <Row>
+                    <Col sm={2}>
+                        <SelectFloatingFormGroup name="delivery_type"
+                            label='Доставка' dataKey='value'
+                            textField='display_name'
+                            options={loaded.object.delivery_types} />
+                    </Col>
+                    <Col sm={6}>
+                        <Field name="address" label='Адрес доставки'
+                            component={FloatingFormGroup}/>
+                    </Col>
+                </Row>
                 <Table size="sm" responsive bordered hover>
                     <FieldArray name="order_items" component={OrderItems}/>
                     <tfoot>
                         <tr>
-                            <Field name="total_text" colSpan={3} disabled
-                                component={TdInput} />
-                            <Field name="order_items_amount" type="number"
-                                disabled component={TdInput} />
-                            <Field name="order_items_cost" type="number"
-                                disabled component={TdInput} />
-                            <Field name="order_items_weight" type="number"
-                                disabled component={TdInput} />
-                        </tr>
-                        <tr>
-                            <TdText label="Образцы" colSpan={5} />
-                            <Field name="samples_weight" type="number"
-                                disabled component={TdInput} />
-                        </tr>
-                        <tr>
-                            <TdText label="Почтовый пакет" colSpan={4} />
+                            <td/>
                             <td>
-                               <Field name="packet" size={8}
-                                      options={loaded.object.packets}
-                                      component={PostPacketField}/>
+                                <Field name="total_text" disabled
+                                component={Input} />
                             </td>
-                            <Field name="packet_weight" type="number"
-                                disabled component={TdInput} />
+                            <td/>
+                            <td>
+                                <Field name="order_items_amount" type="number"
+                                    disabled component={Input} />
+                            </td>
+                            <td>
+                                <Field name="order_items_cost" type="number"
+                                    disabled component={Input} />
+                            </td>
+                            <td>
+                                <Field name="order_items_weight" type="number"
+                                    disabled component={Input} />
+                            </td>
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                Тариф Почты России
+                            <td/>
+                            <td>Образцы</td>
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="samples_weight" type="number"
+                                    disabled component={Input} />
                             </td>
-                            <Field name="post_cost" label="Тариф Почты"
-                                   type="number" component={TdInput} />
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                Тариф Почты России + пакет
+                            <td/>
+                            <td>Почтовый пакет</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <SelectFloatingFormGroup name="packet"
+                                    label='Почтовый пакет' dataKey='value'
+                                    textField='display_name'
+                                    options={loaded.object.packets} />
                             </td>
-                            <Field name="post_cost_with_packet" type="number"
-                                disabled component={TdInput} />
+                            <td>
+                                <Field name="packet_weight" type="number"
+                                    disabled component={Input} />
+                            </td>
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                Скидка на почтовые
+                            <td/>
+                            <td>Тариф Почты России</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="post_cost" label="Тариф Почты"
+                                   type="number" component={Input} />
                             </td>
-                            <Field name="post_discount" type="number"
-                                disabled component={TdInput} />
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                Почтовые с учетом скидки
+                            <td/>
+                            <td>Тариф Почты России + пакет</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="post_cost_with_packet" type="number"
+                                    disabled component={Input} />
                             </td>
-                            <Field name="post_cost_with_packet_and_post_discount"
-                                type="number" disabled component={TdInput} />
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                Итого
+                            <td/>
+                            <td>Скидка на почтовые</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="post_discount" type="number"
+                                    disabled component={Input} />
                             </td>
-                            <Field name="cost_with_postal_and_post_discount"
-                                type="number" disabled component={TdInput} />
-                            <Field name="tolalWeight" type="number"
-                                disabled component={TdInput} />
+                        </tr>
+                        <tr>
+                            <td/>
+                            <td>Почтовые с учетом скидки</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="post_cost_with_packet_and_post_discount"
+                                    type="number" disabled component={Input} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td/>
+                            <td>Итого</td>
+                            <td/>
+                            <td/>
+                            <td>
+                                <Field name="cost_with_postal_and_post_discount"
+                                    type="number" disabled component={Input} />
+                            </td>
+                            <td>
+                                <Field name="tolalWeight" type="number"
+                                    disabled component={Input} />
+                            </td>
                         </tr>
                     </tfoot>
                 </Table>

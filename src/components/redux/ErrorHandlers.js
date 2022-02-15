@@ -13,9 +13,13 @@ export const errorHandler = (dispatch, failedAction) => e => {
     console.error('e: ', e)
     let error_messsages = ['Ошибка!']
     if (Object.keys(data).length != 0) {
-        error_messsages = Object.values(data).flat()
+        error_messsages = []
+        Object.keys(data).slice(0, 50).map((key, index) =>
+            error_messsages.push(`${key}: ${data[key]}`)
+        )
+        // error_messsages = Object.values(data).flat()
     } else if (message) {
-        error_messsages = [message]
+        error_messsages = [message.substring(0, 100)]
     } else if (e.toJSON().message) {
         error_messsages = [e.toJSON().message]
     }

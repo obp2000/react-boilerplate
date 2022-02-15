@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Field } from 'react-final-form'
-import TdInput from '../Shared/TdInput'
+// import NumberField from '../Shared/NumberField'
+import Input from '../Shared/Input'
 import DeleteButton from '../Shared/DeleteButton'
 import ProductField from '../products/ProductField'
 
@@ -17,18 +18,27 @@ const OrderItem = ({
         <th scope="row">
             {index+1}
         </th>
-        <td>
+        <td className="min-vw-35">
             <Field name={`${order_item_name}.product`} label="Наименование"
+                containerClassName='form-field'
                 component={ProductField} />
         </td>
-        <Field name={`${order_item_name}.price`} label="Цена"
-            type="number" step={1} component={TdInput} />
-        <Field name={`${order_item_name}.amount`} label="Количество"
-            type="number" step={0.1} component={TdInput} />
-        <Field name={`${order_item_name}.cost`} type="number"
-            disabled component={TdInput} />
-        <Field name={`${order_item_name}.weight`} type="number"
-            disabled component={TdInput} />
+        <td>
+            <Field name={`${order_item_name}.price`} label="Цена, руб./м"
+                type='number' step={1} min={0} component={Input} />
+        </td>
+        <td>
+            <Field name={`${order_item_name}.amount`} label="Количество"
+                type='number' step={0.1} min={0} component={Input} />
+        </td>
+        <td>
+            <Field name={`${order_item_name}.cost`} type="number"
+                disabled component={Input} />
+        </td>
+        <td>
+            <Field name={`${order_item_name}.weight`} type="number"
+                disabled component={Input} />
+        </td>
         <td>
             <DeleteButton action={() => fields.remove(index)} />
         </td>

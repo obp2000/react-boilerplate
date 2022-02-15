@@ -2,11 +2,10 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import DeleteButton from '../Shared/DeleteButton'
 import LinkToEdit from '../Shared/LinkToEdit'
+import ShortName from './CustomerName'
 
 const CustomerRow = ({
     id,
-    nick,
-    name,
     city,
     pindex,
     address,
@@ -17,8 +16,7 @@ const CustomerRow = ({
     ...rest
 }) => <tr>
     <td>{id}</td>
-    <td>{nick}</td>
-    <td>{name}</td>
+    <td>{ShortName(rest)}</td>
     <td>{city && city.city}</td>
     <td>{city && city.pindex}</td>
     <td>{address}</td>

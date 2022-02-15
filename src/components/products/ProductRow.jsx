@@ -2,15 +2,16 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import DeleteButton from '../Shared/DeleteButton'
 import LinkToEdit from '../Shared/LinkToEdit'
+import ProductName from './ProductName'
 
 const ProductRow = ({
     id,
-    name,
-    product_type,
-    threads,
-    get_threads_display,
-    contents,
-    get_contents_display,
+    // name,
+    // product_type,
+    // threads,
+    // get_threads_display,
+    // contents,
+    // get_contents_display,
     price,
     weight,
     width,
@@ -24,8 +25,7 @@ const ProductRow = ({
 }) => {
     return <tr>
         <th scope="row">{id}</th>
-        <td>{[product_type && product_type.name, (threads != null) && get_threads_display,
-            (contents != null) && get_contents_display, name].join(' ')}</td>
+        <td>{ProductName(rest)}</td>
         <td>{price}</td>
         <td>{width}</td>
         <td>{density}</td>
@@ -43,7 +43,7 @@ const ProductRow = ({
 ProductRow.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string.isRequired,
-    product_type: PropTypes.object,
+    product_type: PropTypes.number,
     threads: PropTypes.number,
     get_threads_display: PropTypes.string,
     contents: PropTypes.number,

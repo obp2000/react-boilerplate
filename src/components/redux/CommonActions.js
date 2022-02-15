@@ -171,9 +171,11 @@ export class CommonActions {
         //         search_results: []
         //     })
 
-        this.reducer = createReducer(this.reducer_actions, this.initialState)
+        // this.reducer = createReducer(this.reducer_actions, this.initialState)
     }
 
     getSearchPath = () => this.index_url
-    getReducer = () => this.reducer
+    // getReducer = () => this.reducer
+    getReducerActions = () => this.reducer_actions
+    getInitialState = () => this.initialState
 }

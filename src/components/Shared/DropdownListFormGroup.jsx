@@ -4,16 +4,12 @@ import { FormGroup, Col } from 'reactstrap'
 import DropdownList from './DropdownList'
 import Label from './Label'
 
-const DropdownListFormGroup = ({
-        label_col_size,
-        ...rest
-    }) => params => {
-        // console.log('params: ', params)
-        // console.log('rest: ', rest)
+const DropdownListFormGroup = settings => props => {
+        // console.log('params: ', props)
         return <FormGroup row>
-            <Label {...{label_col_size, ...params}} />
+            <Label {...settings} {...props} />
             <Col>
-                <DropdownList {...{...rest, ...params}} />
+                <DropdownList {...settings} {...props} />
             </Col>
         </FormGroup>
     }

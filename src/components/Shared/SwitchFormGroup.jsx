@@ -6,8 +6,8 @@ import Label from './Label'
 
 const SwitchFormGroup = params =>
 	<FormGroup check className='form-switch'>
-		<Input {...{role: "switch", ...params}} />
-		<Label {...{check: true, ...params}} />
+		<Input {...params} type="checkbox" role="switch" />
+		<Label {...params} check={true} />
 	</FormGroup>
 
 export default SwitchFormGroup

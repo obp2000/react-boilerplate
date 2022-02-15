@@ -2,22 +2,20 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import DeleteButton from '../Shared/DeleteButton'
 import LinkToEdit from '../Shared/LinkToEdit'
+import { ShortName } from '../customers/CustomerName'
 
 const OrderRow = ({
     id,
+    customer,
     created_at,
     updated_at,
     order_items_cost,
-    customer: {
-        nick = '',
-        name = ''
-    },
     deleteObject,
     ...rest
 }) => {
     return <tr>
         <th scope="row">{id}</th>
-        <td>{`${nick} (${name})`}</td>
+        <td>{ShortName(customer)}</td>
         <td>{order_items_cost}</td>
         <td>{created_at}</td>
         <td>{updated_at}</td>
