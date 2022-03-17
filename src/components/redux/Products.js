@@ -49,6 +49,7 @@ const pre_submit_action = values => {
     delete values.meters_in_roll
     delete values.created_at
     delete values.updated_at
+    delete values.Consts
     // console.log('values: ', values)
 }
 

@@ -4,7 +4,9 @@ import { Field } from 'react-final-form'
 // import NumberField from '../Shared/NumberField'
 import Input from '../Shared/Input'
 import DeleteButton from '../Shared/DeleteButton'
-import ProductField from '../products/ProductField'
+import DropdownList from '../Shared/DropdownList'
+import { Actions } from '../redux/Products'
+import ProductName from '../products/ProductName'
 
 const OrderItem = ({
     order_item_name,
@@ -13,34 +15,74 @@ const OrderItem = ({
     index,
     // row_class_name,
     // deleteOrderItemAction,
-    fields
+    fields,
+    options: {
+        product: {
+            label: product_label,
+            children: product_props = {}
+        } = {},
+        price: {
+            label: price_label
+        } = {},
+        amount: {
+            label: amount_label
+        } = {},
+        cost: {
+            label: cost_label
+        } = {},
+        weight: {
+            label: weight_label
+        } = {}
+    } = {},
+    common_consts
 }) => <tr>
         <th scope="row">
             {index+1}
         </th>
         <td className="min-vw-35">
-            <Field name={`${order_item_name}.product`} label="Наименование"
-                containerClassName='form-field'
-                component={ProductField} />
+            <Field  name={`${order_item_name}.product`}
+                    label={product_label}
+                    containerClassName='form-field'
+                    component={DropdownList}
+                    dataKey='id'
+                    textField={item => ProductName(item, product_props)}
+                    search_path={Actions.getSearchPath()}
+                    renderListItem={({ item }) => ProductName(item, product_props)}
+                    renderValue={({ item }) => ProductName(item, product_props)}
+                    />
         </td>
         <td>
-            <Field name={`${order_item_name}.price`} label="Цена, руб./м"
-                type='number' step={1} min={0} component={Input} />
+            <Field  name={`${order_item_name}.price`}
+                    type='number'
+                    label={price_label}
+                    step={1}
+                    min={0}
+                    component={Input} />
         </td>
         <td>
-            <Field name={`${order_item_name}.amount`} label="Количество"
-                type='number' step={0.1} min={0} component={Input} />
+            <Field  name={`${order_item_name}.amount`}
+                    type='number'
+                    label={amount_label}
+                    step={0.1}
+                    min={0}
+                    component={Input} />
         </td>
         <td>
-            <Field name={`${order_item_name}.cost`} type="number"
-                disabled component={Input} />
+            <Field  name={`${order_item_name}.cost`}
+                    type="number"
+                    label={cost_label}
+                    disabled
+                    component={Input} />
         </td>
         <td>
-            <Field name={`${order_item_name}.weight`} type="number"
-                disabled component={Input} />
+            <Field  name={`${order_item_name}.weight`}
+                    type="number"
+                    label={weight_label}
+                    disabled
+                    component={Input} />
         </td>
         <td>
-            <DeleteButton action={() => fields.remove(index)} />
+            <DeleteButton action={() => fields.remove(index)} {...common_consts} />
         </td>
     </tr>
 
@@ -49,7 +91,14 @@ OrderItem.propTypes = {
     price: PropTypes.number,
     amount: PropTypes.number,
     index: PropTypes.number,
-    fields: PropTypes.object
+    fields: PropTypes.object,
+    product_label: PropTypes.string,
+    price_label: PropTypes.string,
+    amount_label: PropTypes.string,
+    cost_label: PropTypes.string,
+    weight_label: PropTypes.string,
+    common_consts: PropTypes.object
+    // options: PropTypes.object
     // row_class_name: PropTypes.string,
     // deleteOrderItemAction: PropTypes.func.isRequired
 }

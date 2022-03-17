@@ -5,8 +5,8 @@ import { initObject as initProduct } from './Products'
 
 const index_url = '/orders'
 const redirect_url = '/orders'
-const choices_names = [['delivery_types','delivery_type'],
-                       ['packets', 'packet']]
+// const choices_names = [['delivery_types','delivery_type'],
+//                        ['packets', 'packet']]
 
 const initObject = {
     post_cost: 0,
@@ -48,21 +48,21 @@ const pre_submit_action = values => {
     delete values.packet_weight
     delete values.post_cost_with_packet
     delete values.post_discount
-    delete values.post_cost_with_packet_and_post_discount
-    delete values.cost_with_postal_and_post_discount
+    delete values.total_postals
+    delete values.total_sum
     delete values.total_text
-    delete values.tolalWeight
+    delete values.total_weight
     delete values.order_items_amount
     delete values.order_items_cost
     delete values.order_items_weight
     delete values.created_at
     delete values.updated_at
+    delete values.Consts
 }
 
 export const Actions = new CommonActions({ index_url,
                                            redirect_url,
                                            initObject,
-                                           choices_names,
                                            pre_submit_action })
 export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
 

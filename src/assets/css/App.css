@@ -11,6 +11,6 @@ input.rw-input {
     max-width: 70px;
 }
 
-/*tr th {
-    max-width: 30px;
-}*/
+span.rw-dropdown-list-value {
+    white-space: pre-wrap !important;
+}

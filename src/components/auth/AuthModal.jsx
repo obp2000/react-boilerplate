@@ -5,35 +5,41 @@ import { Link } from 'react-router-dom'
 import {
     Modal,
     ModalHeader,
-    ModalTitle,
     ModalBody,
-    Row,
-    Col,
     Button
 } from 'reactstrap'
-import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
-import { toggleModal, toggleLogin } from '../redux/auth'
+import LoginForm from './Containers/LoginForm'
+import RegisterForm from './Containers/RegisterForm'
+import { toggleModal, toggleLogin, getOptions } from '../redux/auth'
 
 const AuthModal = () => {
-    const auth = useSelector(({
+    const loaded = useSelector(({
         auth: {
-            login,
-            modal
-        }
+            login = false,
+            modal,
+        },
+        common_consts: {
+            login: login_text,
+            register: register_text
+        } = {}
     }) => ({
         login,
-        modal
+        modal,
+        modal_header: login ? login_text : register_text,
+        button_label: login ? register_text : login_text
     }))
     const dispatch = useDispatch()
-    return <Modal isOpen={auth.modal}>
+    return <Modal isOpen={loaded.modal}>
          <ModalHeader toggle={() => dispatch(toggleModal())}>
-            {auth.login ? 'Вход' : 'Регистрация'}
+            {loaded.modal_header}
         </ModalHeader>
         <ModalBody>
-            {auth.login ? <LoginForm/> : <RegisterForm/>}
-            <Button size='sm' outline onClick={() => dispatch(toggleLogin())}>
-                {auth.login ? 'Регистрация' : 'Вход'}
+            {loaded.login ? <LoginForm/> : <RegisterForm/>}
+            <Button size='sm'
+                    outline
+                    onClick={() => dispatch(toggleLogin())}
+            >
+                {loaded.button_label}
             </Button>
         </ModalBody>
     </Modal>

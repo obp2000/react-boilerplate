@@ -52,13 +52,14 @@ const PaginationComp = ({
                     />)
         }
         {currentPage < from_table.totalPages && <PageItem {...{
-                                    label: '>',
-                                    to: {
-                                        pathname: `${pages_path}${currentPage + 1}`,
-                                        search},
-                                    key: -2,
-                                    }}
-                                />
+                                label: '>',
+                                to: {
+                                    pathname: `${pages_path}${currentPage + 1}`,
+                                    search
+                                },
+                                key: -2,
+                                }}
+                            />
         }
     </Pagination>
 }

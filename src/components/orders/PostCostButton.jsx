@@ -6,12 +6,12 @@ import { getPostCost_nw } from '../redux/PostCost'
 
 const PostCostButton = ({
     pindex,
-    tolalWeight
+    total_weight
 }) => {
     const dispatch = useDispatch()
     return <Button
             name='post_cost_button'
-            onClick = { getPostCost_nw(dispatch, pindex, tolalWeight) }
+            onClick = { getPostCost_nw(dispatch, pindex, total_weight) }
             type = "button"
             color = "primary"
             outline
@@ -23,7 +23,7 @@ const PostCostButton = ({
 
 PostCostButton.propTypes = {
     pindex: PropTypes.string,
-    tolalWeight: PropTypes.number
+    total_weight: PropTypes.number
 }
 
 export default PostCostButton

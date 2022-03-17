@@ -7,7 +7,11 @@ const ProductName = ({
     get_contents_display,
     fleece,
     name
-}) => {
+}, {
+    fleece: {
+        label: fleece_label = ''
+    } = {}
+} = {}) => {
     let product_name = []
     if (get_product_type_display) {
         product_name.push(get_product_type_display)
@@ -19,7 +23,7 @@ const ProductName = ({
         product_name.push(get_contents_display)
     }
     if (fleece) {
-        product_name.push('с начёсом')
+        product_name.push(fleece_label.toLowerCase())
     }
     product_name.push(name)
     return product_name.join(' ')

@@ -5,6 +5,8 @@ import config from '../Config'
 // import { closeModal } from './NavBar'
 import { errorHandler, formErrorHandler } from './ErrorHandlers'
 import { clearErrors } from './Errors'
+import { startRequest, successRequest } from './TempState'
+import { receiveCommonConsts } from './CommonConsts'
 
 const reducer_actions = {}
 
@@ -23,8 +25,11 @@ const failedReceiveUser = createAction('failedReceiveUser')
 export const toggleModal = createAction('toggleModal')
 export const closeModal = createAction('closeModal')
 export const toggleLogin = createAction('toggleLogin')
+const requestOptions = createAction('requestOptions')
+const successReceiveOptions = createAction('successReceiveOptions')
+const failedReceiveOptions = createAction('failedReceiveOptions')
 
-export const tokenHeaders = (accessToken, to_form_data ) => {
+export const tokenHeaders = (accessToken, to_form_data) => {
     return {
         headers: {
             'Content-Type': to_form_data ?
@@ -48,16 +53,13 @@ const initialState = {
     object: initUser,
     // modal: false,
     // login: true,
-    isFetching: false,
-    loaded: false,
     errors: null
 }
 
-reducer_actions[startAuthentication] = (state) =>
+reducer_actions[startAuthentication] = state =>
     ({
         ...state,
         ...initialState,
-        isFetching: true
     })
 
 reducer_actions[successAuthentication] = (state, accessToken) =>
@@ -65,8 +67,6 @@ reducer_actions[successAuthentication] = (state, accessToken) =>
         ...state,
         isAuthenticated: true,
         accessToken,
-        isFetching: false,
-        loaded: true,
         errors: null
     })
 
@@ -77,18 +77,15 @@ reducer_actions[failedAuthentication] = (state, errors) =>
         errors
     })
 
-reducer_actions[startRegister] = (state) =>
+reducer_actions[startRegister] = state =>
     ({
         ...state,
         ...initialState,
-        isFetching: true,
     })
 
-reducer_actions[successRegister] = (state) =>
+reducer_actions[successRegister] = state =>
     ({
         ...state,
-        isFetching: false,
-        loaded: false,
         errors: null
     })
 
@@ -99,35 +96,29 @@ reducer_actions[failedRegister] = (state, errors) =>
         errors
     })
 
-reducer_actions[startSignout] = (state) =>
+reducer_actions[startSignout] = state =>
     ({
         ...state,
-        isFetching: true,
-        loaded: false,
         errors: null
     })
 
-reducer_actions[successSignout] = (state) =>
+reducer_actions[successSignout] = state =>
     ({
         ...state,
-        ...initialState,
-        loaded: true,
+        ...initialState
+        // isAuthenticated: false,
     })
 
 reducer_actions[failedSignout] = (state, errors) =>
     ({
         ...state,
-        isFetching: false,
-        loaded: false,
         errors
     })
 
-reducer_actions[requestUser] = (state) =>
+reducer_actions[requestUser] = state =>
     ({
         ...state,
         object: initUser,
-        isFetching: true,
-        loaded: false,
         errors: null
     })
 
@@ -135,8 +126,6 @@ reducer_actions[successReceiveUser] = (state, object) =>
     ({
         ...state,
         object,
-        isFetching: false,
-        loaded: true,
         errors: null
     })
 
@@ -144,28 +133,48 @@ reducer_actions[failedReceiveUser] = (state, errors) =>
     ({
         ...state,
         object: initUser,
-        isFetching: false,
-        loaded: false,
         errors
     })
 
-reducer_actions[toggleModal] = (state) =>
+reducer_actions[toggleModal] = state =>
     ({
         ...state,
         modal: !state.modal
     })
 
-reducer_actions[closeModal] = (state) =>
+reducer_actions[closeModal] = state =>
     ({
         ...state,
         modal: false
     })
 
-reducer_actions[toggleLogin] = (state) =>
+reducer_actions[toggleLogin] = state =>
     ({
         ...state,
         login: !state.login
     })
+
+reducer_actions[requestOptions] = state =>
+    ({
+        ...state,
+        options: {},
+        errors: null
+    })
+
+reducer_actions[successReceiveOptions] = (state, options) =>
+    ({
+        ...state,
+        options,
+        errors: null
+    })
+
+reducer_actions[failedReceiveOptions] = (state, errors) =>
+    ({
+        ...state,
+        options: {},
+        errors
+    })
+
 
 const auth = createReducer(reducer_actions, initialState)
 
@@ -175,14 +184,36 @@ export default auth
 
 const base_url = `${config.BACKEND}/api`
 
+export const getOptions = login => () => dispatch => {
+    dispatch(requestOptions())
+    dispatch(startRequest())
+    return axios.options(`${base_url}/${login ? 'login' : 'register'}/`)
+        .then(({
+            data: {
+                actions: {
+                    POST
+                },
+                // name: object_name
+            }
+        }) => {
+            dispatch(successRequest())
+            dispatch(successReceiveOptions(POST))
+            dispatch(clearErrors())
+        })
+        .catch(errorHandler(dispatch, failedReceiveOptions))
+}
+
+
 export const onSubmitLogin = dispatch => values => {
     dispatch(startAuthentication())
+    dispatch(startRequest())
     return axios.post(`${base_url}/login/`, values)
         .then(({
             data: {
                 key
             }
         }) => {
+            dispatch(successRequest())
             dispatch(successAuthentication(key))
             dispatch(clearErrors())
             dispatch(closeModal())
@@ -193,8 +224,10 @@ export const onSubmitLogin = dispatch => values => {
 
 export const onSubmitRegister = dispatch => values => {
     dispatch(startRegister())
+    dispatch(startRequest())
     return axios.post(`${base_url}/register/`, values)
         .then(() => {
+            dispatch(successRequest())
             dispatch(successRegister())
             dispatch(clearErrors())
             dispatch(closeModal())
@@ -203,23 +236,87 @@ export const onSubmitRegister = dispatch => values => {
         .catch(formErrorHandler(dispatch, failedRegister))
 }
 
-export const signOut = dispatch => () => {
+export const signOut = (dispatch, accessToken) => () => {
     dispatch(startSignout())
-    return axios.post(`${base_url}/logout/`)
-        .then(() => dispatch(successSignout()))
+    dispatch(startRequest())
+    return axios.post(`${base_url}/logout/`,
+            tokenHeaders(accessToken))
+        .then(({
+            data: {
+                detail
+            }
+        }) => {
+            dispatch(successRequest())
+            dispatch(successSignout())
+            alert(detail)
+            return dispatch(push('/'))
+        })
         .catch(errorHandler(dispatch, failedSignout))
+}
+
+const getExistingObject = (dispatch, accessToken, { common_consts, ...options }) => {
+    // dispatch(startRequest())
+    return axios.get(`${base_url}/user/`,
+            tokenHeaders(accessToken)
+        )
+        .then(({
+            data
+        }) => {
+            dispatch(successRequest())
+            dispatch(receiveCommonConsts(common_consts))
+            dispatch(successReceiveUser({
+                ...data,
+                options
+            }))
+            dispatch(clearErrors())
+        })
+        .catch(errorHandler(dispatch, failedReceiveUser))
+}
+
+const getExistingObjectWihOptions = (dispatch, accessToken, isAuthenticated) => {
+    dispatch(startRequest())
+    return axios.options(`${base_url}/user/`, {
+                params: {
+                    isAuthenticated
+                },
+                ...tokenHeaders(accessToken)
+            },
+        )
+        .then(({
+            data: {
+                actions: {
+                    PUT
+                },
+                // name: object_name
+            }
+        }) => getExistingObject(dispatch, accessToken, PUT))
+        .catch(errorHandler(dispatch, failedReceiveUser))
 }
 
 export const getObjectAction = () => (dispatch, getState) => {
     const {
         auth: {
-            accessToken
+            accessToken,
+            isAuthenticated
         }
     } = getState()
-    dispatch(requestUser())
-    return axios.get(`${base_url}/user/`,
-            tokenHeaders(accessToken)
-        )
-        .then(({ data }) => dispatch(successReceiveUser(data)))
-        .catch(errorHandler(dispatch, failedReceiveUser))
+    if (accessToken) {
+        dispatch(requestUser())
+        return getExistingObjectWihOptions(dispatch, accessToken, isAuthenticated)
+    }
 }
+
+
+
+// export const getObjectAction11 = actions => id => (dispatch, getState) => {
+//     const {
+//         auth: {
+//             accessToken
+//         }
+//     } = getState()
+//     if (accessToken) {
+//         dispatch(actions.requestObject())
+//         if (id == 'new') getNewObjectOptions(dispatch, actions, accessToken)
+//         else getExistingObjectWihOptions(dispatch, actions, id, accessToken)
+//     }
+// }

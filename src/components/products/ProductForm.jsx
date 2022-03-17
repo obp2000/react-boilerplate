@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Form } from 'react-final-form'
 import { validate } from './Validators'
-import { calculator } from './Selectors'
+import { calculator } from './Calculator'
 import { onSubmitAction } from '../redux/ServerActions'
 import { Actions } from '../redux/Products'
 import ProductFormRender from './ProductFormRender'
@@ -11,21 +11,33 @@ import ProductFormRender from './ProductFormRender'
 const ProductForm = () => {
     const loaded = useSelector(({
         products: {
-            object
+            object: {
+                options = {},
+                options: {
+                    Consts = {}
+                } = {},
+                ...object
+            }
         },
         auth: {
             accessToken
         },
+        common_consts: {
+            error_messages = {}
+        } = {}
     }) => ({
+        options,
+        Consts,
         object,
-        accessToken
+        accessToken,
+        error_messages
     }))
     const dispatch = useDispatch()
-    return <Form name={'product'}
-        validate={validate}
+    return <Form name='product'
+        validate={validate(loaded.error_messages)}
         onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
         decorators={[calculator]}
-        initialValues={loaded.object}
+        initialValues={{...loaded.object, Consts: loaded.Consts}}
         render={ProductFormRender} />
 }
 

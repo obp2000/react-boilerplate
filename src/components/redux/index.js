@@ -4,19 +4,19 @@ import auth from './auth'
 import customers from './Customers'
 import products from './Products'
 import orders from './Orders'
-// import cities from './Cities'
 import errors from './Errors'
 import temp_state from './TempState'
+import common_consts from './CommonConsts'
 
 const rootReducer = (history) => combineReducers({
 	router: connectRouter(history),
 	customers,
 	products,
 	orders,
-	// cities,
 	auth,
 	errors,
-	temp_state
+	temp_state,
+	common_consts
 })
 
 export default rootReducer

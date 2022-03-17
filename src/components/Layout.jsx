@@ -17,8 +17,8 @@ import Orders from './orders/Containers/Orders'
 import Order from './orders/Containers/Order'
 // import Profile from './profile/Containers/Profile'
 import PrivateRoute from './Shared/privateRoute'
-import RegisterForm from './auth/RegisterForm'
-import LoginForm from './auth/LoginForm'
+import RegisterForm from './auth/Containers/RegisterForm'
+import LoginForm from './auth/Containers/LoginForm'
 import User from './users/Containers/User'
 // import Pagination from './Pagination/Containers/Pagination'
 
@@ -27,7 +27,7 @@ const Layout = ({history}) => {
     <Container fluid="sm" className="bg-light border">
       <Route path="/" component={Errors} />
       <Route path="/" component={NavBar} />
-      <Route exact path="/" component={Products}/>
+      <Route exact path="/" component={Customers}/>
       <Route path="/signup" component={RegisterForm}/>
       <Route path="/login" component={LoginForm}/>
       <Switch>

@@ -10,7 +10,9 @@ const FormHeader = ({
         invalid,
         pristine,
         id,
-        options,
+        options: {
+            name_singular
+        } = {},
         children
     }) => <Row>
         <Col sm={2}>
@@ -18,7 +20,7 @@ const FormHeader = ({
         </Col>
         <Col sm={6}>
             <h4>
-                Id {id} {options.object_name}{children}
+                {name_singular} № {id}{children}
             </h4>
         </Col>
         <Col sm={2}>
@@ -31,7 +33,7 @@ FormHeader.propTypes = {
     invalid: PropTypes.bool,
     pristine: PropTypes.bool,
     id: PropTypes.number,
-    options: PropTypes.object,
+    object_name: PropTypes.string,
 }
 
 export default FormHeader

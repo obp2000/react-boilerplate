@@ -15,9 +15,9 @@ const OrderNumber = () => {
         id,
         created_at,
     }))
-	return <Badge>
-        Заказ № {object.id || ' Новый' } от {object.created_at}
-    </Badge>
+	return <>
+        &nbsp;от {object.created_at}
+    </>
 }
 
 export default OrderNumber

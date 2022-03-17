@@ -13,11 +13,53 @@ import {
     failedSearchObjects,
     clearSearchObjects
 } from './TempState'
+import { receiveCommonConsts } from './CommonConsts'
+
+const getObjects = (dispatch, actions, accessToken, page, term, { common_consts, ...options }) => {
+    return axios.get(`${actions.base_url}/`, {
+            params: {
+                page,
+                term: decodeURIComponent(term)
+            },
+            // ...tokenHeaders(accessToken)
+        })
+        .then(({ data }) => {
+            dispatch(successRequest())
+            dispatch(receiveCommonConsts(common_consts))
+            dispatch(actions.successReceiveObjects({
+                ...data,
+                options
+            }))
+            dispatch(clearErrors())
+        })
+        .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+}
+
+const getObjectsWihOptions = (dispatch, actions, accessToken, isAuthenticated, page, term) => {
+    dispatch(startRequest())
+    return axios.options(`${actions.base_url}/`, {
+                params: {
+                    isAuthenticated
+                },
+            // ...tokenHeaders(accessToken)
+            },
+        )
+        .then(({
+            data: {
+                actions: {
+                    POST
+                },
+                // name: object_name
+            }
+        }) => getObjects(dispatch, actions, accessToken, page, term, POST))
+        .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+}
 
 export const getObjectsAction = actions => page => (dispatch, getState) => {
     const {
         auth: {
-            accessToken
+            accessToken,
+            isAuthenticated
         },
         router: {
             location: {
@@ -28,21 +70,38 @@ export const getObjectsAction = actions => page => (dispatch, getState) => {
         }
     } = getState()
     dispatch(actions.requestObjects())
-    dispatch(startRequest())
-    return axios.get(`${actions.base_url}/`, {
-            params: {
-                page,
-                term: decodeURIComponent(term)
-            },
-            ...tokenHeaders(accessToken)
-        })
-        .then(({ data }) => {
-            dispatch(successRequest())
-            dispatch(actions.successReceiveObjects(data))
-            dispatch(clearErrors())
-        })
-        .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+    return getObjectsWihOptions(dispatch, actions, accessToken, isAuthenticated, page, term)
 }
+
+// export const getObjectsAction111 = actions => page => (dispatch, getState) => {
+//     const {
+//         auth: {
+//             accessToken
+//         },
+//         router: {
+//             location: {
+//                 query: {
+//                     term = ''
+//                 }
+//             }
+//         }
+//     } = getState()
+//     dispatch(actions.requestObjects())
+//     dispatch(startRequest())
+//     return axios.get(`${actions.base_url}/`, {
+//             params: {
+//                 page,
+//                 term: decodeURIComponent(term)
+//             },
+//             ...tokenHeaders(accessToken)
+//         })
+//         .then(({ data }) => {
+//             dispatch(successRequest())
+//             dispatch(actions.successReceiveObjects(data))
+//             dispatch(clearErrors())
+//         })
+//         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+// }
 
 // const options = (choices_names = [], method_options) => choices_names.reduce(
 //     (choices, names) => {
@@ -50,32 +109,40 @@ export const getObjectsAction = actions => page => (dispatch, getState) => {
 //         return choices
 //     }, {})
 
-const getNewObjectOptions = (dispatch, actions, accessToken) => {
+const getNewObjectOptions = (dispatch, actions, accessToken, isAuthenticated) => {
     dispatch(startRequest())
-    return axios.options(`${actions.base_url}/`, tokenHeaders(accessToken))
+    return axios.options(`${actions.base_url}/`, {
+                params: {
+                    isAuthenticated
+                },
+                // ...tokenHeaders(accessToken)
+            },
+        )
         .then(({
             data: {
                 actions: {
-                    POST
+                    POST: {
+                        common_consts,
+                        ...options
+                    }
                 },
-                name: object_name
+                // name: object_name
             }
         }) => {
             dispatch(successRequest())
-            dispatch(actions.successReceiveObject(
-                {
+            dispatch(receiveCommonConsts(common_consts))
+            dispatch(actions.successReceiveObject({
                 ...actions.initObject,
                 // ...options(actions.choices_names, {...POST, object_name}),
-                options: {...POST, object_name}
-                }
-            ))
+                options
+            }))
             dispatch(clearErrors())
         })
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
 
-const getExistingObject = (dispatch, actions, id, accessToken, method_options) => {
-    dispatch(startRequest())
+const getExistingObject = (dispatch, actions, id, accessToken, { common_consts, ...options }) => {
+    // dispatch(startRequest())
     return axios.get(`${actions.base_url}/${id}`,
             tokenHeaders(accessToken)
         )
@@ -83,51 +150,48 @@ const getExistingObject = (dispatch, actions, id, accessToken, method_options) =
             data
         }) => {
             dispatch(successRequest())
-            dispatch(actions.successReceiveObject(
-                {
+            dispatch(receiveCommonConsts(common_consts))
+            dispatch(actions.successReceiveObject({
                 ...data,
                 // ...options(actions.choices_names, method_options),
-                options: method_options
-                }
-            ))
+                options
+            }))
             dispatch(clearErrors())
         })
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
 
-const getExistingObjectWihOptions = (dispatch, actions, id, accessToken) => {
+const getExistingObjectWihOptions = (dispatch, actions, id, accessToken, isAuthenticated) => {
     dispatch(startRequest())
-    return axios.options(`${actions.base_url}/${id}`,
-            tokenHeaders(accessToken)
+    return axios.options(`${actions.base_url}/${id}`, {
+                params: {
+                    isAuthenticated
+                },
+                // ...tokenHeaders(accessToken)
+            },
         )
         .then(({
-                data: {
-                    actions: {
-                        PUT
-                    },
-                    name: object_name
+            data: {
+                actions: {
+                    PUT
                 }
-            }) => getExistingObject(dispatch, actions, id, accessToken, {...PUT, object_name})
-        )
+                // name: object_name
+            }
+        }) => getExistingObject(dispatch, actions, id, accessToken, PUT))
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
 
 export const getObjectAction = actions => id => (dispatch, getState) => {
     const {
         auth: {
-            accessToken
+            accessToken,
+            isAuthenticated
         }
     } = getState()
     if (accessToken) {
         dispatch(actions.requestObject())
-        if (id == 'new') {
-            return getNewObjectOptions(dispatch, actions, accessToken)
-            // if (true) {
-            //     return getNewObjectOptions(dispatch, actions, accessToken)
-            // } else {
-            //     return dispatch(actions.successReceiveObject(actions.initObject))
-            // }
-        } else getExistingObjectWihOptions(dispatch, actions, id, accessToken)
+        if (id == 'new') getNewObjectOptions(dispatch, actions, accessToken, isAuthenticated)
+        else getExistingObjectWihOptions(dispatch, actions, id, accessToken, isAuthenticated)
     }
 }
 

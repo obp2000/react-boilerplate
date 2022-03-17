@@ -20,10 +20,9 @@ const Errors = ({ authErrors }) => {
     if (!errors) {
         return null
     }
+    // console.log('errors: ', errors )
     return <Alert color="danger" role="alert">
-            {errors.map((error, index) => {
-                return <div key={index}>{error}</div>
-            })}
+            {errors.map((error, key) => <div key={key}>{error}</div>)}
         </Alert>
 }
 

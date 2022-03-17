@@ -7,32 +7,26 @@ import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
 import { invalid, valid } from './FieldStatus'
-
 import { searchObjectsAction, clearSearchObjectsAction } from '../redux/ServerActions'
 
 const DropdownListComp = ({
-        input,
-        meta,
-        options,
-        // label: placeholder,
-        // isFieldFetching: busy,
-        search_path,
-        // Actions,
-        listbox,
-        // read_only,
-        // form_text,
-        ...rest
+    input: {
+        name: input_name,
+        ...input
+    } = {},
+    name = input_name,
+    id = name,
+    options: {
+        [name]: field_props = {}
+    } = {},
+    label: placeholder = field_props.label,
+    required = field_props.required,
+    readOnly = field_props.read_only,
+    form_text = field_props.help_text,
+    meta,
+    search_path,
+    ...rest
     }) => {
-    let field = {}
-    if (options) {
-        const field_options = options[input.name] || {}
-        field = { ...field_options,
-                  readOnly: field_options.read_only,
-                  placeholder: field_options.label
-                }
-    } else {
-        field = { placeholder: rest.label }
-    }
     let from_selector = {}
     // console.log('data_dl: ', meta.data)
     if (search_path) {
@@ -57,17 +51,17 @@ const DropdownListComp = ({
             onBlur: clearSearchObjectsAction(dispatch)
         }
     }
-    const WidgetComponent = listbox ? Listbox : DropdownList
+    const WidgetComponent = rest.listbox ? Listbox : DropdownList
 	return <>
         <WidgetComponent
             {...input}
-            {...field}
-            id={input.name}
-            // data={data}
-            // placeholder={placeholder}
-            // readOnly={read_only}
+            {...{name,
+                id,
+                placeholder,
+                required,
+                readOnly,
+            }}
             filter={() => true}
-            // busy={busy}
             invalid={invalid(meta)}
             valid={valid(meta)}
             messages={WidgetMessages}
@@ -75,7 +69,7 @@ const DropdownListComp = ({
             {...from_selector}
         />
         <WidgetErrors {...meta} />
-        {rest.form_text && <FormTextList form_text={rest.form_text} />}
+        {form_text && <FormTextList form_text={form_text} />}
         </>
     }
 

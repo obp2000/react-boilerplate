@@ -54,6 +54,7 @@ export const formErrorHandler = (dispatch, failedAction) => e => {
             data = {}
         } = {}
     } = e
+    dispatch(failedRequest())
     // console.log('data: ', data )
     const data_errors = Object.values(data).flat()
     dispatch(failedAction(data_errors || [message]))

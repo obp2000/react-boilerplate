@@ -14,15 +14,19 @@ const CustomerForm = () => {
         },
         auth: {
             accessToken
-        }
+        },
+        common_consts: {
+            error_messages = {}
+        } = {}
     }) => ({
         object,
-        accessToken
+        accessToken,
+        error_messages
     }))
     const dispatch = useDispatch()
     return <Form
             name='customer'
-            validate={validate}
+            validate={validate(loaded.error_messages)}
             onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
             initialValues={loaded.object}
             render={CustomerFormRender}

@@ -15,46 +15,71 @@ const Products = props => {
         products: {
             results = [],
             totalCount,
+            options = {},
+            options: {
+                name_plural,
+                id = {},
+                name = {},
+                price = {},
+                width = {},
+                density = {},
+                created_at = {},
+                updated_at = {}
+            } = {}
         },
         auth: {
             accessToken
         },
         temp_state: {
             isFetching
-        }
+        },
+        common_consts
     }) => ({
         results,
         totalCount,
+        options,
+        name_plural,
+        id,
+        name,
+        price,
+        width,
+        density,
+        created_at,
+        updated_at,
         isFetching,
-        accessToken
+        accessToken,
+        common_consts
     }))
     const dispatch = useDispatch()
     const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
     return <>
-            <ObjectsPageHeader title='Ткани' totalCount={loaded.totalCount} />
+            <ObjectsPageHeader title={loaded.name_plural}
+                               totalCount={loaded.totalCount} />
             <Loader loaded={!loaded.isFetching}>
             <Table size='sm' bordered striped hover className='table-secondary'>
                 <thead className="thead-light">
                         <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Название</th>
-                            <th scope="col">Цена, руб.</th>
-                            <th scope="col">Ширина, см</th>
-                            <th scope="col">Плотность</th>
-                            {/* <th scope="col">Вес</th>
-                            <th scope="col">Цена, $</th>
-                            <th scope="col">Курс $</th>
-                            <th scope="col">Себестоимость, руб./м</th> */}
-                            <th scope="col">Создана</th>
-                            <th scope="col">Изменена</th>
+                            <th scope="col">{loaded.id.label}</th>
+                            <th scope="col">{loaded.name.label}</th>
+                            <th scope="col">{loaded.price.label}</th>
+                            <th scope="col">{loaded.width.label}</th>
+                            <th scope="col">{loaded.density.label}</th>
+                            <th scope="col">{loaded.created_at.label}</th>
+                            <th scope="col">{loaded.updated_at.label}</th>
                             <th scope="col" colSpan={2}>
-                                <LinkToNew {...props}/>
+                                <LinkToNew {...props} {...loaded.common_consts}/>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {loaded.results.map((product, key) => <ProductRow
-                            {...{...product, deleteObject, key, ...props}} />)
+                        {loaded.results.map((product, key) =>
+                            <ProductRow {...{...product,
+                                             options: loaded.options,
+                                             common_consts: loaded.common_consts,
+                                             deleteObject,
+                                             key,
+                                             ...props}}
+                            />)
                         }
                     </tbody>
                 </Table>

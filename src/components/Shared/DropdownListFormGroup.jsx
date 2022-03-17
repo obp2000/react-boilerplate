@@ -4,12 +4,12 @@ import { FormGroup, Col } from 'reactstrap'
 import DropdownList from './DropdownList'
 import Label from './Label'
 
-const DropdownListFormGroup = settings => props => {
+const DropdownListFormGroup = props => {
         // console.log('params: ', props)
         return <FormGroup row>
-            <Label {...settings} {...props} />
+            <Label {...props} />
             <Col>
-                <DropdownList {...settings} {...props} />
+                <DropdownList {...props} />
             </Col>
         </FormGroup>
     }

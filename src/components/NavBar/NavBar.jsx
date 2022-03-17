@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
     Navbar,
     NavbarBrand,
@@ -15,6 +15,7 @@ import AuthModal from '../auth/AuthModal'
 import AuthButton from '../auth/AuthButton'
 import SearchForm from '../Search/SearchForm'
 import { TableName } from '../Shared/BasePathname'
+import config from '../Config'
 // import Errors from '../Errors'
 
 const NavBar = props => {
@@ -24,21 +25,17 @@ const NavBar = props => {
         }
     } = props
     const loaded = useSelector(({
-        auth: {
-            isAuthenticated
-        }
+        common_consts: {
+            main_menu = []
+        } = {}
     }) => ({
-        isAuthenticated,
+        main_menu
     }))
-    const table = TableName(pathname)
-    const dispatch = useDispatch()
     return <>
         <Navbar color="light" expand="md" light style={{backgroundColor: '#e3f2fd'}}>
             <NavbarBrand href="/">
                 <h3>
-                    <Badge pill size='lg'>
-                        Best&C
-                    </Badge>
+                    <Badge pill size='lg'>Best&C</Badge>
                 </h3>
             </NavbarBrand>
             <NavbarToggler className="me-2"
@@ -49,31 +46,22 @@ const NavBar = props => {
                 aria-label="Toggle navigation" />
             <Collapse navbar id="navbarContent">
                 <Nav className="me-auto" navbar>
-                    <NavItemWithLink {...{to: '/',
-                                          label: 'Главная',
-                                          table}} />
-                    <NavItemWithLink {...{to: '/products/',
-                                          label: 'Ткани',
-                                          table}} />
-                    <NavItemWithLink {...{to: '/customers/',
-                                          label: 'Покупатели',
-                                          table}} />
-                    <NavItemWithLink {...{to: '/orders/',
-                                          label: 'Заказы',
-                                          table}} />
-                    {loaded.isAuthenticated &&
-                        <NavItemWithLink {...{to: '/user/',
-                                             label: 'Профиль',
-                                             table}} />}
-                    <NavItem>
-                        <AuthButton />
-                    </NavItem>
+                    {loaded.main_menu.map(({path: to, label}, key) =>
+                        <NavItem key={key}>
+                            <NavItemWithLink {...{to,
+                                                  label,
+                                                  active: (to == '/' ?
+                                                    pathname == to :
+                                                    pathname.includes(to))
+                                                  }} />
+                        </NavItem>
+                    )}
                 </Nav>
-                <SearchForm {...props}/>
+                <SearchForm {...props} />
             </Collapse>
         </Navbar>
         <AuthModal />
-    </>
+        </>
 }
 
 export default NavBar

@@ -7,10 +7,11 @@ import config from '../Config'
 const LinkToNew = ({
     location: {
         pathname
-    }
+    },
+    ['new']: text_new
 }) =>   <Link to={`/${TableName(pathname) || config.BaseTable}/new`}
                 className="btn btn-outline-primary btn-sm">
-            Новый
+            {text_new}
         </Link>
 
 export default LinkToNew

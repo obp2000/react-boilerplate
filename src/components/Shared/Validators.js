@@ -1,47 +1,42 @@
-import {
-    blankErrorText,
-    invalidEmail,
-    shortPassword,
-    invalidPasswordConfirmation,
-    notIntegerText
-} from './Texts'
-
-export const notBlank = (values, fields) =>
+export const notBlank = (values, fields, error_text = '') =>
     fields.reduce((errors, field) => {
         if (!values[field] || (field == 'city' && !values[field].pindex)) {
-            errors[field] = blankErrorText
+            errors[field] = error_text
         }
         return errors
     }, {})
 
-export const validEmail = (values, field) => {
+export const validEmail = (values, field, error_text = '') => {
     const error = {}
     if (values[field] && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values[field])) {
-        error[field] = invalidEmail
+        error[field] = error_text
     }
     return error
 }
 
-export const passwordLength = (values, field) => {
+export const passwordLength = (values, field, error_text = '') => {
     const error = {}
     if (values[field] && (values[field].length < 8)) {
-        error[field] = shortPassword
+        error[field] = error_text
     }
     return error
 }
 
-export const validPasswordConfirmation = (values, password_field, password_confirmation_field) => {
+export const validPasswordConfirmation = (values,
+    password_field,
+    password_confirmation_field,
+    error_text = '') => {
     const error = {}
     if (values[password_field] != values[password_confirmation_field]) {
-        error[password_confirmation_field] = invalidPasswordConfirmation
+        error[password_confirmation_field] = error_text
     }
     return error
 }
 
-export const isInteger = (values, fields) =>
+export const isInteger = (values, fields, error_text = '') =>
     fields.reduce((errors, field) => {
         if (values[field] && !Number.isInteger(Number(values[field]))) {
-            errors[field] = notIntegerText
+            errors[field] = error_text
         }
         return errors
     }, {})

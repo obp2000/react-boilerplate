@@ -4,11 +4,11 @@ import { FormGroup, Col } from 'reactstrap'
 import Input from './Input'
 import Label from './Label'
 
-const RowFormGroup = params =>
+const RowFormGroup = props =>
     <FormGroup row>
-    	<Label {...params} label_col_size={4} />
+    	<Label {...props} label_col_size={4} />
         <Col>
-        	<Input {...params}/>
+        	<Input {...props}/>
 	    </Col>
     </FormGroup>
 

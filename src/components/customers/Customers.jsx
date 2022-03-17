@@ -15,46 +15,76 @@ const Customers = props => {
         customers: {
             results = [],
             totalCount,
+            options = {},
+            options: {
+                name_plural,
+                id = {},
+                name = {},
+                city = {},
+                city: {
+                    children: {
+                        pindex = {},
+                        city: city_name = {}
+                    } = {}
+                } = {},
+                address = {},
+                created_at = {}
+            } = {}
         },
         auth: {
             accessToken
         },
         temp_state: {
             isFetching
-        }
+        },
+        common_consts
     }) => ({
         results,
         totalCount,
+        options,
+        name_plural,
+        id,
+        name,
+        pindex,
+        city_name,
+        address,
+        created_at,
         isFetching,
-        accessToken
+        accessToken,
+        common_consts
     }))
-    // console.log('props ', props)
     const dispatch = useDispatch()
     const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
     return <>
-        <ObjectsPageHeader title='Покупатели' totalCount={loaded.totalCount} />
+        <ObjectsPageHeader title={loaded.name_plural}
+                           totalCount={loaded.totalCount} />
         <Loader loaded={!loaded.isFetching } >
             <Table size='sm' bordered striped hover className='table-secondary'>
-                  <thead className="thead-light">
-                      <tr>
-                          <th scope="col">Id</th>
-                          <th scope="col">Имя</th>
-                          <th scope="col">Город</th>
-                          <th scope="col">Индекс</th>
-                          <th scope="col">Адрес</th>
-                          <th scope="col">Создан</th>
-                          <th scope="col" colSpan={2}>
-                                <LinkToNew {...props}/>
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {loaded.results.map((customer, key) =>
-                            <CustomerRow {...{...customer, deleteObject, key, ...props}} />)}
-                  </tbody>
-                </Table>
-                </Loader>
-                <Pagination { ...props } />
+                <thead className="thead-light">
+                    <tr>
+                        <th scope="col">{loaded.id.label}</th>
+                        <th scope="col">{loaded.name.label}</th>
+                        <th scope="col">{loaded.city_name.label}</th>
+                        <th scope="col">{loaded.address.label}</th>
+                        <th scope="col">{loaded.created_at.label}</th>
+                        <th scope="col" colSpan={2}>
+                            <LinkToNew {...props} {...loaded.common_consts}/>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {loaded.results.map((customer, key) =>
+                    <CustomerRow {...{...customer,
+                                      options: loaded.options,
+                                      common_consts: loaded.common_consts,
+                                      deleteObject,
+                                      key,
+                                      ...props}}
+                    />)}
+                </tbody>
+            </Table>
+            </Loader>
+            <Pagination { ...props } />
         </>
 }
 

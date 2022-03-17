@@ -1,36 +1,34 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Card, CardBody, CardTitle} from 'reactstrap'
+import { Card, CardBody, CardTitle } from 'reactstrap'
 import UserRow from './UserRow'
 
 const User = () => {
     const loaded = useSelector(({
         auth: {
+            object,
             object: {
-                username,
-                email,
-                first_name,
-                last_name
-            },
-        }
+                options: {
+                    name_singular
+                } = {},
+            } = {}
+        } = {}
     }) => ({
-        username,
-        email,
-        first_name,
-        last_name,
+        name_singular,
+        object
     }))
     return <Card>
         <CardBody>
             <CardTitle>
-                <h4 className="display-6">
-                    Профиль
-                </h4>
+                <h3>
+                    {loaded.name_singular}
+                </h3>
             </CardTitle>
-            <UserRow name='Имя пользователя:' value={loaded.username} />
-            <UserRow name='Email:' value={loaded.email} />
-            <UserRow name='Имя:' value={loaded.first_name} />
-            <UserRow name='Фамилия:' value={loaded.last_name} />
+            {['username', 'email', 'first_name', 'last_name'].map(
+                (name, key) => <UserRow {...{...loaded.object, name, key}} />
+              )
+            }
         </CardBody>
     </Card>
 }

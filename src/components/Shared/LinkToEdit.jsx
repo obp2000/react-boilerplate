@@ -8,10 +8,11 @@ const LinkToEdit = ({
     id,
     location: {
         pathname
-    }
-}) =>   <Link to={`/${TableName(pathname) || config.BaseTable}/${id}`}
+    },
+    edit: text_edit
+}) =>   <Link   to={`/${TableName(pathname) || config.BaseTable}/${id}`}
                 className="btn btn-outline-primary btn-sm">
-            Редактировать
+            {text_edit}
         </Link>
 
 LinkToEdit.propTypes = {

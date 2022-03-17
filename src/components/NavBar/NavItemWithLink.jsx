@@ -1,31 +1,28 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { NavItem } from 'reactstrap'
 import { Link } from 'react-router-dom'
+import AuthButton from '../auth/AuthButton'
 
-const NavItemWithLink = ({ to, label, table }) => {
-    let attrs = {}
-    if (table ? to.includes(table) : to == '/') {
-        attrs = {
-            to,
-            className: 'nav-link active',
-            'aria-current': "page"
-        }
+const NavItemWithLink = ({
+    to,
+    label,
+    active
+}) => {
+    if (to.match(/(login|register|logout)/gi)) {
+        return <AuthButton label={label}/>
     } else {
-        attrs = {
-            to,
-            className: 'nav-link'
-        }
+        return <Link to={to}
+                  className={`nav-link${active ? ' active' : ''}`}
+                  aria-current={active ? 'page' : null} >
+                {label}
+            </Link>
     }
-    return <NavItem>
-				<Link {...attrs}>{label}</Link>
-		   </NavItem>
 }
 
 NavItemWithLink.propTypes = {
     to: PropTypes.string,
     label: PropTypes.string,
-    table: PropTypes.string
+    active: PropTypes.bool
 }
 
 export default NavItemWithLink
