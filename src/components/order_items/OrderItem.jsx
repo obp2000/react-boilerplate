@@ -46,7 +46,7 @@ const OrderItem = ({
                     component={DropdownList}
                     dataKey='id'
                     textField={item => ProductName(item, product_props)}
-                    search_path={Actions.getSearchPath()}
+                    search_path={Actions.search_url}
                     renderListItem={({ item }) => ProductName(item, product_props)}
                     renderValue={({ item }) => ProductName(item, product_props)}
                     />

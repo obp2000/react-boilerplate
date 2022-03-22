@@ -18,7 +18,14 @@ const OrderForm = () => {
                     Consts = {},
                     Consts: {
                         SAMPLES_WEIGHT,
-                        PACKET_WEIGHT
+                        PACKET_WEIGHT,
+                        GIFT_WEIGHT,
+                    } = {},
+                    order_items_cost: {
+                        label: order_items_cost_label
+                    } = {},
+                    need_gift: {
+                        label: need_gift_label
                     } = {}
                 } = {},
                 ...object
@@ -28,27 +35,39 @@ const OrderForm = () => {
             accessToken
         },
         common_consts: {
+            successfully = '',
             error_messages = {}
         } = {}
     }) => ({
         Consts,
         SAMPLES_WEIGHT,
         PACKET_WEIGHT,
+        GIFT_WEIGHT,
+        order_items_cost_label,
+        need_gift_label,
         object,
         accessToken,
+        successfully,
         error_messages
     }))
     const dispatch = useDispatch()
     return <Form
         name='order'
         validate={validate(loaded.error_messages)}
-        onSubmit={onSubmitAction(useDispatch(), Actions, loaded.accessToken)}
+        onSubmit={onSubmitAction(
+            dispatch,
+            Actions,
+            loaded.accessToken,
+            loaded.successfully)}
         mutators={{...arrayMutators}}
         decorators={[order_calculator, order_items_calculator]}
         initialValues={{...loaded.object,
                         Consts: loaded.Consts,
                         samples_weight: loaded.SAMPLES_WEIGHT,
-                        packet_weight: loaded.PACKET_WEIGHT
+                        packet_weight: loaded.PACKET_WEIGHT,
+                        gift_weight: loaded.GIFT_WEIGHT,
+                        order_items_cost_label: loaded.order_items_cost_label,
+                        need_gift_label: loaded.need_gift_label
                       }}
         render={OrderFormRender} />
 }

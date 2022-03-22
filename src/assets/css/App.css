@@ -14,3 +14,7 @@ input.rw-input {
 span.rw-dropdown-list-value {
     white-space: pre-wrap !important;
 }
+
+nav.navbar {
+    background-color: #563d82;
+}

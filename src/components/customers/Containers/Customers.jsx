@@ -16,22 +16,26 @@ class Customers extends React.Component {
             match: {
                 params: {
                     page
-                },
-                term = ''
+                }
             }
         } = this.props
         // console.log('componentDidMount')
         // console.log('mount props ', this.props)
-        getObjectsAction(page, term)
+        console.log('Actions ', Actions)
+        getObjectsAction(page)
     }
 
     componentDidUpdate({
-        page: prevPage,
-        term: prevTerm
+        // term,
+        match: {
+            params: {
+                page: prevPage
+            },
+            term: prevTerm
+        }
     }) {
         const {
             getObjectsAction,
-            // term,
             match: {
                 params: {
                     page
@@ -40,10 +44,12 @@ class Customers extends React.Component {
             }
         } = this.props
         // console.log('componentDidUpdate')
-        // console.log('update props ', this.props)
-        if (page !== prevPage || term !== prevTerm) {
-            getObjectsAction(page, term)
-        }
+        // console.log('prevProps ', prevProps)
+        // console.log('prevPage ', prevPage)
+        // console.log('prevTerm ', prevTerm)
+        // if (page !== prevPage || term !== prevTerm) {
+        getObjectsAction(page)
+        // }
     }
 
     render() {

@@ -1,9 +1,9 @@
 import CityName from '../cities/CityName'
 
 export const ShortName = ({
-    name,
-    nick
-}, {
+    nick = '',
+    name = ''
+} = {}, {
     name: {
         label: name_label
     } = {}

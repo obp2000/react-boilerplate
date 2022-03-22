@@ -5,11 +5,14 @@ import LinkToEdit from '../Shared/LinkToEdit'
 import { ShortName } from '../customers/CustomerName'
 
 const OrderRow = ({
-    id,
-    customer,
-    order_items_cost,
-    created_at,
-    updated_at,
+    order,
+    order: {
+        id,
+        customer = {},
+        order_items_cost,
+        created_at,
+        updated_at
+    } = {},
     options: {
         customer: {
             children: customer_props = {}
@@ -18,9 +21,11 @@ const OrderRow = ({
     deleteObject,
     common_consts,
     ...rest
-}) => <tr>
+}) => {
+    // console.log('customer ', customer)
+    return <tr>
         <th scope="row">{id}</th>
-        <td>{ShortName(customer, customer_props)}</td>
+        <td>{ShortName(customer || {}, customer_props)}</td>
         <td>{order_items_cost}</td>
         <td>{created_at}</td>
         <td>{updated_at}</td>
@@ -31,8 +36,10 @@ const OrderRow = ({
             <DeleteButton action={() => deleteObject(id)} {...common_consts} />
         </td>
     </tr>
+}
 
 OrderRow.propTypes = {
+    order: PropTypes.object,
     id: PropTypes.number,
     customer: PropTypes.shape({ nick: PropTypes.string, name: PropTypes.string }),
     order_items_cost: PropTypes.number,

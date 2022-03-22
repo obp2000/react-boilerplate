@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { push } from 'connected-react-router'
 import { objectToFormData } from 'object-to-formdata'
+import { toast } from 'react-toastify'
 import config from '../Config'
 import { tokenHeaders } from './auth'
 import { errorHandler } from './ErrorHandlers'
@@ -15,7 +16,28 @@ import {
 } from './TempState'
 import { receiveCommonConsts } from './CommonConsts'
 
-const getObjects = (dispatch, actions, accessToken, page, term, { common_consts, ...options }) => {
+const getObjects = (actions, page, dispatch, getState) => ({
+    data: {
+        actions: {
+            POST: {
+                common_consts,
+                ...options
+            }
+        }
+    }
+}) => {
+    const {
+        auth: {
+            accessToken
+        },
+        router: {
+            location: {
+                query: {
+                    term = ''
+                }
+            }
+        }
+    } = getState()
     return axios.get(`${actions.base_url}/`, {
             params: {
                 page,
@@ -35,27 +57,53 @@ const getObjects = (dispatch, actions, accessToken, page, term, { common_consts,
         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
 }
 
-const getObjectsWihOptions = (dispatch, actions, accessToken, isAuthenticated, page, term) => {
+export const getObjectsAction = actions => page => (dispatch, getState) => {
+    const {
+        auth: {
+            isAuthenticated
+        }
+    } = getState()
+    dispatch(actions.requestObjects())
     dispatch(startRequest())
     return axios.options(`${actions.base_url}/`, {
-                params: {
-                    isAuthenticated
-                },
-            // ...tokenHeaders(accessToken)
+            params: {
+                isAuthenticated
             },
-        )
-        .then(({
-            data: {
-                actions: {
-                    POST
-                },
-                // name: object_name
-            }
-        }) => getObjects(dispatch, actions, accessToken, page, term, POST))
+            // ...tokenHeaders(accessToken)
+        })
+        .then(getObjects(actions, page, dispatch, getState))
         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
 }
 
-export const getObjectsAction = actions => page => (dispatch, getState) => {
+
+
+
+// const getObjectsWihOptions = (actions, page, dispatch, accessToken, isAuthenticated, term) => {
+//     dispatch(startRequest())
+//     return axios.options(`${actions.base_url}/`, {
+//             params: {
+//                 isAuthenticated
+//             },
+//             // ...tokenHeaders(accessToken)
+//         })
+//         .then(({
+//             data: {
+//                 actions: {
+//                     POST
+//                 },
+//                 // name: object_name
+//             }
+//         }) => getObjects(dispatch, actions, accessToken, page, term, POST))
+//         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+// }
+
+
+
+
+
+
+
+export const getObjectsAction1 = actions => page => (dispatch, getState) => {
     const {
         auth: {
             accessToken,
@@ -112,12 +160,11 @@ export const getObjectsAction = actions => page => (dispatch, getState) => {
 const getNewObjectOptions = (dispatch, actions, accessToken, isAuthenticated) => {
     dispatch(startRequest())
     return axios.options(`${actions.base_url}/`, {
-                params: {
-                    isAuthenticated
-                },
-                // ...tokenHeaders(accessToken)
+            params: {
+                isAuthenticated
             },
-        )
+            // ...tokenHeaders(accessToken)
+        }, )
         .then(({
             data: {
                 actions: {
@@ -164,12 +211,11 @@ const getExistingObject = (dispatch, actions, id, accessToken, { common_consts, 
 const getExistingObjectWihOptions = (dispatch, actions, id, accessToken, isAuthenticated) => {
     dispatch(startRequest())
     return axios.options(`${actions.base_url}/${id}`, {
-                params: {
-                    isAuthenticated
-                },
-                // ...tokenHeaders(accessToken)
+            params: {
+                isAuthenticated
             },
-        )
+            // ...tokenHeaders(accessToken)
+        }, )
         .then(({
             data: {
                 actions: {
@@ -195,14 +241,15 @@ export const getObjectAction = actions => id => (dispatch, getState) => {
     }
 }
 
-const onSuccessCreateOrUpdateObject = (dispatch, actions, id) => ({ data }) => {
+const onSuccessCreateOrUpdateObject = (dispatch, actions, id, flash) => ({ data }) => {
     dispatch(successRequest())
     dispatch(actions.successUpdateObject(data, id))
     dispatch(clearErrors())
+    toast.success(flash)
     return dispatch(push(actions.redirect_url))
 }
 
-export const onSubmitAction = (dispatch, actions, accessToken) => values => {
+export const onSubmitAction = (dispatch, actions, accessToken, flash) => values => {
     // console.log('accessToken: ', accessToken)
     if (accessToken) {
         if (actions.pre_submit_action) { actions.pre_submit_action(values) }
@@ -214,12 +261,12 @@ export const onSubmitAction = (dispatch, actions, accessToken) => values => {
                 ...tokenHeaders(accessToken, actions.to_form_data),
                 data: actions.to_form_data ? objectToFormData(values) : values
             })
-            .then(onSuccessCreateOrUpdateObject(dispatch, actions, id))
+            .then(onSuccessCreateOrUpdateObject(dispatch, actions, id, flash))
             .catch(errorHandler(dispatch))
     }
 }
 
-export const deleteObjectAction = (dispatch, actions, accessToken) => id => {
+export const deleteObjectAction = (dispatch, actions, accessToken, flash) => id => {
     if (accessToken) {
         dispatch(startRequest())
         return axios.delete(`${actions.base_url}/${id}`,
@@ -228,6 +275,7 @@ export const deleteObjectAction = (dispatch, actions, accessToken) => id => {
                 dispatch(successRequest())
                 dispatch(actions.successDeleteObject(id))
                 dispatch(clearErrors())
+                toast.success(flash)
             })
             .catch(errorHandler(dispatch))
     }

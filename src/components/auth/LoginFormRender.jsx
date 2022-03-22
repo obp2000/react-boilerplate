@@ -13,7 +13,11 @@ const LoginFormRender = ({
     submitting,
     invalid,
     pristine,
-    submitError
+    hasSubmitErrors,
+    hasValidationErrors,
+    dirtySinceLastSubmit,
+    submitError,
+    // submitSucceeded
 }) => {
     const loaded = useSelector(({
         auth: {
@@ -21,12 +25,18 @@ const LoginFormRender = ({
         },
         common_consts: {
             login: login_text,
+            successfully,
         } = {}
     }) => ({
         options,
-        login_text
+        login_text,
+        successfully
     }))
     const options = { options: loaded.options }
+    // console.log('ssssss ', submitErrors)
+    // if (submitSucceeded) {
+    //     return loaded.successfully
+    // }
     return <Form onSubmit={handleSubmit}
                  className="shadow p-3 mb-5 bg-body rounded">
                 {submitError && <Errors authErrors={submitError} />}
@@ -39,7 +49,10 @@ const LoginFormRender = ({
                         {...options}
                         component={RowFormGroup} />
                 <SubmitButton text={loaded.login_text}
-                    submitDisabled={submitting || invalid || pristine}/>
+                    submitDisabled={submitting ||
+                                    pristine ||
+                                    hasValidationErrors ||
+                                    (hasSubmitErrors && !dirtySinceLastSubmit)}/>
             </Form>
 }
 

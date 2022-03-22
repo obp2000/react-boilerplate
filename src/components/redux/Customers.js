@@ -1,5 +1,6 @@
 import { createReducer } from 'redux-act'
-import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
+import config from '../Config'
+import { createActions, reducerActions, initialState } from './CommonActions'
 
 export const initCity = {
     city: '',
@@ -25,16 +26,27 @@ const pre_submit_action = values => {
     delete values.updated_at
 }
 
-export const Actions = new CommonActions({
-    index_url,
-    redirect_url,
-    initObject,
-    pre_submit_action
-})
+export const Actions = createActions()
 
-export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
+export default createReducer(reducerActions(Actions, initObject),
+                             initialState(initObject))
+
+Actions.index_url = index_url
+Actions.base_url = `${config.BACKEND}/api${index_url}`
+Actions.redirect_url = redirect_url
+Actions.initObject = initObject
+Actions.pre_submit_action = pre_submit_action
+Actions.search_url = index_url
 
 
+// export Actions
+
+// export const Actions = new CommonActions({
+//     index_url,
+//     redirect_url,
+//     initObject,
+//     pre_submit_action
+// })
 
 // export const getObjectsAction = getObjectsAction1(Actions)
 // export const getObjectAction = getObjectAction1(Actions)

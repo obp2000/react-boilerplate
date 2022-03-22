@@ -32,7 +32,7 @@ const NavBar = props => {
         main_menu
     }))
     return <>
-        <Navbar color="light" expand="md" light style={{backgroundColor: '#e3f2fd'}}>
+        <Navbar color="primary" expand="md" dark className='py-0 mb-1' >
             <NavbarBrand href="/">
                 <h3>
                     <Badge pill size='lg'>Best&C</Badge>

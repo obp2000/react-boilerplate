@@ -14,16 +14,18 @@ const submitListener = createDecorator({
 const LoginForm = () => {
     const loaded = useSelector(({
         common_consts: {
+            successfully = '',
             error_messages = {}
         }
     }) => ({
+        successfully,
         error_messages
     }))
     const dispatch = useDispatch()
     return <Form
             name='Login'
             validate={validateLogin(loaded.error_messages)}
-            onSubmit={onSubmitLogin(dispatch)}
+            onSubmit={onSubmitLogin(dispatch, loaded.successfully)}
             // decorators={[ submitListener ]}
             render={LoginFormRender}
           />

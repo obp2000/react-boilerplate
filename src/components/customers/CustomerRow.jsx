@@ -2,16 +2,19 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import DeleteButton from '../Shared/DeleteButton'
 import LinkToEdit from '../Shared/LinkToEdit'
-import ShortName from './CustomerName'
+import { ShortName } from './CustomerName'
 import CityName from '../cities/CityName'
 
 const CustomerRow = ({
-    id,
-    city,
-    address,
-    created_at,
-    updated_at,
     // accessToken,
+    customer,
+    customer: {
+        id,
+        city,
+        address,
+        created_at,
+        updated_at
+    },
     options,
     options: {
         city: {
@@ -23,7 +26,7 @@ const CustomerRow = ({
     ...rest
 }) => <tr>
         <td>{id}</td>
-        <td>{ShortName(rest, options)}</td>
+        <td>{ShortName(customer, options)}</td>
         <td>{CityName(city, city_props)}</td>
         <td>{address}</td>
         <td>{created_at}</td>
@@ -36,11 +39,12 @@ const CustomerRow = ({
     </tr>
 
 CustomerRow.propTypes = {
+    customer: PropTypes.object,
     id: PropTypes.number,
     city: PropTypes.object,
     address: PropTypes.string,
-    created_at: PropTypes.string.isRequired,
-    updated_at: PropTypes.string.isRequired,
+    created_at: PropTypes.string,
+    updated_at: PropTypes.string,
     options: PropTypes.object,
     children: PropTypes.object,
     deleteObject: PropTypes.func.isRequired,

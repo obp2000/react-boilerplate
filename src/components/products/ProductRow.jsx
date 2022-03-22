@@ -5,19 +5,22 @@ import LinkToEdit from '../Shared/LinkToEdit'
 import ProductName from './ProductName'
 
 const ProductRow = ({
-    id,
-    price,
-    width,
-    density,
-    created_at,
-    updated_at,
+    product,
+    product: {
+        id,
+        price,
+        width,
+        density,
+        created_at,
+        updated_at
+    },
     options,
     deleteObject,
     common_consts,
     ...rest
 }) => <tr>
         <th scope="row">{id}</th>
-        <td>{ProductName(rest, options)}</td>
+        <td>{ProductName(product, options)}</td>
         <td>{price}</td>
         <td>{width}</td>
         <td>{density}</td>
@@ -32,12 +35,13 @@ const ProductRow = ({
     </tr>
 
 ProductRow.propTypes = {
+    product: PropTypes.object,
     id: PropTypes.number,
-    price: PropTypes.number.isRequired,
+    price: PropTypes.number,
     width: PropTypes.number,
     density: PropTypes.number,
-    created_at: PropTypes.string.isRequired,
-    updated_at: PropTypes.string.isRequired,
+    created_at: PropTypes.string,
+    updated_at: PropTypes.string,
     options: PropTypes.object,
     deleteObject: PropTypes.func.isRequired,
     common_consts: PropTypes.object,

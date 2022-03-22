@@ -21,12 +21,6 @@ const Customers = props => {
                 id = {},
                 name = {},
                 city = {},
-                city: {
-                    children: {
-                        pindex = {},
-                        city: city_name = {}
-                    } = {}
-                } = {},
                 address = {},
                 created_at = {}
             } = {}
@@ -37,7 +31,10 @@ const Customers = props => {
         temp_state: {
             isFetching
         },
-        common_consts
+        common_consts,
+        common_consts: {
+            successfully
+        }
     }) => ({
         results,
         totalCount,
@@ -45,26 +42,29 @@ const Customers = props => {
         name_plural,
         id,
         name,
-        pindex,
-        city_name,
+        city,
         address,
         created_at,
         isFetching,
         accessToken,
-        common_consts
+        common_consts,
+        successfully
     }))
     const dispatch = useDispatch()
-    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
-    return <>
+    const deleteObject = deleteObjectAction(dispatch,
+        Actions,
+        loaded.accessToken,
+        loaded.successfully)
+    return < >
         <ObjectsPageHeader title={loaded.name_plural}
-                           totalCount={loaded.totalCount} />
-        <Loader loaded={!loaded.isFetching } >
-            <Table size='sm' bordered striped hover className='table-secondary'>
+                           totalCount={loaded.totalCount} /> <
+        Loader loaded = {!loaded.isFetching } >
+        <Table size='sm' bordered striped hover className='table-secondary'>
                 <thead className="thead-light">
                     <tr>
                         <th scope="col">{loaded.id.label}</th>
                         <th scope="col">{loaded.name.label}</th>
-                        <th scope="col">{loaded.city_name.label}</th>
+                        <th scope="col">{loaded.city.label}</th>
                         <th scope="col">{loaded.address.label}</th>
                         <th scope="col">{loaded.created_at.label}</th>
                         <th scope="col" colSpan={2}>
@@ -74,7 +74,7 @@ const Customers = props => {
                 </thead>
                 <tbody>
                   {loaded.results.map((customer, key) =>
-                    <CustomerRow {...{...customer,
+                    <CustomerRow {...{customer,
                                       options: loaded.options,
                                       common_consts: loaded.common_consts,
                                       deleteObject,
@@ -82,10 +82,11 @@ const Customers = props => {
                                       ...props}}
                     />)}
                 </tbody>
-            </Table>
-            </Loader>
-            <Pagination { ...props } />
-        </>
+            </Table> <
+        /Loader> <
+        Pagination { ...props }
+    /> <
+    />
 }
 
 // Customers.propTypes = {

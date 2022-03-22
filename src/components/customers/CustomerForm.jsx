@@ -16,18 +16,24 @@ const CustomerForm = () => {
             accessToken
         },
         common_consts: {
+            successfully = '',
             error_messages = {}
         } = {}
     }) => ({
         object,
         accessToken,
+        successfully,
         error_messages
     }))
     const dispatch = useDispatch()
     return <Form
             name='customer'
             validate={validate(loaded.error_messages)}
-            onSubmit={onSubmitAction(dispatch, Actions, loaded.accessToken)}
+            onSubmit={onSubmitAction(
+                dispatch,
+                Actions,
+                loaded.accessToken,
+                loaded.successfully)}
             initialValues={loaded.object}
             render={CustomerFormRender}
             />

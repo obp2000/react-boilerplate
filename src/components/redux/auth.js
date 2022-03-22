@@ -1,6 +1,7 @@
 import { createAction, createReducer } from 'redux-act'
 import axios from 'axios'
 import { push } from 'connected-react-router'
+import { toast } from 'react-toastify'
 import config from '../Config'
 // import { closeModal } from './NavBar'
 import { errorHandler, formErrorHandler } from './ErrorHandlers'
@@ -204,7 +205,7 @@ export const getOptions = login => () => dispatch => {
 }
 
 
-export const onSubmitLogin = dispatch => values => {
+export const onSubmitLogin = (dispatch, flash) => values => {
     dispatch(startAuthentication())
     dispatch(startRequest())
     return axios.post(`${base_url}/login/`, values)
@@ -217,12 +218,14 @@ export const onSubmitLogin = dispatch => values => {
             dispatch(successAuthentication(key))
             dispatch(clearErrors())
             dispatch(closeModal())
+            // dispatch(renderFlash(flash))
+            toast.success(flash)
             return dispatch(push('/user/'))
         })
         .catch(formErrorHandler(dispatch, failedAuthentication))
 }
 
-export const onSubmitRegister = dispatch => values => {
+export const onSubmitRegister = (dispatch, flash) => values => {
     dispatch(startRegister())
     dispatch(startRequest())
     return axios.post(`${base_url}/register/`, values)
@@ -231,12 +234,13 @@ export const onSubmitRegister = dispatch => values => {
             dispatch(successRegister())
             dispatch(clearErrors())
             dispatch(closeModal())
-            alert('Успешно зарегистрировались!')
+            // dispatch(renderFlash(flash))
+            toast.success(flash)
         })
         .catch(formErrorHandler(dispatch, failedRegister))
 }
 
-export const signOut = (dispatch, accessToken) => () => {
+export const signOut = (dispatch, accessToken, flash) => () => {
     dispatch(startSignout())
     dispatch(startRequest())
     return axios.post(`${base_url}/logout/`,
@@ -248,7 +252,8 @@ export const signOut = (dispatch, accessToken) => () => {
         }) => {
             dispatch(successRequest())
             dispatch(successSignout())
-            alert(detail)
+            // dispatch(renderFlash(flash))
+            toast.success(flash)
             return dispatch(push('/'))
         })
         .catch(errorHandler(dispatch, failedSignout))

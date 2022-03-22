@@ -25,8 +25,13 @@ class Products extends React.Component {
     }
 
     componentDidUpdate({
-        page: prevPage,
-        term: prevTerm
+        // term,
+        match: {
+            params: {
+                page: prevPage
+            },
+            term: prevTerm
+        }
     }) {
         const {
             getObjectsAction,

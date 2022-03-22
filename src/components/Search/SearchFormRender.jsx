@@ -23,11 +23,11 @@ const SearchFormRender = ({
     }) => ({
         search
     }))
-    return <Form onSubmit={handleSubmit} inline className="bg-body d-flex">
+    return <Form onSubmit={handleSubmit} inline className="d-flex mt-2">
             <Field  name='term' label={loaded.search} type="search"
                     className="me-2" component={Input} />
-            <Button type="submit" outline size="sm"
-                    disabled={submitting || invalid || pristine}>
+            <Button type="submit" color='primary' className='btn-outline-light'
+                    disabled={submitting || invalid}>
                 {loaded.search}
             </Button>
     </Form>

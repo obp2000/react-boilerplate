@@ -25,8 +25,13 @@ class Orders extends React.Component {
     }
 
     componentDidUpdate({
-        page: prevPage,
-        term: prevTerm
+        // term,
+        match: {
+            params: {
+                page: prevPage
+            },
+            term: prevTerm
+        }
     }) {
         const {
             getObjectsAction,
@@ -83,4 +88,3 @@ export default connect(null, {
 //   term,
 //   search
 // })
-

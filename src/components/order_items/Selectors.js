@@ -31,9 +31,11 @@ const order_items_count = order_items => (order_items || []).length
 
 const total_text = ({
         order_items_cost,
+        order_items_cost_label,
+        need_gift_label,
         ...Consts
     }) => needGift({ order_items_cost, ...Consts }) ?
-    'Итого - Нужен подарок!!!' : 'Итого'
+    `${order_items_cost_label} - ${need_gift_label}!!!` : order_items_cost_label
 
 export const order_items_calculator = createDecorator({
     field: /order_items\[\d+\]\.amount/,
@@ -105,7 +107,9 @@ export const order_items_calculator = createDecorator({
         post_cost,
         packet,
         order_items_weight,
-        Consts
+        Consts,
+        order_items_cost_label,
+        need_gift_label
         // Consts: {
         //     SAMPLES_WEIGHT,
         //     PACKET_WEIGHT,
@@ -135,13 +139,19 @@ export const order_items_calculator = createDecorator({
         }).toFixed(2),
         total_text: total_text({
             order_items_cost,
-            ...Consts
+            order_items_cost_label,
+            need_gift_label,
+            ...Consts,
         }),
         total_weight: total_weight({
             order_items_weight,
             order_items_cost,
             ...Consts
-        }).toFixed(0)
+        }).toFixed(0),
+        need_gift: needGift({
+            order_items_cost,
+            ...Consts
+        })
     })
 }, {
     field: 'order_items_weight',

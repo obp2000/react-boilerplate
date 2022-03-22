@@ -9,6 +9,7 @@ import Input from '../Shared/Input'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import OrderItems from '../order_items/OrderItems'
 // import CustomerField from '../customers/CustomerField'
+import GiftIfNeeded from './Gift'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
 import CustomerName from '../customers/CustomerName'
 import { Actions } from '../redux/Customers'
@@ -17,6 +18,10 @@ import OrderNumber from './OrderNumber'
 import FormHeader from '../Shared/FormHeader'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 import Label from '../Shared/Label'
+
+
+
+
 
 const OrderFormRender = props => {
     const loaded = useSelector(({
@@ -63,7 +68,7 @@ const OrderFormRender = props => {
                             component={DropdownListFormGroup}
                             dataKey='id'
                             textField={item => CustomerName(item, loaded.customer_props)}
-                            search_path={Actions.getSearchPath()}
+                            search_path={Actions.search_url}
                             label_col_size={2}
                             renderListItem={({ item }) => CustomerName(item, loaded.customer_props)}
                             renderValue={({ item }) => CustomerName(item, loaded.customer_props)}
@@ -107,6 +112,7 @@ const OrderFormRender = props => {
                                     disabled component={Input} />
                             </td>
                         </tr>
+                        <GiftIfNeeded {...options} />
                         <tr>
                             <td/>
                             <td>
@@ -123,68 +129,44 @@ const OrderFormRender = props => {
                         <tr>
                             <td/>
                             <td>
-                                <Label name="packet" {...options}/>
+                                <Row>
+                                    <Col sm={3}>
+                                        <Field name="post_cost" type="number"
+                                        component={FloatingFormGroup}
+                                        {...options} />
+                                    </Col>
+                                    +
+                                    <Col sm={3}>
+                                        <SelectFloatingFormGroup name="packet"
+                                            dataKey='value'
+                                            textField='display_name'
+                                            {...options} />
+                                    </Col>
+                                    =
+                                    <Col sm={2}>
+                                        <Field name="post_cost_with_packet"
+                                            type="number" disabled
+                                            component={FloatingFormGroup}
+                                             />
+                                    </Col>
+                                    -
+                                    <Col sm={3}>
+                                        <Field name="post_discount" type="number"
+                                            {...options} disabled
+                                            component={FloatingFormGroup} />
+                                    </Col>
+                                </Row>
                             </td>
                             <td/>
                             <td/>
                             <td>
-                                <SelectFloatingFormGroup name="packet"
-                                    dataKey='value'
-                                    textField='display_name'
-                                    {...options} />
+                                <Field name="total_postals" type="number"
+                                    {...options} disabled
+                                    component={FloatingFormGroup} />
                             </td>
                             <td>
                                 <Field name="packet_weight" type="number"
                                     disabled component={Input} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td/>
-                            <td>
-                                <Label name="post_cost" {...options}/>
-                            </td>
-                            <td/>
-                            <td/>
-                            <td>
-                                <Field name="post_cost" type="number"
-                                component={Input} {...options} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td/>
-                            <td>
-                                <Label name="post_cost_with_packet"
-                                    {...options}/>
-                            </td>
-                            <td/>
-                            <td/>
-                            <td>
-                                <Field name="post_cost_with_packet" type="number"
-                                    disabled component={Input} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td/>
-                            <td>
-                                <Label name="post_discount" {...options}/>
-                            </td>
-                            <td/>
-                            <td/>
-                            <td>
-                                <Field name="post_discount" type="number"
-                                    disabled component={Input} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td/>
-                            <td>
-                                <Label name="total_postals" {...options}/>
-                            </td>
-                            <td/>
-                            <td/>
-                            <td>
-                                <Field name="total_postals"
-                                    type="number" disabled component={Input} />
                             </td>
                         </tr>
                         <tr>

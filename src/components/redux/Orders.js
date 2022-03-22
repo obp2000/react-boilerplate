@@ -1,12 +1,11 @@
 import { createReducer } from 'redux-act'
-import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
+import config from '../Config'
+import { createActions, reducerActions, initialState } from './CommonActions'
 import { initObject as initCustomer } from './Customers'
 import { initObject as initProduct } from './Products'
 
 const index_url = '/orders'
 const redirect_url = '/orders'
-// const choices_names = [['delivery_types','delivery_type'],
-//                        ['packets', 'packet']]
 
 const initObject = {
     post_cost: 0,
@@ -58,16 +57,32 @@ const pre_submit_action = values => {
     delete values.created_at
     delete values.updated_at
     delete values.Consts
+    delete values.gift_weight
+    delete values.order_items_cost_label
+    delete values.need_gift_label
+    delete values.need_gift
 }
 
-export const Actions = new CommonActions({ index_url,
-                                           redirect_url,
-                                           initObject,
-                                           pre_submit_action })
-export const addOrderItemAction = (fields) => () => fields.push(initOrderItem)
+export const Actions = createActions()
+
+export default createReducer(reducerActions(Actions, initObject),
+                             initialState(initObject))
+
+Actions.index_url = index_url
+Actions.base_url = `${config.BACKEND}/api${index_url}`
+Actions.redirect_url = redirect_url
+Actions.initObject = initObject
+Actions.pre_submit_action = pre_submit_action
+
+export const addOrderItemAction = fields => () => fields.push(initOrderItem)
 
 // export default Actions.getReducer()
-export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
+// export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
+
+// export const Actions = new CommonActions({ index_url,
+//                                            redirect_url,
+//                                            initObject,
+//                                            pre_submit_action })
 
 
 // export const getObjectsAction = Actions.getObjectsAction()

@@ -33,7 +33,10 @@ const Products = props => {
         temp_state: {
             isFetching
         },
-        common_consts
+        common_consts,
+        common_consts: {
+            successfully
+        }
     }) => ({
         results,
         totalCount,
@@ -48,10 +51,15 @@ const Products = props => {
         updated_at,
         isFetching,
         accessToken,
-        common_consts
+        common_consts,
+        successfully
     }))
     const dispatch = useDispatch()
-    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
+    const deleteObject = deleteObjectAction(
+        dispatch,
+        Actions,
+        loaded.accessToken,
+        loaded.successfully)
     return <>
             <ObjectsPageHeader title={loaded.name_plural}
                                totalCount={loaded.totalCount} />
@@ -73,7 +81,7 @@ const Products = props => {
                     </thead>
                     <tbody>
                         {loaded.results.map((product, key) =>
-                            <ProductRow {...{...product,
+                            <ProductRow {...{product,
                                              options: loaded.options,
                                              common_consts: loaded.common_consts,
                                              deleteObject,

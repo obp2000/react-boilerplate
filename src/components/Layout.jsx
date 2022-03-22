@@ -8,6 +8,8 @@ import { Container } from 'reactstrap'
 //   CSSTransition
 // } from "react-transition-group"
 import Errors from './Shared/Errors'
+// import Flash from './Shared/Flash'
+import { ToastContainer, Zoom } from 'react-toastify'
 import NavBar from './NavBar/NavBar'
 import Products from './products/Containers/Products'
 import Product from './products/Containers/Product'
@@ -20,12 +22,16 @@ import PrivateRoute from './Shared/privateRoute'
 import RegisterForm from './auth/Containers/RegisterForm'
 import LoginForm from './auth/Containers/LoginForm'
 import User from './users/Containers/User'
-// import Pagination from './Pagination/Containers/Pagination'
 
 const Layout = ({history}) => {
   return <ConnectedRouter history={history}>
     <Container fluid="sm" className="bg-light border">
+      <ToastContainer position="top-center"
+                      autoClose={3000}
+                      transition={Zoom}
+                      theme="colored"/>
       <Route path="/" component={Errors} />
+      {/*<Route path="/" component={Flash} />*/}
       <Route path="/" component={NavBar} />
       <Route exact path="/" component={Customers}/>
       <Route path="/signup" component={RegisterForm}/>

@@ -18,6 +18,7 @@ const Orders = props => {
             totalCount,
             options = {},
             options: {
+                name_plural,
                 id = {},
                 customer = {},
                 order_items_cost = {},
@@ -31,11 +32,15 @@ const Orders = props => {
         temp_state: {
             isFetching
         },
-        common_consts
+        common_consts,
+        common_consts: {
+            successfully
+        }
     }) => ({
         results,
         totalCount,
         options,
+        name_plural,
         id,
         customer,
         order_items_cost,
@@ -43,12 +48,18 @@ const Orders = props => {
         updated_at,
         isFetching,
         accessToken,
-        common_consts
+        common_consts,
+        successfully
     }))
     const dispatch = useDispatch()
-    const deleteObject = deleteObjectAction(dispatch, Actions, loaded.accessToken)
+    const deleteObject = deleteObjectAction(
+        dispatch,
+        Actions,
+        loaded.accessToken,
+        loaded.successfully)
     return <>
-            <ObjectsPageHeader title='Заказы' totalCount={loaded.totalCount} />
+            <ObjectsPageHeader  title={loaded.name_plural}
+                                totalCount={loaded.totalCount} />
             <Loader loaded={!loaded.isFetching}>
             <Table size='sm' bordered striped hover className='table-secondary'>
                 <thead className="thead-light">
@@ -65,7 +76,7 @@ const Orders = props => {
                 </thead>
                 <tbody>
                     {loaded.results.map((order, key) =>
-                        <OrderRow {...{...order,
+                        <OrderRow {...{order,
                                        options: loaded.options,
                                        common_consts: loaded.common_consts,
                                        deleteObject,

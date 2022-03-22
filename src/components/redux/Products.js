@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act'
-import { CommonActions, getReducerActions, getInitialState } from './CommonActions'
-
+import config from '../Config'
+import { createActions, reducerActions, initialState } from './CommonActions'
 
 export const initObject = {
     id: null,
@@ -50,23 +50,33 @@ const pre_submit_action = values => {
     delete values.created_at
     delete values.updated_at
     delete values.Consts
-    // console.log('values: ', values)
 }
 
-// const choices_names = [
-//     ['product_type_options', 'product_type'],
-//     ['threads_options', 'threads'],
-//     ['contents_options', 'contents']
-// ]
+export const Actions = createActions()
 
-export const Actions = new CommonActions({
-    index_url,
-    redirect_url,
-    initObject,
-    to_form_data,
-    pre_submit_action,
-    // choices_names
-})
+export default createReducer(reducerActions(Actions, initObject),
+                             initialState(initObject))
+
+Actions.index_url = index_url
+Actions.base_url = `${config.BACKEND}/api${index_url}`
+Actions.redirect_url = redirect_url
+Actions.initObject = initObject
+Actions.pre_submit_action = pre_submit_action
+Actions.search_url = index_url
+
+
+
+
+// export const Actions = new CommonActions({
+//     index_url,
+//     redirect_url,
+//     initObject,
+//     to_form_data,
+//     pre_submit_action,
+//     // choices_names
+// })
+
+// export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
 
 // export const getObjectsAction = Actions.getObjectsAction()
 // export const getObjectAction = Actions.getObjectAction()
@@ -76,4 +86,3 @@ export const Actions = new CommonActions({
 // export const onBlur = Actions.clearSearchObjectsAction()
 
 // export default Actions.getReducer()
-export default createReducer(Actions.getReducerActions(), Actions.getInitialState())

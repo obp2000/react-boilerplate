@@ -8,19 +8,29 @@ const AuthButton = ({ label }) => {
     const auth = useSelector(({
         auth: {
             isAuthenticated,
-            accessToken
+            accessToken,
+            object: {
+                username = ''
+            } = {}
+        },
+        common_consts: {
+            successfully = '',
         }
     }) => ({
         isAuthenticated,
-        accessToken
+        accessToken,
+        username,
+        successfully
     }))
     const dispatch = useDispatch()
-    return  <Button size='sm'
-                    outline
+    const username_label = auth.isAuthenticated ? ` (${auth.username || ''})` : ''
+    return  <Button
+                    color='primary'
+                    className='btn-outline-light'
                     onClick={auth.isAuthenticated ?
-                            signOut(dispatch, auth.accessToken) :
+                            signOut(dispatch, auth.accessToken, auth.successfully) :
                             () => dispatch(toggleModal())} >
-                {label}
+                {`${label}${username_label}`}
             </Button>
 }
 

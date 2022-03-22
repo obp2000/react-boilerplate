@@ -9,16 +9,18 @@ import RegisterFormRender from './RegisterFormRender'
 const RegisterForm = () => {
     const loaded = useSelector(({
         common_consts: {
+            successfully = '',
             error_messages = {}
         }
     }) => ({
+        successfully,
         error_messages
     }))
     const dispatch = useDispatch()
     return <Form
           name='Register'
           validate={validateRegister(loaded.error_messages)}
-          onSubmit={onSubmitRegister(dispatch)}
+          onSubmit={onSubmitRegister(dispatch, loaded.successfully)}
           render={RegisterFormRender}
         />
  }

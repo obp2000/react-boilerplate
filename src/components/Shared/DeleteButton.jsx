@@ -5,10 +5,13 @@ import ConfirmAction from './ConfirmAction'
 
 const DeleteButton = ({
     action,
-    ['delete']: text_delete
-
+    ['delete']: text_delete,
+    yes,
+    no
 }) =>
-    <Button size='sm' outline onClick={ConfirmAction(action, `${text_delete}?`)}>
+    <Button size='sm'
+            outline
+            onClick={ConfirmAction(action, `${text_delete}?`, yes, no)}>
         {text_delete}
     </Button>
 

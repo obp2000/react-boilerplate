@@ -12,6 +12,9 @@ const RegisterFormRender = ({
     submitting,
     invalid,
     pristine,
+    hasSubmitErrors,
+    hasValidationErrors,
+    dirtySinceLastSubmit,
     submitError
 }) => {
     const loaded = useSelector(({
@@ -52,7 +55,10 @@ const RegisterFormRender = ({
                         {...options}
                         component={RowFormGroup} />
                 <SubmitButton text={loaded.register_text}
-                    submitDisabled={submitting ||  pristine}/>
+                    submitDisabled={submitting ||
+                                    pristine ||
+                                    hasValidationErrors ||
+                                    (hasSubmitErrors && !dirtySinceLastSubmit)}/>
             </Form>
 }
 
