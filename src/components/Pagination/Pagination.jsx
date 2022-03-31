@@ -1,67 +1,76 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import querystring from 'querystring'
 import { Pagination } from 'reactstrap'
 import PageItem from './PageItem'
-import { TableName } from '../Shared/BasePathname'
-import config from '../Config'
 
-const PaginationComp = ({
-    match: {
-        params: {
-            page
+const PaginationComp = ({ totalPages }) => {
+    // console.log('pathname ', pathname)
+    const loaded = useSelector(({
+        router: {
+            location: {
+                pathname,
+                query: {
+                    page = 1,
+                    term
+                } = {}
+            }
         }
-    },
-    location: {
-        pathname,
-        search
-    }
-}) => {
-    const table_name = TableName(pathname) || config.BaseTable
-    const pages_path = `/${table_name}/pages/`
-    // console.log('table: ', table_name)
-    const currentPage = parseInt(page) || 1
-    const from_table = useSelector(({
-        [table_name]: {
-            totalPages,
-        },
     }) => ({
-        totalPages,
+        pathname,
+        page,
+        term
     }))
+    // const { page } = loaded.query
+    const currentPage = parseInt(loaded.page)
     return <Pagination>
         {currentPage > 1 && <PageItem {...{
                             label: '<',
                             to: {
-                                pathname: `${pages_path}${currentPage - 1}`,
-                                search
+                                pathname: loaded.pathname,
+                                search: querystring.stringify({
+                                    ...(currentPage == 2 ? {} : {page: currentPage - 1}),
+                                    ...(loaded.term ? {term: loaded.term} : {})
+                                })
                             },
                             key: -1,
                             }}
                         />
         }
-        { Array(from_table.totalPages).fill().map((_, index) =>
+        {Array(totalPages).fill().map((_, index) =>
                     <PageItem {...{
                         label: (index + 1).toString(),
                         to: {
-                            pathname: `${pages_path}${index + 1}`,
-                            search
+                            pathname: loaded.pathname,
+                            search: querystring.stringify({
+                                ...(index == 0 ? {} : {page: index + 1}),
+                                ...(loaded.term ? {term: loaded.term} : {})
+                            })
                         },
                         active: (index + 1) == currentPage,
                         key: index,
                         }}
                     />)
         }
-        {currentPage < from_table.totalPages && <PageItem {...{
+        {currentPage < totalPages && <PageItem {...{
                                 label: '>',
                                 to: {
-                                    pathname: `${pages_path}${currentPage + 1}`,
-                                    search
+                                    pathname: loaded.pathname,
+                                    search: querystring.stringify({
+                                        page: currentPage + 1,
+                                        ...(loaded.term ? {term: loaded.term} : {})
+                                    })
                                 },
                                 key: -2,
                                 }}
                             />
         }
     </Pagination>
+}
+
+Pagination.propTypes = {
+    totalPages: PropTypes.number
 }
 
 export default PaginationComp

@@ -2,54 +2,22 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../Customers'
-import { getObjectsAction } from '../../redux/ServerActions'
+import { getObjectsAction, deleteObjectAction } from '../../redux/ServerActions'
 import { Actions } from '../../redux/Customers'
 
 class Customers extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+    // constructor(props) {
+    //     super(props)
+    // }
 
     componentDidMount() {
-        const {
-            getObjectsAction,
-            match: {
-                params: {
-                    page
-                }
-            }
-        } = this.props
-        // console.log('componentDidMount')
-        // console.log('mount props ', this.props)
-        console.log('Actions ', Actions)
-        getObjectsAction(page)
+        console.log('customers DidMount')
+        this.props.getObjectsAction()
     }
 
-    componentDidUpdate({
-        // term,
-        match: {
-            params: {
-                page: prevPage
-            },
-            term: prevTerm
-        }
-    }) {
-        const {
-            getObjectsAction,
-            match: {
-                params: {
-                    page
-                },
-                term = ''
-            }
-        } = this.props
-        // console.log('componentDidUpdate')
-        // console.log('prevProps ', prevProps)
-        // console.log('prevPage ', prevPage)
-        // console.log('prevTerm ', prevTerm)
-        // if (page !== prevPage || term !== prevTerm) {
-        getObjectsAction(page)
-        // }
+    componentDidUpdate(prevProps) {
+        console.log('customers DidUpdate')
+        if (prevProps != this.props) this.props.getObjectsAction()
     }
 
     render() {
@@ -57,6 +25,15 @@ class Customers extends React.Component {
     }
 }
 
+// const mapStateToProps = ({
+//     customers: objects = {},
+//     common_consts
+// }) => ({
+//     objects,
+//     common_consts
+// })
+
 export default connect(null, {
     getObjectsAction: getObjectsAction(Actions),
+    deleteObjectAction: deleteObjectAction(Actions)
 })(Customers)

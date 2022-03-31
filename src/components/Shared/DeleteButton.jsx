@@ -4,19 +4,20 @@ import { Button } from 'reactstrap'
 import ConfirmAction from './ConfirmAction'
 
 const DeleteButton = ({
-    action,
+    id,
+    deleteObjectAction,
     ['delete']: text_delete,
     yes,
     no
 }) =>
     <Button size='sm'
             outline
-            onClick={ConfirmAction(action, `${text_delete}?`, yes, no)}>
+            onClick={ConfirmAction(() => deleteObjectAction(id), `${text_delete}?`, yes, no)}>
         {text_delete}
     </Button>
 
 DeleteButton.propTypes = {
-    action: PropTypes.func.isRequired
+    deleteObjectAction: PropTypes.func.isRequired
 }
 
 export default DeleteButton

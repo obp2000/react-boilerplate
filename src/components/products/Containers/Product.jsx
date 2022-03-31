@@ -2,32 +2,25 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import FormTemplate from '../ProductForm'
-import { getObjectAction } from '../../redux/ServerActions'
+import { getObjectAction, onSubmitAction } from '../../redux/ServerActions'
 import { Actions } from '../../redux/Products'
 
 class Product extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+    // constructor(props) {
+    //     super(props)
+    // }
 
     componentDidMount() {
-        const {
-            match: {
-                params: {
-                    id
-                }
-            },
-            getObjectAction
-        } = this.props
         // console.log(' DidMount')
-        getObjectAction(id)
+        this.props.getObjectAction()
     }
 
     render() {
-        return <FormTemplate />
+        return <FormTemplate {...this.props} />
     }
 }
 
 export default connect(null, {
     getObjectAction: getObjectAction(Actions),
+    onSubmitAction: onSubmitAction(Actions)
 })(Product)

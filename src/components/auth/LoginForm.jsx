@@ -7,9 +7,9 @@ import { onSubmitLogin } from '../redux/auth'
 import { validateLogin } from './Validators'
 import LoginFormRender from './LoginFormRender'
 
-const submitListener = createDecorator({
-  afterSubmitFailed: form => form.restart()
-})
+// const submitListener = createDecorator({
+//   afterSubmitFailed: form => form.restart()
+// })
 
 const LoginForm = () => {
     const loaded = useSelector(({

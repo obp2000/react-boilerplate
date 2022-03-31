@@ -7,7 +7,8 @@ import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
 import { invalid, valid } from './FieldStatus'
-import { searchObjectsAction, clearSearchObjectsAction } from '../redux/ServerActions'
+import { searchObjectsAction } from '../redux/ServerActions'
+import { clearSearchObjects } from '../redux/TempState'
 
 const DropdownListComp = ({
     input: {
@@ -48,7 +49,7 @@ const DropdownListComp = ({
             data: loaded.data,
             busy: loaded.isFieldFetching,
             onSearch: searchObjectsAction(dispatch, search_path, loaded.accessToken),
-            onBlur: clearSearchObjectsAction(dispatch)
+            onBlur: () => dispatch(clearSearchObjects())
         }
     }
     const WidgetComponent = rest.listbox ? Listbox : DropdownList

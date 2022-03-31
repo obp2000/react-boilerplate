@@ -8,7 +8,6 @@ import Loader from 'react-loader'
 import Input from '../Shared/Input'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import OrderItems from '../order_items/OrderItems'
-// import CustomerField from '../customers/CustomerField'
 import GiftIfNeeded from './Gift'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
 import CustomerName from '../customers/CustomerName'
@@ -19,34 +18,30 @@ import FormHeader from '../Shared/FormHeader'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 import Label from '../Shared/Label'
 
-
-
-
-
 const OrderFormRender = props => {
     const loaded = useSelector(({
         orders: {
-            object: {
-                id,
-                options,
-                options: {
-                    order_items: {
-                        child: {
-                            children: order_items_props = {}
-                        } = {}
-                    } = {},
-                    customer: {
-                        children: customer_props = {}
-                    } = {},
-                } = {}
-            } = {}
+            object = {}
         },
         temp_state: {
             isFetching
         },
-        common_consts
+        common_consts,
+        common_consts: {
+            options,
+            options: {
+                order_items: {
+                    child: {
+                        children: order_items_props = {}
+                    } = {}
+                } = {},
+                customer: {
+                    children: customer_props = {}
+                } = {},
+            } = {}
+        }
     }) => ({
-        id,
+        object,
         options,
         order_items_props,
         customer_props,
@@ -57,41 +52,41 @@ const OrderFormRender = props => {
     const options = { options: loaded.options }
     return <Loader loaded={!loaded.isFetching}>
         <Form onSubmit={props.handleSubmit}
-                   className="shadow p-3 mb-5 bg-body rounded">
-                <FormHeader {...options} id={loaded.id} {...props}>
-                    <OrderNumber />
-                </FormHeader>
-                <Field name="id" hidden {...options} component={Input} />
-                <Row>
-                    <Field  name="customer"
-                            {...options}
-                            component={DropdownListFormGroup}
-                            dataKey='id'
-                            textField={item => CustomerName(item, loaded.customer_props)}
-                            search_path={Actions.search_url}
-                            label_col_size={2}
-                            renderListItem={({ item }) => CustomerName(item, loaded.customer_props)}
-                            renderValue={({ item }) => CustomerName(item, loaded.customer_props)}
-                            />
-                </Row>
-                <Row>
-                    <Col sm={2}>
-                        <SelectFloatingFormGroup name="delivery_type"
-                            dataKey='value'
-                            textField='display_name'
-                            {...options} />
+            className="shadow p-3 mb-5 bg-body rounded">
+            <FormHeader {...loaded.object} {...options} {...props}>
+                <OrderNumber />
+            </FormHeader>
+            <Field name="id" hidden {...options} component={Input} />
+            <Row>
+                <Field  name="customer"
+                        {...options}
+                        component={DropdownListFormGroup}
+                        dataKey='id'
+                        textField={item => CustomerName(item, loaded.customer_props)}
+                        search_path={Actions.search_url}
+                        label_col_size={2}
+                        renderListItem={({ item }) => CustomerName(item, loaded.customer_props)}
+                        renderValue={({ item }) => CustomerName(item, loaded.customer_props)}
+                        />
+            </Row>
+            <Row>
+                <Col sm={2}>
+                    <SelectFloatingFormGroup name="delivery_type"
+                        dataKey='value'
+                        textField='display_name'
+                        {...options} />
+                </Col>
+                <Col sm={6}>
+                    <Field name="address" {...options}
+                        component={FloatingFormGroup}/>
                     </Col>
-                    <Col sm={6}>
-                        <Field name="address" {...options}
-                            component={FloatingFormGroup}/>
-                    </Col>
-                </Row>
-                <Table size="sm" responsive bordered hover>
-                    <FieldArray name="order_items"
-                        options={loaded.order_items_props}
-                        common_consts={loaded.common_consts}
-                        component={OrderItems}/>
-                    <tfoot>
+            </Row>
+            <Table size="sm" responsive bordered hover>
+                <FieldArray name="order_items"
+                            options={loaded.order_items_props}
+                            common_consts={loaded.common_consts}
+                            component={OrderItems}/>
+                <tfoot>
                         <tr>
                             <td/>
                             <td>
@@ -185,8 +180,8 @@ const OrderFormRender = props => {
                                     disabled component={Input} />
                             </td>
                         </tr>
-                    </tfoot>
-                </Table>
+                </tfoot>
+            </Table>
         </Form>
         </Loader>
 }

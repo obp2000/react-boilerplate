@@ -1,13 +1,13 @@
 import CityName from '../cities/CityName'
 
 export const ShortName = ({
-    nick = '',
-    name = ''
+    nick,
+    name
 } = {}, {
     name: {
         label: name_label
     } = {}
-} = {}) => {
+}) => {
     let customer_name = [nick]
     if (name) {
         customer_name.push(

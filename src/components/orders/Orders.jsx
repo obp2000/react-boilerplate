@@ -1,93 +1,69 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Table } from 'reactstrap'
-import Loader from 'react-loader'
-import OrderRow from './OrderRow'
+import Label from '../Shared/Label'
+import DeleteButton from '../Shared/DeleteButton'
+import LinkToEdit from '../Shared/LinkToEdit'
+import TableData from './TableData'
 import Pagination from '../Pagination/Pagination'
 import ObjectsPageHeader from '../Shared/ObjectsPageHeader'
-import { deleteObjectAction } from '../redux/ServerActions'
-import { Actions } from '../redux/Orders'
 import LinkToNew from '../Shared/LinkToNew'
+import Loader from '../Shared/Loader'
 
 const Orders = props => {
     const loaded = useSelector(({
-        orders: {
-            results = [],
-            totalCount,
-            options = {},
-            options: {
-                name_plural,
-                id = {},
-                customer = {},
-                order_items_cost = {},
-                created_at = {},
-                updated_at = {}
-            } = {}
-        },
-        auth: {
-            accessToken
-        },
-        temp_state: {
-            isFetching
-        },
-        common_consts,
-        common_consts: {
-            successfully
-        }
+        orders: objects = {},
+        common_consts
     }) => ({
-        results,
-        totalCount,
-        options,
-        name_plural,
-        id,
-        customer,
-        order_items_cost,
-        created_at,
-        updated_at,
-        isFetching,
-        accessToken,
-        common_consts,
-        successfully
+        objects,
+        common_consts
     }))
-    const dispatch = useDispatch()
-    const deleteObject = deleteObjectAction(
-        dispatch,
-        Actions,
-        loaded.accessToken,
-        loaded.successfully)
-    return <>
-            <ObjectsPageHeader  title={loaded.name_plural}
-                                totalCount={loaded.totalCount} />
-            <Loader loaded={!loaded.isFetching}>
+     return <>
+        <ObjectsPageHeader {...loaded.objects} {...loaded.common_consts} />
+        <Loader loaded={!loaded.isFetching} >
             <Table size='sm' bordered striped hover className='table-secondary'>
-                <thead className="thead-light">
-                    <tr>
-                        <th scope="col">{loaded.id.label}</th>
-                        <th scope="col">{loaded.customer.label}</th>
-                        <th scope="col">{loaded.order_items_cost.label}</th>
-                        <th scope="col">{loaded.created_at.label}</th>
-                        <th scope="col">{loaded.updated_at.label}</th>
-                        <th scope="col" colSpan={2}>
-                            <LinkToNew {...props} {...loaded.common_consts} />
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loaded.results.map((order, key) =>
-                        <OrderRow {...{order,
-                                       options: loaded.options,
-                                       common_consts: loaded.common_consts,
-                                       deleteObject,
-                                       key,
-                                       ...props}}
-                        />)}
-                </tbody>
+                    <thead className="thead-light">
+                        <tr>
+                            {Object.keys(TableData).map((name, key) =>
+                                <th scope="col" key={key}>
+                                    <Label {...{name}}
+                                           {...loaded.common_consts}
+                                           required={false} />
+                                </th>
+                            )}
+                            <th scope="col" colSpan={2}>
+                                <LinkToNew {...loaded.common_consts}/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loaded.objects.results.map((object, key) =>
+                            <tr key={key}>
+                                {Object.values(TableData).map((value, key) =>
+                                    <td scope="row" key={key}>
+                                        {value(object, loaded.common_consts)}
+                                    </td>
+                                )}
+                                <td>
+                                    <LinkToEdit {...object}
+                                                {...loaded.common_consts} />
+                                </td>
+                                <td>
+                                    <DeleteButton {...object} {...props}
+                                                  {...loaded.common_consts} />
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
             </Table>
-            </Loader>
-            <Pagination {...props} />
-        </>
+        </Loader>
+        <Pagination {...loaded.objects} />
+    </>
+}
+
+Orders.propTypes = {
+    deleteObjectAction: PropTypes.func.isRequired
 }
 
 export default Orders

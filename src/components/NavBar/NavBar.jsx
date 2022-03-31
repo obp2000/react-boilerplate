@@ -10,20 +10,14 @@ import {
     NavItem,
     Badge
 } from 'reactstrap'
-import NavItemWithLink from './NavItemWithLink'
+import NavLink from './NavLink'
 import AuthModal from '../auth/AuthModal'
 import AuthButton from '../auth/AuthButton'
 import SearchForm from '../Search/SearchForm'
 import { TableName } from '../Shared/BasePathname'
 import config from '../Config'
-// import Errors from '../Errors'
 
-const NavBar = props => {
-    const {
-        location: {
-            pathname
-        }
-    } = props
+const NavBar = () => {
     const loaded = useSelector(({
         common_consts: {
             main_menu = []
@@ -32,7 +26,7 @@ const NavBar = props => {
         main_menu
     }))
     return <>
-        <Navbar color="primary" expand="md" dark className='py-0 mb-1' >
+        <Navbar color="primary" expand="md" dark className="py-0 mb-1" >
             <NavbarBrand href="/">
                 <h3>
                     <Badge pill size='lg'>Best&C</Badge>
@@ -48,16 +42,11 @@ const NavBar = props => {
                 <Nav className="me-auto" navbar>
                     {loaded.main_menu.map(({path: to, label}, key) =>
                         <NavItem key={key}>
-                            <NavItemWithLink {...{to,
-                                                  label,
-                                                  active: (to == '/' ?
-                                                    pathname == to :
-                                                    pathname.includes(to))
-                                                  }} />
+                            <NavLink {...{to, label}} />
                         </NavItem>
                     )}
                 </Nav>
-                <SearchForm {...props} />
+                <SearchForm />
             </Collapse>
         </Navbar>
         <AuthModal />

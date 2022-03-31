@@ -1,16 +1,14 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { validate } from './Validators'
 import { onSubmit } from '../redux/Search'
 import SearchFormRender from './SearchFormRender'
 
-const SearchForm = ({
-    location: {
-        pathname
-    }
-}) => {
+const SearchForm = () => {
+    const { pathname } = useLocation()
     const dispatch = useDispatch()
     return <Form name='search'
               // validate={validate}
@@ -18,10 +16,6 @@ const SearchForm = ({
               render={SearchFormRender}
               pathname={pathname}
             />
-}
-
-SearchForm.propTypes = {
-    pathname: PropTypes.string,
 }
 
 export default SearchForm

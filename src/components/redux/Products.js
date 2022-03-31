@@ -62,6 +62,7 @@ Actions.base_url = `${config.BACKEND}/api${index_url}`
 Actions.redirect_url = redirect_url
 Actions.initObject = initObject
 Actions.pre_submit_action = pre_submit_action
+Actions.to_form_data = to_form_data
 Actions.search_url = index_url
 
 

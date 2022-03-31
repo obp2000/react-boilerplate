@@ -1,21 +1,22 @@
 {
   "presets": [
     [
-      "@babel/env",
+      "env",
       {
         "modules": false,
         "targets": {
-          "browsers": "> 1%"
+          "browsers": "> 1%",
+          "uglify": true
         },
-	"corejs": "3.x",
-        "useBuiltIns": "entry",
-	"forceAllTransforms": true
+        "useBuiltIns": true
       }
     ],
-    "@babel/react"
+    "@babel/env",
+    "@babel/preset-react"
   ],
   "plugins": [
     "syntax-dynamic-import",
+    "transform-object-rest-spread",
     [
       "transform-class-properties",
       {
@@ -29,16 +30,17 @@
   "env": {
     "test": {
       "presets": [
-        "@babel/env",
-        "@babel/react"
-	
-	
+        "env",
+        "react",
+        "stage-2"
       ],
       "plugins": [
         "transform-export-extensions"
+      ],
+      "only": [
+        "./**/*.js",
+        "node_modules/jest-runtime"
       ]
-
     }
   }
-
 }

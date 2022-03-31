@@ -3,11 +3,16 @@ import React from 'react'
 import { Row, Col, Badge } from 'reactstrap'
 // import SearchForm from '../Search/SearchForm'
 
-const ObjectsPageHeader = ({ title, totalCount }) =>
+const ObjectsPageHeader = ({
+        options: {
+            name_plural
+        } = {},
+        totalCount
+    }) =>
     <Row>
         <Col sm={2}>
             <h3>
-                {title}
+                {name_plural}
             </h3>
         </Col>
         <Col>
@@ -20,7 +25,7 @@ const ObjectsPageHeader = ({ title, totalCount }) =>
     </Row>
 
 ObjectsPageHeader.propTypes = {
-    title: PropTypes.string,
+    name_plural: PropTypes.string,
     totalCount: PropTypes.number,
 }
 

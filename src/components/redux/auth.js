@@ -29,6 +29,7 @@ export const toggleLogin = createAction('toggleLogin')
 const requestOptions = createAction('requestOptions')
 const successReceiveOptions = createAction('successReceiveOptions')
 const failedReceiveOptions = createAction('failedReceiveOptions')
+import { getOptions as getObjectOptions, getExistingObject } from './ServerActions'
 
 export const tokenHeaders = (accessToken, to_form_data) => {
     return {
@@ -193,8 +194,7 @@ export const getOptions = login => () => dispatch => {
             data: {
                 actions: {
                     POST
-                },
-                // name: object_name
+                }
             }
         }) => {
             dispatch(successRequest())
@@ -203,7 +203,6 @@ export const getOptions = login => () => dispatch => {
         })
         .catch(errorHandler(dispatch, failedReceiveOptions))
 }
-
 
 export const onSubmitLogin = (dispatch, flash) => values => {
     dispatch(startAuthentication())
@@ -259,58 +258,78 @@ export const signOut = (dispatch, accessToken, flash) => () => {
         .catch(errorHandler(dispatch, failedSignout))
 }
 
-const getExistingObject = (dispatch, accessToken, { common_consts, ...options }) => {
-    // dispatch(startRequest())
-    return axios.get(`${base_url}/user/`,
-            tokenHeaders(accessToken)
-        )
-        .then(({
-            data
-        }) => {
-            dispatch(successRequest())
-            dispatch(receiveCommonConsts(common_consts))
-            dispatch(successReceiveUser({
-                ...data,
-                options
-            }))
-            dispatch(clearErrors())
-        })
-        .catch(errorHandler(dispatch, failedReceiveUser))
-}
-
-const getExistingObjectWihOptions = (dispatch, accessToken, isAuthenticated) => {
-    dispatch(startRequest())
-    return axios.options(`${base_url}/user/`, {
-                params: {
-                    isAuthenticated
-                },
-                ...tokenHeaders(accessToken)
-            },
-        )
-        .then(({
-            data: {
-                actions: {
-                    PUT
-                },
-                // name: object_name
-            }
-        }) => getExistingObject(dispatch, accessToken, PUT))
-        .catch(errorHandler(dispatch, failedReceiveUser))
-}
-
 export const getObjectAction = () => (dispatch, getState) => {
     const {
         auth: {
-            accessToken,
             isAuthenticated
         }
     } = getState()
-    if (accessToken) {
+    const actions = {base_url: `${base_url}/user`,
+                     successReceiveObject: successReceiveUser,
+                     failedReceiveObject: failedReceiveUser}
+    if (isAuthenticated) {
         dispatch(requestUser())
-        return getExistingObjectWihOptions(dispatch, accessToken, isAuthenticated)
+        getObjectOptions(actions,
+                         dispatch,
+                         getState,
+                         getExistingObject(actions, dispatch, getState),
+                         failedReceiveUser,
+                         'PUT')
     }
 }
 
+
+// const getExistingObject1 = (actions, dispatch, getState) => () => {
+//     const {
+//         auth: {
+//             accessToken,
+//         }
+//     } = getState()
+//     dispatch(startRequest())
+//     return axios.get(`${actions.base_url}/`,
+//             tokenHeaders(accessToken)
+//         )
+//         .then(({
+//             data
+//         }) => {
+//             dispatch(successRequest())
+//             dispatch(actions.successReceiveObject(data))
+//             dispatch(clearErrors())
+//         })
+//         .catch(errorHandler(dispatch, actons.failedReceiveObject))
+// }
+
+// const getExistingObjectWihOptions = (dispatch, accessToken, isAuthenticated) => {
+//     dispatch(startRequest())
+//     return axios.options(`${base_url}/user/`, {
+//             params: {
+//                 isAuthenticated
+//             },
+//             ...tokenHeaders(accessToken)
+//         }, )
+//         .then(({
+//             data: {
+//                 actions: {
+//                     PUT
+//                 },
+//                 // name: object_name
+//             }
+//         }) => getExistingObject(dispatch, accessToken, PUT))
+//         .catch(errorHandler(dispatch, failedReceiveUser))
+// }
+
+// export const getObjectAction = () => (dispatch, getState) => {
+//     const {
+//         auth: {
+//             accessToken,
+//             isAuthenticated
+//         }
+//     } = getState()
+//     if (accessToken) {
+//         dispatch(requestUser())
+//         return getExistingObjectWihOptions(dispatch, accessToken, isAuthenticated)
+//     }
+// }
 
 
 // export const getObjectAction11 = actions => id => (dispatch, getState) => {

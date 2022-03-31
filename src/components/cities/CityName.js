@@ -1,9 +1,11 @@
 const CityName = (city_obj, {
-    pindex: {
-        label: pindex_label = ''
-    } = {},
     city: {
-        label: city_label = ''
+        label: city_label = '',
+        children: {
+            pindex: {
+                label: pindex_label = ''
+            } = {}
+        } = {}
     } = {}
 } = {}) => {
     const {

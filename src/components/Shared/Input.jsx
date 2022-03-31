@@ -28,7 +28,6 @@ const InputComp = ({
             {...input}
             {...{name,
                 id,
-                // checked,
                 placeholder,
                 required,
                 readOnly,
@@ -44,33 +43,3 @@ const InputComp = ({
     </>
 
 export default InputComp
-
-
-// const InputComp111 = ({
-//     input = {},
-//     meta,
-//     label: placeholder,
-//     options = {},
-//     ...rest
-// }) => {
-//     let field = {}
-//     if (field = options[input.name]) {
-//         renameKey(field, 'read_only', 'readOnly')
-//         renameKey(field, 'min_value', 'min')
-//         renameKey(field, 'max_value', 'max')
-//         delete field.type
-//     }
-//     return < >
-//         <Input
-//             {...input}
-//             id={input.name}
-//             placeholder={placeholder}
-//             invalid={invalid(meta)}
-//             valid={valid(meta)}
-//             {...rest}
-//             {...field}
-//         /> <
-//         WidgetErrors { ...meta }
-//     /> { rest.form_text && <FormTextList form_text={rest.form_text} /> } <
-//     />
-// }

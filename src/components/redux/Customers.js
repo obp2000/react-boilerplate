@@ -38,6 +38,9 @@ Actions.initObject = initObject
 Actions.pre_submit_action = pre_submit_action
 Actions.search_url = index_url
 
+// export const TableData = {
+//
+// }
 
 // export Actions
 

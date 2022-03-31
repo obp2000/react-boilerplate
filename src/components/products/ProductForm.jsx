@@ -8,43 +8,33 @@ import { onSubmitAction } from '../redux/ServerActions'
 import { Actions } from '../redux/Products'
 import ProductFormRender from './ProductFormRender'
 
-const ProductForm = () => {
+const ProductForm = ({ onSubmitAction }) => {
     const loaded = useSelector(({
         products: {
-            object: {
-                options = {},
-                options: {
-                    Consts = {}
-                } = {},
-                ...object
-            }
-        },
-        auth: {
-            accessToken
+            object
         },
         common_consts: {
-            successfully = '',
-            error_messages = {}
+            error_messages = {},
+            options: {
+                Consts = {}
+            } = {},
         } = {}
     }) => ({
-        options,
-        Consts,
         object,
-        accessToken,
-        successfully,
-        error_messages
+        error_messages,
+        Consts
     }))
     const dispatch = useDispatch()
     return <Form name='product'
         validate={validate(loaded.error_messages)}
-        onSubmit={onSubmitAction(
-            dispatch,
-            Actions,
-            loaded.accessToken,
-            loaded.successfully)}
+        onSubmit={onSubmitAction}
         decorators={[calculator]}
         initialValues={{...loaded.object, Consts: loaded.Consts}}
         render={ProductFormRender} />
+}
+
+ProductForm.propTypes = {
+    onSubmitAction: PropTypes.func.isRequired
 }
 
 export default ProductForm

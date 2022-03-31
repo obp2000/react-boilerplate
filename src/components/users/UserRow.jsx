@@ -4,25 +4,23 @@ import { Row, Col } from 'reactstrap'
 
 const UserRow = ({
     name,
+    options,
     ...object
 }) => {
-    const {
-        options = {},
-        ...user
-    } = object
     const field = options[name] || {}
 	return <Row>
         <Col sm={2}>
             {field.label}
         </Col>
         <Col sm={8}>
-            {user[name]}
+            {object[name]}
         </Col>
     </Row>
 }
 
 UserRow.propTypes = {
     name: PropTypes.string,
+    options: PropTypes.object,
     object: PropTypes.object
 }
 
