@@ -1,27 +1,32 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+// import { useSelector } from 'react-redux'
 import { Row, Col } from 'reactstrap'
+// import { selectOptions } from '../redux/CommonConsts'
 
 const UserRow = ({
-    name,
-    options,
-    ...object
+    label,
+    value,
+    // options,
+    // ...object
 }) => {
-    const field = options[name] || {}
+    // const options = useSelector(selectOptions)
+    // const field = useSelector(selectOptions)[field_name] || {}
 	return <Row>
         <Col sm={2}>
-            {field.label}
+            {label}
         </Col>
         <Col sm={8}>
-            {object[name]}
+            {value}
         </Col>
     </Row>
 }
 
 UserRow.propTypes = {
-    name: PropTypes.string,
-    options: PropTypes.object,
-    object: PropTypes.object
+    label: PropTypes.string,
+    value: PropTypes.string
+    // options: PropTypes.object,
+    // object: PropTypes.object
 }
 
 export default UserRow

@@ -31,7 +31,9 @@ const getObjects = (actions, dispatch, getState) => () => {
         }
     } = getState()
     dispatch(startRequest())
-    return axios.get(`${config.BACKEND}/api${pathname}`, {
+    // console.log('base_url get ', `${actions.base_url}/`)
+    // return axios.get(`${actions.base_url}/`)
+    return axios.get(`${actions.base_url}/`, {
             params: {
                 page,
                 term: term ? decodeURIComponent(term) : null
@@ -39,6 +41,7 @@ const getObjects = (actions, dispatch, getState) => () => {
             // ...tokenHeaders(accessToken)
         })
         .then(({ data }) => {
+            // console.log('get data ', data)
             dispatch(successRequest())
             dispatch(actions.successReceiveObjects(data))
             dispatch(clearErrors())
@@ -47,6 +50,7 @@ const getObjects = (actions, dispatch, getState) => () => {
 }
 
 export const getOptions = (actions, dispatch, getState, getData, failed, method='POST') => {
+    // console.log('getOptions.............')
     const {
         auth: {
             isAuthenticated,
@@ -54,6 +58,7 @@ export const getOptions = (actions, dispatch, getState, getData, failed, method=
         }
     } = getState()
     dispatch(startRequest())
+    // console.log('base_url ', `${actions.base_url}/`)
     axios.options(`${actions.base_url}/`, {
             params: {
                 isAuthenticated
@@ -70,11 +75,23 @@ export const getOptions = (actions, dispatch, getState, getData, failed, method=
                 }
             }
         }) => {
+            // console.log('common_consts ', common_consts)
             dispatch(successRequest())
             dispatch(receiveCommonConsts({ ...common_consts, options }))
             dispatch(clearErrors())
+            // console.log('getData ', getData)
             if (getData) getData()
         })
+        // .then(({
+        //     data
+        // }) => {
+        //     // const { actions } = data
+        //     console.log('actions ', data.actions)
+        //     dispatch(successRequest())
+        //     // dispatch(receiveCommonConsts({ ...common_consts, options }))
+        //     dispatch(clearErrors())
+        //     if (getData) getData()
+        // })
         .catch(errorHandler(dispatch, failed))
 }
 

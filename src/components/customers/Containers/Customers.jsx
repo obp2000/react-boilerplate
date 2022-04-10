@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import Template from '../Customers'
+import ObjectsTable from '../../Shared/ObjectsTable'
 import { getObjectsAction, deleteObjectAction } from '../../redux/ServerActions'
 import { Actions } from '../../redux/Customers'
+import {
+    selectTableLabels,
+    selectTableValues,
+    selectTotalCount,
+    selectTotalPages
+} from '../../redux/Customers'
 
 class Customers extends React.Component {
     // constructor(props) {
@@ -12,25 +18,51 @@ class Customers extends React.Component {
 
     componentDidMount() {
         console.log('customers DidMount')
-        this.props.getObjectsAction()
+        const {
+            getObjectsAction
+        } = this.props
+        getObjectsAction()
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate({
+        location: {
+            search: prevSearch
+        }
+    }) {
         console.log('customers DidUpdate')
-        if (prevProps != this.props) this.props.getObjectsAction()
+        const {
+            location: {
+                search
+            },
+            getObjectsAction
+        } = this.props
+        if (prevSearch != search) getObjectsAction()
     }
 
     render() {
-        return <Template {...this.props} />
+        console.log('render customers')
+        return <ObjectsTable {...this.props}
+            {...{selectTableLabels,
+                selectTableValues,
+                selectTotalCount,
+                selectTotalPages}} />
     }
 }
 
 // const mapStateToProps = ({
 //     customers: objects = {},
-//     common_consts
+//     // temp_state: {
+//         // isFetching
+//     // },
+//     // common_consts
+//     // router: {
+//     //     location
+//     // }
 // }) => ({
 //     objects,
-//     common_consts
+//     // isFetching,
+//     // common_consts
+//     // location
 // })
 
 export default connect(null, {

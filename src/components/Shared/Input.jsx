@@ -26,13 +26,15 @@ const InputComp = ({
 }) => <>
         <Input
             {...input}
-            {...{name,
-                id,
-                placeholder,
-                required,
-                readOnly,
-                min,
-                max}}
+            {...{   name,
+                    id,
+                    placeholder,
+                    required,
+                    readOnly,
+                    min,
+                    max
+                }
+            }
             checked={rest.type == 'checkbox' && input.value ? true : false}
             invalid={invalid(meta)}
             valid={valid(meta)}

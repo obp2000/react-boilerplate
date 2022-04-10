@@ -10,36 +10,29 @@ import {
 } from 'reactstrap'
 import LoginForm from './Containers/LoginForm'
 import RegisterForm from './Containers/RegisterForm'
-import { toggleModal, toggleLogin, getOptions } from '../redux/auth'
+import {
+    toggleModal,
+    toggleLogin,
+    selectModalIsOpen,
+    selectModalHeader,
+    selectRenderLoginForm,
+    selectModalButtonlabel
+} from '../redux/auth'
 
 const AuthModal = () => {
-    const loaded = useSelector(({
-        auth: {
-            login = false,
-            modal,
-        },
-        common_consts: {
-            login: login_text,
-            register: register_text
-        } = {}
-    }) => ({
-        login,
-        modal,
-        modal_header: login ? login_text : register_text,
-        button_label: login ? register_text : login_text
-    }))
     const dispatch = useDispatch()
-    return <Modal isOpen={loaded.modal}>
+    return <Modal isOpen={useSelector(selectModalIsOpen)}>
          <ModalHeader toggle={() => dispatch(toggleModal())}>
-            {loaded.modal_header}
+            {useSelector(selectModalHeader)}
         </ModalHeader>
         <ModalBody>
-            {loaded.login ? <LoginForm/> : <RegisterForm/>}
+            {useSelector(selectRenderLoginForm) ?
+                <LoginForm /> :
+                <RegisterForm />}
             <Button size='sm'
                     outline
-                    onClick={() => dispatch(toggleLogin())}
-            >
-                {loaded.button_label}
+                    onClick={() => dispatch(toggleLogin())}>
+                {useSelector(selectModalButtonlabel)}
             </Button>
         </ModalBody>
     </Modal>

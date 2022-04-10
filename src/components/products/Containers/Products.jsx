@@ -1,9 +1,16 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import Template from '../Products'
+// import Template from '../Products'
+import ObjectsTable from '../../Shared/ObjectsTable'
 import { getObjectsAction, deleteObjectAction } from '../../redux/ServerActions'
 import { Actions } from '../../redux/Products'
+import {
+    selectTableLabels,
+    selectTableValues,
+    selectTotalCount,
+    selectTotalPages
+} from '../../redux/Products'
 
 class Products extends React.Component {
     // constructor(props) {
@@ -12,16 +19,33 @@ class Products extends React.Component {
 
     componentDidMount() {
         console.log('products DidMount')
-        this.props.getObjectsAction()
+        const {
+            getObjectsAction
+        } = this.props
+        getObjectsAction()
     }
 
-    componentDidUpdate() {
+    componentDidUpdate({
+        location: {
+            search: prevSearch
+        }
+    }) {
         console.log('products DidUpdate')
-        this.props.getObjectsAction()
+        const {
+            location: {
+                search
+            },
+            getObjectsAction
+        } = this.props
+        if (prevSearch != search) getObjectsAction()
     }
 
     render() {
-        return <Template {...this.props} />
+        return <ObjectsTable {...this.props}
+            {...{selectTableLabels,
+                selectTableValues,
+                selectTotalCount,
+                selectTotalPages}} />
     }
 }
 

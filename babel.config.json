@@ -28,7 +28,7 @@
                 "@babel/react"
             ],
             // "plugins": [
-            //     "transform-export-extensions"
+            //     "react-hot-loader/babel",
             // ]
         }
     }

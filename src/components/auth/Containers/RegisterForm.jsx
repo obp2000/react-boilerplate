@@ -2,26 +2,24 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import Template from '../RegisterForm'
-import { getOptions } from '../../redux/auth'
+import { getOptions, onSubmitRegister } from '../../redux/auth'
 
 class RegisterForm extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+    // constructor(props) {
+    //     super(props)
+    // }
 
     componentDidMount() {
-        const {
-            getOptions,
-        } = this.props
         console.log('RegisterDidMount')
-        getOptions()
+        this.props.getOptions()
     }
 
     render() {
-        return <Template />
+        return <Template {...this.props} />
     }
 }
 
 export default connect(null, {
     getOptions: getOptions(),
+    onSubmitRegister
 })(RegisterForm)

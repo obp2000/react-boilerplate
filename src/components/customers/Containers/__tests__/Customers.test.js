@@ -1,43 +1,63 @@
 import React from 'react'
-import Enzyme, {shallow} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import { shallow, mount } from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
+import configureStore, { history } from '../../../Store'
 import Customers from '../Customers'
-import CustomersTable from '../../Customers'
-import "babel-polyfill"
+import ObjectsTable from '../../../Shared/ObjectsTable'
+import { Actions } from '../../../redux/Customers'
+import { getObjectsAction, deleteObjectAction } from '../../../redux/ServerActions'
+import TableData from '../../TableData'
+// import "babel-polyfill"
 jest.mock('../../../loading_spinner.gif', () => 'loading_spinner.gif')
-
-Enzyme.configure({adapter: new Adapter()})
+// import '@testing-library/jest-dom'
 
 function setup() {
 
-    const middlewares = [thunk]
-    const mockStore = configureMockStore(middlewares)
-    const store = mockStore({
-        customers: {
-            customers: ['customer1'],
-            isFetching: true,
-            totalCount: 3
-        }
-    })
+    // const middlewares = [thunk]
+    // const mockStore = configureMockStore(middlewares)
+    // const store = mockStore({
+    //     customers: {
+    //         results: ['customer1', 'customer2', 'customer3'],
+    //         totalCount: 3
+    //     },
+    //     temp_state: {
+    //         isFetching: true,
+    //     }
+    // })
+    const store = configureStore()
 
     const props = {
-        store
+        store,
+        TableData,
+        deleteObjectAction: deleteObjectAction(Actions)
     }
 
-    const customers = shallow(<Customers {...props}/>)
-    return {props, customers}
+    // const customers = shallow(<Customers {...props}/>)
+    const customers = mount(
+        <Provider store={store}>
+            <ConnectedRouter history={history}>
+                <Customers />
+            </ConnectedRouter>
+        </Provider>
+    )
+    return { props, customers }
 }
 
 describe('container', () => {
     describe('Customers', () => {
         test('should have props', async () => {
-            const {props, customers} = await setup()
-            const customersTable = customers.find(CustomersTable)
-            expect(customersTable.props().customers).toBe(props.store.getState().customers.customers)
-            expect(customersTable.props().totalCount).toBe(props.store.getState().customers.totalCount)
-            expect(customersTable.props().isFetching).toBe(props.store.getState().customers.isFetching)
+            const { props, customers } = await setup()
+            const objectsTable = customers.find(ObjectsTable)
+            console.log('props ', objectsTable.props())
+            expect(objectsTable.props().TableData).toBe(TableData)
+            // expect(objectsTable.props().deleteObjectAction).toBe(props.deleteObjectAction)
+
+            // expect(customersTable.props().customers).toBe(props.store.getState().customers.customers)
+            // expect(customersTable.props().totalCount).toBe(props.store.getState().customers.totalCount)
+            // expect(customersTable.props().isFetching).toBe(props.store.getState().customers.isFetching)
         })
     })
 })

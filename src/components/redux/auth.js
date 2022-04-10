@@ -1,5 +1,6 @@
 import { createAction, createReducer } from 'redux-act'
 import axios from 'axios'
+import { createSelector } from 'reselect'
 import { push } from 'connected-react-router'
 import { toast } from 'react-toastify'
 import config from '../Config'
@@ -30,6 +31,7 @@ const requestOptions = createAction('requestOptions')
 const successReceiveOptions = createAction('successReceiveOptions')
 const failedReceiveOptions = createAction('failedReceiveOptions')
 import { getOptions as getObjectOptions, getExistingObject } from './ServerActions'
+import { selectOptions as selectUserOptions } from './CommonConsts'
 
 export const tokenHeaders = (accessToken, to_form_data) => {
     return {
@@ -188,7 +190,7 @@ const base_url = `${config.BACKEND}/api`
 
 export const getOptions = login => () => dispatch => {
     dispatch(requestOptions())
-    dispatch(startRequest())
+    // dispatch(startRequest())
     return axios.options(`${base_url}/${login ? 'login' : 'register'}/`)
         .then(({
             data: {
@@ -197,14 +199,19 @@ export const getOptions = login => () => dispatch => {
                 }
             }
         }) => {
-            dispatch(successRequest())
+            // dispatch(successRequest())
             dispatch(successReceiveOptions(POST))
             dispatch(clearErrors())
         })
         .catch(errorHandler(dispatch, failedReceiveOptions))
 }
 
-export const onSubmitLogin = (dispatch, flash) => values => {
+export const onSubmitLogin = values => (dispatch, getState) => {
+    const {
+        common_consts: {
+            successfully
+        }
+    } = getState()
     dispatch(startAuthentication())
     dispatch(startRequest())
     return axios.post(`${base_url}/login/`, values)
@@ -217,14 +224,18 @@ export const onSubmitLogin = (dispatch, flash) => values => {
             dispatch(successAuthentication(key))
             dispatch(clearErrors())
             dispatch(closeModal())
-            // dispatch(renderFlash(flash))
-            toast.success(flash)
+            toast.success(successfully)
             return dispatch(push('/user/'))
         })
         .catch(formErrorHandler(dispatch, failedAuthentication))
 }
 
-export const onSubmitRegister = (dispatch, flash) => values => {
+export const onSubmitRegister = values => (dispatch, getState) => {
+    const {
+        common_consts: {
+            successfully
+        }
+    } = getState()
     dispatch(startRegister())
     dispatch(startRequest())
     return axios.post(`${base_url}/register/`, values)
@@ -233,17 +244,16 @@ export const onSubmitRegister = (dispatch, flash) => values => {
             dispatch(successRegister())
             dispatch(clearErrors())
             dispatch(closeModal())
-            // dispatch(renderFlash(flash))
-            toast.success(flash)
+            toast.success(successfully)
         })
         .catch(formErrorHandler(dispatch, failedRegister))
 }
 
-export const signOut = (dispatch, accessToken, flash) => () => {
+export const signOut = (dispatch, accessToken) => () => {
     dispatch(startSignout())
     dispatch(startRequest())
-    return axios.post(`${base_url}/logout/`,
-            tokenHeaders(accessToken))
+    return axios.post(`${base_url}/logout/`)
+        // tokenHeaders(accessToken))
         .then(({
             data: {
                 detail
@@ -251,8 +261,7 @@ export const signOut = (dispatch, accessToken, flash) => () => {
         }) => {
             dispatch(successRequest())
             dispatch(successSignout())
-            // dispatch(renderFlash(flash))
-            toast.success(flash)
+            toast.success(detail)
             return dispatch(push('/'))
         })
         .catch(errorHandler(dispatch, failedSignout))
@@ -264,19 +273,119 @@ export const getObjectAction = () => (dispatch, getState) => {
             isAuthenticated
         }
     } = getState()
-    const actions = {base_url: `${base_url}/user`,
-                     successReceiveObject: successReceiveUser,
-                     failedReceiveObject: failedReceiveUser}
+    const actions = {
+        base_url: `${base_url}/user`,
+        successReceiveObject: successReceiveUser,
+        failedReceiveObject: failedReceiveUser
+    }
     if (isAuthenticated) {
         dispatch(requestUser())
         getObjectOptions(actions,
-                         dispatch,
-                         getState,
-                         getExistingObject(actions, dispatch, getState),
-                         failedReceiveUser,
-                         'PUT')
+            dispatch,
+            getState,
+            getExistingObject(actions, dispatch, getState),
+            failedReceiveUser,
+            'PUT')
     }
 }
+
+export const selectAuthButtonLabel = ({
+    auth: {
+        isAuthenticated,
+        accessToken,
+        object: {
+            username = ''
+        } = {}
+    },
+    common_consts: {
+        auth_menu_item: {
+            label
+        } = {}
+    }
+}) => isAuthenticated ? `${label} (${username || ''})` : label
+
+export const selectOnClickAuthButton = dispatch => ({
+        auth: {
+            isAuthenticated,
+            accessToken,
+        }
+    }) => isAuthenticated ?
+    signOut(dispatch, accessToken) :
+    () => dispatch(toggleModal())
+
+export const selectModalHeader = ({
+    auth: {
+        login = false,
+    },
+    common_consts: {
+        login: login_text,
+        register: register_text
+    }
+}) => login ? login_text : register_text
+
+export const selectModalButtonlabel = ({
+    auth: {
+        login = false,
+    },
+    common_consts: {
+        login: login_text,
+        register: register_text
+    }
+}) => login ? register_text : login_text
+
+export const selectModalIsOpen = ({
+    auth: {
+        modal
+    }
+}) => modal
+
+export const selectRenderLoginForm = ({
+    auth: {
+        login = false
+    }
+}) => login
+
+export const selectOptions = ({
+    auth: {
+        options
+    }
+}) => options
+
+export const selectObject = ({
+    auth: {
+        object
+    }
+}) => object
+
+// export const selectAllFields = ({
+//     auth: {
+//         object
+//     },
+//     common_consts: {
+//         options = {},
+//     }
+// }) => ['username', 'email', 'first_name', 'last_name'].reduce(
+//     (fields, field_name) => {
+//         fields.push({
+//             label: options[field_name] && options[field_name].label,
+//             value: object[field_name]
+//         })
+//         return fields
+//     }, [])
+
+export const selectUserFields =
+    createSelector([selectObject, selectUserOptions],
+        (object, options) =>
+            ['username', 'email', 'first_name', 'last_name'].reduce(
+                (fields, field_name) => {
+                    fields.push({
+                        label: options[field_name] && options[field_name].label,
+                        value: object[field_name]
+                    })
+                    return fields
+                }, [])
+    )
+
 
 
 // const getExistingObject1 = (actions, dispatch, getState) => () => {

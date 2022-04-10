@@ -3,7 +3,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
-import { validate } from './Validators'
+// import { validate } from './Validators'
 import { onSubmit } from '../redux/Search'
 import SearchFormRender from './SearchFormRender'
 
@@ -14,7 +14,6 @@ const SearchForm = () => {
               // validate={validate}
               onSubmit={onSubmit(dispatch, pathname)}
               render={SearchFormRender}
-              pathname={pathname}
             />
 }
 

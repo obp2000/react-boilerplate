@@ -3,10 +3,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Alert } from 'reactstrap'
 
-const Errors = ({ authErrors }) => {
+const Errors = ({ submitError }) => {
     let errors = []
-    if (authErrors) {
-        errors = authErrors
+    if (submitError) {
+        errors = submitError
     } else {
         const notAuthErrors = useSelector(({
             errors: {
@@ -27,7 +27,7 @@ const Errors = ({ authErrors }) => {
 }
 
 Errors.propTypes = {
-    authErrors: PropTypes.array,
+    submitError: PropTypes.array,
 }
 
 export default Errors

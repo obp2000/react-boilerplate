@@ -4,34 +4,46 @@ import { useSelector } from 'react-redux'
 import querystring from 'querystring'
 import { Pagination } from 'reactstrap'
 import PageItem from './PageItem'
+import { selectPathname, selectPage, selectTerm } from '../redux/Router'
 
-const PaginationComp = ({ totalPages }) => {
+const PaginationComp = ({
+    totalPages,
+    // pathname,
+    // query: {
+    //     // page = 1,
+    //     term
+    // }
+}) => {
     // console.log('pathname ', pathname)
-    const loaded = useSelector(({
-        router: {
-            location: {
-                pathname,
-                query: {
-                    page = 1,
-                    term
-                } = {}
-            }
-        }
-    }) => ({
-        pathname,
-        page,
-        term
-    }))
+    // const loaded = useSelector(({
+    //     router: {
+    //         location: {
+    //             pathname,
+    //             query: {
+    //                 page = 1,
+    //                 term
+    //             } = {}
+    //         }
+    //     }
+    // }) => ({
+    //     pathname,
+    //     page,
+    //     term
+    // }))
     // const { page } = loaded.query
-    const currentPage = parseInt(loaded.page)
+    const pathname = useSelector(selectPathname)
+    const page = useSelector(selectPage)
+    const currentPage = parseInt(page)
+    const term = useSelector(selectTerm)
+    const term_obj = term ? {term} : {}
     return <Pagination>
         {currentPage > 1 && <PageItem {...{
                             label: '<',
                             to: {
-                                pathname: loaded.pathname,
+                                pathname,
                                 search: querystring.stringify({
                                     ...(currentPage == 2 ? {} : {page: currentPage - 1}),
-                                    ...(loaded.term ? {term: loaded.term} : {})
+                                    ...term_obj
                                 })
                             },
                             key: -1,
@@ -42,10 +54,10 @@ const PaginationComp = ({ totalPages }) => {
                     <PageItem {...{
                         label: (index + 1).toString(),
                         to: {
-                            pathname: loaded.pathname,
+                            pathname,
                             search: querystring.stringify({
                                 ...(index == 0 ? {} : {page: index + 1}),
-                                ...(loaded.term ? {term: loaded.term} : {})
+                                ...term_obj
                             })
                         },
                         active: (index + 1) == currentPage,
@@ -56,10 +68,10 @@ const PaginationComp = ({ totalPages }) => {
         {currentPage < totalPages && <PageItem {...{
                                 label: '>',
                                 to: {
-                                    pathname: loaded.pathname,
+                                    pathname,
                                     search: querystring.stringify({
                                         page: currentPage + 1,
-                                        ...(loaded.term ? {term: loaded.term} : {})
+                                        ...term_obj
                                     })
                                 },
                                 key: -2,
@@ -70,7 +82,10 @@ const PaginationComp = ({ totalPages }) => {
 }
 
 Pagination.propTypes = {
-    totalPages: PropTypes.number
+    totalPages: PropTypes.number,
+    pathname: PropTypes.string,
+    page: PropTypes.string,
+    term: PropTypes.string
 }
 
 export default PaginationComp

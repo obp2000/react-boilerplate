@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
     Navbar,
     NavbarBrand,
@@ -8,28 +8,25 @@ import {
     Collapse,
     Nav,
     NavItem,
-    Badge
+    Badge,
+    Button
 } from 'reactstrap'
-import NavLink from './NavLink'
+import { NavLink } from 'react-router-dom'
 import AuthModal from '../auth/AuthModal'
-import AuthButton from '../auth/AuthButton'
 import SearchForm from '../Search/SearchForm'
 import { TableName } from '../Shared/BasePathname'
-import config from '../Config'
+import { selectMainMenu } from '../redux/CommonConsts'
+import { selectBrandText } from '../redux/CommonConsts'
+import { selectOnClickAuthButton, selectAuthButtonLabel } from '../redux/auth'
 
-const NavBar = () => {
-    const loaded = useSelector(({
-        common_consts: {
-            main_menu = []
-        } = {}
-    }) => ({
-        main_menu
-    }))
-    return <>
-        <Navbar color="primary" expand="md" dark className="py-0 mb-1" >
+const NavBar = () => <>
+        <Navbar color="primary"
+                expand="md"
+                dark
+                className="py-0 mb-1" >
             <NavbarBrand href="/">
                 <h3>
-                    <Badge pill size='lg'>Best&C</Badge>
+                    <Badge pill size='lg'>{useSelector(selectBrandText)}</Badge>
                 </h3>
             </NavbarBrand>
             <NavbarToggler className="me-2"
@@ -40,17 +37,28 @@ const NavBar = () => {
                 aria-label="Toggle navigation" />
             <Collapse navbar id="navbarContent">
                 <Nav className="me-auto" navbar>
-                    {loaded.main_menu.map(({path: to, label}, key) =>
+                    {useSelector(selectMainMenu).map(({path: to, label}, key) =>
                         <NavItem key={key}>
-                            <NavLink {...{to, label}} />
+                            <NavLink to={to}
+                                     className="nav-link"
+                                     activeClassName="active">
+                                {label}
+                            </NavLink>
                         </NavItem>
                     )}
+                    <NavItem>
+                        <Button color='primary'
+                                className='btn-outline-light'
+                                onClick={useSelector(selectOnClickAuthButton(useDispatch()))}
+                                aria-label='auth' >
+                            {useSelector(selectAuthButtonLabel)}
+                        </Button>
+                    </NavItem>
                 </Nav>
                 <SearchForm />
             </Collapse>
         </Navbar>
         <AuthModal />
-        </>
-}
+    </>
 
 export default NavBar

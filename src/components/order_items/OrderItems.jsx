@@ -1,27 +1,33 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Button } from 'reactstrap'
 import OrderItem from './OrderItem'
-import { addOrderItemAction } from '../redux/Orders'
 import Label from '../Shared/Label'
+// import AddOrderItemButton from './AddOrderItemButton'
+import { deleteOrderItemAction, addOrderItemAction } from '../redux/Orders'
+import { selectTableLabels, selectProductProps } from '../redux/OrderItems'
+import { selectAddText } from '../redux/CommonConsts'
+import { selectProductLabels } from '../redux/Products'
 
-const OrderItems = ({
-        fields,
-        options,
-        common_consts
-    }) =>
-    <>
+const OrderItems = ({ fields }) => {
+    // console.log('fields ', fields)
+    const deleteObjectAction = deleteOrderItemAction(fields)
+    const tableLabels = useSelector(selectTableLabels)
+    const product_labels = useSelector(selectProductLabels(selectProductProps))
+    return <>
         <thead>
             <tr>
-                <th scope='col'>№</th>
-                <th scope='col'><Label name="product" {...{options}} /></th>
-                <th scope='col'><Label name="price" {...{options}} /></th>
-                <th scope='col'><Label name="amount" {...{options}} /></th>
-                <th scope='col'><Label name="cost" {...{options}} /></th>
-                <th scope='col'><Label name="weight" {...{options}} /></th>
+                {Object.values(tableLabels).map((label, key) =>
+                    <th scope="col" key={key}>
+                        {label}
+                    </th>
+                )}
                 <th scope='col'>
-                    <Button size='sm' outline onClick={addOrderItemAction(fields)}>
-                        {common_consts.add}
+                    <Button size='sm'
+                            outline
+                            onClick={addOrderItemAction(fields)}>
+                        {useSelector(selectAddText)}
                     </Button>
                 </th>
             </tr>
@@ -29,22 +35,20 @@ const OrderItems = ({
         <tbody >
             {fields.map((order_item_name, index) =>
                 <OrderItem key={index}
-                    {...{order_item_name, fields, index, options, common_consts}}
+                    {...{order_item_name,
+                        index,
+                        product_labels,
+                        tableLabels,
+                        deleteObjectAction
+                    }}
                 />
             )}
         </tbody>
     </>
+}
 
 OrderItems.propTypes = {
     fields: PropTypes.object,
-    options: PropTypes.object,
-    common_consts: PropTypes.object,
-    add: PropTypes.string
-}
-
-OrderItems.defaultProps = {
-    fields: {},
-    options: {}
 }
 
 export default OrderItems

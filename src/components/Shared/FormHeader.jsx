@@ -2,19 +2,19 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Row, Col } from 'reactstrap'
-import SubmitButton from '../Shared/SubmitButton'
-import BackButton from '../Shared/BackButton'
+import SubmitButton from './SubmitButton'
+import BackButton from './BackButton'
+import { selectNameSingular } from '../redux/CommonConsts'
 
 const FormHeader = ({
-        submitting,
-        invalid,
-        pristine,
-        id,
-        options: {
-            name_singular
-        } = {},
-        children
-    }) => <Row>
+    initialValues: {
+        id
+    },
+    children,
+    ...rest
+}) => {
+    const name_singular = useSelector(selectNameSingular)
+    return <Row>
         <Col sm={2}>
             <BackButton />
         </Col>
@@ -24,16 +24,14 @@ const FormHeader = ({
             </h4>
         </Col>
         <Col sm={2}>
-            <SubmitButton submitDisabled={submitting || invalid || pristine}/>
+            <SubmitButton {...rest} />
         </Col>
     </Row>
+}
 
 FormHeader.propTypes = {
-    submitting: PropTypes.bool.isRequired,
-    invalid: PropTypes.bool,
-    pristine: PropTypes.bool,
     id: PropTypes.number,
-    object_name: PropTypes.string,
+    // object_name: PropTypes.string
 }
 
 export default FormHeader

@@ -1,33 +1,28 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Form, Field } from 'react-final-form'
+import Loader from 'react-loader'
+import { Form } from 'react-final-form'
 import { validate } from './Validators'
 import CustomerFormRender from './CustomerFormRender'
+import { selectErrorMessages } from '../redux/CommonConsts'
+import { selectObject } from '../redux/Customers'
 
-const CustomerForm = ({ onSubmitAction }) => {
-    const loaded = useSelector(({
-        customers: {
-            object
-        },
-        common_consts: {
-            error_messages = {}
-        } = {}
-    }) => ({
-        object,
-        error_messages
-    }))
-    return <Form
-            name='customer'
-            validate={validate(loaded.error_messages)}
-            onSubmit={onSubmitAction}
-            initialValues={loaded.object}
-            render={CustomerFormRender}
-            />
-}
+const CustomerForm = ({
+    onSubmitAction,
+    isFetching
+}) => <Loader loaded={!isFetching } >
+        <Form   name='customer'
+                validate={validate(useSelector(selectErrorMessages))}
+                onSubmit={onSubmitAction}
+                initialValues={useSelector(selectObject)}
+                render={CustomerFormRender}
+                />
+    </Loader>
 
 CustomerForm.propTypes = {
-    onSubmitAction: PropTypes.func.isRequired
+    onSubmitAction: PropTypes.func.isRequired,
+    isFetching: PropTypes.bool
 }
 
 export default CustomerForm

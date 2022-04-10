@@ -1,27 +1,19 @@
 const CityName = (city_obj, {
-    city: {
-        label: city_label = '',
-        children: {
-            pindex: {
-                label: pindex_label = ''
-            } = {}
-        } = {}
-    } = {}
-} = {}) => {
+    pindex_label,
+    city_label
+}) => {
     const {
         pindex = null,
         city = null
     } = city_obj || {}
     let city_name = []
     if (pindex) {
-        city_name.push(
-            `${pindex_label.substring(0, 3).toLowerCase()}.${pindex}`
-        )
+        city_name.push(pindex_label)
+        city_name.push(pindex)
     }
     if (city) {
-        city_name.push(
-            `${city_label.substring(0, 1).toLowerCase()}.${city}`
-        )
+        city_name.push(city_label)
+        city_name.push(city)
     }
     return city_name.join(' ')
 }

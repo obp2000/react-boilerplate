@@ -20,7 +20,15 @@ class Product extends React.Component {
     }
 }
 
-export default connect(null, {
+const mapStateToProps = ({
+    temp_state: {
+        isFetching
+    },
+}) => ({
+    isFetching,
+})
+
+export default connect(mapStateToProps, {
     getObjectAction: getObjectAction(Actions),
     onSubmitAction: onSubmitAction(Actions)
 })(Product)

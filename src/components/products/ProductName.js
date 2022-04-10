@@ -8,23 +8,13 @@ const ProductName = ({
     fleece,
     name
 }, {
-    fleece: {
-        label: fleece_label = ''
-    } = {}
-} = {}) => {
+    fleece_label
+}) => {
     let product_name = []
-    if (get_product_type_display) {
-        product_name.push(get_product_type_display)
-    }
-    if (threads != null) {
-        product_name.push(get_threads_display)
-    }
-    if (contents != null) {
-        product_name.push(get_contents_display)
-    }
-    if (fleece) {
-        product_name.push(fleece_label.toLowerCase())
-    }
+    if (get_product_type_display) product_name.push(get_product_type_display)
+    if (threads != null) product_name.push(get_threads_display)
+    if (contents != null) product_name.push(get_contents_display)
+    if (fleece) product_name.push(fleece_label)
     product_name.push(name)
     return product_name.join(' ')
 }

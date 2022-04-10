@@ -4,16 +4,10 @@ export const ShortName = ({
     nick,
     name
 } = {}, {
-    name: {
-        label: name_label
-    } = {}
+    name_label
 }) => {
     let customer_name = [nick]
-    if (name) {
-        customer_name.push(
-            `${name_label}: ${name}`
-        )
-    }
+    if (name) customer_name.push([name_label, name].join(' '))
     return customer_name.join(' ')
 }
 

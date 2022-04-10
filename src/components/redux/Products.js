@@ -1,6 +1,11 @@
 import { createReducer } from 'redux-act'
+import { createSelector } from 'reselect'
 import config from '../Config'
 import { createActions, reducerActions, initialState } from './CommonActions'
+import { selectOptions } from './CommonConsts'
+import blank from '../../assets/img/blank.png'
+import { selectConsts } from './CommonConsts'
+import ProductName from '../products/ProductName'
 
 export const initObject = {
     id: null,
@@ -55,7 +60,7 @@ const pre_submit_action = values => {
 export const Actions = createActions()
 
 export default createReducer(reducerActions(Actions, initObject),
-                             initialState(initObject))
+    initialState(initObject))
 
 Actions.index_url = index_url
 Actions.base_url = `${config.BACKEND}/api${index_url}`
@@ -65,7 +70,91 @@ Actions.pre_submit_action = pre_submit_action
 Actions.to_form_data = to_form_data
 Actions.search_url = index_url
 
+export const selectImage = ({
+    products: {
+        object: {
+            image
+        } = {}
+    }
+}) => image || String(blank)
 
+export const selectObject = ({
+    products: {
+        object
+    }
+}) => object
+
+export const selectFormInitialValues =
+    createSelector([selectObject, selectConsts],
+        (object, Consts) => ({ ...object, Consts })
+    )
+
+export const selectObjects = ({
+    products: {
+        results = {}
+    } = {}
+}) => results
+
+export const selectProductLabels = selectProductProps =>
+    createSelector([selectProductProps],
+        ({
+            fleece = {}
+        }) => {
+            const {
+                label: fleece_label = ''
+            } = fleece
+            return {
+                fleece_label: fleece_label.toLowerCase()
+            }
+        }
+    )
+
+export const selectTableValues =
+    createSelector([selectObjects, selectProductLabels(selectOptions)],
+        (objects, product_labels) => objects.reduce((result, object) => {
+                result.push({
+                    id: object.id,
+                    name: ProductName(object, product_labels),
+                    price: object.price,
+                    width: object.width,
+                    density: object.density,
+                    created_at: object.created_at,
+                    updated_at: object.updated_at
+                })
+                return result
+            }, [])
+    )
+
+export const selectTableLabels =
+    createSelector([selectOptions], ({
+        id = {},
+        name = {},
+        price = {},
+        width = {},
+        density = {},
+        created_at = {},
+        updated_at = {}
+    }) => [
+        id.label,
+        name.label,
+        price.label,
+        width.label,
+        density.label,
+        created_at.label,
+        updated_at.label
+    ])
+
+export const selectTotalCount = ({
+    products: {
+        totalCount = 0
+    } = {}
+}) => totalCount
+
+export const selectTotalPages = ({
+    products: {
+        totalPages = 0
+    } = {}
+}) => totalPages
 
 
 // export const Actions = new CommonActions({

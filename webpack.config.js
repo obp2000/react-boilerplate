@@ -68,26 +68,20 @@ const resolve = {
 // }
 
 const html_settings = {
-    // template: "./src/index.html",
+    template: "./public/index.html",
     inject: true,
-    templateContent: `
-                <head>
-                  <title>Best&C react frontend</title>
-                </head>
-                <body>
-                  <div id="root"></div>
-                </body>
-            `,
     meta: {
+        charset: "utf-8",
         viewport: "width=device-width, initial-scale=1.0",
-        charset: "UTF-8",
         'X-UA-Compatible': {
             'http-equiv': 'X-UA-Compatible',
-            'content': 'ie=edge'
-        }
+            content: 'ie=edge'
+        },
+        'theme-color': "#000000",
+        description: 'Best&C react frontend'
     },
-    favicon: "./src/favicon.ico",
-    title: "Best&C react frontend",
+    title: "Best&C",
+    // manifest: "manifest.json"
 }
 
 const devtool = "source-map"

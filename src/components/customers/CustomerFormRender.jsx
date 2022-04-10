@@ -3,34 +3,23 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Field } from 'react-final-form'
 import { Form, Row, Col } from 'reactstrap'
-import Loader from 'react-loader'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
-import CityName from '../cities/CityName'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
+import Errors from '../Shared/Errors'
+import { selectOptions } from '../redux/CommonConsts'
+import { selectCityProps } from '../redux/Customers'
+import CityName from '../cities/CityName'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
+import { selectShortLabels } from '../redux/Cities'
 
 const CustomerFormRender = props => {
-    const loaded = useSelector(({
-        customers: {
-            object
-        },
-        temp_state: {
-            isFetching
-        },
-        common_consts: {
-            options
-        } = {}
-    }) => ({
-        object,
-        options,
-        isFetching
-    }))
-    const options = { options: loaded.options }
-    return <Loader loaded={!loaded.isFetching } >
-        <Form onSubmit={props.handleSubmit}
-              className="shadow p-3 mb-5 bg-body rounded">
-            <FormHeader {...loaded.object} {...props} {...options} />
+    const options = { options: useSelector(selectOptions) }
+    const city_labels = useSelector(selectShortLabels(selectCityProps))
+    return <Form    onSubmit={props.handleSubmit}
+                    className="shadow p-3 mb-5 bg-body rounded">
+            {props.hasSubmitErrors && <Errors {...props} />}
+            <FormHeader {...props} />
             <Field  name="id"
                     {...options}
                     hidden
@@ -48,15 +37,15 @@ const CustomerFormRender = props => {
                 </Col>
                 <Col sm={6}>
                     <Field  name="city"
-                            {...options}
                             component={DropdownListFormGroup}
                             dataKey='id'
-                            textField={item => CityName(item, loaded.options)}
+                            textField={item => CityName(item, city_labels)}
                             search_path='/cities'
                             label_col_size={2}
-                            renderListItem={({ item }) => CityName(item, loaded.options)}
-                            renderValue={({ item }) => CityName(item, loaded.options)}
-                            />
+                            renderListItem={({ item }) => CityName(item, city_labels)}
+                            renderValue={({ item }) => CityName(item, city_labels)}
+                            {...options}
+                    />
                 </Col>
                 <Col sm={8}>
                     <Field  name="address"
@@ -65,7 +54,6 @@ const CustomerFormRender = props => {
                 </Col>
             </Row>
         </Form>
-    </Loader>
 }
 
 export default CustomerFormRender

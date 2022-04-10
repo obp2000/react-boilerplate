@@ -5,7 +5,6 @@ import { Label } from 'reactstrap'
 const LabelComp = ({
     input: {
         name: input_name,
-        ...input
     } = {},
     name = input_name,
     options: {

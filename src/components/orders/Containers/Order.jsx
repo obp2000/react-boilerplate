@@ -19,34 +19,21 @@ class Order extends React.Component {
     }
 }
 
-export default connect(null, {
+const mapStateToProps = ({
+    orders: {
+        object
+    },
+    temp_state: {
+        isFetching
+    },
+    common_consts
+}) => ({
+    object,
+    isFetching,
+    common_consts
+})
+
+export default connect(mapStateToProps, {
     getObjectAction: getObjectAction(Actions),
     onSubmitAction: onSubmitAction(Actions)
 })(Order)
-
-// const mapStateToProps = (state, {
-//     match: {
-//         params: {
-//             id
-//         }
-//     }
-// }) => {
-//     const {
-//         orders: {
-//             order,
-//             isFetching
-//         },
-//     } = state
-//     return {
-//         id,
-//         initialValues: order,
-//         isFetching,
-//         ...OrderSumSelector(state)
-//     }
-// }
-
-// export default connect(mapStateToProps, {
-//     getObjectAction,
-//     getPostCost,
-//     goBack
-// })(Order)

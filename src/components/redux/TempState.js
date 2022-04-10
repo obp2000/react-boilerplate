@@ -68,4 +68,10 @@ reducer_actions[clearSearchObjects] = state =>
 
 const TempState = createReducer(reducer_actions, initialState)
 
+export const selectIsFetching = ({
+    temp_state: {
+        isFetching
+    } = {}
+}) => isFetching
+
 export default TempState
