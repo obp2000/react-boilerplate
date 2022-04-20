@@ -1,11 +1,14 @@
 import { createReducer } from 'redux-act'
 import { createSelector } from 'reselect'
-import config from '../Config'
-import { createActions, reducerActions, initialState } from './CommonActions'
-import { selectOptions } from './CommonConsts'
+// import config from '../Config'
+import { createCommonSlice } from './CommonActions'
+// import { selectOptions } from './CommonConsts'
 import blank from '../../assets/img/blank.png'
 import { selectConsts } from './CommonConsts'
 import ProductName from '../products/ProductName'
+import { useOptions } from '../../services/apiSlice'
+
+// import { test1, createCommonSlice } from './test1'
 
 export const initObject = {
     id: null,
@@ -29,8 +32,8 @@ export const initObject = {
     image: null
 }
 
-const index_url = '/products'
-const redirect_url = '/products'
+const index_url = '/products/'
+const redirect_url = '/products/'
 const to_form_data = true
 const pre_submit_action = values => {
     if (values.new_image) {
@@ -57,13 +60,25 @@ const pre_submit_action = values => {
     delete values.Consts
 }
 
-export const Actions = createActions()
+// const config = {
+//     initObject,
+//     index_url
+// }
 
-export default createReducer(reducerActions(Actions, initObject),
-    initialState(initObject))
+// console.log('test1 ', createCommonSlice)
+
+const Slice = createCommonSlice(initObject)
+export const Actions = Slice.actions
+export default Slice.reducer
+
+
+// export const Actions = createActions()
+
+// export default createReducer(reducerActions(Actions, initObject),
+//     initialState(initObject))
 
 Actions.index_url = index_url
-Actions.base_url = `${config.BACKEND}/api${index_url}`
+// Actions.base_url = `${config.BACKEND}/api${index_url}`
 Actions.redirect_url = redirect_url
 Actions.initObject = initObject
 Actions.pre_submit_action = pre_submit_action
@@ -109,24 +124,8 @@ export const selectProductLabels = selectProductProps =>
         }
     )
 
-export const selectTableValues =
-    createSelector([selectObjects, selectProductLabels(selectOptions)],
-        (objects, product_labels) => objects.reduce((result, object) => {
-                result.push({
-                    id: object.id,
-                    name: ProductName(object, product_labels),
-                    price: object.price,
-                    width: object.width,
-                    density: object.density,
-                    created_at: object.created_at,
-                    updated_at: object.updated_at
-                })
-                return result
-            }, [])
-    )
-
 export const selectTableLabels =
-    createSelector([selectOptions], ({
+    createSelector([useOptions], ({
         id = {},
         name = {},
         price = {},
@@ -144,17 +143,78 @@ export const selectTableLabels =
         updated_at.label
     ])
 
-export const selectTotalCount = ({
-    products: {
-        totalCount = 0
-    } = {}
-}) => totalCount
+export const selectTableValues = results =>
+    createSelector([
+            selectProductLabels(useOptions),
+            selectTableLabels
+        ],
+        (
+            product_labels,
+            table_labels
+        ) => results.reduce((result, object) => {
+            result.push({
+                id: object.id,
+                name: ProductName(object, product_labels),
+                price: object.price,
+                width: object.width,
+                density: object.density,
+                created_at: object.created_at,
+                updated_at: object.updated_at
+            })
+            return result
+        }, [table_labels])
+    )
 
-export const selectTotalPages = ({
-    products: {
-        totalPages = 0
-    } = {}
-}) => totalPages
+export const selectImageProps = createSelector([useOptions],
+    ({ image = {} }) => image)
+
+// export const getTableLabels = ({
+//     id = {},
+//     name = {},
+//     price = {},
+//     width = {},
+//     density = {},
+//     created_at = {},
+//     updated_at = {}
+// }) => [id.label,
+//     name.label,
+//     price.label,
+//     width.label,
+//     density.label,
+//     created_at.label,
+//     updated_at.label
+// ]
+
+export const tableFieldNames = [
+    'id',
+    'name',
+    'price',
+    'width',
+    'density',
+    'created_at',
+    'updated_at'
+]
+
+export const productLabels =
+    ({
+        fleece: {
+            label: fleece_label
+        } = {}
+    }) => {
+        return {
+            fleece_label: fleece_label.toLowerCase()
+        }
+    }
+
+export const rowData = (object, options) => [
+    object.id,
+    ProductName(object, options),
+    object.price,
+    object.width,
+    object.density,
+    object.created_at,
+    object.updated_at
+]
 
 
 // export const Actions = new CommonActions({

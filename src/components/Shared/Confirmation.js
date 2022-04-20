@@ -21,11 +21,7 @@ class Confirmation extends React.Component {
             enableEscape = true
         } = this.props
         return <Modal
-                isOpen={show}
-                // onClosed={() => proceed(false)}
-                // backdrop={enableEscape ? true : "static"}
-                // keyboard={enableEscape}
-              >
+                isOpen={show}>
                 <ModalHeader>
                   {title}
                 </ModalHeader>
@@ -42,8 +38,7 @@ class Confirmation extends React.Component {
                   <Button
                     size='sm'
                     outline
-                    onClick={() => proceed(true)}
-                  >
+                    onClick={() => proceed(true)}>
                     {proceedLabel}
                   </Button>
                 </ModalFooter>

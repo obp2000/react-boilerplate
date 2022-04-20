@@ -2,7 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Button } from 'reactstrap'
-import { selectSaveText } from '../redux/CommonConsts'
+// import { selectCommonConsts } from '../redux/CommonConsts'
+import { useCommonConsts } from '../../services/apiSlice'
 
 const calculatedFields = [
     'density_for_count',
@@ -27,9 +28,9 @@ const SubmitButton = ({
         dirtySinceLastSubmit,
         dirtyFields,
         text,
+        save,
         className
     }) => {
-    const save = useSelector(selectSaveText)
     return <Button
         type="submit"
         color="primary"

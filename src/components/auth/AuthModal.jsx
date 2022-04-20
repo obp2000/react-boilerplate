@@ -13,20 +13,19 @@ import RegisterForm from './Containers/RegisterForm'
 import {
     toggleModal,
     toggleLogin,
-    selectModalIsOpen,
     selectModalHeader,
-    selectRenderLoginForm,
-    selectModalButtonlabel
+    selectModalButtonlabel,
+    selectAuth
 } from '../redux/auth'
 
 const AuthModal = () => {
     const dispatch = useDispatch()
-    return <Modal isOpen={useSelector(selectModalIsOpen)}>
+    return <Modal isOpen={useSelector(selectAuth).modal}>
          <ModalHeader toggle={() => dispatch(toggleModal())}>
             {useSelector(selectModalHeader)}
         </ModalHeader>
         <ModalBody>
-            {useSelector(selectRenderLoginForm) ?
+            {useSelector(selectAuth).login ?
                 <LoginForm /> :
                 <RegisterForm />}
             <Button size='sm'

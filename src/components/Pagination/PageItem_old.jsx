@@ -10,11 +10,9 @@ const PageItem = ({
         active
     }) => {
         const Comp = active ? ActiveItem : Link
-        return <PaginationItem active={active}>
-                    <Comp to={to} className="page-link">
-                        {label}
-                    </Comp>
-                </PaginationItem>
+        return <Comp to={to} className="page-link">
+                    {label}
+                </Comp>
     }
 
 PageItem.propTypes = {

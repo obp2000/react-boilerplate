@@ -10,7 +10,8 @@ import SwitchFormGroup from '../Shared/SwitchFormGroup'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
 import Errors from '../Shared/Errors'
-import { selectOptions, selectImageLabel } from '../redux/CommonConsts'
+import { selectOptions } from '../redux/CommonConsts'
+import { selectImageProps } from '../redux/Products'
 // import { formatPrice, normalizePhone } from '../Shared/Formatters'
 import blank from '../../assets/img/blank.png'
 import { selectImage } from '../redux/Products'
@@ -29,7 +30,7 @@ const ProductFormRender = props => {
                 {/*<Row>*/}
                 <fieldset className="row my-2 py-2 border shadow">
                     <Col sm={2}>
-                        <img    alt={useSelector(selectImageLabel)}
+                        <img    alt={useSelector(selectImageProps).label}
                                 src={useSelector(selectImage)}
                                 className='img-thumbnail rounded float-start'
                         />

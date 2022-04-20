@@ -9,16 +9,19 @@ import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import OrderItems from '../order_items/OrderItems'
 import GiftIfNeeded from './Gift'
 // import PostCostButton from './PostCostButton'
-import CustomerField from './CustomerField'
 import FormHeader from '../Shared/FormHeader'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 import Label from '../Shared/Label'
 import Errors from '../Shared/Errors'
 import { selectOptions } from '../redux/CommonConsts'
-import { selectFromCreatedAt } from '../redux/Orders'
+import { selectFromCreatedAt, selectCustomerAndCityLabels } from '../redux/Orders'
+import { Actions } from '../redux/Customers'
+import CustomerName from '../customers/CustomerName'
+import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
 
 const OrderFormRender = props => {
     const options = { options: useSelector(selectOptions) }
+    const customer_and_city_labels = useSelector(selectCustomerAndCityLabels)
     return <Form    onSubmit={props.handleSubmit}
                     className="shadow p-3 mb-5 bg-body rounded">
             {props.hasSubmitErrors && <Errors {...props} />}
@@ -30,7 +33,16 @@ const OrderFormRender = props => {
                     hidden
                     component={Input} />
             <Row>
-                {/*<CustomerField {...options} />*/}
+                <Field  name="customer"
+                        component={DropdownListFormGroup}
+                        dataKey='id'
+                        textField={item => CustomerName(item, customer_and_city_labels)}
+                        search_path={Actions.search_url}
+                        label_col_size={2}
+                        renderListItem={({ item }) => CustomerName(item, customer_and_city_labels)}
+                        renderValue={({ item }) => CustomerName(item, customer_and_city_labels)}
+                        {...options}
+                />
             </Row>
             <Row>
                 <Col sm={2}>

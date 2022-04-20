@@ -1,23 +1,24 @@
 import { createReducer } from 'redux-act'
 import { createSelector } from 'reselect'
-import config from '../Config'
+// import config from '../Config'
 import {
     createActions,
     reducerActions,
-    initialState
+    createCommonSlice
 } from './CommonActions'
 import {
-    selectOptions,
     selectConsts,
-    selectFromText
+    selectCommonConsts
 } from './CommonConsts'
 import { initObject as initCustomer } from './Customers'
 import { initObject as initProduct } from './Products'
 import { ShortName } from '../customers/CustomerName'
 import { selectCustomerLabels } from './Customers'
+import { selectShortLabels } from './Cities'
+import { useOptions } from '../../services/apiSlice'
 
-const index_url = '/orders'
-const redirect_url = '/orders'
+const index_url = '/orders/'
+const redirect_url = '/orders/'
 
 const initObject = {
     post_cost: 0,
@@ -75,13 +76,22 @@ const pre_submit_action = values => {
     delete values.need_gift
 }
 
-export const Actions = createActions()
+// const config = {
+//     initObject,
+//     index_url
+// }
 
-export default createReducer(reducerActions(Actions, initObject),
-    initialState(initObject))
+const Slice = createCommonSlice(initObject)
+export const Actions = Slice.actions
+export default Slice.reducer
+
+// export const Actions = createActions()
+
+// export default createReducer(reducerActions(Actions, initObject),
+//     initialState(initObject))
 
 Actions.index_url = index_url
-Actions.base_url = `${config.BACKEND}/api${index_url}`
+// Actions.base_url = `${config.BACKEND}/api${index_url}`
 Actions.redirect_url = redirect_url
 Actions.initObject = initObject
 Actions.pre_submit_action = pre_submit_action
@@ -89,15 +99,19 @@ Actions.pre_submit_action = pre_submit_action
 export const addOrderItemAction = fields => () => fields.push(initOrderItem)
 export const deleteOrderItemAction = fields => id => fields.remove(id)
 
-export const selectCustomerProps = ({
-    common_consts: {
-        options: {
-            customer: {
-                children = {}
-            } = {}
+export const selectCustomerProps =
+    createSelector([useOptions], ({
+        customer: {
+            children = {}
         } = {}
-    }
-}) => children
+    }) => children)
+
+export const selectCityProps =
+    createSelector([selectCustomerProps], ({
+        city: {
+            children = {}
+        } = {}
+    }) => children)
 
 export const selectObject = ({
     orders: {
@@ -128,7 +142,7 @@ export const selectObject = ({
 // })
 
 export const selectFormInitialValues =
-    createSelector([selectObject, selectConsts, selectOptions],
+    createSelector([selectObject, selectConsts, useOptions],
         (object, Consts, {
             order_items_cost = {},
             need_gift = {}
@@ -148,22 +162,8 @@ export const selectObjects = ({
     } = {}
 }) => results
 
-export const selectTableValues =
-    createSelector([selectObjects, selectCustomerLabels(selectCustomerProps)],
-        (objects, customer_labels) => objects.reduce((result, object) => {
-            result.push({
-                id: object.id,
-                customer: ShortName(object.customer, customer_labels),
-                order_items_cost: object.order_items_cost,
-                created_at: object.created_at,
-                updated_at: object.updated_at
-            })
-            return result
-        }, [])
-    )
-
 export const selectTableLabels =
-    createSelector([selectOptions], ({
+    createSelector([useOptions], ({
         id = {},
         customer = {},
         order_items_cost = {},
@@ -177,22 +177,57 @@ export const selectTableLabels =
         updated_at.label
     ])
 
-export const selectTotalCount = ({
-    orders: {
-        totalCount = 0
-    } = {}
-}) => totalCount
-
-export const selectTotalPages = ({
-    orders: {
-        totalPages = 0
-    } = {}
-}) => totalPages
+export const selectTableValues = results =>
+    createSelector([
+            selectCustomerLabels(selectCustomerProps),
+            selectTableLabels
+        ],
+        (
+            customer_labels,
+            table_labels
+        ) => results.reduce((result, object) => {
+            result.push({
+                id: object.id,
+                customer: ShortName(object.customer, customer_labels),
+                order_items_cost: object.order_items_cost,
+                created_at: object.created_at,
+                updated_at: object.updated_at
+            })
+            return result
+        }, [table_labels])
+    )
 
 export const selectFromCreatedAt =
-    createSelector([selectObject, selectFromText], ({
+    createSelector([selectObject, selectCommonConsts], ({
         created_at = '',
-    }, from_text) => `${from_text} ${created_at}`)
+    }, {
+        from
+    }) => `${from} ${created_at}`)
+
+export const selectCustomerAndCityLabels =
+    createSelector([selectCustomerLabels(selectCustomerProps),
+            selectShortLabels(selectCityProps)
+        ],
+        (customer_labels, city_labels) => ({
+            ...customer_labels,
+            ...city_labels
+        }))
+
+export const tableFieldNames = [
+    'id',
+    'customer',
+    'order_items_cost',
+    'created_at',
+    'updated_at'
+]
+
+export const rowData = (object, options) => [
+    object.id,
+    ShortName(object.customer, options?.customer?.children),
+    object.order_items_cost,
+    object.created_at,
+    object.updated_at
+]
 
 // export default Actions.getReducer()
 // export default createReducer(Actions.getReducerActions(), Actions.getInitialState())

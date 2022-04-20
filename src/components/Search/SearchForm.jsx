@@ -7,13 +7,14 @@ import { Form } from 'react-final-form'
 import { onSubmit } from '../redux/Search'
 import SearchFormRender from './SearchFormRender'
 
-const SearchForm = () => {
+const SearchForm = props => {
     const { pathname } = useLocation()
     const dispatch = useDispatch()
     return <Form name='search'
               // validate={validate}
               onSubmit={onSubmit(dispatch, pathname)}
               render={SearchFormRender}
+              {...props}
             />
 }
 

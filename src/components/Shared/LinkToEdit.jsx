@@ -1,21 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { TableName } from '../Shared/BasePathname'
-import config from '../Config'
-import { selectTextEdit } from '../redux/CommonConsts'
+import { selectCommonConsts } from '../redux/CommonConsts'
+import { selectBasePathname } from '../redux/Router'
 
-const LinkToEdit = ({
-    id,
-}) => {
-    const { pathname } = useLocation()
-    const text_edit = useSelector(selectTextEdit)
-    return <Link   to={`/${TableName(pathname) || config.BaseTable}/${id}`}
-                className="btn btn-outline-primary btn-sm">
-            {text_edit}
-        </Link>
-}
+const LinkToEdit = ({ id }) =>
+    <Link   to={`${useSelector(selectBasePathname)}${id}`}
+            className="btn btn-outline-primary btn-sm">
+        {useSelector(selectCommonConsts).edit}
+    </Link>
 
 LinkToEdit.propTypes = {
     id: PropTypes.number,

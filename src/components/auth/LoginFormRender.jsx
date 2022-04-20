@@ -7,7 +7,7 @@ import { Form } from 'reactstrap'
 import RowFormGroup from '../Shared/RowFormGroup'
 import Errors from '../Shared/Errors'
 import SubmitButton from '../Shared/SubmitButton'
-import { selectLoginText } from '../redux/CommonConsts'
+import { selectCommonConsts } from '../redux/CommonConsts'
 import { selectOptions } from '../redux/auth'
 
 const LoginFormRender = props => {
@@ -23,7 +23,7 @@ const LoginFormRender = props => {
                     type='password'
                     {...options}
                     component={RowFormGroup} />
-            <SubmitButton text={useSelector(selectLoginText)} {...props} />
+            <SubmitButton text={useSelector(selectCommonConsts).login} {...props} />
         </Form>
 }
 

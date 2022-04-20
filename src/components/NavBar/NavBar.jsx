@@ -11,22 +11,47 @@ import {
     Badge,
     Button
 } from 'reactstrap'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation, useParams } from 'react-router-dom'
 import AuthModal from '../auth/AuthModal'
 import SearchForm from '../Search/SearchForm'
-import { TableName } from '../Shared/BasePathname'
-import { selectMainMenu } from '../redux/CommonConsts'
-import { selectBrandText } from '../redux/CommonConsts'
-import { selectOnClickAuthButton, selectAuthButtonLabel } from '../redux/auth'
+import { selectMainMenu, selectCommonConsts } from '../redux/CommonConsts'
+import { selectOnClickAuthButton, authButtonLabel, selectAuth } from '../redux/auth'
+import { useGetOptionsQuery, useCommonConsts } from '../../services/apiSlice'
 
-const NavBar = () => <>
+const NavBar = ({ index_url }) => {
+    const auth = useSelector(selectAuth)
+    // console.log('useLocation ', useLocation())
+    // let common_consts = {}
+    const {
+        data: {
+            common_consts
+        } = {},
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetOptionsQuery({
+        url: index_url,
+        params: {
+            isAuthenticated: auth?.isAuthenticated
+        }
+    })
+    // const common_consts = useCommonConsts({
+    //     url: index_url,
+    //     params: {
+    //         isAuthenticated: auth?.isAuthenticated
+    //     }
+    // })
+
+    console.log('auth ', auth)
+    return <>
         <Navbar color="primary"
                 expand="md"
                 dark
                 className="py-0 mb-1" >
             <NavbarBrand href="/">
                 <h3>
-                    <Badge pill size='lg'>{useSelector(selectBrandText)}</Badge>
+                    <Badge pill size='lg'>{common_consts?.brand_text}</Badge>
                 </h3>
             </NavbarBrand>
             <NavbarToggler className="me-2"
@@ -37,7 +62,7 @@ const NavBar = () => <>
                 aria-label="Toggle navigation" />
             <Collapse navbar id="navbarContent">
                 <Nav className="me-auto" navbar>
-                    {useSelector(selectMainMenu).map(({path: to, label}, key) =>
+                    {common_consts?.main_menu?.map(({path: to, label}, key) =>
                         <NavItem key={key}>
                             <NavLink to={to}
                                      className="nav-link"
@@ -51,14 +76,15 @@ const NavBar = () => <>
                                 className='btn-outline-light'
                                 onClick={useSelector(selectOnClickAuthButton(useDispatch()))}
                                 aria-label='auth' >
-                            {useSelector(selectAuthButtonLabel)}
+                            {authButtonLabel(auth, common_consts)}
                         </Button>
                     </NavItem>
                 </Nav>
-                <SearchForm />
+                <SearchForm {...common_consts} />
             </Collapse>
         </Navbar>
         <AuthModal />
     </>
+}
 
 export default NavBar

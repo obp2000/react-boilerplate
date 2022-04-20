@@ -31,3 +31,8 @@ Errors.propTypes = {
 }
 
 export default Errors
+
+export const Error = ({ message }) =>
+    <Alert color="danger" role="alert">
+        <div >{message}</div>
+    </Alert>

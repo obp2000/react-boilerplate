@@ -3,7 +3,7 @@ import CityName from '../cities/CityName'
 export const ShortName = ({
     nick,
     name
-} = {}, {
+}, {
     name_label
 }) => {
     let customer_name = [nick]
@@ -12,28 +12,16 @@ export const ShortName = ({
 }
 
 const CustomerName = ({
-    nick,
-    name,
     city = null,
-    address
+    address,
+    ...short_customer
 }, {
-    city: city_options = {},
-    address: {
-        label: address_label
-    } = {},
-    ...customer_props
-} = {}) => {
-    let customer_name = [ShortName({ nick, name }, customer_props)]
-    if (city) {
-        customer_name.push(
-            CityName(city, city_options.children)
-        )
-    }
-    if (address) {
-        customer_name.push(
-            `${address_label}: ${address}`
-        )
-    }
+    address_label,
+    ...rest_labels
+}) => {
+    let customer_name = [ShortName(short_customer, rest_labels)]
+    if (city) customer_name.push(CityName(city, rest_labels))
+    if (address) customer_name.push(`${address_label} ${address}`)
     return customer_name.join(' ')
 }
 

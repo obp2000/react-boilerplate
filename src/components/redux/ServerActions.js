@@ -1,8 +1,9 @@
+import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { push } from 'connected-react-router'
 import { objectToFormData } from 'object-to-formdata'
 import { toast } from 'react-toastify'
-import config from '../Config'
+import config, { api } from '../Config'
 import { tokenHeaders } from './auth'
 import { errorHandler } from './ErrorHandlers'
 import { clearErrors } from './Errors'
@@ -13,93 +14,37 @@ import {
     successSearchObjects,
     failedSearchObjects
 } from './TempState'
-import { receiveCommonConsts } from './CommonConsts'
+// import { receiveCommonConsts } from './CommonConsts'
+import { receiveErrors } from './Errors'
+import { selectLocation } from './Router'
 
-const getObjects = (actions, dispatch, getState) => () => {
-    const {
-        auth: {
-            accessToken
-        },
-        router: {
-            location: {
-                pathname,
-                query: {
-                    term,
-                    page
-                }
-            }
-        }
-    } = getState()
-    dispatch(startRequest())
-    // console.log('base_url get ', `${actions.base_url}/`)
-    // return axios.get(`${actions.base_url}/`)
-    return axios.get(`${actions.base_url}/`, {
-            params: {
-                page,
-                term: term ? decodeURIComponent(term) : null
-            },
-            // ...tokenHeaders(accessToken)
-        })
-        .then(({ data }) => {
-            // console.log('get data ', data)
-            dispatch(successRequest())
-            dispatch(actions.successReceiveObjects(data))
-            dispatch(clearErrors())
-        })
-        .catch(errorHandler(dispatch, actions.failedReceiveObjects))
-}
+// export const getObjectsAction = createAsyncThunk(
+//     'getObjects',
+//     async config => await api.request(config))
 
-export const getOptions = (actions, dispatch, getState, getData, failed, method='POST') => {
-    // console.log('getOptions.............')
-    const {
-        auth: {
-            isAuthenticated,
-            accessToken
-        }
-    } = getState()
-    dispatch(startRequest())
-    // console.log('base_url ', `${actions.base_url}/`)
-    axios.options(`${actions.base_url}/`, {
-            params: {
-                isAuthenticated
-            },
-            ...(isAuthenticated ? tokenHeaders(accessToken) : {})
-        })
-        .then(({
-            data: {
-                actions: {
-                    [method]: {
-                        common_consts,
-                        ...options
-                    }
-                }
-            }
-        }) => {
-            // console.log('common_consts ', common_consts)
-            dispatch(successRequest())
-            dispatch(receiveCommonConsts({ ...common_consts, options }))
-            dispatch(clearErrors())
-            // console.log('getData ', getData)
-            if (getData) getData()
-        })
-        // .then(({
-        //     data
-        // }) => {
-        //     // const { actions } = data
-        //     console.log('actions ', data.actions)
-        //     dispatch(successRequest())
-        //     // dispatch(receiveCommonConsts({ ...common_consts, options }))
-        //     dispatch(clearErrors())
-        //     if (getData) getData()
-        // })
-        .catch(errorHandler(dispatch, failed))
-}
+// export const getObjectsAction = createAsyncThunk(
+//         'getObjects',
+//         async (index_url, { getState }) => {
+//             const { data } = await api.get(
+//                 index_url,
+//                 { params: selectLocation(getState()).query }
+//             )
+//             return data
+//         }
+//     )
 
-export const getObjectsAction = actions => () => (dispatch, getState) => {
-    dispatch(actions.requestObjects())
-    getOptions(actions, dispatch, getState,
-        getObjects(actions, dispatch, getState), actions.failedReceiveObjects)
-}
+
+// export const getOptionsAction = createAsyncThunk(
+//     'getOptions',
+//     async config => await api.request({...config, method: 'options' }))
+
+// export const getObjectAction = createAsyncThunk(
+//     'getObject',
+//     async config => await api.request(config))
+
+
+
+
 
 export const getExistingObject = (actions, dispatch, getState) => () => {
     const {
@@ -126,7 +71,7 @@ export const getExistingObject = (actions, dispatch, getState) => () => {
         .catch(errorHandler(dispatch, actions.failedReceiveObject))
 }
 
-export const getObjectAction = actions => () => (dispatch, getState) => {
+export const getObjectAction222 = actions => () => (dispatch, getState) => {
     const {
         router: {
             location: {
@@ -151,10 +96,16 @@ export const getObjectAction = actions => () => (dispatch, getState) => {
     }
 }
 
+
+
+
+
+
 const onSuccessCreateOrUpdateObject = (dispatch, actions, id, successfully) =>
     ({ data }) => {
         dispatch(successRequest())
-        dispatch(actions.successUpdateObject(data, id))
+        // dispatch(actions.successUpdateObject(data, id))
+        dispatch(actions.successUpdateObject(data))
         dispatch(clearErrors())
         toast.success(successfully)
         return dispatch(push(actions.redirect_url))
@@ -163,11 +114,11 @@ const onSuccessCreateOrUpdateObject = (dispatch, actions, id, successfully) =>
 // export const onSubmitAction = (dispatch, actions, accessToken, flash) => values => {
 export const onSubmitAction = actions => values => (dispatch, getState) => {
     const {
-        router: {
-            location: {
-                pathname
-            }
-        },
+        // router: {
+        //     location: {
+        //         pathname
+        //     }
+        // },
         auth: {
             accessToken,
         },
@@ -194,11 +145,6 @@ export const onSubmitAction = actions => values => (dispatch, getState) => {
 // export const deleteObjectAction = (dispatch, actions, accessToken, flash) => id => {
 export const deleteObjectAction = actions => id => (dispatch, getState) => {
     const {
-        router: {
-            location: {
-                pathname
-            }
-        },
         auth: {
             accessToken,
         },
@@ -241,6 +187,103 @@ export const searchObjectsAction = (dispatch, search_path, accessToken) => term 
             .catch(errorHandler(dispatch, failedSearchObjects))
     }
 }
+
+
+// const getObjects = (actions, dispatch, getState) => () => {
+//     const {
+//         auth: {
+//             accessToken
+//         },
+//         router: {
+//             location: {
+//                 pathname,
+//                 query: {
+//                     term,
+//                     page
+//                 }
+//             }
+//         }
+//     } = getState()
+//     dispatch(startRequest())
+//     // console.log('base_url get ', `${actions.base_url}/`)
+//     // return axios.get(`${actions.base_url}/`)
+//     return axios.get(`${actions.base_url}/`, {
+//             params: {
+//                 page,
+//                 term: term ? decodeURIComponent(term) : null
+//             },
+//             // ...tokenHeaders(accessToken)
+//         })
+//         .then(({ data }) => {
+//             // console.log('get data ', data)
+//             dispatch(successRequest())
+//             dispatch(actions.successReceiveObjects(data))
+//             dispatch(clearErrors())
+//         })
+//         .catch(errorHandler(dispatch, actions.failedReceiveObjects))
+// }
+
+export const getOptions = (actions, dispatch, getState, getData, failed, method = 'POST') => {
+    // console.log('getOptions.............')
+    const {
+        auth: {
+            isAuthenticated,
+            accessToken
+        }
+    } = getState()
+    dispatch(startRequest())
+    // console.log('base_url ', `${actions.base_url}/`)
+    axios.options(`${actions.base_url}/`, {
+            params: {
+                isAuthenticated
+            },
+            ...(isAuthenticated ? tokenHeaders(accessToken) : {})
+        })
+        .then(({
+            data: {
+                actions: {
+                    [method]: {
+                        common_consts,
+                        ...options
+                    }
+                }
+            }
+        }) => {
+            // console.log('common_consts ', common_consts)
+            dispatch(successRequest())
+            // dispatch(receiveCommonConsts({ ...common_consts, options }))
+            dispatch(clearErrors())
+            // console.log('getData ', getData)
+            if (getData) getData()
+        })
+        // .then(({
+        //     data
+        // }) => {
+        //     // const { actions } = data
+        //     console.log('actions ', data.actions)
+        //     dispatch(successRequest())
+        //     // dispatch(receiveCommonConsts({ ...common_consts, options }))
+        //     dispatch(clearErrors())
+        //     if (getData) getData()
+        // })
+        .catch(errorHandler(dispatch, failed))
+}
+
+// export const getObjectsAction33 = actions =>
+//     createAsyncThunk('getObjects',
+//         (_, { dispatch, getState }) => {
+//             dispatch(actions.requestObjects())
+//             getOptions(actions, dispatch, getState,
+//                 getObjects(actions, dispatch, getState), actions.failedReceiveObjects)
+//         }
+//     )
+
+
+// export const getObjectsAction22 = actions => () => (dispatch, getState) => {
+//     dispatch(actions.requestObjects())
+//     getOptions(actions, dispatch, getState,
+//         getObjects(actions, dispatch, getState), actions.failedReceiveObjects)
+// }
 
 
 // export const clearSearchObjectsAction = dispatch => () => {

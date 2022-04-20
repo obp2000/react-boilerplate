@@ -1,36 +1,271 @@
 import { createAction, createReducer } from 'redux-act'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { objectToFormData } from 'object-to-formdata'
+import { toast } from 'react-toastify'
+import { getObjectAction } from './ServerActions'
+import { errorHandler } from './ErrorHandlers'
+import { api } from '../Config'
+import { selectLocation } from './Router'
+import { selectAuth, tokenHeaders } from './auth'
+import { selectCommonConsts } from './CommonConsts'
+// import { selectCommonConsts } from './CommonConsts'
 
-const init_objects_info = {
-    results: [],
-    totalCount: 0,
-    page: null,
-    totalPages: 0,
-    term: null
+// const init_objects_info = {
+//     results: [],
+//     totalCount: 0,
+//     page: null,
+//     totalPages: 0,
+//     term: null
+// }
+
+// export const initialState = initObject => ({
+//     ...init_objects_info,
+//     object: initObject
+// })
+
+const to_object_id = id => (id == 'new') ? '' : `${id}/`
+
+export const getObjectsThunk = index_url => createAsyncThunk(
+    'getObjects',
+    async (_, { getState }) => {
+        const { data } = await api.get(
+            index_url, { params: selectLocation(getState()).query }
+        )
+        return data
+    }
+)
+
+export const getObjectThunk = index_url => createAsyncThunk(
+    'getObject',
+    async (id, { getState }) => {
+        const { data } = await api.get(
+            `${index_url}${to_object_id(id)}`,
+            tokenHeaders(selectAuth(getState()).accessToken)
+        )
+        return data
+    }
+)
+
+export const createOrUpdateObjectThunk = ({
+    index_url,
+    pre_submit_action,
+    to_form_data
+} = {}) => createAsyncThunk(
+    'createOrUpdateObject',
+    async (values, { getState }) => {
+        const state = getState()
+        const accessToken = selectAuth(state).accessToken
+        if (accessToken) {
+            if (pre_submit_action) pre_submit_action(values)
+            const id = values.id
+            const { data } = await api.request({
+                url: `${index_url}${ id ? id + '/' : ''}`,
+                method: id ? 'PUT' : 'POST',
+                data: to_form_data ? objectToFormData(values) : values,
+                ...tokenHeaders(accessToken, to_form_data),
+            })
+            toast.success(selectCommonConsts(state).successfully)
+            return data
+        }
+    }
+)
+
+export const deleteObjectThunk = index_url => createAsyncThunk(
+    'deleteObject',
+    async (id, { getState }) => {
+        await api.delete(
+            `${index_url}${to_object_id(id)}`,
+            tokenHeaders(selectAuth(getState()).accessToken)
+        )
+        return to_object_id(id)
+    }
+)
+
+export const createCommonSlice = initObject => {
+
+    const init_objects_info = {
+        results: [],
+        totalCount: 0,
+        totalPages: 0,
+    }
+
+    const initialState = {
+        ...init_objects_info,
+        object: initObject,
+        status: 'idle',
+        error: null
+    }
+
+    const getObjectsAction = getObjectsThunk()
+    const getObjectAction = getObjectThunk()
+    const createOrUpdateObjectAction = createOrUpdateObjectThunk()
+    const deleteObjectAction = deleteObjectThunk()
+
+    const actionsSlice = createSlice({
+        name: 'actions',
+        initialState,
+        reducers: {
+            // requestObjects: state => initialState,
+            // successReceiveObjects: (state, { payload }) => payload,
+            // failedReceiveObjects: state => initialState,
+            // requestObject: state => {
+            //     state.object = initObject
+            // },
+            // successReceiveObject: (state, { payload }) => {
+            //     state.object = payload
+            // },
+            // failedReceiveObject: state => {
+            //     state.object = initObject
+            // },
+            successUpdateObject: (state, { payload }) => {
+                state.object = payload
+                const existingObject = state.results.find(result => result.id === payload.id)
+                // console.log('existingObject ', existingObject)
+                if (existingObject) {
+                    state.results[existingObject.id] = payload
+                } else {
+                    state.results.push(payload)
+                    state.totalCount++
+                }
+                // state.results = [
+                //     ...exclude_from_results(state.results, payload.object.id),
+                //     payload.object
+                // ]
+                // if (!payload.id) state.totalCount += 1
+            },
+            successDeleteObject: (state, { payload }) => {
+                // state.results = exclude_from_results(state.results, payload)
+                state.results = state.results.filter(result => result.id !== payload)
+                state.totalCount--
+            },
+            resetStatus: (state, { payload }) => {
+                // state.results = exclude_from_results(state.results, payload)
+                state.status = initialState.status
+            }
+        },
+        extraReducers(builder) {
+            builder
+                .addCase(getObjectsAction.pending, (state, action) => {
+                    state.status = 'pending'
+                })
+                .addCase(getObjectsAction.fulfilled, (state, { payload }) => ({
+                    ...state,
+                    ...payload,
+                    status: 'idle',
+                    error: null
+                }))
+                .addCase(getObjectsAction.rejected, (state, {
+                    error: {
+                        message
+                    }
+                }) => ({
+                    ...state,
+                    ...init_objects_info,
+                    status: 'rejected',
+                    error: message
+                }))
+                .addCase(getObjectAction.pending, (state, action) => {
+                    state.status = 'pending'
+                })
+                .addCase(getObjectAction.fulfilled, (state, {
+                    payload
+                }) => {
+                    state.status = initialState.status
+                    state.error = null
+                    state.object = payload
+                })
+                .addCase(getObjectAction.rejected, (state, {
+                    error: {
+                        message
+                    }
+                }) => {
+                    state.object = initObject
+                    state.status = 'rejected'
+                    state.error = message
+                })
+                .addCase(createOrUpdateObjectAction.pending, (state, action) => {
+                    state.status = 'pending'
+                })
+                .addCase(createOrUpdateObjectAction.fulfilled, (state, {
+                    payload
+                }) => {
+                    state.status = initialState.status
+                    state.error = null
+                    state.object = payload
+                    const existingObject = state.results.find(result => result.id === payload.id)
+                    if (existingObject) {
+                        state.results[existingObject.id] = payload
+                    } else {
+                        state.results.push(payload)
+                        state.totalCount++
+                    }
+                })
+                .addCase(createOrUpdateObjectAction.rejected, (state, {
+                    error: {
+                        message
+                    }
+                }) => {
+                    state.status = 'rejected'
+                    state.error = message
+                })
+                .addCase(deleteObjectAction.pending, (state, action) => {
+                    state.status = 'pending'
+                })
+                .addCase(deleteObjectAction.fulfilled, (state, {
+                    payload
+                }) => {
+                    state.status = 'idle'
+                    state.error = null
+                    state.results = state.results.filter(result => result.id !== payload)
+                    state.totalCount--
+                })
+                .addCase(deleteObjectAction.rejected, (state, {
+                    error: {
+                        message
+                    }
+                }) => {
+                    state.status = 'rejected'
+                    state.error = message
+                })
+        }
+    })
+
+    const {
+        // requestObjects,
+        // successReceiveObjects,
+        // failedReceiveObjects,
+        // requestObject,
+        // successReceiveObject,
+        // failedReceiveObject,
+        successUpdateObject,
+        successDeleteObject
+    } = actionsSlice.actions
+
+    return actionsSlice
+
+    // export default actionsSlice.reducer
+
+    // const actions = {}
+
+    // actions.requestObjects = createAction('requestObjects')
+    // actions.successReceiveObjects = createAction('successReceiveObjects')
+    // actions.failedReceiveObjects = createAction('failedReceiveObjects')
+
+    // actions.requestObject = createAction('requestObject')
+    // actions.successReceiveObject = createAction('successReceiveObject')
+    // actions.failedReceiveObject = createAction('failedReceiveObject')
+
+    // actions.successUpdateObject = createAction('successUpdateObject')
+
+    // actions.successDeleteObject = createAction('successDeleteObject')
+
+    // return actions
 }
 
-export const initialState = initObject => ({
-    ...init_objects_info,
-    object: initObject
-})
 
-export const createActions = () => {
 
-    const actions = {}
-
-    actions.requestObjects = createAction('requestObjects')
-    actions.successReceiveObjects = createAction('successReceiveObjects')
-    actions.failedReceiveObjects = createAction('failedReceiveObjects')
-
-    actions.requestObject = createAction('requestObject')
-    actions.successReceiveObject = createAction('successReceiveObject')
-    actions.failedReceiveObject = createAction('failedReceiveObject')
-
-    actions.successUpdateObject = createAction('successUpdateObject')
-
-    actions.successDeleteObject = createAction('successDeleteObject')
-
-    return actions
-}
+const exclude_from_results = (results, id) =>
+    results.filter(result => (result.id != id))
 
 export const reducerActions = (actions, initObject) => {
 
@@ -41,9 +276,6 @@ export const reducerActions = (actions, initObject) => {
         totalPages: 0,
         term: null
     }
-
-    const exclude_from_results = (results, id) =>
-        results.filter(result => (result.id != id))
 
     let reducer_actions = {}
 

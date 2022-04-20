@@ -23,9 +23,9 @@ const App = () =>
       <Layout {...{history}} />
     </Provider>
 
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-    module.hot.accept('./components/Layout', App)
-}
+// if (process.env.NODE_ENV !== 'production' && module.hot) {
+//     module.hot.accept('./components/Layout', App)
+// }
 
-// export default App
-export default hot(module)(App)
+export default App
+// export default hot(module)(App)

@@ -7,7 +7,7 @@ import Label from '../Shared/Label'
 // import AddOrderItemButton from './AddOrderItemButton'
 import { deleteOrderItemAction, addOrderItemAction } from '../redux/Orders'
 import { selectTableLabels, selectProductProps } from '../redux/OrderItems'
-import { selectAddText } from '../redux/CommonConsts'
+import { selectCommonConsts } from '../redux/CommonConsts'
 import { selectProductLabels } from '../redux/Products'
 
 const OrderItems = ({ fields }) => {
@@ -27,7 +27,7 @@ const OrderItems = ({ fields }) => {
                     <Button size='sm'
                             outline
                             onClick={addOrderItemAction(fields)}>
-                        {useSelector(selectAddText)}
+                        {useSelector(selectCommonConsts).add}
                     </Button>
                 </th>
             </tr>

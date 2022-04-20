@@ -5,7 +5,7 @@ import {
     total_sum,
     needGift,
     total_weight
-} from '../orders/Selectors'
+} from '../orders/Calculator'
 // import { initOrderItem } from '../redux/Orders'
 
 const weight = ({

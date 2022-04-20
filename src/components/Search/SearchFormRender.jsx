@@ -5,16 +5,16 @@ import { Field } from 'react-final-form'
 import { Form, Button } from 'reactstrap'
 import Input from '../Shared/Input'
 import SubmitButton from '../Shared/SubmitButton'
-import { selectSearchLabel } from '../redux/CommonConsts'
+import { selectCommonConsts } from '../redux/CommonConsts'
 
 const SearchFormRender = props => {
-    const searchLabel = useSelector(selectSearchLabel)
+    const searchLabel = useSelector(selectCommonConsts).search
     return <Form    onSubmit={props.handleSubmit}
                     inline
                     className="d-flex mt-2">
             <Field  name='term'
                     type="search"
-                    label={searchLabel}
+                    label={props.search}
                     className="me-2"
                     component={Input} />
 {/*            <Button type="submit" color='primary' className='btn-outline-light'
@@ -22,7 +22,7 @@ const SearchFormRender = props => {
                     >
                 {searchLabel}
             </Button>*/}
-            <SubmitButton   text={searchLabel}
+            <SubmitButton   text={props.search}
                             className='btn-outline-light'
                             {...props} />
     </Form>

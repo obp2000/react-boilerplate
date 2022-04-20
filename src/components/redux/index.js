@@ -7,8 +7,9 @@ import orders from './Orders'
 import errors from './Errors'
 import temp_state from './TempState'
 import common_consts from './CommonConsts'
+import { apiSlice } from '../../services/apiSlice'
 
-const rootReducer = (history) => combineReducers({
+const rootReducer = history => combineReducers({
 	router: connectRouter(history),
 	customers,
 	products,
@@ -16,7 +17,8 @@ const rootReducer = (history) => combineReducers({
 	auth,
 	errors,
 	temp_state,
-	common_consts
+	common_consts,
+	[apiSlice.reducerPath]: apiSlice.reducer
 })
 
 export default rootReducer

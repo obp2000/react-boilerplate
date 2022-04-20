@@ -1,17 +1,14 @@
 import { createSelector } from 'reselect'
 import { selectOptions, selectConsts } from './CommonConsts'
 
-export const selectOrderItemProps = ({
-    common_consts: {
-        options: {
-            order_items: {
-                child: {
-                    children = {}
-                } = {}
-            } = {},
+export const selectOrderItemProps =
+    createSelector([selectOptions], ({
+        order_items: {
+            child: {
+                children = {}
+            } = {}
         } = {},
-    }
-}) => children
+    }) => children)
 
 export const selectTableLabels =
     createSelector([selectOrderItemProps], ({
@@ -32,7 +29,6 @@ export const selectTableLabels =
 export const selectProductProps =
     createSelector([selectOrderItemProps], ({
         product: {
-       		children = {}
+            children = {}
         } = {}
-    }) => children
-)
+    }) => children)

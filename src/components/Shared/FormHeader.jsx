@@ -4,16 +4,17 @@ import { useSelector } from 'react-redux'
 import { Row, Col } from 'reactstrap'
 import SubmitButton from './SubmitButton'
 import BackButton from './BackButton'
-import { selectNameSingular } from '../redux/CommonConsts'
+// import { selectOptions } from '../redux/CommonConsts'
+// import { useOptions } from '../../services/apiSlice'
 
 const FormHeader = ({
     initialValues: {
         id
     },
+    name_singular,
     children,
     ...rest
 }) => {
-    const name_singular = useSelector(selectNameSingular)
     return <Row>
         <Col sm={2}>
             <BackButton />

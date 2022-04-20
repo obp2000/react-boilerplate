@@ -7,8 +7,8 @@ import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
 import { invalid, valid } from './FieldStatus'
-import { searchObjectsAction } from '../redux/ServerActions'
-import { clearSearchObjects } from '../redux/TempState'
+// import { searchObjectsAction } from '../redux/ServerActions'
+import { clearSearchObjects, searchObjectsThunk } from '../redux/TempState'
 
 const DropdownListComp = ({
     input: {
@@ -45,10 +45,12 @@ const DropdownListComp = ({
             accessToken
         }))
         const dispatch = useDispatch()
+        const searchObjectsAction = searchObjectsThunk(search_path)
         from_selector = {
             data: loaded.data,
             busy: loaded.isFieldFetching,
-            onSearch: searchObjectsAction(dispatch, search_path, loaded.accessToken),
+            // onSearch: searchObjectsAction(dispatch, search_path, loaded.accessToken),
+            onSearch: term => dispatch(searchObjectsAction(term)),
             onBlur: () => dispatch(clearSearchObjects())
         }
     }

@@ -1,19 +1,12 @@
-const CityName = (city_obj, {
-    pindex_label,
-    city_label
-}) => {
-    const {
-        pindex = null,
-        city = null
-    } = city_obj || {}
+const CityName = (city, cityProps) => {
     let city_name = []
-    if (pindex) {
-        city_name.push(pindex_label)
-        city_name.push(pindex)
+    if (city?.pindex) {
+        city_name.push(cityProps?.pindex_label)
+        city_name.push(city.pindex)
     }
-    if (city) {
-        city_name.push(city_label)
-        city_name.push(city)
+    if (city?.city) {
+        city_name.push(cityProps?.city_label)
+        city_name.push(city.city)
     }
     return city_name.join(' ')
 }

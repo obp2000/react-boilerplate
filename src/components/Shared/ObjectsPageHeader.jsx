@@ -2,16 +2,15 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Row, Col, Badge } from 'reactstrap'
 import { useSelector } from 'react-redux'
-import { selectNamePlural } from '../redux/CommonConsts'
+import { selectOptions } from '../redux/CommonConsts'
 
 const ObjectsPageHeader = ({
     totalCount
 }) => {
-    const name_plural = useSelector(selectNamePlural)
     return <Row>
         <Col sm={2}>
             <h3>
-                {name_plural}
+                {useSelector(selectOptions).name_plural}
             </h3>
         </Col>
         <Col>

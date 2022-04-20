@@ -1,29 +1,28 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { Button } from 'reactstrap'
 import ConfirmAction from './ConfirmAction'
-import {
-    selectTextDelete,
-    selectYes,
-    selectNo
-} from '../redux/CommonConsts'
+// import { selectCommonConsts } from '../redux/CommonConsts'
+// import { useCommonConsts } from '../../services/apiSlice'
 
 const DeleteButton = ({
     id,
-    deleteObjectAction
+    deleteObjectAction,
+    delete: delete_text,
+    yes,
+    no
 }) => {
-    const text_delete = useSelector(selectTextDelete)
-    const yes = useSelector(selectYes)
-    const no = useSelector(selectNo)
     return <Button size='sm'
             outline
-            onClick={ConfirmAction(() => deleteObjectAction(id), `${text_delete}?`, yes, no)}>
-        {text_delete}
+            onClick={ConfirmAction(() => deleteObjectAction(id),
+                    `${delete_text}?`, yes, no)}>
+        {delete_text}
     </Button>
 }
 
 DeleteButton.propTypes = {
+    id: PropTypes.number,
     deleteObjectAction: PropTypes.func.isRequired
 }
 

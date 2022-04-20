@@ -4,12 +4,6 @@ import { connect } from 'react-redux'
 import ObjectsTable from '../../Shared/ObjectsTable'
 import { getObjectsAction, deleteObjectAction } from '../../redux/ServerActions'
 import { Actions } from '../../redux/Customers'
-import {
-    selectTableLabels,
-    selectTableValues,
-    selectTotalCount,
-    selectTotalPages
-} from '../../redux/Customers'
 
 class Customers extends React.Component {
     // constructor(props) {
@@ -41,11 +35,7 @@ class Customers extends React.Component {
 
     render() {
         console.log('render customers')
-        return <ObjectsTable {...this.props}
-            {...{selectTableLabels,
-                selectTableValues,
-                selectTotalCount,
-                selectTotalPages}} />
+        return <ObjectsTable {...this.props} getObjectsAction={getObjectsAction(Actions)}/>
     }
 }
 
@@ -66,6 +56,6 @@ class Customers extends React.Component {
 // })
 
 export default connect(null, {
-    getObjectsAction: getObjectsAction(Actions),
+    // getObjectsAction: getObjectsAction(Actions),
     deleteObjectAction: deleteObjectAction(Actions)
 })(Customers)
