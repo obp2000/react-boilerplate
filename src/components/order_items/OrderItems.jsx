@@ -6,19 +6,25 @@ import OrderItem from './OrderItem'
 import Label from '../Shared/Label'
 // import AddOrderItemButton from './AddOrderItemButton'
 import { deleteOrderItemAction, addOrderItemAction } from '../redux/Orders'
-import { selectTableLabels, selectProductProps } from '../redux/OrderItems'
-import { selectCommonConsts } from '../redux/CommonConsts'
-import { selectProductLabels } from '../redux/Products'
+import { tableFieldNames } from '../redux/OrderItems'
+// import { selectCommonConsts } from '../redux/CommonConsts'
+import { productLabels } from '../redux/Products'
+import { getTableLabels } from '../redux/Router'
 
-const OrderItems = ({ fields }) => {
+const OrderItems = ({ fields, options, add, ...consts }) => {
     // console.log('fields ', fields)
     const deleteObjectAction = deleteOrderItemAction(fields)
-    const tableLabels = useSelector(selectTableLabels)
-    const product_labels = useSelector(selectProductLabels(selectProductProps))
+    const orderItemProps = options?.order_items?.child?.children
+    const productProps = orderItemProps?.product?.children
+    const tableLabels = getTableLabels(tableFieldNames, orderItemProps)
+    const product_labels = productLabels(productProps)
     return <>
         <thead>
             <tr>
-                {Object.values(tableLabels).map((label, key) =>
+                <th scope="col">
+                    №
+                </th>
+                {tableLabels.map((label, key) =>
                     <th scope="col" key={key}>
                         {label}
                     </th>
@@ -27,7 +33,7 @@ const OrderItems = ({ fields }) => {
                     <Button size='sm'
                             outline
                             onClick={addOrderItemAction(fields)}>
-                        {useSelector(selectCommonConsts).add}
+                        {add}
                     </Button>
                 </th>
             </tr>
@@ -39,7 +45,8 @@ const OrderItems = ({ fields }) => {
                         index,
                         product_labels,
                         tableLabels,
-                        deleteObjectAction
+                        deleteObjectAction,
+                        ...consts
                     }}
                 />
             )}

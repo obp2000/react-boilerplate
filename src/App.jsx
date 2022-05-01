@@ -16,11 +16,11 @@ import Layout from './components/Layout'
 numeral.locale('ru')
 // console.log('App')
 
-const { store, history } = configureStore()
+const store = configureStore()
 
 const App = () =>
     <Provider {...{store}}>
-      <Layout {...{history}} />
+      <Layout />
     </Provider>
 
 // if (process.env.NODE_ENV !== 'production' && module.hot) {

@@ -1,14 +1,14 @@
 const mapCollectionState = (collection_name, {
-    router: {
-        location: {
-            query: {
-                term = ''
-            },
-        }
-    }
+  router: {
+    location: {
+      query: {
+        term = '',
+      },
+    },
+  },
 }) => ({
-    term
-})
+  term,
+});
 
 // const mapCollectionOwnProps = ({
 //     match: {
@@ -18,9 +18,7 @@ const mapCollectionState = (collection_name, {
 //     } = { params: {} }
 // }) => ({ page: parseInt(page) })
 
-export const mapCollectionStateToProps = (collection_name) =>
-    state => mapCollectionState(collection_name, state)
-
+export const mapCollectionStateToProps = (collection_name) => (state) => mapCollectionState(collection_name, state);
 
 // const mapObjectOwnProps = ({
 //     match: {
@@ -31,12 +29,11 @@ export const mapCollectionStateToProps = (collection_name) =>
 // }) => ({ id })
 
 const mapObjectState = (collection_name, {
-    auth: {
-        accessToken
-    }
-}) => ({
+  auth: {
     accessToken,
-})
+  },
+}) => ({
+  accessToken,
+});
 
-export const mapObjectStateToProps = (collection_name, object_name) =>
-    state => mapObjectState(collection_name, state)
+export const mapObjectStateToProps = (collection_name, object_name) => (state) => mapObjectState(collection_name, state);

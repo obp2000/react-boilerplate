@@ -1,22 +1,47 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Card, CardBody, CardTitle } from 'reactstrap'
-import UserRow from './UserRow'
-import { selectOptions } from '../redux/CommonConsts'
-import { selectUserFields } from '../redux/auth'
+import {Card, CardBody, CardTitle, Row, Col} from 'reactstrap'
+import {useGetOptionsQuery, useGetUserQuery} from '../../services/apiSlice'
+import {userFieldNames} from '../redux/auth'
 
-const User = () =>
-    <Card>
-        <CardBody>
-            <CardTitle>
-                <h3>{useSelector(selectOptions).name_singular}</h3>
-            </CardTitle>
-            {useSelector(selectUserFields).map(
-                (field, key) => <UserRow {...{...field, key}} />
+const User = ({indexUrl}) => {
+  // const { isAuthenticated } = useSelector(selectAuth)
+  // if (!isAuthenticated) return
+  const {
+    data: {
+      options = {},
+    } = {},
+  } = useGetOptionsQuery('/user/')
+  const {
+    data: user = {},
+    // isLoading,
+    // isFetching,
+    // isSuccess,
+    // isError,
+    // error,
+  } = useGetUserQuery()
+  return <Card>
+    <CardBody>
+      <CardTitle>
+        <h3>{options?.name_singular}</h3>
+      </CardTitle>
+      {userFieldNames.map((fieldName, key) =>
+        <Row key={key}>
+          <Col sm={2}>
+            {options[fieldName]?.label}
+          </Col>
+          <Col sm={8}>
+            {user[fieldName]}
+          </Col>
+        </Row>,
 
-            )}
-        </CardBody>
-    </Card>
+      )}
+    </CardBody>
+  </Card>
+}
+
+User.propTypes = {
+  indexUrl: PropTypes.string,
+}
 
 export default User

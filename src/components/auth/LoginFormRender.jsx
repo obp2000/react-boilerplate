@@ -1,36 +1,44 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Field } from 'react-final-form'
 import createDecorator from 'final-form-submit-listener'
 import { Form } from 'reactstrap'
+import Loader from 'react-loader'
 import RowFormGroup from '../Shared/RowFormGroup'
 import Errors from '../Shared/Errors'
 import SubmitButton from '../Shared/SubmitButton'
-import { selectCommonConsts } from '../redux/CommonConsts'
-import { selectOptions } from '../redux/auth'
 
-const LoginFormRender = props => {
-    const options = { options: useSelector(selectOptions) }
-    return <Form    onSubmit={props.handleSubmit}
-                    className="shadow p-3 mb-5 bg-body rounded">
-            {props.hasSubmitErrors && <Errors {...props} />}
+const LoginFormRender = ({
+    options,
+    handleSubmit,
+    isLoadingLogin,
+    login,
+    ...props
+}) => {
+    // const options = props.options
+    // console.log('props ', props)
+    return <Loader loaded={!isLoadingLogin}>
+        <Form onSubmit={handleSubmit}
+              className="shadow p-3 mb-5 bg-body rounded">
             <Field  name="username"
                     required
-                    {...options}
+                    {...{options}}
                     component={RowFormGroup} />
             <Field  name="password"
                     type='password'
-                    {...options}
+                    {...{options}}
                     component={RowFormGroup} />
-            <SubmitButton text={useSelector(selectCommonConsts).login} {...props} />
+            <SubmitButton text={login} {...props} />
         </Form>
+    </Loader>
 }
 
 LoginFormRender.propTypes = {
+    options: PropTypes.object,
     handleSubmit: PropTypes.func,
-    hasSubmitErrors: PropTypes.func,
-    submitError: PropTypes.object,
+    login: PropTypes.string
+    // hasSubmitErrors: PropTypes.func,
+    // submitError: PropTypes.object,
 }
 
 export default LoginFormRender

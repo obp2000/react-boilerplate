@@ -1,37 +1,46 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import {
     Modal,
     ModalHeader,
     ModalBody,
     Button
 } from 'reactstrap'
-import LoginForm from './Containers/LoginForm'
-import RegisterForm from './Containers/RegisterForm'
-import {
-    toggleModal,
-    toggleLogin,
-    selectModalHeader,
-    selectModalButtonlabel,
-    selectAuth
-} from '../redux/auth'
+import LoginForm from './LoginForm'
+import RegisterForm from './RegisterForm'
+import { selectAuth, toggleModal, toggleLogin } from '../redux/auth'
+// import { useGetOptionsQuery } from '../../services/apiSlice'
 
-const AuthModal = () => {
+const AuthModal = commonConsts => {
+    const {
+        isAuthenticated,
+        modal,
+        isLogin
+    } = useSelector(selectAuth)
+    // const {
+    //     data: {
+    //         commonConsts = {}
+    //     } = {},
+    //     isLoading,
+    //     isFetching: isOptionsFetching,
+    //     isSuccess,
+    //     isError,
+    //     error
+    // } = useGetOptionsQuery(lastOptionsArg)
+    const { login, register } = commonConsts
     const dispatch = useDispatch()
-    return <Modal isOpen={useSelector(selectAuth).modal}>
-         <ModalHeader toggle={() => dispatch(toggleModal())}>
-            {useSelector(selectModalHeader)}
+    return <Modal isOpen={modal}>
+        <ModalHeader toggle={() => dispatch(toggleModal())}>
+            {isLogin ? login : register}
         </ModalHeader>
         <ModalBody>
-            {useSelector(selectAuth).login ?
-                <LoginForm /> :
-                <RegisterForm />}
-            <Button size='sm'
-                    outline
+            {isLogin ?
+                <LoginForm {...commonConsts } /> :
+                <RegisterForm {...commonConsts} />}
+            <Button size='sm' outline
                     onClick={() => dispatch(toggleLogin())}>
-                {useSelector(selectModalButtonlabel)}
+                {isLogin ? register : login}
             </Button>
         </ModalBody>
     </Modal>

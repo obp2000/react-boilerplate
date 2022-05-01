@@ -14,13 +14,13 @@ import Loader from '../Shared/Loader'
 const Products = props => {
     const loaded = useSelector(({
         products: objects = {},
-        common_consts
+        commonConsts
     }) => ({
         objects,
-        common_consts
+        commonConsts
     }))
      return <>
-        <ObjectsPageHeader {...loaded.objects} {...loaded.common_consts} />
+        <ObjectsPageHeader {...loaded.objects} {...loaded.commonConsts} />
         <Loader loaded={!loaded.isFetching} >
             <Table size='sm' bordered striped hover className='table-secondary'>
                     <thead className="thead-light">
@@ -28,12 +28,12 @@ const Products = props => {
                             {Object.keys(TableData).map((name, key) =>
                                 <th scope="col" key={key}>
                                     <Label {...{name}}
-                                           {...loaded.common_consts}
+                                           {...loaded.commonConsts}
                                            required={false} />
                                 </th>
                             )}
                             <th scope="col" colSpan={2}>
-                                <LinkToNew {...loaded.common_consts}/>
+                                <LinkToNew {...loaded.commonConsts}/>
                             </th>
                         </tr>
                     </thead>
@@ -42,16 +42,16 @@ const Products = props => {
                             <tr key={key}>
                                 {Object.values(TableData).map((value, key) =>
                                     <td scope="row" key={key}>
-                                        {value(object, loaded.common_consts)}
+                                        {value(object, loaded.commonConsts)}
                                     </td>
                                 )}
                                 <td>
                                     <LinkToEdit {...object}
-                                                {...loaded.common_consts} />
+                                                {...loaded.commonConsts} />
                                 </td>
                                 <td>
                                     <DeleteButton {...object} {...props}
-                                                  {...loaded.common_consts} />
+                                                  {...loaded.commonConsts} />
                                 </td>
                             </tr>
                         )}

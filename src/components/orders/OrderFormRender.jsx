@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Field } from 'react-final-form'
 import { Form, Row, Col, Table } from 'reactstrap'
 import { FieldArray } from 'react-final-form-arrays'
+import { toast } from 'react-toastify'
 import Input from '../Shared/Input'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import OrderItems from '../order_items/OrderItems'
@@ -13,23 +14,29 @@ import FormHeader from '../Shared/FormHeader'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 import Label from '../Shared/Label'
 import Errors from '../Shared/Errors'
-import { selectOptions } from '../redux/CommonConsts'
-import { selectFromCreatedAt, selectCustomerAndCityLabels } from '../redux/Orders'
-import { Actions } from '../redux/Customers'
+// import { selectOptions } from '../redux/CommonConsts'
+import { customerAndCityLabels, fromCreatedAt } from '../redux/Orders'
+import { config as customersConfig } from '../redux/Customers'
 import CustomerName from '../customers/CustomerName'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
 
-const OrderFormRender = props => {
-    const options = { options: useSelector(selectOptions) }
-    const customer_and_city_labels = useSelector(selectCustomerAndCityLabels)
+
+
+const OrderFormRender = ({ options, commonConsts, ...props }) => {
+    // const options = { options }
+    const customer_and_city_labels = customerAndCityLabels(options)
+    // console.log('initialValues ', props.initialValues)
+    // console.log('props ', props)
+
+    // const customer_and_city_labels = useSelector(selectCustomerAndCityLabels)
     return <Form    onSubmit={props.handleSubmit}
                     className="shadow p-3 mb-5 bg-body rounded">
             {props.hasSubmitErrors && <Errors {...props} />}
-            <FormHeader {...props} >
-                &nbsp;{useSelector(selectFromCreatedAt)}
+            <FormHeader {...{options}} {...props} {...commonConsts} >
+                &nbsp;{fromCreatedAt(props.initialValues, commonConsts)}
             </FormHeader>
             <Field  name="id"
-                    {...options}
+                    {...{options}}
                     hidden
                     component={Input} />
             <Row>
@@ -37,11 +44,11 @@ const OrderFormRender = props => {
                         component={DropdownListFormGroup}
                         dataKey='id'
                         textField={item => CustomerName(item, customer_and_city_labels)}
-                        search_path={Actions.search_url}
+                        search_path={customersConfig.searchUrl}
                         label_col_size={2}
                         renderListItem={({ item }) => CustomerName(item, customer_and_city_labels)}
                         renderValue={({ item }) => CustomerName(item, customer_and_city_labels)}
-                        {...options}
+                        {...{options}}
                 />
             </Row>
             <Row>
@@ -50,17 +57,19 @@ const OrderFormRender = props => {
                         name="delivery_type"
                         dataKey='value'
                         textField='display_name'
-                        {...options} />
+                        {...{options}} />
                 </Col>
                 <Col sm={6}>
                     <Field  name="address"
-                            {...options}
+                            {...{options}}
                             component={FloatingFormGroup}/>
                     </Col>
             </Row>
             <Table size="sm" responsive bordered hover>
                 <FieldArray name="order_items"
                             component={OrderItems}
+                            {...{options}}
+                            {...commonConsts}
                             />
                 <tfoot>
                     <tr>
@@ -90,12 +99,12 @@ const OrderFormRender = props => {
                                     component={Input} />
                         </td>
                     </tr>
-                    <GiftIfNeeded {...options} />
+                    <GiftIfNeeded {...{options}} />
                     <tr>
                         <td/>
                         <td>
                             <Label  name="samples"
-                                    {...options}/>
+                                    {...{options}} />
                         </td>
                         <td/>
                         <td/>
@@ -115,7 +124,7 @@ const OrderFormRender = props => {
                                     <Field  name="post_cost"
                                             type="number"
                                             component={FloatingFormGroup}
-                                            {...options} />
+                                            {...{options}} />
                                 </Col>
                                 +
                                 <Col sm={3}>
@@ -123,7 +132,7 @@ const OrderFormRender = props => {
                                         name="packet"
                                         dataKey='value'
                                         textField='display_name'
-                                        {...options} />
+                                        {...{options}} />
                                 </Col>
                                 =
                                 <Col sm={2}>
@@ -136,7 +145,7 @@ const OrderFormRender = props => {
                                 <Col sm={3}>
                                     <Field  name="post_discount"
                                             type="number"
-                                            {...options}
+                                            {...{options}}
                                             disabled
                                             component={FloatingFormGroup} />
                                 </Col>
@@ -147,7 +156,7 @@ const OrderFormRender = props => {
                         <td>
                             <Field  name="total_postals"
                                     type="number"
-                                    {...options}
+                                    {...{options}}
                                     disabled
                                     component={FloatingFormGroup} />
                         </td>
@@ -162,7 +171,7 @@ const OrderFormRender = props => {
                         <td/>
                         <td>
                             <Label  name="total_sum"
-                                    {...options} />
+                                    {...{options}} />
                         </td>
                         <td/>
                         <td/>

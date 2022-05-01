@@ -1,7 +1,7 @@
 const FormConsts = ({
-	Consts = {},
+  Consts = {},
 } = {}) => ({
-	Consts
-})
+  Consts,
+});
 
-export default FormConsts
+export default FormConsts;

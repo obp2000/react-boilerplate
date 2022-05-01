@@ -5,10 +5,8 @@ import { Field } from 'react-final-form'
 import { Form, Button } from 'reactstrap'
 import Input from '../Shared/Input'
 import SubmitButton from '../Shared/SubmitButton'
-import { selectCommonConsts } from '../redux/CommonConsts'
 
 const SearchFormRender = props => {
-    const searchLabel = useSelector(selectCommonConsts).search
     return <Form    onSubmit={props.handleSubmit}
                     inline
                     className="d-flex mt-2">

@@ -9,7 +9,7 @@ const TdInput = params =>
 
 TdInput.propTypes = {
     label: PropTypes.string,
-    form_text: PropTypes.array,
+    formText: PropTypes.array,
     size: PropTypes.number,
     colSpan: PropTypes.number
 }

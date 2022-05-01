@@ -24,9 +24,9 @@ import { selectLocation } from './Router'
 
 // export const getObjectsAction = createAsyncThunk(
 //         'getObjects',
-//         async (index_url, { getState }) => {
+//         async (indexUrl, { getState }) => {
 //             const { data } = await api.get(
-//                 index_url,
+//                 indexUrl,
 //                 { params: selectLocation(getState()).query }
 //             )
 //             return data
@@ -84,7 +84,7 @@ export const getObjectAction222 = actions => () => (dispatch, getState) => {
     } = getState()
     if (isAuthenticated) {
         dispatch(actions.requestObject())
-        if (pathname == `${actions.index_url}/new`) {
+        if (pathname == `${actions.indexUrl}/new`) {
             getOptions(actions, dispatch, getState,
                 null,
                 actions.failedReceiveObject)
@@ -108,7 +108,7 @@ const onSuccessCreateOrUpdateObject = (dispatch, actions, id, successfully) =>
         dispatch(actions.successUpdateObject(data))
         dispatch(clearErrors())
         toast.success(successfully)
-        return dispatch(push(actions.redirect_url))
+        return dispatch(push(actions.redirectUrl))
     }
 
 // export const onSubmitAction = (dispatch, actions, accessToken, flash) => values => {
@@ -122,12 +122,12 @@ export const onSubmitAction = actions => values => (dispatch, getState) => {
         auth: {
             accessToken,
         },
-        common_consts: {
+        commonConsts: {
             successfully
         }
     } = getState()
     if (accessToken) {
-        if (actions.pre_submit_action) actions.pre_submit_action(values)
+        if (actions.preSubmitAction) actions.preSubmitAction(values)
         const id = values.id
         dispatch(startRequest())
         return axios({
@@ -148,7 +148,7 @@ export const deleteObjectAction = actions => id => (dispatch, getState) => {
         auth: {
             accessToken,
         },
-        common_consts: {
+        commonConsts: {
             successfully
         }
     } = getState()
@@ -243,15 +243,15 @@ export const getOptions = (actions, dispatch, getState, getData, failed, method 
             data: {
                 actions: {
                     [method]: {
-                        common_consts,
+                        commonConsts,
                         ...options
                     }
                 }
             }
         }) => {
-            // console.log('common_consts ', common_consts)
+            // console.log('commonConsts ', commonConsts)
             dispatch(successRequest())
-            // dispatch(receiveCommonConsts({ ...common_consts, options }))
+            // dispatch(receiveCommonConsts({ ...commonConsts, options }))
             dispatch(clearErrors())
             // console.log('getData ', getData)
             if (getData) getData()
@@ -262,7 +262,7 @@ export const getOptions = (actions, dispatch, getState, getData, failed, method 
         //     // const { actions } = data
         //     console.log('actions ', data.actions)
         //     dispatch(successRequest())
-        //     // dispatch(receiveCommonConsts({ ...common_consts, options }))
+        //     // dispatch(receiveCommonConsts({ ...commonConsts, options }))
         //     dispatch(clearErrors())
         //     if (getData) getData()
         // })
@@ -394,14 +394,14 @@ export const getOptions = (actions, dispatch, getState, getData, failed, method 
 //             data: {
 //                 actions: {
 //                     POST: {
-//                         common_consts,
+//                         commonConsts,
 //                         ...options
 //                     }
 //                 }
 //             }
 //         }) => {
 //             dispatch(successRequest())
-//             dispatch(receiveCommonConsts(common_consts))
+//             dispatch(receiveCommonConsts(commonConsts))
 //             dispatch(actions.successReceiveObject({
 //                 ...actions.initObject,
 //                 options

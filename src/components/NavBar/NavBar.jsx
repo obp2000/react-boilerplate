@@ -11,79 +11,87 @@ import {
     Badge,
     Button
 } from 'reactstrap'
-import { NavLink, useLocation, useParams } from 'react-router-dom'
+import { NavLink, Redirect, useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import Loader from 'react-loader'
 import AuthModal from '../auth/AuthModal'
 import SearchForm from '../Search/SearchForm'
-import { selectMainMenu, selectCommonConsts } from '../redux/CommonConsts'
-import { selectOnClickAuthButton, authButtonLabel, selectAuth } from '../redux/auth'
-import { useGetOptionsQuery, useCommonConsts } from '../../services/apiSlice'
+import { selectAuth, toggleModal } from '../redux/auth'
+import { useGetOptionsQuery, useSignOutMutation } from '../../services/apiSlice'
+import SignOutButton from '../auth/SignOutButton'
 
-const NavBar = ({ index_url }) => {
-    const auth = useSelector(selectAuth)
-    // console.log('useLocation ', useLocation())
-    // let common_consts = {}
+const NavBar = ({ indexUrl }) => {
+    const { isAuthenticated, user } = useSelector(selectAuth)
+    // const { push } = useHistory()
     const {
         data: {
-            common_consts
+            commonConsts = {}
         } = {},
         isLoading,
+        isFetching: isOptionsFetching,
         isSuccess,
         isError,
         error
-    } = useGetOptionsQuery({
-        url: index_url,
-        params: {
-            isAuthenticated: auth?.isAuthenticated
+    } = useGetOptionsQuery(indexUrl)
+    const { login, register } = commonConsts
+    const dispatch = useDispatch()
+    const [
+        signOutAction,
+        {
+            isLoading: isLoadingSignOut,
+            data: {
+                detail: successSignOutMessage
+            } = {},
+            isSuccess: isSuccessSignOut,
+            isError: isErrorSignOut,
+            error: signOutError
         }
-    })
-    // const common_consts = useCommonConsts({
-    //     url: index_url,
-    //     params: {
-    //         isAuthenticated: auth?.isAuthenticated
-    //     }
-    // })
-
-    console.log('auth ', auth)
+    ] = useSignOutMutation()
+    let authButtonLabel = commonConsts?.auth_menu_item?.label
+    if (isAuthenticated) authButtonLabel = `${authButtonLabel} (${user?.username || ''})`
+    const onClickAuthButton = isAuthenticated ? () => signOutAction() : () => dispatch(toggleModal())
     return <>
-        <Navbar color="primary"
-                expand="md"
-                dark
-                className="py-0 mb-1" >
-            <NavbarBrand href="/">
-                <h3>
-                    <Badge pill size='lg'>{common_consts?.brand_text}</Badge>
-                </h3>
-            </NavbarBrand>
-            <NavbarToggler className="me-2"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation" />
-            <Collapse navbar id="navbarContent">
-                <Nav className="me-auto" navbar>
-                    {common_consts?.main_menu?.map(({path: to, label}, key) =>
-                        <NavItem key={key}>
-                            <NavLink to={to}
-                                     className="nav-link"
-                                     activeClassName="active">
-                                {label}
-                            </NavLink>
+        <Loader loaded={!isLoadingSignOut}>
+            <Navbar color="primary"
+                    expand="md"
+                    dark
+                    className="py-0 mb-1" >
+                <NavbarBrand href="/">
+                    <h3>
+                        <Badge pill size='lg'>{commonConsts?.brand_text}</Badge>
+                    </h3>
+                </NavbarBrand>
+                <NavbarToggler className="me-2"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation" />
+                <Collapse navbar id="navbarContent">
+                    <Nav className="me-auto" navbar>
+                        {commonConsts?.main_menu?.map(({path: to, label}, key) =>
+                            <NavItem key={key}>
+                                <NavLink to={to}
+                                         className="nav-link"
+                                         activeClassName="active">
+                                    {label}
+                                </NavLink>
+                            </NavItem>
+                        )}
+                        <NavItem>
+                            <Button color='primary'
+                                    className='btn-outline-light'
+                                    onClick={onClickAuthButton}
+                                    aria-label='auth' >
+                                    {authButtonLabel}
+                            </Button>
                         </NavItem>
-                    )}
-                    <NavItem>
-                        <Button color='primary'
-                                className='btn-outline-light'
-                                onClick={useSelector(selectOnClickAuthButton(useDispatch()))}
-                                aria-label='auth' >
-                            {authButtonLabel(auth, common_consts)}
-                        </Button>
-                    </NavItem>
-                </Nav>
-                <SearchForm {...common_consts} />
-            </Collapse>
-        </Navbar>
-        <AuthModal />
+                    </Nav>
+                    <SearchForm {...commonConsts} />
+                </Collapse>
+            </Navbar>
+        </Loader>
+        <AuthModal {...commonConsts} />
     </>
 }
 

@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { Form } from 'react-final-form'
-// import { validate } from './Validators'
-import { onSubmit } from '../redux/Search'
+import querystring from 'querystring'
 import SearchFormRender from './SearchFormRender'
 
 const SearchForm = props => {
     const { pathname } = useLocation()
-    const dispatch = useDispatch()
+    const { push } = useHistory()
+    const onSubmit = ({ term }) =>
+      push(`${pathname}?${querystring.stringify({term})}`)
     return <Form name='search'
               // validate={validate}
-              onSubmit={onSubmit(dispatch, pathname)}
+              onSubmit={onSubmit}
               render={SearchFormRender}
               {...props}
             />

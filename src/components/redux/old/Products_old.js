@@ -1,38 +1,38 @@
-import { createAction, createReducer } from 'redux-act'
+import { createAction, createReducer } from 'redux-act';
 // import axios from 'axios'
 // import { change } from 'redux-form'
 // import { push, goBack } from 'connected-react-router'
-import config from '../Config'
+import config from '../Config';
 // import { validate } from '../products/Validators'
 import {
-    // error_handler,
-    // extract_data,
-    // extract_results,
-    init_objects_info,
-    // reduceRequestObjects,
-    // reduceReceiveObjects,
-    buildGetObjectsAction,
+  // error_handler,
+  // extract_data,
+  // extract_results,
+  init_objects_info,
+  // reduceRequestObjects,
+  // reduceReceiveObjects,
+  buildGetObjectsAction,
 
-    // reduceRequestObject,
-    // reduceReceiveObject,
-    buildGetObjectAction,
+  // reduceRequestObject,
+  // reduceReceiveObject,
+  buildGetObjectAction,
 
-    // reduceRequestUpdateObject,
-    // reduceReceiveUpdateObject,
-    buildOnSubmitAction,
+  // reduceRequestUpdateObject,
+  // reduceReceiveUpdateObject,
+  buildOnSubmitAction,
 
-    // reduceRequestDeleteObject,
-    // reduceReceiveDeleteObject,
-    buildDeleteObjectAction,
+  // reduceRequestDeleteObject,
+  // reduceReceiveDeleteObject,
+  buildDeleteObjectAction,
 
-    // reduceRequestSearchObjects,
-    // reduceRecieveSearchObjects,
-    builSearchObjectsAction,
-    buildReducer,
+  // reduceRequestSearchObjects,
+  // reduceRecieveSearchObjects,
+  builSearchObjectsAction,
+  buildReducer,
 
-} from './common_actions'
+} from './common_actions';
 
-const base_url = `${config.BACKEND}/api/products`
+const base_url = `${config.BACKEND}/api/products`;
 
 // const reducer_actions = {}
 
@@ -47,30 +47,30 @@ const base_url = `${config.BACKEND}/api/products`
 // reducer_actions[receiveObjects] = reduceReceiveObjects
 
 export const getObjectsAction = buildGetObjectsAction({
-    // requestObjects,
-    // receiveObjects,
-    base_url
-})
+  // requestObjects,
+  // receiveObjects,
+  base_url,
+});
 
 // Get object
 
 export const initObject = {
-    id: null,
-    name: '',
-    price: null,
-    density: null,
-    weight: null,
-    width: null,
-    density: null,
-    dollar_price: null,
-    dollar_rate: null,
-    width_shop: null,
-    density_shop: null,
-    weight_for_count: null,
-    length_for_count: null,
-    price_pre: null,
-    image: null
-}
+  id: null,
+  name: '',
+  price: null,
+  density: null,
+  weight: null,
+  width: null,
+  density: null,
+  dollar_price: null,
+  dollar_rate: null,
+  width_shop: null,
+  density_shop: null,
+  weight_for_count: null,
+  length_for_count: null,
+  price_pre: null,
+  image: null,
+};
 
 // const requestObject = createAction()
 
@@ -81,26 +81,26 @@ export const initObject = {
 // reducer_actions[receiveObject] = reduceReceiveObject(initObject)
 
 export const getObjectAction = buildGetObjectAction({
-    // requestObject,
-    // receiveObject,
-    base_url
-})
+  // requestObject,
+  // receiveObject,
+  base_url,
+});
 
 // Create or update object
 
-const redirect_url = '/products'
+const redirectUrl = '/products';
 
-const to_form_data = true
+const to_form_data = true;
 
-const pre_submit_action = values => {
-     // console.log('values: ', values, typeof(values.image))
-    if (values.new_image) {
-        values.image = values.new_image
-    } else {
-        delete values.image
-    }
-    delete values.new_image
-}
+const preSubmitAction = (values) => {
+  // console.log('values: ', values, typeof(values.image))
+  if (values.new_image) {
+    values.image = values.new_image;
+  } else {
+    delete values.image;
+  }
+  delete values.new_image;
+};
 
 // const requestUpdateObject = createAction()
 
@@ -130,13 +130,13 @@ const pre_submit_action = values => {
 // }
 
 export const onSubmit = buildOnSubmitAction({
-    // requestUpdateObject,
-    // receiveUpdateObject,
-    base_url,
-    redirect_url,
-    to_form_data,
-    pre_submit_action
-})
+  // requestUpdateObject,
+  // receiveUpdateObject,
+  base_url,
+  redirectUrl,
+  to_form_data,
+  preSubmitAction,
+});
 
 // Delete object
 
@@ -149,10 +149,10 @@ export const onSubmit = buildOnSubmitAction({
 // reducer_actions[receiveDeleteObject] = reduceReceiveDeleteObject
 
 export const deleteObjectAction = buildDeleteObjectAction({
-    // requestDeleteObject,
-    // receiveDeleteObject,
-    base_url
-})
+  // requestDeleteObject,
+  // receiveDeleteObject,
+  base_url,
+});
 
 // Search objects
 
@@ -165,10 +165,10 @@ export const deleteObjectAction = buildDeleteObjectAction({
 // reducer_actions[receiveSearchObjects] = reduceRecieveSearchObjects
 
 export const onChangeProduct = builSearchObjectsAction({
-    // requestSearchObjects,
-    // receiveSearchObjects,
-    base_url
-})
+  // requestSearchObjects,
+  // receiveSearchObjects,
+  base_url,
+});
 
 // export const onSelectProduct = ({
 //     price
@@ -181,24 +181,22 @@ export const onChangeProduct = builSearchObjectsAction({
 // Create reducer
 
 const initialState = {
-    ...init_objects_info,
-    isFetching: false,
-    didInvalidate: false,
-    loaded: false,
-    object: initObject,
-    search_results: []
-}
+  ...init_objects_info,
+  isFetching: false,
+  didInvalidate: false,
+  loaded: false,
+  object: initObject,
+  search_results: [],
+};
 
-export default buildReducer(initialState)
+export default buildReducer(initialState);
 // export default createReducer(reducer_actions, initialState)
-
 
 // export const deleteObjectAction = id => dispatch => {
 //     dispatch(requestDeleteProduct())
 //     return deleteProduct(id)
 //         .then(() => dispatch(receiveDeleteProduct(id)))
 // }
-
 
 // const requestProducts = createAction()
 // const receiveProducts = createAction()
@@ -313,8 +311,6 @@ export default buildReducer(initialState)
 
 // Server requests:
 
-
-
 // const new_object_test = (id) => (id == 'new')
 
 // const getProducts = (page, term) => axios.get(`${base_url}/`, {
@@ -331,8 +327,6 @@ export default buildReducer(initialState)
 //     .catch(error_handler)
 //     .then(extract_data)
 
-
-
 // const deleteProduct = (id) => axios.delete(`${base_url}/${id}`)
 //     .catch(error_handler)
 
@@ -347,13 +341,6 @@ export default buildReducer(initialState)
 //     .then(extract_results)
 
 // Async actions:
-
-
-
-
-
-
-
 
 // export const onSubmit = (values) => (dispatch, getState) => {
 //     const {
@@ -370,17 +357,10 @@ export default buildReducer(initialState)
 //     }
 // }
 
-
 // export const onSubmitSuccess = (product, dispatch) => {
 //     dispatch(receiveUpdateProduct(product))
 //     dispatch(push('/products'))
 // }
-
-
-
-
-
-
 
 // export const onSearchCustomer = value => (dispatch, getState) => {
 //     const {
@@ -399,8 +379,6 @@ export default buildReducer(initialState)
 //         alert('sssssssss')
 //     }
 // }
-
-
 
 // redux form
 

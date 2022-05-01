@@ -52,7 +52,7 @@ const initialState = {
     search_results: []
 }
 
-const redirect_url = '/customers'
+const redirectUrl = '/customers'
 
 // var reducer_actions = {}
 
@@ -105,7 +105,7 @@ export const onSubmit = buildOnSubmitAction({
     // requestUpdateObject,
     // receiveUpdateObject,
     base_url,
-    redirect_url
+    redirectUrl
 })
 
 // Delete object

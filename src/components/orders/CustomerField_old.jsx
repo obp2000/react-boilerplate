@@ -17,7 +17,7 @@ const CustomerField = ({
             component={DropdownListFormGroup}
             dataKey='id'
             textField={item => CustomerName(item, customer_props)}
-            search_path={Actions.search_url}
+            search_path={Actions.searchUrl}
             label_col_size={2}
             renderListItem={({ item }) => CustomerName(item, customer_props)}
             renderValue={({ item }) => CustomerName(item, customer_props)}

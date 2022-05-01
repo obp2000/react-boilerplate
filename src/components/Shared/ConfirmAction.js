@@ -1,21 +1,19 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Confirmation from "./Confirmation"
+import confirmationComp from './Confirmation'
 
-const ConfirmAction = (action,
-        text,
-        proceedLabel = 'Ok',
-        cancelLabel = 'cancel') =>
-    async () => {
-        const confirm = confirmation => Confirmation({
-            confirmation,
-            proceedLabel,
-            cancelLabel
-        })
-
-        if (await confirm(text)) {
-            action()
-        }
-    }
+const ConfirmAction = (
+    action,
+    text,
+    proceedLabel = 'Ok',
+    cancelLabel = 'Cancel',
+) => async () => {
+  const confirm = (confirmation) => confirmationComp({
+    confirmation,
+    proceedLabel,
+    cancelLabel,
+  })
+  if (await confirm(text)) {
+    action()
+  }
+}
 
 export default ConfirmAction

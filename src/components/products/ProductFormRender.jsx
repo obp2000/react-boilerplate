@@ -5,19 +5,19 @@ import { Field } from 'react-final-form'
 import { Form, Row, Col } from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
-import ImageFormGroup from '../Shared/ImageFormGroup'
+// import ImageFormGroup from '../Shared/ImageFormGroup'
 import SwitchFormGroup from '../Shared/SwitchFormGroup'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
 import Errors from '../Shared/Errors'
-import { selectOptions } from '../redux/CommonConsts'
-import { selectImageProps } from '../redux/Products'
+// import { selectImageProps } from '../redux/Products'
 // import { formatPrice, normalizePhone } from '../Shared/Formatters'
 import blank from '../../assets/img/blank.png'
-import { selectImage } from '../redux/Products'
+// import { selectImage } from '../redux/Products'
 
 const ProductFormRender = props => {
-    const options = { options: useSelector(selectOptions) }
+    const options = { options: props.options}
+    // console.log('props.hasSubmitErrors ', props.hasSubmitErrors)
     return <Form    onSubmit={props.handleSubmit}
                     className="p-3 mb-5 bg-body">
             {props.hasSubmitErrors && <Errors {...props} />}
@@ -30,8 +30,8 @@ const ProductFormRender = props => {
                 {/*<Row>*/}
                 <fieldset className="row my-2 py-2 border shadow">
                     <Col sm={2}>
-                        <img    alt={useSelector(selectImageProps).label}
-                                src={useSelector(selectImage)}
+                        <img    alt={props.options?.image?.label}
+                                src={props.initialValues.image || String(blank)}
                                 className='img-thumbnail rounded float-start'
                         />
                     </Col>
@@ -53,6 +53,7 @@ const ProductFormRender = props => {
                             </Col>
                             <Col sm={2}>
                                 <Field  name="fleece"
+                                        type='checkbox'
                                         {...options}
                                         component={SwitchFormGroup}/>
                             </Col>
@@ -71,7 +72,8 @@ const ProductFormRender = props => {
                             <Col sm={3}>
                                 <Field  name="new_image"
                                         {...options}
-                                        component={ImageFormGroup} />
+                                        type='file'
+                                        component={FloatingFormGroup} />
                             </Col>
                         </Row>
                     </Col>
@@ -106,11 +108,6 @@ const ProductFormRender = props => {
                         <Field  name="price"
                                 {...options}
                                 type='number'
-                                // parse={normalizePhone}
-                                // parse={value => value.replace(/[^\d]/g, "")}
-                                // format={formatPrice}
-                                // formatOnBlur
-                                // placeholder="$0.00"
                                 component={FloatingFormGroup} />
                     </Col>
                     <Col sm={9}>

@@ -1,5 +1,5 @@
 import { rest } from 'msw'
-import config from '../components/Config'
+import { baseUrl } from '../services/apiSlice'
 
 const options = {
     "name": "Customer List",
@@ -245,21 +245,10 @@ const objects = {
 }
 
 export const handlers = [
-    rest.options(`${config.BACKEND}/api/customers/`, (req, res, ctx) => {
-        const { searchParams } = req.url
-        console.log('req.params options', req.params)
-        // rest.get(`${config.BACKEND}/api/customers/`, (req, res, ctx) => {
-        //     console.log('req get', req)
-        //     return res(ctx.json(objects))
-        // })
-        // rest.get('*/api/', (req, res, ctx) => {
-        //  console.log( 'req.url get', req.url )
-        //     return res(ctx.json(objects))
-        // })
+    rest.options(`${baseUrl}/customers/`, (req, res, ctx) => {
         return res(ctx.json(options))
     }),
-    rest.get(`${config.BACKEND}/api/customers/`, (req, res, ctx) => {
-        console.log('req get', req)
+    rest.get(`${baseUrl}/customers/`, (req, res, ctx) => {
         return res(ctx.json(objects))
     }),
 ]

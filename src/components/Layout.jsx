@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
-import { ConnectedRouter } from 'connected-react-router'
+import { HashRouter, Route, Switch } from 'react-router-dom'
+// import { ConnectedRouter } from 'connected-react-router'
 import { Container } from 'reactstrap'
 // import {
 //   TransitionGroup,
@@ -10,73 +10,93 @@ import { Container } from 'reactstrap'
 import Errors from './Shared/Errors'
 import { ToastContainer, Zoom } from 'react-toastify'
 import NavBar from './NavBar/NavBar'
-import Products from './products/Containers/Products'
+import AuthModal from './auth/AuthModal'
+// import Products from './products/Products'
+import { config as productsConfig } from './redux/Products'
 import Product from './products/ProductForm'
 // import Customers from './customers/Containers/Customers'
+import { config as customersConfig } from './redux/Customers'
 import Customer from './customers/CustomerForm'
-import Orders from './orders/Containers/Orders'
+// import Orders from './orders/Orders'
+import { config as ordersConfig } from './redux/Orders'
 import Order from './orders/OrderForm'
 // import Profile from './profile/Containers/Profile'
 import PrivateRoute from './Shared/privateRoute'
-import RegisterForm from './auth/Containers/RegisterForm'
-import LoginForm from './auth/Containers/LoginForm'
-import User from './users/Containers/User'
+import RegisterForm from './auth/RegisterForm'
+import LoginForm from './auth/LoginForm'
+import User from './users/User'
 
 import ObjectsTable from './Shared/ObjectsTable'
 
-const Layout = props =>
+const Layout = () =>
     <Container fluid="sm" className="bg-light border">
       <ToastContainer position="top-center"
                       autoClose={2000}
                       transition={Zoom}
                       theme="colored"
+                      closeOnClick
+                      draggable
                       hideProgressBar={true}
+                      limit={1}
                       />
-      <Errors />
-      <ConnectedRouter {...props} >
+      {/*<Errors />*/}
+      <HashRouter>
         {/*<Route path="/" component={Errors} />*/}
         {/*<Route path="/" render={routeProps => <NavBar {...routeProps} />} />*/}
-        <Route path="/signup" component={RegisterForm}/>
-        <Route path="/login" component={LoginForm}/>
+{/*        <Route path="/signup" component={RegisterForm}/>
+        <Route path="/login" component={LoginForm}/>*/}
         <Switch>
 {/*          <Route  path="/customers/:id"
                   render={routeProps => <Customer {...routeProps} />} />*/}
           {/*<Route path="/customers" componenet={Customers} />*/}
 {/*          <Route  path="/customers"
-                  render={routeProps => <ObjectsTable {...routeProps} index_url='/customers/' />} />*/}
+                  render={routeProps => <ObjectsTable {...routeProps} indexUrl='/customers/' />} />*/}
           <Route path="/customers/:id">
-            <NavBar index_url='/customers/' />
-            <Customer index_url='/customers/' />
+            <NavBar {...customersConfig} />
+            <Customer {...customersConfig} />
           </Route>
           <Route path="/customers">
-            <NavBar index_url='/customers/' />
-            <ObjectsTable index_url='/customers/' />
+            <NavBar {...customersConfig} />
+            <ObjectsTable {...customersConfig} />
           </Route>
-          <Route  path="/products/:id"
-                  render={routeProps => <Product {...routeProps} />} />
+          <Route path="/products/:id">
+            <NavBar {...productsConfig} />
+            <Product {...productsConfig} />
+          </Route>
+{/*          <Route  path="/products/:id"
+                  render={routeProps => <Product {...routeProps} />} />*/}
           <Route path="/products">
-            <NavBar index_url='/products/' />
-            <ObjectsTable index_url='/products/' />
+            <NavBar {...productsConfig} />
+            <ObjectsTable {...productsConfig} />
           </Route>
 {/*          <Route  path="/products"
-                  render={routeProps => <ObjectsTable {...routeProps} index_url='/products/' />} />*/}
-          <Route  path="/orders/:id"
-                  render={routeProps => <Order {...routeProps} />} />
+                  render={routeProps => <ObjectsTable {...routeProps} indexUrl='/products/' />} />*/}
+          <Route path="/orders/:id">
+            <NavBar {...ordersConfig} />
+            <Order {...ordersConfig} />
+          </Route>
+{/*          <Route  path="/orders/:id"
+                  render={routeProps => <Order {...routeProps} />} />*/}
           <Route path="/orders">
-            <NavBar index_url='/orders/' />
-            <ObjectsTable index_url='/orders/' />
+            <NavBar {...ordersConfig} />
+            <ObjectsTable {...ordersConfig} />
           </Route>
 {/*          <Route  path="/orders"
-                  render={routeProps => <ObjectsTable {...routeProps} index_url='/orders/' />} />*/}
-          <PrivateRoute path="/user/" component={User} />
+                  render={routeProps => <ObjectsTable {...routeProps} indexUrl='/orders/' />} />*/}
+          <Route path="/user">
+            <NavBar indexUrl='/user/' />
+            <PrivateRoute path="/user/" component={User} />
+          </Route>
+          {/*<PrivateRoute path="/user/" component={User} />*/}
 {/*          <Route  path="/"
-                  render={routeProps => <ObjectsTable {...routeProps} index_url='/customers/' />} />*/}
+                  render={routeProps => <ObjectsTable {...routeProps} indexUrl='/customers/' />} />*/}
           <Route path="/">
-            <NavBar index_url='/customers/' />
-            <ObjectsTable index_url='/customers/' />
+            <NavBar {...customersConfig} />
+            <ObjectsTable {...customersConfig} />
           </Route>
         </Switch>
-      </ConnectedRouter>
+      </HashRouter>
+      {/*<AuthModal />*/}
     </Container>
 
 Layout.propTypes = {

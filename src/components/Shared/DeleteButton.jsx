@@ -1,29 +1,62 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-// import { useSelector } from 'react-redux'
-import { Button } from 'reactstrap'
-import ConfirmAction from './ConfirmAction'
-// import { selectCommonConsts } from '../redux/CommonConsts'
-// import { useCommonConsts } from '../../services/apiSlice'
+import {toast} from 'react-toastify'
+import {Button} from 'reactstrap'
+import confirmAction from './ConfirmAction'
 
 const DeleteButton = ({
-    id,
-    deleteObjectAction,
-    delete: delete_text,
-    yes,
-    no
+  url,
+  id,
+  deleteObjectAction,
+  delete: deleteText,
+  yes,
+  no,
+  successfully,
 }) => {
-    return <Button size='sm'
-            outline
-            onClick={ConfirmAction(() => deleteObjectAction(id),
-                    `${delete_text}?`, yes, no)}>
-        {delete_text}
-    </Button>
+  return <Button size='sm'
+    outline
+    onClick={confirmAction(() => deleteObjectAction({url, id}).unwrap()
+        .then(() => {
+          toast.dismiss()
+          toast.success(successfully)
+        })
+        .catch(({data}) => toast.error(data.detail, {autoClose: false})),
+    `${deleteText}?`, yes, no)}>
+    {deleteText}
+  </Button>
 }
 
 DeleteButton.propTypes = {
-    id: PropTypes.number,
-    deleteObjectAction: PropTypes.func.isRequired
+  url: PropTypes.string,
+  id: PropTypes.number,
+  deleteObjectAction: PropTypes.func.isRequired,
+  delete: PropTypes.string,
+  yes: PropTypes.string,
+  no: PropTypes.string,
+  successfully: PropTypes.string,
 }
 
 export default DeleteButton
+
+export const DeleteOrderItemButton = ({
+  id,
+  deleteObjectAction,
+  delete: deleteText,
+  yes,
+  no,
+}) => {
+  return <Button size='sm'
+    outline
+    onClick={confirmAction(() => deleteObjectAction(id),
+        `${deleteText}?`, yes, no)}>
+    {deleteText}
+  </Button>
+}
+
+DeleteOrderItemButton.propTypes = {
+  id: PropTypes.number,
+  deleteObjectAction: PropTypes.func.isRequired,
+  delete: PropTypes.string,
+  yes: PropTypes.string,
+  no: PropTypes.string,
+}

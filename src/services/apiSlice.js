@@ -1,30 +1,39 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { objectToFormData } from 'object-to-formdata'
-import { tokenHeaders } from '../components/redux/auth'
+import { setAuthenticated } from '../components/redux/auth'
+
+export const baseUrl = 'http://127.0.0.1:8000/api'
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:8000/api' }),
-    tagTypes: ['Posts'],
+    baseQuery: fetchBaseQuery({
+        baseUrl,
+        prepareHeaders: (headers, { getState }) => {
+            const {
+                auth: {
+                    accessToken
+                }
+            } = getState()
+            if (accessToken) headers.set('Authorization', `Token ${accessToken}`)
+            return headers
+        },
+    }),
+    tagTypes: ['Posts', 'CurrentUser', 'Options'],
     endpoints: builder => ({
         getOptions: builder.query({
-            query: ({
-                url = '/',
-                params
-            } = {}) => ({
+            query: url => ({
                 url,
                 method: 'OPTIONS',
-                params
             }),
             transformResponse: ({
-                    common_consts,
-                    actions
-                },
-                meta,
-                arg) => ({
-                common_consts,
-                options: actions.POST || actions.PUT
-            })
+                common_consts: commonConsts,
+                actions
+            }, meta, arg) => ({
+                commonConsts,
+                options: actions.POST || actions.PUT,
+                arg
+            }),
+            providesTags: ['Options'],
         }),
         getObjects: builder.query({
             query: ({
@@ -35,25 +44,20 @@ export const apiSlice = createApi({
                 params
             }),
             providesTags: ({ results }) =>
-                // is result available?
-                results ? // successful query
-                [
+                results ? [
                     ...results.map(({ id }) => ({ type: 'Posts', id })),
                     { type: 'Posts', id: 'LIST' },
-                ] : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-                [{ type: 'Posts', id: 'LIST' }],
+                ] : [{ type: 'Posts', id: 'LIST' }],
         }),
         createObject: builder.mutation({
             query: ({
                 url,
-                accessToken,
                 to_form_data,
                 ...values
             }) => ({
                 url,
                 method: 'POST',
                 body: to_form_data ? objectToFormData(values) : values,
-                ...tokenHeaders(accessToken, to_form_data)
             }),
             invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
         }),
@@ -61,10 +65,8 @@ export const apiSlice = createApi({
             query: ({
                 url,
                 id,
-                accessToken
             }) => ({
-                url: `${url}${to_object_id(id)}`,
-                ...tokenHeaders(accessToken)
+                url: `${url}${id}/`,
             }),
             providesTags: (result, error, { id }) => [{ type: 'Posts', id }],
         }),
@@ -72,28 +74,121 @@ export const apiSlice = createApi({
             query: ({
                 url,
                 id,
-                accessToken,
                 to_form_data,
                 ...values
             }) => ({
                 url: `${url}${id}/`,
                 method: 'PUT',
-                body: to_form_data ? objectToFormData(values) : values,
-                ...tokenHeaders(accessToken, to_form_data)
+                body: to_form_data ? objectToFormData(values) : values
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Posts', id }],
+            async onQueryStarted({
+                url,
+                id,
+                accessToken,
+                to_form_data,
+                ...values
+            }, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: updatedObject } = await queryFulfilled
+                    const patchResult = dispatch(
+                        apiSlice.util.updateQueryData('getObject', { url, id, accessToken },
+                            draft => ({ ...draft, ...updatedObject })
+                        )
+                    )
+                } catch {}
+            },
+            invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+            // invalidatesTags: (result, error, { id }) => [{ type: 'Posts', id }],
         }),
         deleteObject: builder.mutation({
             query: ({
                 url,
                 id,
-                accessToken,
             }) => ({
-                url: `${url}${to_object_id(id)}`,
+                url: `${url}${id}/`,
                 method: 'DELETE',
-                ...tokenHeaders(accessToken, to_form_data)
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Posts', id }],
+            invalidatesTags: (result, error, { id }) => [{ type: 'Posts', id },
+                { type: 'Posts', id: 'LIST' }
+            ]
+        }),
+        getUser: builder.query({
+            query: () => '/user/',
+            // async queryFn(args, queryApi, extraOptions, baseQuery) {
+            //     const optionsResult = await baseQuery('/user/', {method: 'OPTIONS'})
+            //     if (optionsResult.error) throw optionsResult.error
+            //     const result = await baseQuery('/user/')
+            //     console.log('result ', result)
+            //     return result.data ? { data: result.data } : { error: result.error }
+            // },
+
+            // providesTags: (result, error, { id }) => [{ type: 'Posts', id }],
+            providesTags: ['CurrentUser']
+        }),
+        getAuthOptions: builder.query({
+            query: url => ({
+                url,
+                method: 'OPTIONS',
+            }),
+            transformResponse: ({
+                actions
+            }, meta, arg) => ({
+                options: actions.POST || actions.PUT,
+            }),
+            // providesTags: ['Options'],
+        }),
+        login: builder.mutation({
+            // query: credentials => ({
+            //     url: '/login/',
+            //     method: 'POST',
+            //     body: credentials,
+            // }),
+            async queryFn(args, { dispatch }, extraOptions, baseQuery) {
+                const result = await baseQuery({
+                    url: '/login/',
+                    method: 'POST',
+                    body: args})
+                if (result.error) return result
+                dispatch(setAuthenticated(result.data))
+                dispatch(apiSlice.endpoints.getUser.initiate())
+                return result
+            },
+            invalidatesTags: (result, error) => error ? [] : ['Options']
+        }),
+        register: builder.mutation({
+            // query: values => ({
+            //     url: '/register/',
+            //     method: 'POST',
+            //     body: values,
+            // }),
+            async queryFn(args, { dispatch }, extraOptions, baseQuery) {
+                const result = await baseQuery({
+                    url: '/register/',
+                    method: 'POST',
+                    body: args})
+                if (result.error) return result
+                dispatch(setAuthenticated(result.data))
+                dispatch(apiSlice.endpoints.getUser.initiate())
+                return result
+            },
+            invalidatesTags: (result, error) => error ? [] : ['Options']
+        }),
+        signOut: builder.mutation({
+            query: () => ({
+                url: '/logout/',
+                method: 'POST',
+            }),
+            invalidatesTags: ['Options']
+        }),
+        searchObjects: builder.query({
+            query: ({
+                url,
+                params
+            }) => ({
+                url,
+                params
+            }),
+            transformResponse: ({ results }, meta, arg) => results,
         }),
     })
 })
@@ -106,35 +201,42 @@ export const {
     useGetObjectQuery,
     useCreateObjectMutation,
     useUpdateObjectMutation,
-    useDeleteObjectMutation
+    useDeleteObjectMutation,
+    useGetUserQuery,
+    useGetAuthOptionsQuery,
+    useLoginMutation,
+    useRegisterMutation,
+    useSignOutMutation,
+    useSearchObjectsQuery
 } = apiSlice
 
-const emptyData = {}
-const emptyCommonConsts = {}
+export const {searchObjects} = apiSlice.endpoints
 
-export const useCommonConsts = ({ url, params } = {}) =>
-    useGetOptionsQuery({ url, params }, {
-        selectFromResult: ({
-            data: {
-                common_consts
-            } = emptyData
-        }) => common_consts
-    })
+const emptyObject = {}
 
-export const useOptions = ({ url, params }) =>
-    useGetOptionsQuery({ url, params }, {
-        selectFromResult: ({
-            data: {
-                options
-            } = emptyData
-        }) => options
-    })
+// export const useCommonConsts = ({ url, params } = {}) =>
+//     useGetOptionsQuery({ url, params }, {
+//         selectFromResult: ({
+//             data: {
+//                 commonConsts
+//             } = emptyObject
+//         }) => commonConsts
+//     })
 
-// export const getObjectsThunk = index_url => createAsyncThunk(
+// export const useOptions = ({ url, params } = {}) =>
+//     useGetOptionsQuery({ url, params }, {
+//         selectFromResult: ({
+//             data: {
+//                 options
+//             } = emptyObject
+//         }) => options
+//     })
+
+// export const getObjectsThunk = indexUrl => createAsyncThunk(
 //     'getObjects',
 //     async (_, { getState }) => {
 //         const { data } = await api.get(
-//             index_url, { params: selectLocation(getState()).query }
+//             indexUrl, { params: selectLocation(getState()).query }
 //         )
 //         return data
 //     }
