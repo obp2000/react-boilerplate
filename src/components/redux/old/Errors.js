@@ -1,15 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
   errors: null,
-};
+}
 
 export const errorsSlice = createSlice({
   name: 'errors',
   initialState,
   reducers: {
-    receiveErrors: (state, { payload }) => {
-      console.error('e: ', payload);
+    receiveErrors: (state, {payload}) => {
+      console.error('e: ', payload)
       // console.log('payload keys ..... ', payload.message)
       // const {
       //     message,
@@ -30,18 +30,18 @@ export const errorsSlice = createSlice({
       // } else if (error.toJSON().message) {
       //     error_messsages = [error.toJSON().message]
       // }
-      state.errors = [payload.message];
+      state.errors = [payload.message]
     },
     clearErrors: (state) => initialState,
   },
-});
+})
 
 export const {
   receiveErrors,
   clearErrors,
-} = errorsSlice.actions;
+} = errorsSlice.actions
 
-export default errorsSlice.reducer;
+export default errorsSlice.reducer
 
 // const reducer_actions = {}
 

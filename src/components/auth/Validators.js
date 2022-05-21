@@ -11,14 +11,16 @@ export const validateLogin = ({
 
 export const validateRegister = ({
   blank,
-  invalid_email,
-  short_password,
-  password_mismatch,
+  invalid_email: invalidEmail,
+  short_password: shortPassword,
+  password_mismatch: passwordMismatch,
 } = {}) => (values) => ({
   ...notBlank(values, ['username', 'email', 'password1', 'password2'], blank),
-  ...validEmail(values, 'email', invalid_email),
-  ...passwordLength(values, 'password1', short_password),
-  ...validPasswordConfirmation(values, 'password1', 'password2', password_mismatch),
+  ...validEmail(values, 'email', invalidEmail),
+  ...passwordLength(values, 'password1', shortPassword),
+  ...validPasswordConfirmation(values, 'password1', 'password2',
+      passwordMismatch),
 })
 
-// export const validateRegister = values => notBlank(values, ['username', 'password'])
+// export const validateRegister = values =>
+//     notBlank(values, ['username', 'password'])

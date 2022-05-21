@@ -1,50 +1,59 @@
-import { ShortName } from '../customers/CustomerName';
-import { customerLabels } from './Customers';
-import { cityLabels } from './Cities';
-// import { useOptions } from '../../services/apiSlice'
+import createDecorator from 'final-form-submit-listener'
+import arrayMutators from 'final-form-arrays'
+import {shortName} from '../customers/CustomerName'
+import {customerLabels} from './Customers'
+import {cityLabels} from './Cities'
+import {initOrderItem} from './OrderItems'
+import OrderFormRender from '../orders/OrderFormRender'
+import {validate} from '../orders/Validators'
+import {orderCalculator} from '../orders/Calculator'
+import {orderItemsCalculator} from '../order_items/Calculator'
 
-const indexUrl = '/orders/';
-const redirectUrl = '/orders/';
-const searchUrl = indexUrl;
+const indexUrl = '/orders/'
+
+const redirectUrl = '/orders/'
+
+const searchUrl = indexUrl
+
 const preSubmitAction = (values) => {
   if (values.customer) {
-    values.customer_id = values.customer.id;
-    delete values.customer;
+    values.customer_id = values.customer.id
+    delete values.customer
   }
-  (values.order_items || []).map((order_item, index) => {
-    delete order_item.cost;
-    delete order_item.weight;
-    delete order_item._destroy;
-    if (order_item.product) {
-      order_item.product_id = order_item.product.id;
-      delete order_item.product;
+  (values.order_items || []).map((orderItem, index) => {
+    delete orderItem.cost
+    delete orderItem.weight
+    delete orderItem._destroy
+    if (orderItem.product) {
+      orderItem.product_id = orderItem.product.id
+      delete orderItem.product
       // delete order_item.product.name
       // delete order_item.product.get_product_type_display
       // delete order_item.product.get_threads_display
       // delete order_item.product.get_contents_display
     }
-  });
-  delete values.delivery_types;
-  delete values.packets;
-  delete values.samples_weight;
-  delete values.packet_weight;
-  delete values.post_cost_with_packet;
-  delete values.post_discount;
-  delete values.total_postals;
-  delete values.total_sum;
-  delete values.total_text;
-  delete values.total_weight;
-  delete values.order_items_amount;
-  delete values.order_items_cost;
-  delete values.order_items_weight;
-  delete values.created_at;
-  delete values.updated_at;
-  delete values.Consts;
-  delete values.gift_weight;
-  delete values.order_items_cost_label;
-  delete values.need_gift_label;
-  delete values.need_gift;
-};
+  })
+  delete values.delivery_types
+  delete values.packets
+  delete values.samples_weight
+  delete values.packet_weight
+  delete values.post_cost_with_packet
+  delete values.post_discount
+  delete values.total_postals
+  delete values.total_sum
+  delete values.total_text
+  delete values.total_weight
+  delete values.order_items_amount
+  delete values.order_items_cost
+  delete values.order_items_weight
+  delete values.created_at
+  delete values.updated_at
+  delete values.Consts
+  delete values.gift_weight
+  delete values.order_items_cost_label
+  delete values.need_gift_label
+  delete values.need_gift
+}
 
 const tableFieldNames = [
   'id',
@@ -52,147 +61,122 @@ const tableFieldNames = [
   'order_items_cost',
   'created_at',
   'updated_at',
-];
+]
 
 const rowData = (object, options) => [
   object.id,
-  ShortName(object?.customer, customerLabels(options?.customer?.children)),
+  shortName(object?.customer, customerLabels(options?.customer?.children)),
   object.order_items_cost,
   object.created_at,
   object.updated_at,
-];
+]
 
-export const config = {
-  indexUrl,
-  redirectUrl,
-  preSubmitAction,
-  searchUrl,
-  tableFieldNames,
-  rowData,
-};
+const submitListener = createDecorator({
+  beforeSubmit: (form) => {
+    // console.log('pre.....')
+    preSubmitAction(form.getState().values)
+  }
+})
 
-export const addOrderItemAction = (fields) => () => fields.push(initOrderItem);
-
-export const deleteOrderItemAction = (fields) => (id) => fields.remove(id);
-
-export const formInitialValues = (object, {
+const formInitialValues = (object, {
   Consts = {},
-  order_items_cost = {},
-  need_gift = {},
+  order_items_cost: orderItemsCost = {},
+  need_gift: needGift = {},
 }) => ({
   ...object,
   Consts,
   samples_weight: Consts?.SAMPLES_WEIGHT,
   packet_weight: Consts?.PACKET_WEIGHT,
   gift_weight: Consts?.GIFT_WEIGHT,
-  order_items_cost_label: order_items_cost.label,
-  need_gift_label: need_gift.label,
-});
+  order_items_cost_label: orderItemsCost.label,
+  need_gift_label: needGift.label,
+})
+
+const postCostCount = (args, state, {getIn, changeValue, resetFieldState}) => {
+  const pindex = getIn(state, 'formState.values.customer.city.pindex')
+  // console.log('pindex ', pindex)
+  const total_weight = getIn(state, 'formState.values.total_weight')
+  // console.log('total_weight ', total_weight)
+  const postBaseUrl = 'http://api.print-post.com/api/sendprice/v2/'
+
+  let params = new URLSearchParams()
+  params.set('from_index', '153038')
+  params.set('to_index', pindex)
+  params.set('weight', total_weight)
+
+  fetch(`${postBaseUrl}?${params.toString()}`)
+  .then(response => response.json())
+  .then(({posilka_nds}) => {
+    changeValue(state, 'post_cost', (oldValue) => parseInt(posilka_nds))
+    return resetFieldState('post_cost')
+  })
+  .catch((e) => console.error(e))
+}
+
+const config = {
+  indexUrl,
+  redirectUrl,
+  decorators: [orderCalculator, orderItemsCalculator, submitListener],
+  searchUrl,
+  tableFieldNames,
+  rowData,
+  ObjectFormRender: OrderFormRender,
+  validate,
+  formInitialValues,
+  mutators: {postCostCount, ...arrayMutators}
+}
+
+export default config
+
+export const addOrderItemAction = (fields) => fields.push(initOrderItem)
+
+export const deleteOrderItemAction = (fields, id) => fields.remove(id)
 
 export const customerAndCityLabels = (options) => {
-  const customerProps = options?.customer?.children;
-  const cityProps = customerProps?.city?.children;
+  const customerProps = options?.customer?.children
+  const cityProps = customerProps?.city?.children
   return {
     ...customerLabels(customerProps),
     ...cityLabels(cityProps),
-  };
-};
+  }
+}
 
-export const fromCreatedAt = ({ created_at = '' }, { from }) => `${from} ${created_at}`;
 
-// createSelector([selectObject, selectCommonConsts], ({
-//     created_at = '',
-// }, {
-//     from
-// }) => `${from} ${created_at}`)
+  // console.log('post_cost ', post_cost)
+  // tools.changeValue(state, 'post_cost', (oldValue) => post_cost)
 
-// export default Actions.getReducer()
-// export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
+  // fetchJsonp(`${postBaseUrl}?${params.toString()}`)
+  //   // .then(response => response.json())
+  //       .then((resp) => {
+  //         // dispatch(change('order', 'post_cost', parseInt(Тариф)))
+  //         // dispatch(successPostCost(parseInt(Тариф)))
+  //         console.log('resp ', resp)
+  //       })
+  //   .catch((e) => console.error(e))
+  // params.set('o', 'json')
+  // params.set('st', 'localhost')
+  // params.set('ml', 'obp2000@mail.ru')
+  // params.set('key', 'test')
 
-// export const Actions = new CommonActions({ indexUrl,
-//                                            redirectUrl,
-//                                            initObject,
-//                                            preSubmitAction })
 
-// export const getObjectsAction = Actions.getObjectsAction()
-// export const getObjectAction = Actions.getObjectAction()
-// export const onSubmit = Actions.onSubmitAction()
-// export const deleteObjectAction = Actions.deleteObjectAction()
-// export const onSearchOrder = Actions.searchObjectsAction()
+  // const params = {
+  //   f: 'Иваново',
+  //   o: 'json',
+  //   st: 'localhost',
+  //   ml: 'obp2000@mail.ru',
+  //   key: 'test',
+  //   t: '101000',
+  //   w: 2300,
+  // }
+  // const query = fetchBaseQuery({
+  //   baseUrl: `${postBaseUrl}?${params.toString()}`,
+  // })
 
-// export const selectTableLabels =
-//     createSelector([useOptions], ({
-//         id = {},
-//         customer = {},
-//         order_items_cost = {},
-//         created_at = {},
-//         updated_at = {}
-//     }) => [
-//         id.label,
-//         customer.label,
-//         order_items_cost.label,
-//         created_at.label,
-//         updated_at.label
-//     ])
+  // let headers = new Headers()
+  // headers.append('Content-Type', 'application/json')
+  // headers.append('Accept', 'application/json')
+  // headers.append('Origin','http://localhost:8080')
+  // headers.append('Access-Control-Allow-Origin', '*')
 
-// export const selectTableValues = results =>
-//     createSelector([
-//             selectCustomerLabels(selectCustomerProps),
-//             selectTableLabels
-//         ],
-//         (
-//             customer_labels,
-//             table_labels
-//         ) => results.reduce((result, object) => {
-//             result.push({
-//                 id: object.id,
-//                 customer: ShortName(object.customer, customer_labels),
-//                 order_items_cost: object.order_items_cost,
-//                 created_at: object.created_at,
-//                 updated_at: object.updated_at
-//             })
-//             return result
-//         }, [table_labels])
-//     )
-
-// export const selectFromCreatedAt =
-//     createSelector([selectObject, selectCommonConsts], ({
-//         created_at = '',
-//     }, {
-//         from
-//     }) => `${from} ${created_at}`)
-
-// export const selectCustomerAndCityLabels =
-//     createSelector([selectCustomerLabels(selectCustomerProps),
-//             selectShortLabels(selectCityProps)
-//         ],
-//         (customer_labels, city_labels) => ({
-//             ...customer_labels,
-//             ...city_labels
-//         }))
-
-// const config = {
-//     initObject,
-//     indexUrl
-// }
-
-// const Slice = createCommonSlice(initObject)
-// export const Actions = {}
-// export default Slice.reducer
-
-// export const Actions = createActions()
-
-// export default createReducer(reducerActions(Actions, initObject),
-//     initialState(initObject))
-
-// Actions.indexUrl = indexUrl
-// Actions.base_url = `${config.BACKEND}/api${indexUrl}`
-// Actions.redirectUrl = redirectUrl
-// Actions.initObject = initObject
-// Actions.preSubmitAction = preSubmitAction
-
-// export const selectObjects = ({
-//     orders: {
-//         results = {}
-//     } = {}
-// }) => results
+  // console.log('query ', query)
+  // let post_cost

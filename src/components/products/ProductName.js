@@ -1,22 +1,22 @@
-const ProductName = ({
-  product_type,
-  get_product_type_display,
+const productName = ({
+  // product_type: productType,
+  get_product_type_display: getProductTypeDisplay,
   threads,
-  get_threads_display,
+  get_threads_display: getThreadsDisplay,
   contents,
-  get_contents_display,
+  get_contents_display: getContentsDisplay,
   fleece,
   name,
 }, {
-  fleece_label,
+  fleeceLabel,
 }) => {
-  const product_name = [];
-  if (get_product_type_display) product_name.push(get_product_type_display);
-  if (threads != null) product_name.push(get_threads_display);
-  if (contents != null) product_name.push(get_contents_display);
-  if (fleece) product_name.push(fleece_label);
-  product_name.push(name);
-  return product_name.join(' ');
-};
+  const productNameArray = []
+  if (getProductTypeDisplay) productNameArray.push(getProductTypeDisplay)
+  if (threads != null) productNameArray.push(getThreadsDisplay)
+  if (contents != null) productNameArray.push(getContentsDisplay)
+  if (fleece) productNameArray.push(fleeceLabel)
+  productNameArray.push(name)
+  return productNameArray.join(' ')
+}
 
-export default ProductName;
+export default productName

@@ -1,31 +1,51 @@
 import React from 'react'
-
-import './assets/css/App.scss'
-import "react-widgets/scss/styles.scss"
-import 'react-toastify/dist/ReactToastify.min.css'
-import 'bootstrap/dist/js/bootstrap.min.js'
-import './assets/css/App.css'
-
-import 'numeral/locales/ru'
-import numeral from 'numeral'
-import { Provider } from 'react-redux'
-import { hot } from 'react-hot-loader'
-import configureStore from './components/Store'
+import {Routes, Route, useParams} from 'react-router-dom'
+import {Container} from 'reactstrap'
+import ToastContainer from './components/Shared/ToastContainer'
 import Layout from './components/Layout'
+// import Objects from './components/Objects'
+import customersConfig from './components/redux/Customers'
+import productsConfig from './components/redux/Products'
+import ordersConfig from './components/redux/Orders'
+import User from './components/users/User'
+import NotFound from './components/NotFound'
+import ObjectsTable from './components/Shared/ObjectsTable'
+import ObjectForm from './components/Shared/ObjectForm'
 
-numeral.locale('ru')
-// console.log('App')
-
-const store = configureStore()
+export const ValidateId = config => {
+  let {id} = useParams()
+  return id.match(/^\d+$/) ? <ObjectForm id={id} {...config} /> : <NotFound />
+}
 
 const App = () =>
-    <Provider {...{store}}>
-      <Layout />
-    </Provider>
-
-// if (process.env.NODE_ENV !== 'production' && module.hot) {
-//     module.hot.accept('./components/Layout', App)
-// }
+    <Container fluid="sm" className="bg-light border">
+        <ToastContainer />
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                {/*<Route index element={<Objects config={customersConfig} />} />*/}
+                <Route index element={<ObjectsTable {...customersConfig} />} />
+                {/*<Route path='customers/*' element={<Objects config={customersConfig} />} />*/}
+                <Route path='customers'>
+                    <Route index element={<ObjectsTable {...customersConfig} />} />
+                    <Route path=':id' element={<ValidateId {...customersConfig} />} />
+                    <Route path='new' element={<ObjectForm id='new' {...customersConfig} />} />
+                </Route>
+                {/*<Route path='products/*' element={<Objects config={productsConfig} />} />*/}
+                <Route path='products'>
+                    <Route index element={<ObjectsTable {...productsConfig} />} />
+                    <Route path=':id' element={<ValidateId {...productsConfig} />} />
+                    <Route path='new' element={<ObjectForm id='new' {...productsConfig} />} />
+                </Route>
+                {/*<Route path='orders/*' element={<Objects config={ordersConfig} />} />*/}
+                <Route path='orders'>
+                    <Route index element={<ObjectsTable {...ordersConfig} />} />
+                    <Route path=':id' element={<ValidateId {...ordersConfig} />} />
+                    <Route path='new' element={<ObjectForm id='new' {...ordersConfig} />} />
+                </Route>
+                <Route path='user' element={<User />} />
+            </Route>
+            <Route path='*' element={<NotFound />} />
+        </Routes>
+    </Container>
 
 export default App
-// export default hot(module)(App)

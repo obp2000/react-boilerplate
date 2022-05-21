@@ -1,51 +1,75 @@
-import { ShortName } from '../customers/CustomerName';
-import CityName from '../cities/CityName';
-import { cityLabels } from './Cities';
+import createDecorator from 'final-form-submit-listener'
+// import fetchJsonp from 'fetch-jsonp'
+// import {fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import {shortName} from '../customers/CustomerName'
+import cityName from '../cities/CityName'
+import {cityLabels} from './Cities'
+import CustomerFormRender from '../customers/CustomerFormRender'
+import {validate} from '../customers/Validators'
 
-const indexUrl = '/customers/';
-const redirectUrl = '/customers/';
-const searchUrl = indexUrl;
+const indexUrl = '/customers/'
+
+const redirectUrl = '/customers/'
+
+const searchUrl = indexUrl
+
 const preSubmitAction = (values) => {
   if (values.city) {
-    values.city_id = values.city.id;
-    delete values.city;
+    values.city_id = values.city.id
+    delete values.city
   }
-  delete values.options;
-  delete values.created_at;
-  delete values.updated_at;
-};
+  delete values.options
+  delete values.created_at
+  delete values.updated_at
+}
+
 const tableFieldNames = [
   'id',
   'name',
   'city',
   'address',
   'created_at',
-];
+]
 
 export const customerLabels = ({
   name,
   address,
 } = {}) => ({
-  name_label: `${name?.label}:`,
-  address_label: `${address?.label}:`,
-});
+  nameLabel: `${name?.label}:`,
+  addressLabel: `${address?.label}:`,
+})
 
 const rowData = (object = {}, options) => ([
   object.id,
-  ShortName(object, customerLabels(options)),
-  CityName(object.city, cityLabels(options?.city?.children)),
+  shortName(object, customerLabels(options)),
+  cityName(object.city, cityLabels(options?.city?.children)),
   object.address,
   object.created_at,
-]);
+])
 
-export const config = {
+const formInitialValues = (object) => object
+
+const submitListener = createDecorator({
+  beforeSubmit: (form) => {
+    // console.log('pre.....')
+    preSubmitAction(form.getState().values)
+  }
+})
+
+const config = {
   indexUrl,
   redirectUrl,
-  preSubmitAction,
+  decorators: [submitListener],
   searchUrl,
   tableFieldNames,
   rowData,
-};
+  ObjectFormRender: CustomerFormRender,
+  validate,
+  formInitialValues,
+  // mutators: {mutator1}
+}
+
+export default config
 
 // const Slice = createCommonSlice(initObject)
 

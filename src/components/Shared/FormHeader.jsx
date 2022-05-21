@@ -22,7 +22,7 @@ const FormHeader = ({
       <BackButton {...rest} />
     </Col>
     <Col sm={6}>
-      <h4>
+      <h4 aria-label={nameSingular}>
         {nameSingular} № {id}{children}
       </h4>
     </Col>
@@ -35,7 +35,7 @@ const FormHeader = ({
 FormHeader.propTypes = {
   initialValues: PropTypes.object,
   options: PropTypes.object,
-  children: PropTypes.object,
+  children: PropTypes.array,
 }
 
 export default FormHeader

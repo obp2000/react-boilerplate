@@ -14,7 +14,7 @@ const LabelComp = ({
   check,
 }) => {
   const {label, required} = fieldProps({name}, options)
-  return <Label {...{for: name, sm, size, check}}>
+  return <Label {...{htmlFor: name, sm, size, check}}>
     {label} {required ? '*' : ''}
   </Label>
 }

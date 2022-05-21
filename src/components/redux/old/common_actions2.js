@@ -1,11 +1,11 @@
-import { createAction, createReducer } from 'redux-act';
-import axios from 'axios';
+import {createAction, createReducer} from 'redux-act'
+import axios from 'axios'
 // import { push } from 'connected-react-router'
-import { objectToFormData } from 'object-to-formdata';
-import BACKEND from 'config';
+import {objectToFormData} from 'object-to-formdata'
+import BACKEND from 'config'
 // import config from '../Config'
-import { tokenHeaders } from './auth';
-import { errorHandler } from './ErrorHandlers';
+import {tokenHeaders} from './auth'
+import {errorHandler} from './ErrorHandlers'
 // import { FORM_ERROR } from 'final-form'
 
 export class CommonActions {
@@ -17,13 +17,13 @@ export class CommonActions {
     to_form_data,
     preSubmitAction,
   }) {
-    this.base_url = `${BACKEND}/api${indexUrl}`;
-    this.redirectUrl = redirectUrl;
-    this.initObject = initObject;
+    this.base_url = `${BACKEND}/api${indexUrl}`
+    this.redirectUrl = redirectUrl
+    this.initObject = initObject
     // this.FORM_ERROR = FORM_ERROR
     // this.initialState = initialState
-    this.to_form_data = to_form_data;
-    this.preSubmitAction = preSubmitAction;
+    this.to_form_data = to_form_data
+    this.preSubmitAction = preSubmitAction
     // this.formErrorHandler = formErrorHandler
 
     this.init_objects_info = {
@@ -32,7 +32,7 @@ export class CommonActions {
       page: null,
       totalPages: 0,
       term: null,
-    };
+    }
 
     this.initialState = {
       ...this.init_objects_info,
@@ -41,32 +41,32 @@ export class CommonActions {
       isFetching: false,
       loaded: false,
       errors: null,
-    };
+    }
 
-    this.reducer_actions = {};
-    this.exclude_from_results = (results, id) => results.filter((result) => (result.id != id));
+    this.reducer_actions = {}
+    this.exclude_from_results = (results, id) => results.filter((result) => (result.id != id))
 
-    this.requestObjects = createAction('requestObjects');
-    this.successReceiveObjects = createAction('successReceiveObjects');
-    this.failedReceiveObjects = createAction('failedReceiveObjects');
+    this.requestObjects = createAction('requestObjects')
+    this.successReceiveObjects = createAction('successReceiveObjects')
+    this.failedReceiveObjects = createAction('failedReceiveObjects')
 
-    this.requestObject = createAction('requestObject');
-    this.successReceiveObject = createAction('successReceiveObject');
-    this.failedReceiveObject = createAction('failedReceiveObject');
-    this.setNewObject = createAction('setNewObject');
+    this.requestObject = createAction('requestObject')
+    this.successReceiveObject = createAction('successReceiveObject')
+    this.failedReceiveObject = createAction('failedReceiveObject')
+    this.setNewObject = createAction('setNewObject')
 
-    this.requestUpdateObject = createAction('requestUpdateObject');
-    this.successUpdateObject = createAction('successUpdateObject');
-    this.failedUpdateObject = createAction('failedUpdateObject');
+    this.requestUpdateObject = createAction('requestUpdateObject')
+    this.successUpdateObject = createAction('successUpdateObject')
+    this.failedUpdateObject = createAction('failedUpdateObject')
 
-    this.requestDeleteObject = createAction('requestDeleteObject');
-    this.successDeleteObject = createAction('successDeleteObject');
-    this.failedDeleteObject = createAction('failedDeleteObject');
+    this.requestDeleteObject = createAction('requestDeleteObject')
+    this.successDeleteObject = createAction('successDeleteObject')
+    this.failedDeleteObject = createAction('failedDeleteObject')
 
-    this.requestSearchObjects = createAction('requestSearchObjects');
-    this.successSearchObjects = createAction('successSearchObjects');
-    this.failedSearchObjects = createAction('failedSearchObjects');
-    this.clearSearchObjects = createAction('clearSearchObjects');
+    this.requestSearchObjects = createAction('requestSearchObjects')
+    this.successSearchObjects = createAction('successSearchObjects')
+    this.failedSearchObjects = createAction('failedSearchObjects')
+    this.clearSearchObjects = createAction('clearSearchObjects')
 
     this.reducer_actions[this.requestObjects] = (state) => ({
       ...state,
@@ -74,7 +74,7 @@ export class CommonActions {
       isFetching: true,
       loaded: false,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.successReceiveObjects] = (state, objects_info) => ({
       ...state,
@@ -82,7 +82,7 @@ export class CommonActions {
       isFetching: false,
       loaded: true,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.failedReceiveObjects] = (state, errors) => ({
       ...state,
@@ -90,7 +90,7 @@ export class CommonActions {
       isFetching: false,
       loaded: false,
       errors,
-    });
+    })
 
     this.reducer_actions[this.requestObject] = (state) => ({
       ...state,
@@ -98,7 +98,7 @@ export class CommonActions {
       isFetching: true,
       loaded: false,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.successReceiveObject] = (state, object) => ({
       ...state,
@@ -106,7 +106,7 @@ export class CommonActions {
       isFetching: false,
       loaded: true,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.failedReceiveObject] = (state, errors) => ({
       ...state,
@@ -114,19 +114,19 @@ export class CommonActions {
       isFetching: false,
       loaded: false,
       errors,
-    });
+    })
 
     this.reducer_actions[this.setNewObject] = (state) => ({
       ...state,
       object: this.initObject,
-    });
+    })
 
     this.reducer_actions[this.requestUpdateObject] = (state) => ({
       ...state,
       isFetching: true,
       loaded: false,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.successUpdateObject] = (state, object, id) => ({
       ...state,
@@ -139,21 +139,21 @@ export class CommonActions {
       isFetching: false,
       loaded: true,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.failedUpdateObject] = (state, errors) => ({
       ...state,
       isFetching: false,
       loaded: false,
       errors,
-    });
+    })
 
     this.reducer_actions[this.requestDeleteObject] = (state) => ({
       ...state,
       isFetching: true,
       loaded: false,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.successDeleteObject] = (state, id) => ({
       ...state,
@@ -162,14 +162,14 @@ export class CommonActions {
       isFetching: false,
       loaded: true,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.failedDeleteObject] = (state, errors) => ({
       ...state,
       isFetching: false,
       loaded: false,
       errors,
-    });
+    })
 
     this.reducer_actions[this.requestSearchObjects] = (state) => ({
       ...state,
@@ -177,7 +177,7 @@ export class CommonActions {
       isFetching: true,
       loaded: false,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.successSearchObjects] = (state, search_results) => ({
       ...state,
@@ -185,7 +185,7 @@ export class CommonActions {
       isFetching: false,
       loaded: true,
       errors: null,
-    });
+    })
 
     this.reducer_actions[this.failedSearchObjects] = (state, errors) => ({
       ...state,
@@ -193,23 +193,23 @@ export class CommonActions {
       isFetching: false,
       loaded: false,
       errors,
-    });
+    })
 
     this.reducer_actions[this.clearSearchObjects] = (state) => ({
       ...state,
       search_results: [],
-    });
+    })
 
-    this.reducer = createReducer(this.reducer_actions, this.initialState);
+    this.reducer = createReducer(this.reducer_actions, this.initialState)
   }
 
-  getReducer = () => this.reducer;
+  getReducer = () => this.reducer
 
-  error_handler = (e) => console.log(`Error: ${e}`);
+  error_handler = (e) => console.log(`Error: ${e}`)
 
-  extract_data = ({ data }) => data;
+  extract_data = ({data}) => data
 
-  extract_results = ({ results }) => results;
+  extract_results = ({results}) => results
 
   // onFailedAction = (dispatch, errorHandler) => e => {
   //     console.log(e)
@@ -244,7 +244,7 @@ export class CommonActions {
   // }
 
   getObjectsAction = () => (page, term, accessToken) => (dispatch) => {
-    dispatch(this.requestObjects());
+    dispatch(this.requestObjects())
     return axios.get(`${this.base_url}/`, {
       params: {
         page,
@@ -252,69 +252,71 @@ export class CommonActions {
       },
       ...tokenHeaders(accessToken),
     })
-      .then(({ data }) => dispatch(this.successReceiveObjects(data)))
-      .catch(errorHandler(dispatch, this.failedReceiveObjects));
-  };
+        .then(({data}) => dispatch(this.successReceiveObjects(data)))
+        .catch(errorHandler(dispatch, this.failedReceiveObjects))
+  }
 
   getObjectAction = () => (id, accessToken) => (dispatch) => {
     if (accessToken) {
       if (id == 'new') {
-        return dispatch(this.setNewObject());
+        return dispatch(this.setNewObject())
       }
-      dispatch(this.requestObject());
+      dispatch(this.requestObject())
       return axios.get(
-        `${this.base_url}/${id}`,
-        tokenHeaders(accessToken),
+          `${this.base_url}/${id}`,
+          tokenHeaders(accessToken),
       )
-        .then(({ data }) => dispatch(this.successReceiveObject(data)))
-        .catch(errorHandler(dispatch, this.failedReceiveObject));
+          .then(({data}) => dispatch(this.successReceiveObject(data)))
+          .catch(errorHandler(dispatch, this.failedReceiveObject))
     }
-  };
+  }
 
-  onSuccessCreateOrUpdateObject = (dispatch, id) => ({ data }) => {
-    dispatch(this.successUpdateObject(data, id));
-    return dispatch(push(this.redirectUrl));
-  };
+  onSuccessCreateOrUpdateObject = (dispatch, id) => ({data}) => {
+    dispatch(this.successUpdateObject(data, id))
+    return dispatch(push(this.redirectUrl))
+  }
 
   onSubmitAction = () => (values) => (dispatch, getState) => {
     const {
       auth: {
         accessToken,
       },
-    } = getState();
-    console.log('accessToken: ', accessToken);
+    } = getState()
+    console.log('accessToken: ', accessToken)
     if (accessToken) {
-      if (this.preSubmitAction) { this.preSubmitAction(values); }
-      const { id } = values;
-      dispatch(this.requestUpdateObject());
+      if (this.preSubmitAction) {
+        this.preSubmitAction(values)
+      }
+      const {id} = values
+      dispatch(this.requestUpdateObject())
       return axios({
         url: `${this.base_url}/${id ? `${id}/` : ''}`,
         method: id ? 'PUT' : 'POST',
         ...tokenHeaders(accessToken),
         data: this.to_form_data ? objectToFormData(values) : values,
       })
-        .then(this.onSuccessCreateOrUpdateObject(dispatch, id))
-        .catch(errorHandler(dispatch, this.failedUpdateObject));
+          .then(this.onSuccessCreateOrUpdateObject(dispatch, id))
+          .catch(errorHandler(dispatch, this.failedUpdateObject))
     }
-  };
+  }
 
   deleteObjectAction = () => (id, accessToken) => (dispatch) => {
     if (accessToken) {
-      dispatch(this.requestDeleteObject());
+      dispatch(this.requestDeleteObject())
       return axios.delete(`${this.base_url}/${id}`, tokenHeaders(accessToken))
-        .then(() => dispatch(this.successDeleteObject(id)))
-        .catch(errorHandler(dispatch, this.failedDeleteObject));
+          .then(() => dispatch(this.successDeleteObject(id)))
+          .catch(errorHandler(dispatch, this.failedDeleteObject))
     }
-  };
+  }
 
   searchObjectsAction = () => (term) => (dispatch, getState) => {
     const {
       auth: {
         accessToken,
       },
-    } = getState();
+    } = getState()
     if (accessToken && typeof (term) === 'string' && term.length > 1) {
-      dispatch(this.requestSearchObjects());
+      dispatch(this.requestSearchObjects())
       return axios.get(`${this.base_url}/`, {
         params: {
           term: decodeURIComponent(term),
@@ -322,18 +324,18 @@ export class CommonActions {
         },
         // ...tokenHeaders(accessToken)
       })
-        .then(({
-          data: {
-            results,
-          },
-        }) => dispatch(this.successSearchObjects(results)))
-        .catch(errorHandler(dispatch, this.failedSearchObjects));
+          .then(({
+            data: {
+              results,
+            },
+          }) => dispatch(this.successSearchObjects(results)))
+          .catch(errorHandler(dispatch, this.failedSearchObjects))
     }
-  };
+  }
 
   clearSearchObjectsAction = () => () => (dispatch) => {
-    dispatch(this.clearSearchObjects());
-  };
+    dispatch(this.clearSearchObjects())
+  }
 
   // deleteObject = (id, accessToken) =>
   //     axios.delete(`${this.base_url}/${id}`, tokenHeaders(accessToken))

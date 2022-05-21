@@ -1,35 +1,41 @@
-import blank from '../../assets/img/blank.png';
-import ProductName from '../products/ProductName';
+import createDecorator from 'final-form-submit-listener'
+import productName from '../products/ProductName'
+import ProductFormRender from '../products/ProductFormRender'
+import {validate} from '../products/Validators'
+import {calculator} from '../products/Calculator'
 
-const indexUrl = '/products/';
-const redirectUrl = '/products/';
-const searchUrl = indexUrl;
+const indexUrl = '/products/'
+
+const redirectUrl = '/products/'
+
+const searchUrl = indexUrl
+
 const preSubmitAction = (values) => {
   if (values.new_image) {
-    values.image = values.new_image;
+    values.image = values.new_image
   } else {
-    delete values.image;
+    delete values.image
   }
-  delete values.new_image;
+  delete values.new_image
   if (values.product_type) {
-    values.product_type_id = values.product_type;
-    delete values.product_type;
+    values.product_type_id = values.product_type
+    delete values.product_type
   }
-  delete values.product_type_options;
-  delete values.get_product_type_display;
-  delete values.threads_options;
-  delete values.get_threads_display;
-  delete values.contents_options;
-  delete values.get_contents_display;
-  delete values.prices;
-  delete values.density_for_count;
-  delete values.meters_in_roll;
-  delete values.created_at;
-  delete values.updated_at;
-  delete values.Consts;
-  values.to_form_data = true;
+  delete values.product_type_options
+  delete values.get_product_type_display
+  delete values.threads_options
+  delete values.get_threads_display
+  delete values.contents_options
+  delete values.get_contents_display
+  delete values.prices
+  delete values.density_for_count
+  delete values.meters_in_roll
+  delete values.created_at
+  delete values.updated_at
+  delete values.PriceCoeffs
+  values.toFormData = true
   // values = objectToFormData(values)
-};
+}
 
 const tableFieldNames = [
   'id',
@@ -39,30 +45,45 @@ const tableFieldNames = [
   'density',
   'created_at',
   'updated_at',
-];
+]
 
-export const rowData = (object, options) => [
+const rowData = (object, options) => [
   object.id,
-  ProductName(object, options),
+  productName(object, options),
   object.price,
   object.width,
   object.density,
   object.created_at,
   object.updated_at,
-];
+]
 
-export const config = {
+const formInitialValues = (object, {Consts} = {}) =>
+  ({...object, ...Consts})
+
+const submitListener = createDecorator({
+  beforeSubmit: (form) => {
+    // console.log('pre.....')
+    preSubmitAction(form.getState().values)
+  }
+})
+
+const config = {
   indexUrl,
   redirectUrl,
-  preSubmitAction,
+  decorators: [calculator, submitListener],
   searchUrl,
   tableFieldNames,
   rowData,
-};
+  ObjectFormRender: ProductFormRender,
+  validate,
+  formInitialValues
+}
 
-export const productLabels = ({ fleece }) => ({ fleece_label: fleece?.label.toLowerCase() });
+export const productLabels = ({fleece}) =>
+  ({fleeceLabel: fleece?.label.toLowerCase()})
 
-export const formInitialValues = (object, { Consts } = {}) => ({ ...object, Consts });
+export default config
+
 
 // export const Actions = new CommonActions({
 //     indexUrl,
@@ -73,7 +94,8 @@ export const formInitialValues = (object, { Consts } = {}) => ({ ...object, Cons
 //     // choices_names
 // })
 
-// export default createReducer(Actions.getReducerActions(), Actions.getInitialState())
+// export default createReducer(Actions.getReducerActions(),
+//    Actions.getInitialState())
 
 // export const getObjectsAction = Actions.getObjectsAction()
 // export const getObjectAction = Actions.getObjectAction()
@@ -178,7 +200,7 @@ export const formInitialValues = (object, { Consts } = {}) => ({ ...object, Cons
 //         ) => results.reduce((result, object) => {
 //             result.push({
 //                 id: object.id,
-//                 name: ProductName(object, product_labels),
+//                 name: productName(object, product_labels),
 //                 price: object.price,
 //                 width: object.width,
 //                 density: object.density,

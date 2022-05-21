@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {useSelector} from 'react-redux'
-import {Route, Redirect, withRouter} from 'react-router-dom'
+// import {Route, Navigate, withRouter} from 'react-router-dom'
+import {Route, Navigate} from 'react-router-dom'
 import {selectAuth} from '../redux/auth'
 
 const RedirectToLogin = ({location}) =>
-  <Redirect to={{pathname: '/', state: {from: location}}} />
+  <Navigate to={{pathname: '/', state: {from: location}}} />
 
 RedirectToLogin.propTypes = {
   location: PropTypes.string,
@@ -27,4 +28,5 @@ PrivateRoute.propTypes = {
   component: PropTypes.object,
 }
 
-export default withRouter(PrivateRoute)
+// export default withRouter(PrivateRoute)
+export default PrivateRoute

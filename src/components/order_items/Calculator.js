@@ -1,169 +1,88 @@
-import createDecorator from 'final-form-calculate';
+import createDecorator from 'final-form-calculate'
 import {
-  post_discount,
-  total_postals,
-  total_sum,
+  postDiscount,
+  totalPostals,
+  totalSum,
   needGift,
-  total_weight,
-} from '../orders/Calculator';
-// import { initOrderItem } from '../redux/Orders'
+  totalWeight,
+} from '../orders/Calculator'
 
-const weight = ({
-  amount = 0,
-  density = 0,
-  width = 0,
-}) => amount * density * width / 100;
+const weight = ({amount = 0, product}) =>
+  amount * product?.density * product?.width / 100
 
-const cost = ({
-  amount = 0,
-  price = 0,
-}) => amount * price;
+const cost = ({amount = 0, price = 0}) => amount * price
 
-const findIndex = (name) => parseInt(name.replace('order_items[', ''));
+const findIndex = (name) => parseInt(name.replace('order_items[', ''))
 
-const order_items_sum = (order_items, name) => (order_items || []).reduce(
-  (sum, {
-    [name]: value,
-  }) => sum + Number(value || 0),
-  0,
-);
+const orderItemsSum = (
+    orderItems = [],
+    name,
+) => orderItems.reduce((sum, {
+  [name]: value}) => sum + Number(value || 0), 0)
 
-const order_items_count = (order_items) => (order_items || []).length;
+const totalText = ({
+  order_items_cost_label: orderItemsCostLabel,
+  need_gift_label: needGiftLabel,
+  ...values
+}) => {
+  const label = [orderItemsCostLabel]
+  if (needGift(values)) {
+    label.push('-')
+    label.push(needGiftLabel)
+  }
+  return label.join(' ')
+}
 
-const total_text = ({
-  order_items_cost,
-  order_items_cost_label,
-  need_gift_label,
-  ...Consts
-}) => (needGift({ order_items_cost, ...Consts })
-  ? `${order_items_cost_label} - ${need_gift_label}!!!` : order_items_cost_label);
-
-export const order_items_calculator = createDecorator({
+export const orderItemsCalculator = createDecorator({
   field: /order_items\[\d+\]\.amount/,
-  updates: (amount, name, { order_items }) => {
-    const index = findIndex(name);
-    const {
-      price,
-      product,
-    } = order_items[index];
-    const density = product && product.density;
-    const width = product && product.width;
-    // console.log('amount', amount)
-    // console.log('price', price)
+  updates: (_, name, {order_items: orderItems = []}) => {
+    const orderItem = orderItems[findIndex(name)]
     return {
-      [name.replace('.amount', '.cost')]: cost({
-        amount,
-        price,
-      }).toFixed(2),
-      [name.replace('.amount', '.weight')]: weight({
-        amount,
-        density,
-        width,
-      }).toFixed(0),
-      order_items_amount: order_items_sum(order_items, 'amount').toFixed(2),
-    };
+      [name.replace('.amount', '.cost')]: cost(orderItem).toFixed(2),
+      [name.replace('.amount', '.weight')]: weight(orderItem).toFixed(0),
+      order_items_amount: orderItemsSum(orderItems, 'amount').toFixed(2),
+    }
   },
 }, {
   field: /order_items\[\d+\]\.price/,
-  updates: (price, name, { order_items }) => {
-    const index = findIndex(name);
-    const { amount } = (order_items[index] || {});
+  updates: (_, name, {order_items: orderItems = []}) => {
+    const orderItem = orderItems[findIndex(name)]
     return {
-      [name.replace('.price', '.cost')]: cost({
-        amount,
-        price,
-      }).toFixed(2),
-    };
+      [name.replace('.price', '.cost')]: cost(orderItem).toFixed(2),
+    }
   },
 }, {
   field: /order_items\[\d+\]\.product/,
-  updates: (product, name, { order_items }) => {
-    const price = product && product.price;
-    const density = product && product.density;
-    const width = product && product.width;
-    const index = findIndex(name);
-    const { amount } = (order_items[index] || {});
+  updates: (product, name, {order_items: orderItems = []}) => {
+    const orderItem = orderItems[findIndex(name)]
     return {
-      [name.replace('.product', '.price')]: price,
-      [name.replace('.product', '.weight')]: weight({
-        amount,
-        density,
-        width,
-      }).toFixed(0),
-    };
+      [name.replace('.product', '.price')]: product?.price,
+      [name.replace('.product', '.weight')]: weight(orderItem).toFixed(0),
+    }
   },
 }, {
   field: /order_items\[\d+\]\.cost/,
-  updates: (value, name, { order_items }) => ({
-    order_items_cost: order_items_sum(order_items, 'cost').toFixed(2),
+  updates: (value, name, {order_items: orderItems = []}) => ({
+    order_items_cost: orderItemsSum(orderItems, 'cost').toFixed(2),
   }),
 }, {
   field: /order_items\[\d+\]\.weight/,
-  updates: (value, name, { order_items }) => ({
-    order_items_weight: order_items_sum(order_items, 'weight').toFixed(0),
+  updates: (value, name, {order_items: orderItems = []}) => ({
+    order_items_weight: orderItemsSum(orderItems, 'weight').toFixed(0),
   }),
 }, {
   field: 'order_items_cost',
-  updates: (order_items_cost, name, {
-    post_cost,
-    packet,
-    order_items_weight,
-    Consts,
-    order_items_cost_label,
-    need_gift_label,
-    // Consts: {
-    //     SAMPLES_WEIGHT,
-    //     PACKET_WEIGHT,
-    //     GIFT_WEIGHT,
-    //     SUM_FOR_POST_DISCOUNT,
-    //     POST_DISCOUNT_PERCENT,
-    //     SUM_FOR_GIFT
-    // }
-  }) => ({
-    post_discount: post_discount({
-      order_items_cost,
-      post_cost,
-      packet,
-      ...Consts,
-    }).toFixed(2),
-    total_postals: total_postals({
-      order_items_cost,
-      post_cost,
-      packet,
-      ...Consts,
-    }).toFixed(2),
-    total_sum: total_sum({
-      order_items_cost,
-      post_cost,
-      packet,
-      ...Consts,
-    }).toFixed(2),
-    total_text: total_text({
-      order_items_cost,
-      order_items_cost_label,
-      need_gift_label,
-      ...Consts,
-    }),
-    total_weight: total_weight({
-      order_items_weight,
-      order_items_cost,
-      ...Consts,
-    }).toFixed(0),
-    need_gift: needGift({
-      order_items_cost,
-      ...Consts,
-    }),
+  updates: (_, name, values) => ({
+    post_discount: postDiscount(values).toFixed(2),
+    total_postals: totalPostals(values).toFixed(2),
+    total_sum: totalSum(values).toFixed(2),
+    total_text: totalText(values),
+    total_weight: totalWeight(values).toFixed(0),
+    need_gift: needGift(values),
   }),
 }, {
   field: 'order_items_weight',
-  updates: (order_items_weight, name, {
-    order_items_cost,
-    Consts,
-  }) => ({
-    total_weight: total_weight({
-      order_items_weight,
-      order_items_cost,
-      ...Consts,
-    }).toFixed(0),
+  updates: (_, name, values) => ({
+    total_weight: totalWeight(values).toFixed(0),
   }),
-});
+})

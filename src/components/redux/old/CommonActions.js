@@ -1,15 +1,15 @@
-import { createAction, createReducer } from 'redux-act';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { objectToFormData } from 'object-to-formdata';
-import { toast } from 'react-toastify';
+import {createAction, createReducer} from 'redux-act'
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import {objectToFormData} from 'object-to-formdata'
+import {toast} from 'react-toastify'
 // import { getObjectAction } from './ServerActions'
-import { errorHandler } from './ErrorHandlers';
+import {errorHandler} from './ErrorHandlers'
 // import { api } from '../Config'
 // import { selectLocation } from './Router'
-import { selectAuth, tokenHeaders } from './auth';
-import { selectCommonConsts } from './CommonConsts';
+import {selectAuth, tokenHeaders} from './auth'
+import {selectCommonConsts} from './CommonConsts'
 
-const to_object_id = (id) => ((id == 'new') ? '' : `${id}/`);
+const to_object_id = (id) => ((id == 'new') ? '' : `${id}/`)
 
 // export const getObjectsThunk = indexUrl => createAsyncThunk(
 //     'getObjects',
@@ -57,34 +57,34 @@ const to_object_id = (id) => ((id == 'new') ? '' : `${id}/`);
 // )
 
 export const deleteObjectThunk = (indexUrl) => createAsyncThunk(
-  'deleteObject',
-  async (id, { getState }) => {
-    await api.delete(
-      `${indexUrl}${to_object_id(id)}`,
-      tokenHeaders(selectAuth(getState()).accessToken),
-    );
-    return to_object_id(id);
-  },
-);
+    'deleteObject',
+    async (id, {getState}) => {
+      await api.delete(
+          `${indexUrl}${to_object_id(id)}`,
+          tokenHeaders(selectAuth(getState()).accessToken),
+      )
+      return to_object_id(id)
+    },
+)
 
 export const createCommonSlice = (initObject) => {
   const init_objects_info = {
     results: [],
     totalCount: 0,
     totalPages: 0,
-  };
+  }
 
   const initialState = {
     ...init_objects_info,
     object: initObject,
     status: 'idle',
     error: null,
-  };
+  }
 
-  const getObjectsAction = getObjectsThunk();
-  const getObjectAction = getObjectThunk();
-  const createOrUpdateObjectAction = createOrUpdateObjectThunk();
-  const deleteObjectAction = deleteObjectThunk();
+  const getObjectsAction = getObjectsThunk()
+  const getObjectAction = getObjectThunk()
+  const createOrUpdateObjectAction = createOrUpdateObjectThunk()
+  const deleteObjectAction = deleteObjectThunk()
 
   const actionsSlice = createSlice({
     name: 'actions',
@@ -102,15 +102,15 @@ export const createCommonSlice = (initObject) => {
       // failedReceiveObject: state => {
       //     state.object = initObject
       // },
-      successUpdateObject: (state, { payload }) => {
-        state.object = payload;
-        const existingObject = state.results.find((result) => result.id === payload.id);
+      successUpdateObject: (state, {payload}) => {
+        state.object = payload
+        const existingObject = state.results.find((result) => result.id === payload.id)
         // console.log('existingObject ', existingObject)
         if (existingObject) {
-          state.results[existingObject.id] = payload;
+          state.results[existingObject.id] = payload
         } else {
-          state.results.push(payload);
-          state.totalCount++;
+          state.results.push(payload)
+          state.totalCount++
         }
         // state.results = [
         //     ...exclude_from_results(state.results, payload.object.id),
@@ -118,102 +118,102 @@ export const createCommonSlice = (initObject) => {
         // ]
         // if (!payload.id) state.totalCount += 1
       },
-      successDeleteObject: (state, { payload }) => {
+      successDeleteObject: (state, {payload}) => {
         // state.results = exclude_from_results(state.results, payload)
-        state.results = state.results.filter((result) => result.id !== payload);
-        state.totalCount--;
+        state.results = state.results.filter((result) => result.id !== payload)
+        state.totalCount--
       },
-      resetStatus: (state, { payload }) => {
+      resetStatus: (state, {payload}) => {
         // state.results = exclude_from_results(state.results, payload)
-        state.status = initialState.status;
+        state.status = initialState.status
       },
     },
     extraReducers(builder) {
       builder
-        .addCase(getObjectsAction.pending, (state, action) => {
-          state.status = 'pending';
-        })
-        .addCase(getObjectsAction.fulfilled, (state, { payload }) => ({
-          ...state,
-          ...payload,
-          status: 'idle',
-          error: null,
-        }))
-        .addCase(getObjectsAction.rejected, (state, {
-          error: {
-            message,
-          },
-        }) => ({
-          ...state,
-          ...init_objects_info,
-          status: 'rejected',
-          error: message,
-        }))
-        .addCase(getObjectAction.pending, (state, action) => {
-          state.status = 'pending';
-        })
-        .addCase(getObjectAction.fulfilled, (state, {
-          payload,
-        }) => {
-          state.status = initialState.status;
-          state.error = null;
-          state.object = payload;
-        })
-        .addCase(getObjectAction.rejected, (state, {
-          error: {
-            message,
-          },
-        }) => {
-          state.object = initObject;
-          state.status = 'rejected';
-          state.error = message;
-        })
-        .addCase(createOrUpdateObjectAction.pending, (state, action) => {
-          state.status = 'pending';
-        })
-        .addCase(createOrUpdateObjectAction.fulfilled, (state, {
-          payload,
-        }) => {
-          state.status = initialState.status;
-          state.error = null;
-          state.object = payload;
-          const existingObject = state.results.find((result) => result.id === payload.id);
-          if (existingObject) {
-            state.results[existingObject.id] = payload;
-          } else {
-            state.results.push(payload);
-            state.totalCount++;
-          }
-        })
-        .addCase(createOrUpdateObjectAction.rejected, (state, {
-          error: {
-            message,
-          },
-        }) => {
-          state.status = 'rejected';
-          state.error = message;
-        })
-        .addCase(deleteObjectAction.pending, (state, action) => {
-          state.status = 'pending';
-        })
-        .addCase(deleteObjectAction.fulfilled, (state, {
-          payload,
-        }) => {
-          state.status = 'idle';
-          state.error = null;
-          state.results = state.results.filter((result) => result.id !== payload);
-          state.totalCount--;
-        })
-        .addCase(deleteObjectAction.rejected, (state, {
-          error: {
-            message,
-          },
-        }) => {
-          state.status = 'rejected';
-          state.error = message;
-        });
+          .addCase(getObjectsAction.pending, (state, action) => {
+            state.status = 'pending'
+          })
+          .addCase(getObjectsAction.fulfilled, (state, {payload}) => ({
+            ...state,
+            ...payload,
+            status: 'idle',
+            error: null,
+          }))
+          .addCase(getObjectsAction.rejected, (state, {
+            error: {
+              message,
+            },
+          }) => ({
+            ...state,
+            ...init_objects_info,
+            status: 'rejected',
+            error: message,
+          }))
+          .addCase(getObjectAction.pending, (state, action) => {
+            state.status = 'pending'
+          })
+          .addCase(getObjectAction.fulfilled, (state, {
+            payload,
+          }) => {
+            state.status = initialState.status
+            state.error = null
+            state.object = payload
+          })
+          .addCase(getObjectAction.rejected, (state, {
+            error: {
+              message,
+            },
+          }) => {
+            state.object = initObject
+            state.status = 'rejected'
+            state.error = message
+          })
+          .addCase(createOrUpdateObjectAction.pending, (state, action) => {
+            state.status = 'pending'
+          })
+          .addCase(createOrUpdateObjectAction.fulfilled, (state, {
+            payload,
+          }) => {
+            state.status = initialState.status
+            state.error = null
+            state.object = payload
+            const existingObject = state.results.find((result) => result.id === payload.id)
+            if (existingObject) {
+              state.results[existingObject.id] = payload
+            } else {
+              state.results.push(payload)
+              state.totalCount++
+            }
+          })
+          .addCase(createOrUpdateObjectAction.rejected, (state, {
+            error: {
+              message,
+            },
+          }) => {
+            state.status = 'rejected'
+            state.error = message
+          })
+          .addCase(deleteObjectAction.pending, (state, action) => {
+            state.status = 'pending'
+          })
+          .addCase(deleteObjectAction.fulfilled, (state, {
+            payload,
+          }) => {
+            state.status = 'idle'
+            state.error = null
+            state.results = state.results.filter((result) => result.id !== payload)
+            state.totalCount--
+          })
+          .addCase(deleteObjectAction.rejected, (state, {
+            error: {
+              message,
+            },
+          }) => {
+            state.status = 'rejected'
+            state.error = message
+          })
     },
-  });
+  })
 
   const {
     // requestObjects,
@@ -224,9 +224,9 @@ export const createCommonSlice = (initObject) => {
     // failedReceiveObject,
     successUpdateObject,
     successDeleteObject,
-  } = actionsSlice.actions;
+  } = actionsSlice.actions
 
-  return actionsSlice;
+  return actionsSlice
 
   // export default actionsSlice.reducer
 
@@ -245,7 +245,7 @@ export const createCommonSlice = (initObject) => {
   // actions.successDeleteObject = createAction('successDeleteObject')
 
   // return actions
-};
+}
 
 // const exclude_from_results = (results, id) =>
 //     results.filter(result => (result.id != id))
@@ -257,39 +257,39 @@ export const reducerActions = (actions, initObject) => {
     page: null,
     totalPages: 0,
     term: null,
-  };
+  }
 
-  const reducer_actions = {};
+  const reducer_actions = {}
 
   reducer_actions[actions.requestObjects] = (state) => ({
     ...state,
     ...init_objects_info,
-  });
+  })
 
   reducer_actions[actions.successReceiveObjects] = (state, objects_info) => ({
     ...state,
     ...objects_info,
-  });
+  })
 
   reducer_actions[actions.failedReceiveObjects] = (state) => ({
     ...state,
     ...init_objects_info,
-  });
+  })
 
   reducer_actions[actions.requestObject] = (state) => ({
     ...state,
     object: initObject,
-  });
+  })
 
   reducer_actions[actions.successReceiveObject] = (state, object) => ({
     ...state,
     object,
-  });
+  })
 
   reducer_actions[actions.failedReceiveObject] = (state) => ({
     ...state,
     object: initObject,
-  });
+  })
 
   reducer_actions[actions.successUpdateObject] = (state, object, id) => ({
     ...state,
@@ -299,16 +299,16 @@ export const reducerActions = (actions, initObject) => {
       object,
     ],
     totalCount: state.totalCount + (id ? 0 : 1),
-  });
+  })
 
   reducer_actions[actions.successDeleteObject] = (state, id) => ({
     ...state,
     results: exclude_from_results(state.results, id),
     totalCount: state.totalCount - 1,
-  });
+  })
 
-  return reducer_actions;
-};
+  return reducer_actions
+}
 
 // import config from '../Config'
 // import { FORM_ERROR } from 'final-form'

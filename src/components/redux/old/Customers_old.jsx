@@ -1,55 +1,55 @@
-import { createAction, createReducer } from 'redux-act'
+import {createAction, createReducer} from 'redux-act'
 // import axios from 'axios'
 // import { push } from 'connected-react-router'
 // import { reduxForm } from 'redux-form'
 // import { connect } from 'react-redux'
 // import pickKeys from 'json-pick-keys'
-import { initCity } from './Cities'
+import {initCity} from './Cities'
 // import { tokenHeaders } from './auth'
 import config from '../Config'
 // import { validate } from '../customers/Validators'
 import {
-    init_objects_info,
+  init_objects_info,
 
-    // reduceRequestObjects,
-    // reduceReceiveObjects,
-    buildGetObjectsAction,
-    // get_reducer_actions,
+  // reduceRequestObjects,
+  // reduceReceiveObjects,
+  buildGetObjectsAction,
+  // get_reducer_actions,
 
-    // reduceRequestObject,
-    // reduceReceiveObject,
-    buildGetObjectAction,
+  // reduceRequestObject,
+  // reduceReceiveObject,
+  buildGetObjectAction,
 
-    // reduceRequestUpdateObject,
-    // reduceReceiveUpdateObject,
-    buildOnSubmitAction,
+  // reduceRequestUpdateObject,
+  // reduceReceiveUpdateObject,
+  buildOnSubmitAction,
 
-    // reduceRequestDeleteObject,
-    // reduceReceiveDeleteObject,
-    buildDeleteObjectAction,
+  // reduceRequestDeleteObject,
+  // reduceReceiveDeleteObject,
+  buildDeleteObjectAction,
 
-    // reduceRequestSearchObjects,
-    // reduceRecieveSearchObjects,
-    builSearchObjectsAction,
-    buildReducer,
+  // reduceRequestSearchObjects,
+  // reduceRecieveSearchObjects,
+  builSearchObjectsAction,
+  buildReducer,
 } from './common_actions'
 
 const base_url = `${config.BACKEND}/api/customers`
 
 export const initObject = {
-    nick: '',
-    name: '',
-    city: initCity,
-    address: ''
+  nick: '',
+  name: '',
+  city: initCity,
+  address: '',
 }
 
 const initialState = {
-    ...init_objects_info,
-    isFetching: false,
-    didInvalidate: false,
-    loaded: false,
-    object: initObject,
-    search_results: []
+  ...init_objects_info,
+  isFetching: false,
+  didInvalidate: false,
+  loaded: false,
+  object: initObject,
+  search_results: [],
 }
 
 const redirectUrl = '/customers'
@@ -67,9 +67,9 @@ const redirectUrl = '/customers'
 // reducer_actions[receiveObjects] = reduceReceiveObjects
 
 export const getObjectsAction = buildGetObjectsAction({
-    // requestObjects,
-    // receiveObjects,
-    base_url
+  // requestObjects,
+  // receiveObjects,
+  base_url,
 })
 
 // reducer_actions = get_reducer_actions()
@@ -85,9 +85,9 @@ export const getObjectsAction = buildGetObjectsAction({
 // reducer_actions[receiveObject] = reduceReceiveObject(initObject)
 
 export const getObjectAction = buildGetObjectAction({
-    // requestObject,
-    // receiveObject,
-    base_url
+  // requestObject,
+  // receiveObject,
+  base_url,
 })
 
 // Create or update object
@@ -102,10 +102,10 @@ export const getObjectAction = buildGetObjectAction({
 // reducer_actions[receiveUpdateObject] = reduceReceiveUpdateObject
 
 export const onSubmit = buildOnSubmitAction({
-    // requestUpdateObject,
-    // receiveUpdateObject,
-    base_url,
-    redirectUrl
+  // requestUpdateObject,
+  // receiveUpdateObject,
+  base_url,
+  redirectUrl,
 })
 
 // Delete object
@@ -119,9 +119,9 @@ export const onSubmit = buildOnSubmitAction({
 // reducer_actions[receiveDeleteObject] = reduceReceiveDeleteObject
 
 export const deleteObjectAction = buildDeleteObjectAction({
-    // requestDeleteObject,
-    // receiveDeleteObject,
-    base_url
+  // requestDeleteObject,
+  // receiveDeleteObject,
+  base_url,
 })
 
 // Search objects
@@ -135,9 +135,9 @@ export const deleteObjectAction = buildDeleteObjectAction({
 // reducer_actions[receiveSearchObjects] = reduceRecieveSearchObjects
 
 export const onSearchCustomer = builSearchObjectsAction({
-    // requestSearchObjects,
-    // receiveSearchObjects,
-    base_url
+  // requestSearchObjects,
+  // receiveSearchObjects,
+  base_url,
 })
 
 // Create reducer

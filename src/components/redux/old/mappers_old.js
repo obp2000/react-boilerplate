@@ -8,7 +8,7 @@ const mapCollectionState = (collection_name, {
   },
 }) => ({
   term,
-});
+})
 
 // const mapCollectionOwnProps = ({
 //     match: {
@@ -18,7 +18,7 @@ const mapCollectionState = (collection_name, {
 //     } = { params: {} }
 // }) => ({ page: parseInt(page) })
 
-export const mapCollectionStateToProps = (collection_name) => (state) => mapCollectionState(collection_name, state);
+export const mapCollectionStateToProps = (collection_name) => (state) => mapCollectionState(collection_name, state)
 
 // const mapObjectOwnProps = ({
 //     match: {
@@ -34,6 +34,6 @@ const mapObjectState = (collection_name, {
   },
 }) => ({
   accessToken,
-});
+})
 
-export const mapObjectStateToProps = (collection_name, object_name) => (state) => mapObjectState(collection_name, state);
+export const mapObjectStateToProps = (collection_name, object_name) => (state) => mapObjectState(collection_name, state)

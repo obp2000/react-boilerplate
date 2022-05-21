@@ -2,6 +2,6 @@ const FormConsts = ({
   Consts = {},
 } = {}) => ({
   Consts,
-});
+})
 
-export default FormConsts;
+export default FormConsts

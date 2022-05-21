@@ -1,6 +1,6 @@
-const WidgetMessages = {
-  emptyFilter: 'Не найдено',
-  emptyList: () => 'Не найдено',
-}
+const WidgetMessages = (notFound) => ({
+  emptyFilter: notFound,
+  emptyList: () => notFound,
+})
 
 export default WidgetMessages

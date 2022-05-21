@@ -56,9 +56,10 @@ const image_rules = {
 
 const resolve = {
     extensions: ['.js', '.jsx'],
-    alias: {
-        'react-dom': '@hot-loader/react-dom'
-    }
+    // alias: {
+    //     'react-dom': '@hot-loader/react-dom',
+    //     'react-dom/client': '@hot-loader/react-dom/client'
+    // }
 }
 
 // const externals = {

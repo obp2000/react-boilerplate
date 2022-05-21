@@ -1,9 +1,9 @@
-import { logger } from 'redux-logger';
-import { configureStore } from '@reduxjs/toolkit';
-import persistState from 'redux-localstorage';
-import { apiSlice } from '../services/apiSlice';
-import { rtkQueryErrorLogger } from './ErrorMiddleware';
-import auth from './redux/auth';
+import {logger} from 'redux-logger'
+import {configureStore} from '@reduxjs/toolkit'
+import persistState from 'redux-localstorage'
+import {apiSlice} from '../services/apiSlice'
+import {rtkQueryErrorLogger} from './ErrorMiddleware'
+import auth from './redux/auth'
 
 export const configureStoreFunc = (preloadedState) => {
   const store = configureStore({
@@ -17,28 +17,14 @@ export const configureStoreFunc = (preloadedState) => {
       logger]),
     devTools: process.env.NODE_ENV !== 'production',
     preloadedState,
-    enhancers: [persistState('auth', { key: 'AUTH' })],
-  });
+    enhancers: [persistState('auth', {key: 'AUTH'})],
+  })
 
   // if (process.env.NODE_ENV !== 'production' && module.hot) {
   //     module.hot.accept('./redux/index', () => store.replaceReducer(reducer))
   // }
 
-  return store;
-};
+  return store
+}
 
-export default configureStoreFunc;
-
-// import StoreEnhancer from './StoreEnhancer'
-
-// const configureStore = preloadedState => {
-//     const history = createHashHistory()
-//     const reducer = rootReducer(history)
-//     const store = createStore(reducer, preloadedState, StoreEnhancer(history))
-//     if (process.env.NODE_ENV !== 'production' && module.hot) {
-//         module.hot.accept('./redux/index', () => store.replaceReducer(reducer))
-//     }
-//     return { store, history }
-// }
-
-// export default configureStore
+export default configureStoreFunc

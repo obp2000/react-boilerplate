@@ -1,8 +1,8 @@
-import { createAction, createReducer } from 'redux-act';
+import {createAction, createReducer} from 'redux-act'
 // import axios from 'axios'
 // import { change } from 'redux-form'
 // import { push, goBack } from 'connected-react-router'
-import config from '../Config';
+import config from '../Config'
 // import { validate } from '../products/Validators'
 import {
   // error_handler,
@@ -30,9 +30,9 @@ import {
   builSearchObjectsAction,
   buildReducer,
 
-} from './common_actions';
+} from './common_actions'
 
-const base_url = `${config.BACKEND}/api/products`;
+const base_url = `${config.BACKEND}/api/products`
 
 // const reducer_actions = {}
 
@@ -50,7 +50,7 @@ export const getObjectsAction = buildGetObjectsAction({
   // requestObjects,
   // receiveObjects,
   base_url,
-});
+})
 
 // Get object
 
@@ -70,7 +70,7 @@ export const initObject = {
   length_for_count: null,
   price_pre: null,
   image: null,
-};
+}
 
 // const requestObject = createAction()
 
@@ -84,23 +84,23 @@ export const getObjectAction = buildGetObjectAction({
   // requestObject,
   // receiveObject,
   base_url,
-});
+})
 
 // Create or update object
 
-const redirectUrl = '/products';
+const redirectUrl = '/products'
 
-const to_form_data = true;
+const to_form_data = true
 
 const preSubmitAction = (values) => {
   // console.log('values: ', values, typeof(values.image))
   if (values.new_image) {
-    values.image = values.new_image;
+    values.image = values.new_image
   } else {
-    delete values.image;
+    delete values.image
   }
-  delete values.new_image;
-};
+  delete values.new_image
+}
 
 // const requestUpdateObject = createAction()
 
@@ -136,7 +136,7 @@ export const onSubmit = buildOnSubmitAction({
   redirectUrl,
   to_form_data,
   preSubmitAction,
-});
+})
 
 // Delete object
 
@@ -152,7 +152,7 @@ export const deleteObjectAction = buildDeleteObjectAction({
   // requestDeleteObject,
   // receiveDeleteObject,
   base_url,
-});
+})
 
 // Search objects
 
@@ -168,7 +168,7 @@ export const onChangeProduct = builSearchObjectsAction({
   // requestSearchObjects,
   // receiveSearchObjects,
   base_url,
-});
+})
 
 // export const onSelectProduct = ({
 //     price
@@ -187,9 +187,9 @@ const initialState = {
   loaded: false,
   object: initObject,
   search_results: [],
-};
+}
 
-export default buildReducer(initialState);
+export default buildReducer(initialState)
 // export default createReducer(reducer_actions, initialState)
 
 // export const deleteObjectAction = id => dispatch => {

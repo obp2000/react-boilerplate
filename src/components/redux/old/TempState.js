@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { apiSlice } from '../../services/apiSlice';
+import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit'
+import {apiSlice} from '../../services/apiSlice'
 
 const initialState = {
   data: [],
@@ -8,18 +8,18 @@ const initialState = {
   busy: false,
   // status: 'idle',
   // error: null
-};
+}
 
 export const tempStateSlice = createSlice({
   name: 'temp_state',
   initialState,
   reducers: {
     clearSearchObjects: (state) => {
-      state.data = initialState.data;
+      state.data = initialState.data
     },
   },
   extraReducers(builder) {
-    builder;
+    builder
     // .addCase(searchObjectsAction.pending, (state, action) => {
     //     state.status = 'pending'
     //     state.data = initialState.data
@@ -51,7 +51,7 @@ export const tempStateSlice = createSlice({
     //     }
     // )
   },
-});
+})
 
 export const {
   // startRequest,
@@ -61,21 +61,21 @@ export const {
   // successSearchObjects,
   // failedSearchObjects,
   clearSearchObjects,
-} = tempStateSlice.actions;
+} = tempStateSlice.actions
 
-export default tempStateSlice.reducer;
+export default tempStateSlice.reducer
 
 export const selectTempState = ({
   temp_state,
-}) => temp_state;
+}) => temp_state
 
 export const selectData = createSelector([selectTempState], ({
   data = initialState.data,
-}) => data);
+}) => data)
 
 export const selectBusy = createSelector([selectTempState], ({
   busy = initialState.busy,
-}) => busy);
+}) => busy)
 
 // export const startRequest = createAction('startRequest')
 // export const successRequest = createAction('successRequest')

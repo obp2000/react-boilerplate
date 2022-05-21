@@ -3,7 +3,7 @@ import React from 'react'
 import {Input} from 'reactstrap'
 import WidgetErrors from './WidgetErrors'
 import FormTextList from './FormTextList'
-import { getFieldAttrs, getFormText } from './FieldProps'
+import {getFieldAttrs, getFormText} from './FieldProps'
 
 const ImageInputComp33 = ({
   input: {
@@ -25,40 +25,39 @@ const ImageInputComp33 = ({
 }) => {
   console.log('input ', input)
   return <>
-  <Input
-    type={input.type}
-    accept='.jpg, .png, .jpeg'
-    {...{name,
-      id,
-      placeholder,
-      required,
-      readOnly,
-    }}
-    onChange={(e) => onChange(e.target.files[0])}
-    invalid={meta.touched && !!meta.error}
-    valid={meta.touched && !meta.error}
-    {...rest}
-  />
-  <WidgetErrors {...meta} />
-  {formText && <FormTextList {...{formText}} />}
-</>
+    <Input
+      type={input.type}
+      accept='.jpg, .png, .jpeg'
+      {...{name,
+        id,
+        placeholder,
+        required,
+        readOnly,
+      }}
+      onChange={(e) => onChange(e.target.files[0])}
+      invalid={meta.touched && !!meta.error}
+      valid={meta.touched && !meta.error}
+      {...rest}
+    />
+    <WidgetErrors {...meta} />
+    {formText && <FormTextList {...{formText}} />}
+  </>
 }
 
 const ImageInputComp = ({input, meta, options, ...props}) => {
   const formText = getFormText(input, options, props)
   delete input.value
   return <>
-  <Input
+    <Input
     // type={input.type}
-    {...input}
-    {...getFieldAttrs(input, meta, options)}
-    {...props}
-  />
-  <WidgetErrors { ...meta }/>
-  {formText && <FormTextList {...{formText}} />}
-</>
+      {...input}
+      {...getFieldAttrs(input, meta, options)}
+      {...props}
+    />
+    <WidgetErrors { ...meta }/>
+    {formText && <FormTextList {...{formText}} />}
+  </>
 }
-
 
 
 ImageInputComp.propTypes = {

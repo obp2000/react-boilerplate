@@ -1,28 +1,28 @@
-import CityName from '../cities/CityName';
+import cityName from '../cities/CityName'
 
-export const ShortName = ({
+export const shortName = ({
   nick,
   name,
 } = {}, {
-  name_label,
+  nameLabel,
 }) => {
-  const customer_name = [nick];
-  if (name) customer_name.push([name_label, name].join(' '));
-  return customer_name.join(' ');
-};
+  const customerName = [nick]
+  if (name) customerName.push([nameLabel, name].join(' '))
+  return customerName.join(' ')
+}
 
-const CustomerName = ({
+const customerName = ({
   city = null,
   address,
-  ...short_customer
+  ...shortCustomer
 }, {
-  address_label,
-  ...rest_labels
+  addressLabel,
+  ...restLabels
 }) => {
-  const customer_name = [ShortName(short_customer, rest_labels)];
-  if (city) customer_name.push(CityName(city, rest_labels));
-  if (address) customer_name.push(`${address_label} ${address}`);
-  return customer_name.join(' ');
-};
+  const customerName = [shortName(shortCustomer, restLabels)]
+  if (city) customerName.push(cityName(city, restLabels))
+  if (address) customerName.push(`${addressLabel} ${address}`)
+  return customerName.join(' ')
+}
 
-export default CustomerName;
+export default customerName

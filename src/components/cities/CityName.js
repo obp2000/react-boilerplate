@@ -1,14 +1,14 @@
-const CityName = (city, cityProps) => {
-  const city_name = [];
+const cityName = (city, cityProps) => {
+  const cityNameArray = []
   if (city?.pindex) {
-    city_name.push(cityProps?.pindex_label);
-    city_name.push(city.pindex);
+    cityNameArray.push(cityProps?.pindex_label)
+    cityNameArray.push(city.pindex)
   }
   if (city?.city) {
-    city_name.push(cityProps?.city_label);
-    city_name.push(city.city);
+    cityNameArray.push(cityProps?.city_label)
+    cityNameArray.push(city.city)
   }
-  return city_name.join(' ');
-};
+  return cityNameArray.join(' ')
+}
 
-export default CityName;
+export default cityName

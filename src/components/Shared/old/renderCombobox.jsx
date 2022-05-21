@@ -4,14 +4,14 @@ import WidgetErrors from './WidgetErrors'
 import WidgetMessages from './WidgetMessages'
 
 const renderCombobox = ({
-    input,
-    dataKey,
-    textField,
-    filter,
-    isFetching,
-    meta,
-    onChange,
-    normalize
+  input,
+  dataKey,
+  textField,
+  filter,
+  isFetching,
+  meta,
+  onChange,
+  normalize,
 }) => <> {
         isFetching ? <Combobox busy /> :
         <Combobox
@@ -26,9 +26,9 @@ const renderCombobox = ({
           normalize={normalize}
           messages={WidgetMessages}
         />
-      }
+}
 
-    <WidgetErrors {...meta} />
-    </>
+<WidgetErrors {...meta} />
+</>
 
 export default renderCombobox

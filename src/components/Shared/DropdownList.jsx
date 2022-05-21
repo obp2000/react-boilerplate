@@ -14,6 +14,7 @@ const DropdownListComp = ({
   meta,
   options,
   search_path: searchPath,
+  not_found: notFound,
   ...props
 }) => {
   const formText = getFormText(input, options, props)
@@ -38,7 +39,7 @@ const DropdownListComp = ({
       }
     }
     const {isLoading: busy, data} = useSelector(getSelector(term))
-    const onBlur = () => subscription.unsubscribe()
+    const onBlur = () => subscription && subscription.unsubscribe()
     fromSelector = {
       data,
       busy,
@@ -52,7 +53,7 @@ const DropdownListComp = ({
       {...input}
       {...getFieldAttrs(input, meta, options)}
       filter='contains'
-      messages={WidgetMessages}
+      messages={WidgetMessages(notFound)}
       {...props}
       {...fromSelector}
     />

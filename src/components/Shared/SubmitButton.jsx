@@ -36,6 +36,7 @@ const SubmitButton = ({
     outline
     size="sm"
     className={className}
+    aria-labelledby={text || save}
     disabled={submitting ||
                   pristine ||
                   isCalculatedFields(dirtyFields) ||

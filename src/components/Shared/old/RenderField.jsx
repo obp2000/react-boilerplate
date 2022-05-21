@@ -1,17 +1,17 @@
 import React from 'react'
-import { Input } from 'reactstrap'
+import {Input} from 'reactstrap'
 import WidgetErrors from './WidgetErrors'
 
 const renderField = ({input, meta, ...rest}) =>
-    <>
-        <Input
-            {...input}
-            invalid={meta.touched && !!meta.error}
-            valid={meta.touched && !meta.error}
-            {...rest}
-        />
-        <WidgetErrors {...meta} />
-    </>
+  <>
+    <Input
+      {...input}
+      invalid={meta.touched && !!meta.error}
+      valid={meta.touched && !meta.error}
+      {...rest}
+    />
+    <WidgetErrors {...meta} />
+  </>
 
 export default renderField
 
