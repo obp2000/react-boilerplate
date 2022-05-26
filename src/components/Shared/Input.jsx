@@ -1,36 +1,36 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input } from 'reactstrap'
+import {Input} from 'reactstrap'
 import WidgetErrors from './WidgetErrors'
 import FormTextList from './FormTextList'
-import { getFieldAttrs, getFormText } from './FieldProps'
+import {getFieldAttrs, getFormText} from './FieldProps'
 
 const InputComp = ({
-    input,
-    meta,
-    options,
-    ...props
+  input,
+  meta,
+  options,
+  ...props
 }) => {
-    const formText = getFormText(input, options, props)
-    if (input.type == 'file') {
-        delete input.value
-    }
-    return < >
-        <Input
+  const formText = getFormText(input, options, props)
+  if (input.type == 'file') {
+    delete input.value
+  }
+  return < >
+    <Input
       {...input}
       {...getFieldAttrs(input, meta, options, props)}
       {...props}
     /> <
-        WidgetErrors { ...meta }
+      WidgetErrors { ...meta }
     /> { formText && <FormTextList {...{formText}} /> } <
-    />
+                                                        />
 }
 
 InputComp.propTypes = {
-    input: PropTypes.object,
-    meta: PropTypes.object,
-    options: PropTypes.object,
-    props: PropTypes.object,
+  input: PropTypes.object,
+  meta: PropTypes.object,
+  options: PropTypes.object,
+  props: PropTypes.object,
 }
 
 export default InputComp

@@ -1,8 +1,8 @@
 import React from 'react'
 // import * as ReactDOM from 'react-dom'
-import { createRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
+import {createRoot} from 'react-dom/client'
+import {Provider} from 'react-redux'
+import {HashRouter} from 'react-router-dom'
 import configureStore from './components/Store'
 import App from './App'
 import 'numeral/locales/ru'
@@ -21,10 +21,10 @@ const domContainer = document.querySelector('#root')
 const root = createRoot(domContainer)
 root.render(
     <Provider {...{store}}>
-	    <HashRouter>
-	    	<App />
-	    </HashRouter>
-	 </Provider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </Provider>,
 )
 
 // ReactDOM.render(<App />, document.getElementById('root'))

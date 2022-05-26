@@ -146,17 +146,17 @@ const OrderFormRender = ({options, commonConsts, ...props}) => {
           </td>
           <td/>
           <td>
-                <Button
-                  name='post_cost_button'
-                  type = "button"
-                  color = "primary"
-                  outline
-                  size = "sm"
-                  onClick={() => props.form.mutators.postCostCount()}
-                  disabled={!props.values.customer?.city?.pindex ||
+            <Button
+              name='post_cost_button'
+              type = "button"
+              color = "primary"
+              outline
+              size = "sm"
+              onClick={() => props.form.mutators.postCostCount()}
+              disabled={!props.values.customer?.city?.pindex ||
                             !props.values.total_weight}>
-                  {commonConsts?.count}
-                </Button>
+              {commonConsts?.count}
+            </Button>
           </td>
           <td>
             <Field name="total_postals"
@@ -204,6 +204,8 @@ OrderFormRender.propTypes = {
   handleSubmit: PropTypes.func,
   hasSubmitErrors: PropTypes.bool,
   initialValues: PropTypes.object,
+  form: PropTypes.object,
+  values: PropTypes.object,
 }
 
 export default OrderFormRender

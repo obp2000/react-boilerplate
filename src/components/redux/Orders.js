@@ -75,7 +75,7 @@ const submitListener = createDecorator({
   beforeSubmit: (form) => {
     // console.log('pre.....')
     preSubmitAction(form.getState().values)
-  }
+  },
 })
 
 const formInitialValues = (object, {
@@ -95,22 +95,21 @@ const formInitialValues = (object, {
 const postCostCount = (args, state, {getIn, changeValue, resetFieldState}) => {
   const pindex = getIn(state, 'formState.values.customer.city.pindex')
   // console.log('pindex ', pindex)
-  const total_weight = getIn(state, 'formState.values.total_weight')
-  // console.log('total_weight ', total_weight)
+  const totalWeight = getIn(state, 'formState.values.total_weight')
   const postBaseUrl = 'http://api.print-post.com/api/sendprice/v2/'
 
-  let params = new URLSearchParams()
+  const params = new URLSearchParams()
   params.set('from_index', '153038')
   params.set('to_index', pindex)
-  params.set('weight', total_weight)
+  params.set('weight', totalWeight)
 
   fetch(`${postBaseUrl}?${params.toString()}`)
-  .then(response => response.json())
-  .then(({posilka_nds}) => {
-    changeValue(state, 'post_cost', (oldValue) => parseInt(posilka_nds))
-    return resetFieldState('post_cost')
-  })
-  .catch((e) => console.error(e))
+      .then((response) => response.json())
+      .then(({posilka_nds: posilkaNds}) => {
+        changeValue(state, 'post_cost', (oldValue) => parseInt(posilkaNds))
+        return resetFieldState('post_cost')
+      })
+      .catch((e) => console.error(e))
 }
 
 const config = {
@@ -123,7 +122,7 @@ const config = {
   ObjectFormRender: OrderFormRender,
   validate,
   formInitialValues,
-  mutators: {postCostCount, ...arrayMutators}
+  mutators: {postCostCount, ...arrayMutators},
 }
 
 export default config
@@ -142,41 +141,41 @@ export const customerAndCityLabels = (options) => {
 }
 
 
-  // console.log('post_cost ', post_cost)
-  // tools.changeValue(state, 'post_cost', (oldValue) => post_cost)
+// console.log('post_cost ', post_cost)
+// tools.changeValue(state, 'post_cost', (oldValue) => post_cost)
 
-  // fetchJsonp(`${postBaseUrl}?${params.toString()}`)
-  //   // .then(response => response.json())
-  //       .then((resp) => {
-  //         // dispatch(change('order', 'post_cost', parseInt(Тариф)))
-  //         // dispatch(successPostCost(parseInt(Тариф)))
-  //         console.log('resp ', resp)
-  //       })
-  //   .catch((e) => console.error(e))
-  // params.set('o', 'json')
-  // params.set('st', 'localhost')
-  // params.set('ml', 'obp2000@mail.ru')
-  // params.set('key', 'test')
+// fetchJsonp(`${postBaseUrl}?${params.toString()}`)
+//   // .then(response => response.json())
+//       .then((resp) => {
+//         // dispatch(change('order', 'post_cost', parseInt(Тариф)))
+//         // dispatch(successPostCost(parseInt(Тариф)))
+//         console.log('resp ', resp)
+//       })
+//   .catch((e) => console.error(e))
+// params.set('o', 'json')
+// params.set('st', 'localhost')
+// params.set('ml', 'obp2000@mail.ru')
+// params.set('key', 'test')
 
 
-  // const params = {
-  //   f: 'Иваново',
-  //   o: 'json',
-  //   st: 'localhost',
-  //   ml: 'obp2000@mail.ru',
-  //   key: 'test',
-  //   t: '101000',
-  //   w: 2300,
-  // }
-  // const query = fetchBaseQuery({
-  //   baseUrl: `${postBaseUrl}?${params.toString()}`,
-  // })
+// const params = {
+//   f: 'Иваново',
+//   o: 'json',
+//   st: 'localhost',
+//   ml: 'obp2000@mail.ru',
+//   key: 'test',
+//   t: '101000',
+//   w: 2300,
+// }
+// const query = fetchBaseQuery({
+//   baseUrl: `${postBaseUrl}?${params.toString()}`,
+// })
 
-  // let headers = new Headers()
-  // headers.append('Content-Type', 'application/json')
-  // headers.append('Accept', 'application/json')
-  // headers.append('Origin','http://localhost:8080')
-  // headers.append('Access-Control-Allow-Origin', '*')
+// let headers = new Headers()
+// headers.append('Content-Type', 'application/json')
+// headers.append('Accept', 'application/json')
+// headers.append('Origin','http://localhost:8080')
+// headers.append('Access-Control-Allow-Origin', '*')
 
-  // console.log('query ', query)
-  // let post_cost
+// console.log('query ', query)
+// let post_cost

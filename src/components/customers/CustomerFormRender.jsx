@@ -50,11 +50,11 @@ const CustomerFormRender = ({options, commonConsts, ...props}) => {
           {...{options}}
           component={FloatingFormGroup} />
       </Col>
-{/*      <Button onClick={() => props.form.mutators.mutator1(1, 2, 3)}>
+      {/*      <Button onClick={() => props.form.mutators.mutator1(1, 2, 3)}>
         Test
       </Button>*/}
     </Row>
-{/*    <FormSpy
+    {/*    <FormSpy
       subscription={{ values: {name: true}}}
       onChange={(props) => {
         // setFieldData("firstName", {
@@ -72,6 +72,7 @@ const CustomerFormRender = ({options, commonConsts, ...props}) => {
 
 CustomerFormRender.propTypes = {
   options: PropTypes.object,
+  commonConsts: PropTypes.object,
   handleSubmit: PropTypes.func,
 }
 

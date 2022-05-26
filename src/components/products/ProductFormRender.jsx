@@ -176,6 +176,7 @@ const ProductFormRender = ({options, commonConsts, ...props}) => {
 
 ProductFormRender.propTypes = {
   options: PropTypes.object,
+  commonConsts: PropTypes.object,
   handleSubmit: PropTypes.func,
   initialValues: PropTypes.object,
 }

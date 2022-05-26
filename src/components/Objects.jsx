@@ -10,11 +10,11 @@ const Objects = ({config}) =>
     <Route index element={<ObjectsTable {...config} />} />
     <Route path=':id' element={<ValidateId {...config} />} />
     <Route path='new' element={<ObjectForm id='new' {...config} />} />
-    {/*<Route path='*' element={<NotFound />} />*/}
+    {/* <Route path='*' element={<NotFound />} />*/}
   </Routes>
 
-export const ValidateId = config => {
-  let {id} = useParams()
+export const ValidateId = (config) => {
+  const {id} = useParams()
   return id.match(/^\d+$/) ? <ObjectForm id={id} {...config} /> : <NotFound />
 }
 

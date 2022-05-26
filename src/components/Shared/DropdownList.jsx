@@ -4,7 +4,7 @@ import DropdownList from 'react-widgets/DropdownList'
 import Listbox from 'react-widgets/Listbox'
 import {useSelector, useDispatch} from 'react-redux'
 import WidgetErrors from './WidgetErrors'
-import WidgetMessages from './WidgetMessages'
+import widgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
 import {searchObjects} from '../../services/apiSlice'
 import {getFormText, getFieldAttrs} from './FieldProps'
@@ -53,7 +53,7 @@ const DropdownListComp = ({
       {...input}
       {...getFieldAttrs(input, meta, options)}
       filter='contains'
-      messages={WidgetMessages(notFound)}
+      messages={widgetMessages(notFound)}
       {...props}
       {...fromSelector}
     />
@@ -68,6 +68,7 @@ DropdownListComp.propTypes = {
   meta: PropTypes.object,
   search_path: PropTypes.string,
   listbox: PropTypes.bool,
+  not_found: PropTypes.string,
   props: PropTypes.string,
 }
 

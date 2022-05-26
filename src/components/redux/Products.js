@@ -64,7 +64,7 @@ const submitListener = createDecorator({
   beforeSubmit: (form) => {
     // console.log('pre.....')
     preSubmitAction(form.getState().values)
-  }
+  },
 })
 
 const config = {
@@ -76,7 +76,7 @@ const config = {
   rowData,
   ObjectFormRender: ProductFormRender,
   validate,
-  formInitialValues
+  formInitialValues,
 }
 
 export const productLabels = ({fleece}) =>

@@ -12,40 +12,40 @@ import NotFound from './components/NotFound'
 import ObjectsTable from './components/Shared/ObjectsTable'
 import ObjectForm from './components/Shared/ObjectForm'
 
-export const ValidateId = config => {
-  let {id} = useParams()
+export const ValidateId = (config) => {
+  const {id} = useParams()
   return id.match(/^\d+$/) ? <ObjectForm id={id} {...config} /> : <NotFound />
 }
 
 const App = () =>
-    <Container fluid="sm" className="bg-light border">
-        <ToastContainer />
-        <Routes>
-            <Route path="/" element={<Layout />}>
-                {/*<Route index element={<Objects config={customersConfig} />} />*/}
-                <Route index element={<ObjectsTable {...customersConfig} />} />
-                {/*<Route path='customers/*' element={<Objects config={customersConfig} />} />*/}
-                <Route path='customers'>
-                    <Route index element={<ObjectsTable {...customersConfig} />} />
-                    <Route path=':id' element={<ValidateId {...customersConfig} />} />
-                    <Route path='new' element={<ObjectForm id='new' {...customersConfig} />} />
-                </Route>
-                {/*<Route path='products/*' element={<Objects config={productsConfig} />} />*/}
-                <Route path='products'>
-                    <Route index element={<ObjectsTable {...productsConfig} />} />
-                    <Route path=':id' element={<ValidateId {...productsConfig} />} />
-                    <Route path='new' element={<ObjectForm id='new' {...productsConfig} />} />
-                </Route>
-                {/*<Route path='orders/*' element={<Objects config={ordersConfig} />} />*/}
-                <Route path='orders'>
-                    <Route index element={<ObjectsTable {...ordersConfig} />} />
-                    <Route path=':id' element={<ValidateId {...ordersConfig} />} />
-                    <Route path='new' element={<ObjectForm id='new' {...ordersConfig} />} />
-                </Route>
-                <Route path='user' element={<User />} />
-            </Route>
-            <Route path='*' element={<NotFound />} />
-        </Routes>
-    </Container>
+  <Container fluid="sm" className="bg-light border">
+    <ToastContainer />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* <Route index element={<Objects config={customersConfig} />} />*/}
+        <Route index element={<ObjectsTable {...customersConfig} />} />
+        <Route path='customers'>
+          <Route index element={<ObjectsTable {...customersConfig} />} />
+          <Route path=':id' element={<ValidateId {...customersConfig} />} />
+          <Route path='new'
+            element={<ObjectForm id='new' {...customersConfig} />} />
+        </Route>
+        <Route path='products'>
+          <Route index element={<ObjectsTable {...productsConfig} />} />
+          <Route path=':id' element={<ValidateId {...productsConfig} />} />
+          <Route path='new'
+            element={<ObjectForm id='new' {...productsConfig} />} />
+        </Route>
+        <Route path='orders'>
+          <Route index element={<ObjectsTable {...ordersConfig} />} />
+          <Route path=':id' element={<ValidateId {...ordersConfig} />} />
+          <Route path='new'
+            element={<ObjectForm id='new' {...ordersConfig} />} />
+        </Route>
+        <Route path='user' element={<User />} />
+      </Route>
+      <Route path='*' element={<NotFound />} />
+    </Routes>
+  </Container>
 
 export default App

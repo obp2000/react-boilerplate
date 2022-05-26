@@ -82,6 +82,7 @@ OrderItem.propTypes = {
   delete: PropTypes.string,
   yes: PropTypes.string,
   no: PropTypes.string,
+  not_found: PropTypes.string,
 }
 
 export default OrderItem

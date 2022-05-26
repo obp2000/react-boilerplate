@@ -53,7 +53,7 @@ const submitListener = createDecorator({
   beforeSubmit: (form) => {
     // console.log('pre.....')
     preSubmitAction(form.getState().values)
-  }
+  },
 })
 
 const config = {

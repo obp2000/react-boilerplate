@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useParams, Navigate} from 'react-router-dom'
+import {Navigate} from 'react-router-dom'
 import Loader from 'react-loader'
 import {Form} from 'react-final-form'
 import {toast} from 'react-toastify'
-import createDecorator from 'final-form-submit-listener'
 import {
   useGetOptionsQuery,
   useGetObjectQuery,
@@ -38,10 +37,12 @@ const ObjectForm = ({
     data: object = {},
     // isLoading,
     isFetching: isObjectFetching,
-    isSuccess: isSuccessFetchingObject,
+    // isSuccess: isSuccessFetchingObject,
     isError: isErrorFetchingObject,
-    error: objectFetchingError
-  } = isNewObject ? {isSuccess: true} : useGetObjectQuery({url, id: parseInt(id)})
+    // error: objectFetchingError,
+  } = isNewObject ?
+    {isSuccess: true} :
+    useGetObjectQuery({url, id: parseInt(id)})
   const [
     createOrUpdateObject,
     {
@@ -61,11 +62,13 @@ const ObjectForm = ({
     toast.dismiss()
     toast.error(mutationError.detail, {autoClose: false})
   }
-  if (isErrorFetchingObject) {return <NotFound />}
+  if (isErrorFetchingObject) {
+    return <NotFound />
+  }
   return <Loader loaded={!busy}>
     {isSuccessMutation && <Navigate to={redirectUrl} />}
-    {/*{isErrorFetchingObject && <Navigate to={-1} />}*/}
-    {/*{!isNewObject && isErrorFetchingObject && <Navigate to='/' />}*/}
+    {/* {isErrorFetchingObject && <Navigate to={-1} />}*/}
+    {/* {!isNewObject && isErrorFetchingObject && <Navigate to='/' />}*/}
     <Form name='objectForm'
       validate={validate(commonConsts?.error_messages)}
       // onSubmit={values => createOrUpdateObject({...values, url}).unwrap()

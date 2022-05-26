@@ -1,6 +1,6 @@
-const WidgetMessages = (notFound) => ({
+const widgetMessages = (notFound) => ({
   emptyFilter: notFound,
   emptyList: () => notFound,
 })
 
-export default WidgetMessages
+export default widgetMessages
