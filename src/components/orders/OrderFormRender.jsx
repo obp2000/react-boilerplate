@@ -13,16 +13,16 @@ import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
 import Label from '../Shared/Label'
 import Errors from '../Shared/Errors'
 // import { selectOptions } from '../redux/CommonConsts'
-import {customerAndCityLabels} from '../redux/Orders'
-import customersConfig from '../redux/Customers'
-import customerName from '../customers/CustomerName'
+import {customerAndCityLabels} from '../customers/options'
+import {orderOrderItemOptions, orderCustomerOptions} from './options'
+import customersConfig from '../customers/config'
+import customerName from '../customers/name'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
 
 const OrderFormRender = ({options, commonConsts, ...props}) => {
-  const customerLabels = customerAndCityLabels(options)
+  const customerLabels = customerAndCityLabels(orderCustomerOptions(options))
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
-    {props.hasSubmitErrors && <Errors {...props} />}
     <FormHeader {...{options}} {...props} {...commonConsts} >
       &nbsp;{commonConsts?.from} {props.initialValues.created_at}
     </FormHeader>
@@ -33,14 +33,12 @@ const OrderFormRender = ({options, commonConsts, ...props}) => {
     <Row>
       <Field name="customer"
         component={DropdownListFormGroup}
-        dataKey='id'
         textField={(item) => customerName(item, customerLabels)}
-        search_path={customersConfig.searchUrl}
-        label_col_size={2}
-        renderListItem={({item}) => customerName(item, customerLabels)}
+        searchPath={customersConfig.searchUrl}
         renderValue={({item}) => customerName(item, customerLabels)}
+        renderListItem={({item}) => customerName(item, customerLabels)}
         {...{options}}
-        not_found={commonConsts?.not_found}
+        notFound={commonConsts?.not_found}
       />
     </Row>
     <Row>
@@ -60,7 +58,7 @@ const OrderFormRender = ({options, commonConsts, ...props}) => {
     <Table size="sm" responsive bordered hover>
       <FieldArray name="order_items"
         component={OrderItems}
-        {...{options}}
+        options={orderOrderItemOptions(options)}
         {...commonConsts}
       />
       <tfoot>
@@ -202,7 +200,6 @@ OrderFormRender.propTypes = {
   options: PropTypes.object,
   commonConsts: PropTypes.object,
   handleSubmit: PropTypes.func,
-  hasSubmitErrors: PropTypes.bool,
   initialValues: PropTypes.object,
   form: PropTypes.object,
   values: PropTypes.object,

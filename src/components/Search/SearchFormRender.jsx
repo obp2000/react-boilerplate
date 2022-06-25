@@ -6,18 +6,12 @@ import Input from '../Shared/Input'
 import SubmitButton from '../Shared/SubmitButton'
 
 const SearchFormRender = (props) =>
-  <Form onSubmit={props.handleSubmit} inline className="d-flex mt-2">
+  <Form onSubmit={props.handleSubmit} inline className="d-flex mt-1">
     <Field name='term'
       type="search"
       placeholder={props.search}
       className="me-2"
       component={Input} />
-    {/*            <Button type="submit" color='primary'
-                          className='btn-outline-light'
-                    // disabled={submitting || invalid}
-                    >
-                {searchLabel}
-            </Button>*/}
     <SubmitButton text={props.search}
       className='btn-outline-light'
       {...props} />

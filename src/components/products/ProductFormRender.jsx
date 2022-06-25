@@ -4,18 +4,14 @@ import {Field} from 'react-final-form'
 import {Form, Row, Col} from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
-// import ImageFormGroup from '../Shared/ImageFormGroup'
 import SwitchFormGroup from '../Shared/SwitchFormGroup'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
 // import { selectImageProps } from '../redux/Products'
 // import { formatPrice, normalizePhone } from '../Shared/Formatters'
 import blank from '../../assets/img/blank.png'
-// import { selectImage } from '../redux/Products'
 
 const ProductFormRender = ({options, commonConsts, ...props}) => {
-  // const options = {options: props.options}
-  // console.log('props.hasSubmitErrors ', props.hasSubmitErrors)
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <FormHeader {...{options}} {...props} {...commonConsts}/>

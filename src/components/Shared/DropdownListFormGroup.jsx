@@ -4,9 +4,8 @@ import DropdownList from './DropdownList'
 import Label from './Label'
 
 const DropdownListFormGroup = (props) => {
-  // console.log('params: ', props)
   return <FormGroup row>
-    <Label {...props} />
+    <Label {...props} labelColSize={2} />
     <Col>
       <DropdownList {...props} />
     </Col>

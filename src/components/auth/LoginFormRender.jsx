@@ -12,10 +12,7 @@ const LoginFormRender = ({
   busy,
   login,
   ...props
-}) => {
-  // const options = props.options
-  // console.log('props ', props)
-  return <Loader loaded={!busy}>
+}) => <Loader loaded={!busy}>
     <Form onSubmit={handleSubmit}
       className="shadow p-3 mb-5 bg-body rounded">
       <Field name="username"
@@ -29,7 +26,6 @@ const LoginFormRender = ({
       <SubmitButton text={login} {...props} />
     </Form>
   </Loader>
-}
 
 LoginFormRender.propTypes = {
   options: PropTypes.object,
@@ -37,8 +33,6 @@ LoginFormRender.propTypes = {
   busy: PropTypes.bool,
   login: PropTypes.string,
   props: PropTypes.object,
-  // hasSubmitErrors: PropTypes.func,
-  // submitError: PropTypes.object,
 }
 
 export default LoginFormRender

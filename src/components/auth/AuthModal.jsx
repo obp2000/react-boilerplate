@@ -9,30 +9,22 @@ import {
 } from 'reactstrap'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
-import {selectAuth, toggleModal, toggleLogin} from '../redux/auth'
-// import { useGetOptionsQuery } from '../../services/apiSlice'
+import {toggleModal, toggleLogin} from './modalSlice'
+import {selectAuth, selectAuthModal} from './selectors'
 
-const AuthModal = (commonConsts) => {
-  const {modal, isLogin} = useSelector(selectAuth)
-  // const {
-  //     data: {
-  //         commonConsts = {}
-  //     } = {},
-  //     isLoading,
-  //     isFetching: isOptionsFetching,
-  //     isSuccess,
-  //     isError,
-  //     error
-  // } = useGetOptionsQuery(lastOptionsArg)
+const AuthModal = ({commonConsts}) => {
+  const {modal, isLogin} = useSelector(selectAuthModal)
+  const {isAuthenticated} = useSelector(selectAuth)
   const {login, register} = commonConsts
   const dispatch = useDispatch()
-  return <Modal isOpen={modal}>
+  // console.log('commonConsts ', props)
+  return <Modal isOpen={modal && !isAuthenticated}>
     <ModalHeader toggle={() => dispatch(toggleModal())}>
       {isLogin ? login : register}
     </ModalHeader>
     <ModalBody>
       {isLogin ?
-                <LoginForm {...commonConsts } /> :
+                <LoginForm {...commonConsts} /> :
                 <RegisterForm {...commonConsts} />}
       <Button size='sm' outline
         onClick={() => dispatch(toggleLogin())}>

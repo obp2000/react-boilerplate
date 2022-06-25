@@ -1,70 +1,42 @@
 import PropTypes from 'prop-types'
-import React from 'react'
-import {useSelector} from 'react-redux'
+import React, {useEffect} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import {Link, useSearchParams} from 'react-router-dom'
 import {Table, Row, Col, Badge, Button} from 'reactstrap'
-import {toast} from 'react-toastify'
 import Loader from 'react-loader'
-// import {toast} from 'react-toastify'
 import Pagination from '../Pagination/Pagination'
-// import DeleteButton from './DeleteButton'
-import {selectAuth} from '../redux/auth'
+import {selectAuth} from '../auth/selectors'
 import {
-  useGetObjectsQuery,
-  useGetOptionsQuery,
-  useDeleteObjectMutation,
-} from '../../services/apiSlice'
-import {getTableLabels} from '../redux/Router'
-import confirmAction from '../Shared/ConfirmAction'
+  getObjectsDataSelector,
+  getSelectors,
+  getObjectByIdSelector,
+} from '../../services/entityAdapter'
+import {deleteWithConfirm} from './deleteWithConfirm'
 
-const ObjectsTable = ({indexUrl, tableFieldNames, rowData}) => {
+const ObjectsTable = ({
+  indexUrl: url,
+  tableFieldNames,
+  rowData,
+  optionsTrigger,
+  commonConsts,
+  options,
+  getObjects,
+  useDeleteObjectMutation,
+}) => {
+  useEffect(() => {
+    optionsTrigger(url, true)
+  }, [url])
+  const params = useSearchParams()[0].toString()
+  const dispatch = useDispatch()
+  dispatch(getObjects.initiate(params))
+  const selectObjectsResult = getObjects.select(params)
+  const objectsResult = useSelector(selectObjectsResult)
+  const selectObjectsData = getObjectsDataSelector(selectObjectsResult)
+  const objectsData = useSelector(selectObjectsData)
+  const {selectAll} = getSelectors(selectObjectsData)
+  const [deleteObject, deleteStatus] = useDeleteObjectMutation()
+  const busy = objectsResult.isFetching || deleteStatus.isLoading
   const {isAuthenticated} = useSelector(selectAuth)
-  // console.log("isAuthenticated ", isAuthenticated)
-  const {
-    data: {
-      commonConsts: {
-        new: textNew,
-        edit,
-        successfully,
-        delete: textDelete,
-        yes,
-        no,
-      } = {},
-      options,
-    } = {},
-    isFetching: isOptionsFetching,
-    // isLoading,
-    // isSuccess,
-  } = useGetOptionsQuery(indexUrl)
-  const [searchParams] = useSearchParams()
-  const args = {url: indexUrl}
-  if (searchParams) {
-    // args.params = querystring.parse(location.search.replace('?', ''))
-    args.params = searchParams.toString()
-  }
-  const {
-    data: tableData = {},
-    isFetching: isObjectsFetching,
-  } = useGetObjectsQuery(args)
-  const [
-    deleteObject,
-    {
-      isLoading: isDeleting,
-      // isSuccess: isSuccessDelete,
-      // isError: isErrorDelete,
-      // error: deleteError,
-    },
-  ] = useDeleteObjectMutation()
-  const busy = isOptionsFetching || isObjectsFetching || isDeleting
-  // if (!busy && isSuccessDelete) {
-  //   toast.dismiss()
-  //   toast.success(commonConsts?.successfully)
-  // }
-  // if (!busy && isErrorDelete) {
-  //   toast.dismiss()
-  //   toast.error(deleteError.detail, {autoClose: false})
-  // }
-  // console.log('useNavigate() ', useNavigate())
   return <Loader loaded={!busy} >
     <Row>
       <Col sm={2}>
@@ -74,7 +46,7 @@ const ObjectsTable = ({indexUrl, tableFieldNames, rowData}) => {
       </Col>
       <Col>
         <h4 aria-label='Total count'>
-          <Badge>{tableData.totalCount}</Badge>
+          <Badge>{objectsData?.totalCount}</Badge>
         </h4>
       </Col>
     </Row>
@@ -85,23 +57,24 @@ const ObjectsTable = ({indexUrl, tableFieldNames, rowData}) => {
       className='table-secondary'>
       <thead className="thead-light">
         <tr>
-          {getTableLabels(tableFieldNames, options).map((label, key) =>
+          {tableFieldNames.map((tableFieldName, key) =>
             <th scope="col" key={key}>
-              {label}
-            </th>,
+              {options[tableFieldName]?.label}
+            </th>
           )}
           {isAuthenticated &&
                             <th scope="col" colSpan={2}>
-                              <Link to={`${indexUrl}new`}
+                              <Link to={`${url}new`}
+                                state={{object: {}}}
                                 className="btn btn-outline-primary btn-sm"
-                                aria-labelledby={textNew}>
-                                {textNew}
+                                aria-labelledby={commonConsts?.new}>
+                                {commonConsts?.new}
                               </Link>
                             </th>}
         </tr>
       </thead>
       <tbody>
-        {tableData?.results?.map((object, key) =>
+        {useSelector(selectAll)?.map((object, key) =>
           <tr key={key} aria-label={options?.name_singular}>
             {rowData(object, options)?.map((value, key) =>
               <td scope="row" key={key}>
@@ -110,36 +83,28 @@ const ObjectsTable = ({indexUrl, tableFieldNames, rowData}) => {
             )}
             {isAuthenticated &&
                                 <td>
-                                  <Link to={`${indexUrl}${object.id}`}
+                                  <Link to={`${url}${object.id}`}
+                                    state={{object}}
                                     className="btn btn-outline-primary btn-sm"
-                                    aria-labelledby={edit}>
-                                    {edit}
+                                    aria-labelledby={commonConsts?.edit}>
+                                    {commonConsts?.edit}
                                   </Link>
                                 </td>}
             {isAuthenticated &&
                 <td>
                   <Button size='sm'
                     outline
-                    aria-labelledby={textDelete}
-                    onClick={confirmAction(() => deleteObject({
-                      url: indexUrl,
-                      id: object.id}).unwrap()
-                        .then(() => {
-                          toast.dismiss()
-                          toast.success(successfully)
-                        })
-                        .catch(({data}) =>
-                          toast.error(data.detail, {autoClose: false})),
-                    `${textDelete}?`, yes, no)}
-                  >
-                    {textDelete}
+                    aria-labelledby={commonConsts?.delete}
+                    onClick={deleteWithConfirm(deleteObject,
+                      {id: object.id, tableArgs: params}, commonConsts)}>
+                    {commonConsts?.delete}
                   </Button>
                 </td>}
           </tr>,
         )}
       </tbody>
     </Table>
-    <Pagination {...{tableData}} />
+    <Pagination totalPages={objectsData?.totalPages} />
   </Loader>
 }
 
@@ -147,6 +112,9 @@ ObjectsTable.propTypes = {
   indexUrl: PropTypes.string,
   tableFieldNames: PropTypes.array,
   rowData: PropTypes.func,
+  optionsTrigger: PropTypes.func,
+  commonConsts: PropTypes.object,
+  options: PropTypes.object,
 }
 
 export default ObjectsTable

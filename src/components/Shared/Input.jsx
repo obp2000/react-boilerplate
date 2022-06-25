@@ -11,19 +11,16 @@ const InputComp = ({
   options,
   ...props
 }) => {
-  const formText = getFormText(input, options, props)
-  if (input.type == 'file') {
-    delete input.value
-  }
-  return < >
+  if (input.type == 'file') {delete input.value}
+  return <>
     <Input
       {...input}
       {...getFieldAttrs(input, meta, options, props)}
       {...props}
-    /> <
-      WidgetErrors { ...meta }
-    /> { formText && <FormTextList {...{formText}} /> } <
-                                                        />
+    />
+    <WidgetErrors {...meta} />
+    <FormTextList formText={getFormText(input, options, props)} />
+  </>
 }
 
 InputComp.propTypes = {

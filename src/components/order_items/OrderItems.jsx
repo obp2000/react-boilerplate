@@ -2,31 +2,23 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {Button} from 'reactstrap'
 import OrderItem from './OrderItem'
-// import AddOrderItemButton from './AddOrderItemButton'
-import {deleteOrderItemAction, addOrderItemAction} from '../redux/Orders'
-import {tableFieldNames} from '../redux/OrderItems'
-// import { selectCommonConsts } from '../redux/CommonConsts'
-import {productLabels} from '../redux/Products'
-import {getTableLabels} from '../redux/Router'
+import orderItemsConfig from '../order_items/config'
 
-const OrderItems = ({fields, options, add, ...consts}) => {
-  // console.log('fields ', fields)
-  // const deleteObjectAction = deleteOrderItemAction(fields)
-  const orderItemProps = options?.order_items?.child?.children
-  const productProps = orderItemProps?.product?.children
-  const tableLabels = getTableLabels(tableFieldNames, orderItemProps)
+const OrderItems = ({fields, options, ...commonConsts}) => {
   return <>
     <thead>
       <tr>
         <th scope="col">№</th>
-        {tableLabels.map((label, key) =>
-          <th scope="col" key={key}>{label}</th>,
+        {orderItemsConfig.tableFieldNames.map((tableFieldName, key) =>
+          <th scope="col" key={key}>
+            {options[tableFieldName]?.label}
+          </th>
         )}
         <th scope='col'>
           <Button size='sm'
             outline
-            onClick={() => addOrderItemAction(fields)}>
-            {add}
+            onClick={() => orderItemsConfig.addOrderItemAction(fields)}>
+            {commonConsts?.add}
           </Button>
         </th>
       </tr>
@@ -35,11 +27,10 @@ const OrderItems = ({fields, options, add, ...consts}) => {
       {fields.map((orderItemName, index) =>
         <OrderItem key={index}
           {...{orderItemName,
+            fields,
             index,
-            productLabels: productLabels(productProps),
-            tableLabels,
-            deleteOrderItem: () => deleteOrderItemAction(fields, index),
-            ...consts,
+            options,
+            ...commonConsts,
           }}
         />,
       )}
@@ -50,8 +41,7 @@ const OrderItems = ({fields, options, add, ...consts}) => {
 OrderItems.propTypes = {
   fields: PropTypes.object,
   options: PropTypes.object,
-  add: PropTypes.string,
-  const: PropTypes.object,
+  commonConsts: PropTypes.object,
 }
 
 export default OrderItems

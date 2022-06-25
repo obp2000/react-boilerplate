@@ -1,5 +1,5 @@
 import {isRejectedWithValue} from '@reduxjs/toolkit'
-import {toast} from 'react-toastify'
+import {toastError} from './Shared/Toast'
 
 export const rtkQueryErrorLogger = (api) => (next) => (action) => {
   // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood,
@@ -10,7 +10,7 @@ export const rtkQueryErrorLogger = (api) => (next) => (action) => {
     if (!['login', 'register'].includes(action.meta.arg.endpointName)) {
       const message = action.payload.data?.detail ||
         `Async error! ${action.error.message}`
-      toast.error(message, {autoClose: false})
+      toastError(message)
     }
   }
 

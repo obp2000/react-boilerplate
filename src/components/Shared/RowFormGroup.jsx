@@ -5,7 +5,7 @@ import Label from './Label'
 
 const RowFormGroup = (props) =>
   <FormGroup row>
-    <Label {...props} label_col_size={4} />
+    <Label {...props} labelColSize={4} />
     <Col>
       <Input {...props}/>
     </Col>

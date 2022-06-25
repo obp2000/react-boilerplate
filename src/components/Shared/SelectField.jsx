@@ -11,7 +11,6 @@ const SelectField = ({
   textField,
   ...props
 }) => {
-  const formText = getFormText({name}, options, props)
   const fieldAttrs = getFieldAttrs({name}, null, options)
   const choices = fieldAttrs?.choices
   delete fieldAttrs.choices
@@ -29,7 +28,7 @@ const SelectField = ({
         </option>,
       )}
     </Field>
-    {formText && <FormTextList {...{formText}} />}
+    <FormTextList formText={getFormText({name}, options, props)} />
   </>
 }
 

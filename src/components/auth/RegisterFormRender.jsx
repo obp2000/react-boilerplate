@@ -14,9 +14,7 @@ const RegisterFormRender = ({
   // isErrorRegister,
   // registerError,
   ...props
-}) => {
-  // const options = { options: useSelector(selectOptions) }
-  return <Loader loaded={!busy}>
+}) => <Loader loaded={!busy}>
     <Form onSubmit={handleSubmit}
       className="shadow p-3 mb-5 bg-body rounded">
       <Field name="username"
@@ -43,7 +41,6 @@ const RegisterFormRender = ({
       <SubmitButton text={register} {...props} />
     </Form>
   </Loader>
-}
 
 RegisterFormRender.propTypes = {
   options: PropTypes.object,

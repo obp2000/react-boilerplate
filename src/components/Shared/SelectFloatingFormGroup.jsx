@@ -6,7 +6,7 @@ import SelectField from './SelectField'
 const SelectFloatingFormGroup = (props) =>
   <FormGroup floating >
     <SelectField {...props} />
-    <Label {...props} label_size='sm' />
+    <Label {...props} labelSize='sm' />
   </FormGroup>
 
 export default SelectFloatingFormGroup

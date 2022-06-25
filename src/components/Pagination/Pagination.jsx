@@ -4,17 +4,16 @@ import {Pagination, PaginationItem} from 'reactstrap'
 import {useSearchParams, createSearchParams, Link} from 'react-router-dom'
 // import PaginationItem from './PaginationItem'
 
-const PaginationComp = ({tableData}) => {
+const PaginationComp = ({totalPages = 0}) => {
   const [searchParams] = useSearchParams()
   const currentPage = parseInt(searchParams.get('page') || 1)
   const urlSearchParams = createSearchParams(searchParams)
   const setSearch = (page) => {
-        page ? urlSearchParams.set('page', page) :
+        page ?  urlSearchParams.set('page', page) :
                 urlSearchParams.delete('page')
         return urlSearchParams.toString()
   }
-  const {totalPages = 0} = tableData
-  // console.log('createSearchParams ', test1.toString())
+  // const {totalPages = 0} = tableData
   const pages = []
   if (currentPage > 1) {
     pages.push({
@@ -41,7 +40,7 @@ const PaginationComp = ({tableData}) => {
   if (pages == []) return null
   return <Pagination>
     {pages.map(({label, search, active}, key) =>
-      <PaginationItem key={key} {...{active}} >
+      <PaginationItem {...{active, key}} >
         <Link to={{search}} className="page-link">
           {label}
         </Link>

@@ -6,15 +6,13 @@ import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
 // import Errors from '../Shared/Errors'
-import cityName from '../cities/CityName'
+import cityName from '../cities/name'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
-import {cityLabels} from '../redux/Cities'
+import {cityLabels} from '../cities/options'
+import {customerCityOptions} from '../customers/options'
 
-const CustomerFormRender = ({options, commonConsts, ...props}) => {
-  const cityFieldLabels = cityLabels(options?.city?.children)
-  // console.log("form ", props.form.mutators)
-  // props.form.change('name', 'testName')
-  return <Form onSubmit={props.handleSubmit}
+const CustomerFormRender = ({options, commonConsts, ...props}) =>
+  <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <FormHeader {...{options}} {...props} {...commonConsts} />
     <Field name="id"
@@ -35,14 +33,14 @@ const CustomerFormRender = ({options, commonConsts, ...props}) => {
       <Col sm={6}>
         <Field name="city"
           component={DropdownListFormGroup}
-          dataKey='id'
-          textField={(item) => cityName(item, cityFieldLabels)}
-          search_path='/cities/'
-          label_col_size={2}
-          renderListItem={({item}) => cityName(item, cityFieldLabels)}
-          renderValue={({item}) => cityName(item, cityFieldLabels)}
+          textField={({city, pindex}) => [city, pindex]}
+          searchPath='/cities/'
+          renderValue={({item}) =>
+            cityName(item, cityLabels(customerCityOptions(options)))}
+          renderListItem={({item}) =>
+            cityName(item, cityLabels(customerCityOptions(options)))}
           {...{options}}
-          not_found={commonConsts?.not_found}
+          notFound={commonConsts?.not_found}
         />
       </Col>
       <Col sm={8}>
@@ -50,25 +48,8 @@ const CustomerFormRender = ({options, commonConsts, ...props}) => {
           {...{options}}
           component={FloatingFormGroup} />
       </Col>
-      {/*      <Button onClick={() => props.form.mutators.mutator1(1, 2, 3)}>
-        Test
-      </Button>*/}
     </Row>
-    {/*    <FormSpy
-      subscription={{ values: {name: true}}}
-      onChange={(props) => {
-        // setFieldData("firstName", {
-        //   warning: values.firstName ? undefined : "Recommended"
-        // });
-        // setFieldData("lastName", {
-        //   warning: values.lastName ? undefined : "Recommended"
-        // });
-        console.log('spy props', props)
-      }
-    }
-    />*/}
   </Form>
-}
 
 CustomerFormRender.propTypes = {
   options: PropTypes.object,

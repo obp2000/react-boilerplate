@@ -3,12 +3,14 @@ import {configureStore} from '@reduxjs/toolkit'
 import persistState from 'redux-localstorage'
 import {apiSlice} from '../services/apiSlice'
 import {rtkQueryErrorLogger} from './ErrorMiddleware'
-import auth from './redux/auth'
+import auth from './auth/authSlice'
+import authModal from './auth/modalSlice'
 
 export const configureStoreFunc = (preloadedState) => {
   const store = configureStore({
     reducer: {
       auth,
+      authModal,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([

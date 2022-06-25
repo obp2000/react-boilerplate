@@ -6,7 +6,7 @@ import Label from './Label'
 const FloatingFormGroup = (props) =>
   <FormGroup floating >
     <Input {...props} />
-    <Label {...props} label_size='sm' />
+    <Label {...props} labelSize='sm' />
   </FormGroup>
 
 export default FloatingFormGroup

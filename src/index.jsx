@@ -3,10 +3,11 @@ import React from 'react'
 import {createRoot} from 'react-dom/client'
 import {Provider} from 'react-redux'
 import {HashRouter} from 'react-router-dom'
-import configureStore from './components/Store'
-import App from './App'
 import 'numeral/locales/ru'
 import numeral from 'numeral'
+import configureStore from './components/Store'
+import App from './App'
+import ToastContainer from './components/Shared/ToastContainer'
 
 import './assets/css/App.scss'
 import 'react-widgets/scss/styles.scss'
@@ -22,6 +23,7 @@ const root = createRoot(domContainer)
 root.render(
     <Provider {...{store}}>
       <HashRouter>
+        <ToastContainer />
         <App />
       </HashRouter>
     </Provider>,

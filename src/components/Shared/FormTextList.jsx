@@ -3,8 +3,13 @@ import React from 'react'
 import {FormText} from 'reactstrap'
 import parse from 'html-react-parser'
 
-const FormTextList = ({formText}) =>
-  <FormText>{parse(formText)}</FormText>
+const FormTextList = ({formText}) => {
+  if (formText) {
+    return <FormText>{parse(formText)}</FormText>
+  } else {
+    return null
+  }
+}
 
 FormTextList.propTypes = {
   formText: PropTypes.string,
