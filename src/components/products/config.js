@@ -1,5 +1,5 @@
+import React from 'react'
 import createDecorator from 'final-form-submit-listener'
-import productName from './name'
 import ProductFormRender from './ProductFormRender'
 import {validate} from './Validators'
 import {calculator} from './Calculator'
@@ -10,6 +10,12 @@ import {
     useUpdateProductMutation,
     useDeleteProductMutation
 } from './apiSlice'
+import ProductName from './ProductName'
+import {
+  densityForCount,
+  metersInRoll,
+  prices
+} from './Calculator'
 
 const indexUrl = '/products/'
 
@@ -41,7 +47,6 @@ const preSubmitAction = (values) => {
   delete values.updated_at
   delete values.PriceCoeffs
   values.toFormData = true
-  // values = objectToFormData(values)
 }
 
 const tableFieldNames = [
@@ -62,10 +67,9 @@ const rowData = ({
   created_at,
   updated_at,
   ...restObject
-},
-options) => [
+}) => [
   id,
-  productName(restObject, options),
+  <ProductName {...restObject} />,
   price,
   width,
   density,
@@ -73,12 +77,21 @@ options) => [
   updated_at,
 ]
 
-const formInitialValues = (object, {Consts} = {}) =>
-  ({...object, ...Consts})
+const emptyObject = {}
+
+const formInitialValues = (
+  object,
+  {Consts} = emptyObject
+) => ({
+  ...object,
+  ...Consts,
+  density_for_count: densityForCount(null, object),
+  meters_in_roll: metersInRoll(null, object),
+  prices: prices(null, {...object, PriceCoeffs: Consts?.PriceCoeffs})
+})
 
 const submitListener = createDecorator({
   beforeSubmit: (form) => {
-    // console.log('pre.....')
     preSubmitAction(form.getState().values)
   },
 })

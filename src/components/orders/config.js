@@ -1,13 +1,9 @@
+import React from 'react'
 import createDecorator from 'final-form-submit-listener'
 import arrayMutators from 'final-form-arrays'
-import {shortName} from '../customers/name'
-import {customerCityOptions, customerLabels} from '../customers/options'
-import {cityLabels} from '../cities/options'
 import OrderFormRender from './OrderFormRender'
 import {validate} from './Validators'
 import {orderCalculator} from './Calculator'
-import {orderItemsCalculator} from '../order_items/Calculator'
-import {orderCustomerOptions} from './options'
 import {
     getOrders,
     useGetOrderQuery,
@@ -15,6 +11,23 @@ import {
     useUpdateOrderMutation,
     useDeleteOrderMutation,
 } from './apiSlice'
+import {ShortCustomerName} from './CustomerName'
+import {
+  postCostWithPacket,
+  postDiscount,
+  totalPostals,
+  totalSum,
+  totalWeight,
+} from './Calculator'
+import {formInitialOrderItems} from '../orderItems/config'
+import {
+  orderItemsAmount,
+  orderItemsCost,
+  orderItemsWeight,
+} from './Calculator'
+
+const emptyObject = {}
+const emptyArray = []
 
 const indexUrl = '/orders/'
 
@@ -27,7 +40,7 @@ const preSubmitAction = (values) => {
     values.customer_id = values.customer.id
     delete values.customer
   }
-  (values.order_items || []).map((orderItem, index) => {
+  (values.order_items ?? emptyArray).map((orderItem, index) => {
     delete orderItem.cost
     delete orderItem.weight
     delete orderItem._destroy
@@ -48,7 +61,6 @@ const preSubmitAction = (values) => {
   delete values.post_discount
   delete values.total_postals
   delete values.total_sum
-  delete values.total_text
   delete values.total_weight
   delete values.order_items_amount
   delete values.order_items_cost
@@ -76,39 +88,52 @@ const rowData = ({
   order_items_cost,
   created_at,
   updated_at
-} = {},
-options) => [
+} = emptyObject) => [
   id,
-  shortName(customer, customerLabels(orderCustomerOptions(options))),
+  <ShortCustomerName {...customer} />,
   order_items_cost,
   created_at,
   updated_at,
 ]
 
 const submitListener = createDecorator({
-  beforeSubmit: (form) => {
-    // console.log('pre.....')
-    preSubmitAction(form.getState().values)
-  },
+  beforeSubmit: (form) => preSubmitAction(form.getState().values)
 })
 
-const formInitialValues = (object, {
-  Consts = {},
-  order_items_cost: orderItemsCost = {},
-  need_gift: needGift = {},
-}) => ({
-  ...object,
-  Consts,
-  samples_weight: Consts?.SAMPLES_WEIGHT,
-  packet_weight: Consts?.PACKET_WEIGHT,
-  gift_weight: Consts?.GIFT_WEIGHT,
-  order_items_cost_label: orderItemsCost.label,
-  need_gift_label: needGift.label,
-})
+const formInitialValues = (
+  object,
+  {Consts} = emptyObject,
+) => {
+    // const Consts = options?.Consts || {}
+    const orderItems = {
+      order_items: formInitialOrderItems(object?.order_items)
+    }
+    let objectValues = {
+      ...object,
+      ...Consts,
+      samples_weight: Consts?.SAMPLES_WEIGHT,
+      packet_weight: Consts?.PACKET_WEIGHT,
+      gift_weight: Consts?.GIFT_WEIGHT,
+      ...orderItems,
+      order_items_amount: orderItemsAmount(null, orderItems),
+      order_items_cost: orderItemsCost(null, orderItems),
+      order_items_weight: orderItemsWeight(null, orderItems),
+    }
+    objectValues = {
+      ...objectValues,
+      post_cost_with_packet: postCostWithPacket(null, objectValues),
+      post_discount: postDiscount(null, objectValues),
+      total_postals: totalPostals(null, objectValues),
+    }
+    return {
+      ...objectValues,
+      total_sum: totalSum(null, objectValues),
+      total_weight: totalWeight(null, objectValues),
+    }
+}
 
 const postCostCount = (args, state, {getIn, changeValue, resetFieldState}) => {
   const pindex = getIn(state, 'formState.values.customer.city.pindex')
-  // console.log('pindex ', pindex)
   const totalWeight = getIn(state, 'formState.values.total_weight')
   const postBaseUrl = 'http://api.print-post.com/api/sendprice/v2/'
 
@@ -120,7 +145,8 @@ const postCostCount = (args, state, {getIn, changeValue, resetFieldState}) => {
   fetch(`${postBaseUrl}?${params.toString()}`)
       .then((response) => response.json())
       .then(({posilka_nds: posilkaNds}) => {
-        changeValue(state, 'post_cost', (oldValue) => parseInt(posilkaNds))
+        changeValue(state, 'post_cost',
+          (oldValue) => (posilkaNds ?? 0).toFixed(2))
         return resetFieldState('post_cost')
       })
       .catch((e) => console.error(e))
@@ -129,7 +155,7 @@ const postCostCount = (args, state, {getIn, changeValue, resetFieldState}) => {
 const config = {
   indexUrl,
   redirectUrl,
-  decorators: [orderCalculator, orderItemsCalculator, submitListener],
+  decorators: [orderCalculator, submitListener],
   searchUrl,
   tableFieldNames,
   rowData,

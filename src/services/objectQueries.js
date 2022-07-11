@@ -1,3 +1,4 @@
+import {objectToFormData} from 'object-to-formdata'
 import {
     setAll,
     objectsInitialState,
@@ -42,7 +43,7 @@ export const updateObjectMutation = (url, type) => ({
 })
 
 export const deleteObjectMutation = (url, type) => ({
-    query: ({id, tableArgs}) => ({
+    query: ({id}) => ({
         url: `${url}${id}`,
         method: 'DELETE',
     }),

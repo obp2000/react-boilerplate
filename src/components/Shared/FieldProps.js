@@ -1,6 +1,11 @@
 import {invalid, valid} from './FieldStatus'
 
-export const fieldProps = ({name} = {}, options = {}) => options[name] || {}
+const emptyObject = {}
+
+export const fieldProps = (
+  {name} = emptyObject,
+  options = emptyObject
+) => options[name] || emptyObject
 
 export const getFormText = (input, options, {help_text: helpText}) =>
   helpText || fieldProps(input, options).help_text
@@ -20,7 +25,7 @@ options,
     choices,
     min_value: min,
     max_value: max,
-  } = fieldProps({name}, options)
+  } = fieldProps({name: name.split('.').pop()}, options)
   const attrs = {
     name,
     'id': name,

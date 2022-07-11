@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Button} from 'reactstrap'
-// import { selectCommonConsts } from '../redux/CommonConsts'
+import {useOutletContext} from 'react-router-dom'
+
+const emptyObject = {}
 
 const calculatedFields = [
   'density_for_count',
@@ -24,25 +26,25 @@ const SubmitButton = ({
   hasSubmitErrors,
   hasValidationErrors,
   dirtySinceLastSubmit,
-  dirtyFields,
+  dirtyFields = emptyObject,
   text,
-  save,
   className,
 }) => {
-  // console.log('submitting ', submitting)
+  const {commonConsts} = useOutletContext() || {}
+  const label = text || commonConsts?.save
   return <Button
     type="submit"
     color="primary"
     outline
     size="sm"
     className={className}
-    aria-labelledby={text || save}
+    aria-labelledby={label}
     disabled={submitting ||
                   pristine ||
                   isCalculatedFields(dirtyFields) ||
                   hasValidationErrors ||
                   (hasSubmitErrors && !dirtySinceLastSubmit)}>
-    {text || save}
+    {label}
   </Button>
 }
 
@@ -53,7 +55,6 @@ SubmitButton.propTypes = {
   hasValidationErrors: PropTypes.bool,
   dirtySinceLastSubmit: PropTypes.bool,
   dirtyFields: PropTypes.object,
-  save: PropTypes.string,
   text: PropTypes.string,
   className: PropTypes.string,
 }

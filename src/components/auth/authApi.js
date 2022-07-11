@@ -48,7 +48,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             url: '/logout/',
             method: 'POST',
         }),
-        invalidatesTags: (result, error) => error ? [] : ['Options'],
+        invalidatesTags: [
+            {type: 'Options', id: '/customers/'},
+            {type: 'Options', id: '/products/'},
+            {type: 'Options', id: '/orders/'}
+        ]
     }),
   })
 })

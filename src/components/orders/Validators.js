@@ -1,5 +1,7 @@
 import {notBlank} from '../Shared/Validators'
 
+const emptyObject = {}
+
 export const validate = ({
   blank,
-} = {}) => (values) => notBlank(values, ['customer'], blank)
+} = emptyObject) => (values) => notBlank(values, ['customer'], blank)

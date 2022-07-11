@@ -1,24 +1,32 @@
 import PropTypes from 'prop-types'
-import React, {useEffect} from 'react'
-import {Card, CardBody, CardTitle, Row, Col} from 'reactstrap'
+import React from 'react'
+import {useSelector} from 'react-redux'
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Row,
+  Col
+} from 'reactstrap'
+import {useOutletContext} from 'react-router-dom'
 import Loader from 'react-loader'
+import {useGetUserQuery} from './apiSlice'
 import {userFieldNames} from './config'
+import {useOptionsTrigger, useOptions} from '../options/hooks'
 
-const User = ({
-  optionsTrigger,
-  options,
-  optionsStatus,
-  user,
-  userStatus
-}) => {
-    const url = '/user/'
-    useEffect(() => {
-      optionsTrigger(url, true)
-    }, [url])
-    // const { data: user = {}, ...userStatus } = useGetUserQuery()
-    const busy = optionsStatus.isFetching || userStatus.isFetching
-    return <Loader loaded={!busy} >
-      <Card>
+const emptyObject = {}
+
+const User = () => {
+  const indexUrl = '/user/'
+  useOptionsTrigger(indexUrl)
+  const {options = emptyObject} = useOutletContext()
+  // console.log('options ', options)
+  const {
+    data: user = emptyObject,
+    isFetching
+  } = useGetUserQuery()
+  return <Loader loaded={!isFetching} >
+    <Card>
       <CardBody>
         <CardTitle>
           <h3>{options?.name_singular}</h3>
@@ -32,14 +40,6 @@ const User = ({
       </CardBody>
     </Card>
   </Loader>
-}
-
-User.propTypes = {
-  optionsTrigger: PropTypes.func,
-  options: PropTypes.object,
-  optionsStatus: PropTypes.object,
-  user: PropTypes.object,
-  userStatus: PropTypes.object,
 }
 
 export default User

@@ -9,36 +9,6 @@ import {
 } from 'reactstrap'
 import {confirmable, createConfirmation} from 'react-confirm'
 
-// class Confirmation1 extends React.Component {
-//     render() {
-//         const {
-//             proceedLabel,
-//             cancelLabel,
-//             title,
-//             confirmation,
-//             show,
-//             proceed,
-//             // enableEscape = true,
-//         } = this.props
-//         return <Modal isOpen={show}>
-//       <ModalHeader>
-//         {title}
-//       </ModalHeader>
-//       <ModalBody>
-//         {confirmation}
-//       </ModalBody>
-//       <ModalFooter>
-//         <Button size='sm' outline onClick={() => proceed(false)}>
-//           {cancelLabel}
-//         </Button>
-//         <Button size='sm' outline onClick={() => proceed(true)}>
-//           {proceedLabel}
-//         </Button>
-//       </ModalFooter>
-//     </Modal>
-//     }
-// }
-
 const Confirmation = ({
   proceedLabel,
   cancelLabel,

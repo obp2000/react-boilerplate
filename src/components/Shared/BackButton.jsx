@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useOutletContext} from 'react-router-dom'
 import {Button} from 'reactstrap'
 
-const BackButton = ({
-  back,
-}) => {
+const BackButton = () => {
   const navigate = useNavigate()
+  const {commonConsts} = useOutletContext()
   return <Button color = "primary"
     outline
     size="sm"
     onClick={() => navigate(-1)} >
-    {back}
+    {commonConsts?.back}
   </Button>
 }
 

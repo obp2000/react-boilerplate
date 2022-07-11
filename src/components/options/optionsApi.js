@@ -1,5 +1,7 @@
 import {apiSlice} from '../../services/apiSlice'
 
+const emptyObject = {}
+
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getOptions: builder.query({
@@ -8,14 +10,17 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             method: 'OPTIONS',
         }),
         transformResponse: ({
-            common_consts: commonConsts,
-            actions,
+            common_consts: commonConsts = emptyObject,
+            actions: {
+                POST: post,
+                PUT: put
+            } = emptyObject,
         }, meta, arg) => ({
             commonConsts,
-            options: actions.POST || actions.PUT,
+            options: post ?? put ?? emptyObject,
             arg,
         }),
-        providesTags: ['Options'],
+        providesTags: (result, error, arg) => [{type: 'Options', id: arg}],
     }),
 
   })
@@ -25,3 +30,5 @@ export const {
     useGetOptionsQuery,
     useLazyGetOptionsQuery
 } = extendedApiSlice
+
+export const {getOptions} = extendedApiSlice.endpoints

@@ -1,8 +1,5 @@
+import React from 'react'
 import createDecorator from 'final-form-submit-listener'
-import {shortName} from './name'
-import {customerCityOptions, customerLabels} from './options'
-import cityName from '../cities/name'
-import { cityLabels } from '../cities/options'
 import CustomerFormRender from './CustomerFormRender'
 import { validate } from './Validators'
 import {
@@ -13,6 +10,10 @@ import {
     useUpdateCustomerMutation,
     useDeleteCustomerMutation,
 } from './apiSlice'
+import CityName from './CityName'
+import ShortName from './ShortName'
+
+const emptyObject = {}
 
 const indexUrl = '/customers/'
 
@@ -44,11 +45,10 @@ const rowData = ({
     address,
     created_at,
     ...restObject
-} = {},
-options) => [
+} = emptyObject) => [
     id,
-    shortName(restObject, customerLabels(options)),
-    cityName(city, cityLabels(customerCityOptions(options))),
+    <ShortName {...restObject} />,
+    <CityName {...city} />,
     address,
     created_at,
 ]

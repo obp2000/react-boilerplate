@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
+import {signOut} from '../auth/authApi'
 
 const initialState = {
   isLogin: true,
@@ -18,6 +19,12 @@ const modalSlice = createSlice({
     closeModal: (state, {payload}) => {
       state.modal = false
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(signOut.matchFulfilled, (state, {payload}) => {
+        state.modal = false
+      })
   },
 })
 

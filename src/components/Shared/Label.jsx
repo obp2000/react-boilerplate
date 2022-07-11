@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Label} from 'reactstrap'
+import {useOutletContext} from 'react-router-dom'
 import {fieldProps} from './FieldProps'
+
+const emptyObject = {}
 
 const LabelComp = ({
   input: {
     name: inputName,
-  } = {},
+  } = emptyObject,
   name = inputName,
-  options,
+  options = useOutletContext()?.options,
   labelColSize: sm,
   labelSize: size,
   check,

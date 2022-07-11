@@ -3,38 +3,33 @@ import React from 'react'
 import {Row, Col} from 'reactstrap'
 import SubmitButton from './SubmitButton'
 import BackButton from './BackButton'
-// import { selectOptions } from '../redux/CommonConsts'
-// import { useOptions } from '../../services/apiSlice'
+import {useOutletContext} from 'react-router-dom'
 
 const FormHeader = ({
-  initialValues: {
-    id,
-  } = {},
-  options: {
-    name_singular: nameSingular,
-  },
-  children,
-  ...rest
+  id,
+  created_at,
+  ...props
 }) => {
+  const {options, commonConsts} = useOutletContext()
   return <Row>
     <Col sm={2}>
-      <BackButton {...rest} />
+      <BackButton />
     </Col>
     <Col sm={6}>
-      <h4 aria-label={nameSingular}>
-        {nameSingular} № {id}{children}
+      <h4 aria-label={options?.name_singular}>
+        {options?.name_singular} № {id} {commonConsts?.from} {created_at}
       </h4>
     </Col>
     <Col sm={2}>
-      <SubmitButton {...rest} />
+      <SubmitButton {...props} />
     </Col>
   </Row>
 }
 
 FormHeader.propTypes = {
-  initialValues: PropTypes.object,
-  options: PropTypes.object,
-  children: PropTypes.array,
+  id: PropTypes.number,
+  created_at: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default FormHeader

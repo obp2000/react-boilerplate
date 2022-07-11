@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Input} from 'reactstrap'
+import {useOutletContext} from 'react-router-dom'
 import WidgetErrors from './WidgetErrors'
 import FormTextList from './FormTextList'
 import {getFieldAttrs, getFormText} from './FieldProps'
@@ -8,14 +9,14 @@ import {getFieldAttrs, getFormText} from './FieldProps'
 const InputComp = ({
   input,
   meta,
-  options,
+  options = useOutletContext()?.options,
   ...props
 }) => {
   if (input.type == 'file') {delete input.value}
   return <>
     <Input
       {...input}
-      {...getFieldAttrs(input, meta, options, props)}
+      {...getFieldAttrs(input, meta, options)}
       {...props}
     />
     <WidgetErrors {...meta} />

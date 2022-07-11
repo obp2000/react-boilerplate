@@ -3,7 +3,7 @@ import {ToastContainer, Zoom} from 'react-toastify'
 
 const ToastContainerComp = () =>
   <ToastContainer position="top-center"
-    autoClose={2000}
+    autoClose={1000}
     transition={Zoom}
     theme="colored"
     closeOnClick

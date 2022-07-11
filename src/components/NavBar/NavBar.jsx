@@ -16,12 +16,9 @@ import AuthButton from '../auth/AuthButton'
 
 const NavBar = ({
   commonConsts,
-  signOutAction,
-  user,
-  optionsStatus
+  isFetching
 }) => {
-    const busy = optionsStatus.isUninitialized
-    return <Loader loaded={!busy} >
+    return <Loader loaded={!isFetching} >
       <Navbar color="primary"
         expand="md"
         dark
@@ -48,7 +45,7 @@ const NavBar = ({
               </NavItem>,
             )}
             <NavItem>
-              <AuthButton {...{signOutAction, commonConsts, user}} />
+              <AuthButton {...{commonConsts}} />
             </NavItem>
           </Nav>
           <SearchForm {...commonConsts} />
@@ -59,9 +56,7 @@ const NavBar = ({
 
 NavBar.propTypes = {
   commonConsts: PropTypes.object,
-  signOutAction: PropTypes.func,
-  user: PropTypes.object,
-  optionsStatus: PropTypes.object,
+  isFetching: PropTypes.bool,
 }
 
 export default NavBar

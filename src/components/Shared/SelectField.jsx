@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Field} from 'react-final-form'
+import {useOutletContext} from 'react-router-dom'
 import FormTextList from './FormTextList'
 import {getFormText, getFieldAttrs} from './FieldProps'
 
 const SelectField = ({
   name,
-  options,
+  options = useOutletContext()?.options,
   dataKey,
   textField,
   ...props
@@ -21,9 +22,8 @@ const SelectField = ({
       component='select'
       {...props}
     >
-      {choices.map((choice, key) =>
-        // <option value={choice[dataKey] == null ? '' : choice[dataKey]}
-        <option value={choice[dataKey] ?? ''} key={key}>
+      {choices?.map((choice, key) =>
+        <option value={choice[dataKey] ?? ''} {...{key}}>
           {choice[textField]}
         </option>,
       )}

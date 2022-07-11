@@ -1,60 +1,52 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Field} from 'react-final-form'
+// import {useOutletContext} from 'react-router-dom'
 import {Form, Row, Col} from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import FormHeader from '../Shared/FormHeader'
 import Input from '../Shared/Input'
 // import Errors from '../Shared/Errors'
-import cityName from '../cities/name'
 import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
-import {cityLabels} from '../cities/options'
-import {customerCityOptions} from '../customers/options'
+import CityName from './CityName'
 
-const CustomerFormRender = ({options, commonConsts, ...props}) =>
-  <Form onSubmit={props.handleSubmit}
+const CustomerFormRender = ({
+  handleSubmit,
+  initialValues,
+  ...props
+}) => {
+  const renderCity = ({item}) => <CityName {...item} />
+  return <Form onSubmit={handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
-    <FormHeader {...{options}} {...props} {...commonConsts} />
-    <Field name="id"
-      {...{options}}
-      hidden
-      component={Input} />
+    <FormHeader {...initialValues} {...props} />
+    <Field name="id" hidden component={Input} />
     <Row>
       <Col sm={3}>
-        <Field name="nick"
-          {...{options}}
-          component={FloatingFormGroup} />
+        <Field name="nick" component={FloatingFormGroup} />
       </Col>
       <Col sm={6}>
-        <Field name="name"
-          {...{options}}
-          component={FloatingFormGroup} />
+        <Field name="name" component={FloatingFormGroup} />
       </Col>
       <Col sm={6}>
         <Field name="city"
           component={DropdownListFormGroup}
           textField={({city, pindex}) => [city, pindex]}
           searchPath='/cities/'
-          renderValue={({item}) =>
-            cityName(item, cityLabels(customerCityOptions(options)))}
-          renderListItem={({item}) =>
-            cityName(item, cityLabels(customerCityOptions(options)))}
-          {...{options}}
-          notFound={commonConsts?.not_found}
+          renderValue={renderCity}
+          renderListItem={renderCity}
         />
       </Col>
       <Col sm={8}>
-        <Field name="address"
-          {...{options}}
-          component={FloatingFormGroup} />
+        <Field name="address" component={FloatingFormGroup} />
       </Col>
     </Row>
   </Form>
+}
 
 CustomerFormRender.propTypes = {
-  options: PropTypes.object,
-  commonConsts: PropTypes.object,
   handleSubmit: PropTypes.func,
+  initialValues: PropTypes.object,
+  props: PropTypes.object,
 }
 
 export default CustomerFormRender

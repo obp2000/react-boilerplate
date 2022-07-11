@@ -10,5 +10,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
+    useGetUserQuery,
     useLazyGetUserQuery,
 } = extendedApiSlice

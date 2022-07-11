@@ -2,40 +2,40 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {Button} from 'reactstrap'
+import Loader from 'react-loader'
 import {selectAuth} from './selectors'
 import {toggleModal} from './modalSlice'
+import UserLabel from './UserLabel'
+import {useSignOutMutation} from '../auth/authApi'
 
-const authButtonLabel = (isAuthenticated, {
-    username = ''
-} = {}, {
-    auth_menu_item: {
-        label = ''
-    } = {}
-} = {}) => {
-    let authButtonLabelArray = [label]
-    if (isAuthenticated && username) {
-        authButtonLabelArray.push(`(${username})`)
-    }
-    return authButtonLabelArray.join(' ')
+const emptyObject = {}
+
+const AuthButton = ({
+    commonConsts: {
+        auth_menu_item: {
+            label
+        } = emptyObject
+    } = emptyObject
+}) => {
+    const {isAuthenticated} = useSelector(selectAuth)
+    const dispatch = useDispatch()
+    const [signOutAction, signOutStatus] = useSignOutMutation()
+    const onClickAuthButton = isAuthenticated ?
+        () => signOutAction() :
+        () => dispatch(toggleModal())
+    return <Loader loaded={!signOutStatus.isLoading} >
+            <Button color='primary'
+                className='btn-outline-light'
+                onClick={onClickAuthButton}
+                aria-label='auth' >
+                {isAuthenticated ?
+                    <UserLabel {...{label}} /> : label}
+            </Button>
+        </Loader>
 }
 
-const AuthButton = ({signOutAction, commonConsts, user}) => {
-  const {isAuthenticated} = useSelector(selectAuth)
-  // let user = {}
-  // let userStatus = {}
-  // if (isAuthenticated) {
-  //   ;({data: user, ...userStatus} = useGetUserQuery())
-  // }
-  const dispatch = useDispatch()
-  const onClickAuthButton = isAuthenticated ?
-    () => signOutAction() :
-    () => dispatch(toggleModal())
-  return <Button color='primary'
-            className='btn-outline-light'
-            onClick={onClickAuthButton}
-            aria-label='auth' >
-            {authButtonLabel(isAuthenticated, user, commonConsts)}
-        </Button>
+AuthButton.propTypes = {
+  label: PropTypes.string,
 }
 
 export default AuthButton

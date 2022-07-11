@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import DropdownList from 'react-widgets/DropdownList'
+import {useOutletContext} from 'react-router-dom'
 import WidgetErrors from './WidgetErrors'
 import widgetMessages from './WidgetMessages'
 import FormTextList from './FormTextList'
@@ -10,25 +11,22 @@ import {getFormText, getFieldAttrs} from './FieldProps'
 const DropdownListComp = ({
   input,
   meta,
-  options,
+  options = useOutletContext()?.options,
   searchPath: url,
-  notFound,
+  notFound = useOutletContext()?.commonConsts?.not_found,
   ...props
 }) => {
-  const [searchTrigger, {data, ...searchStatus}] = useLazySearchObjectsQuery()
+  const [searchTrigger, {data, isFetching}] = useLazySearchObjectsQuery()
   const onSearch = (term) => {
-    if (term.length == 2) {
-      searchTrigger({url, params: {term}}, true)
-    }
+    if (term.length == 2) {searchTrigger({url, params: {term}}, true)}
   }
-  // console.log('render DropdownList')
   return <>
     <DropdownList
       {...input}
       {...getFieldAttrs(input, meta, options)}
       data={data}
       onSearch={onSearch}
-      busy={searchStatus.isFetching}
+      busy={isFetching}
       filter='contains'
       messages={widgetMessages(notFound)}
       {...props}
@@ -40,8 +38,8 @@ const DropdownListComp = ({
 
 DropdownListComp.propTypes = {
   input: PropTypes.object,
-  options: PropTypes.object,
   meta: PropTypes.object,
+  options: PropTypes.object,
   searchPath: PropTypes.string,
   notFound: PropTypes.string,
   props: PropTypes.string,

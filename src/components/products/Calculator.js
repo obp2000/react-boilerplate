@@ -1,68 +1,84 @@
 import createDecorator from 'final-form-calculate'
 
-const densityForCount = ({
+const canCountDensityForCount = ({
   weight_for_count: weightForCount,
   length_for_count: lengthForCount,
   width,
-}) => (weightForCount && lengthForCount && width) ?
-  parseInt(weightForCount / lengthForCount / width * 100) : null
+} = {}) => lengthForCount && width
 
-const metersInRoll = ({
+const countDensityForCount = ({
+  weight_for_count: weightForCount = 0,
+  length_for_count: lengthForCount,
+  width,
+} = {}) => weightForCount / lengthForCount / width * 100
+
+export const densityForCount = (_, values) => canCountDensityForCount(values)
+  ? parseInt(countDensityForCount(values))
+  : null
+
+const canCountMetersInRoll = ({
   weight,
   density,
   width,
-}) => (weight && density && width) ?
-  (weight * 100000 / density / width).toFixed(2) : null
+} = {}) => density && width
 
-const priceRubM = ({
+const countMetersInRoll = ({
+  weight = 0,
+  density,
+  width,
+} = {}) => weight * 100000 / density / width
+
+export const metersInRoll = (_, values) => canCountMetersInRoll(values)
+  ? countMetersInRoll(values).toFixed(2)
+  : null
+
+const countPriceRubM = ({
   dollar_price: dollarPrice = 0,
   dollar_rate: dollarRate = 0,
   density = 0,
   width = 0,
-}) => dollarPrice * dollarRate * density * width / 100000
+} = {}) => dollarPrice * dollarRate * density * width / 100000
 
-const prices = ({
+const priceRubM = (values, coeff = 1) =>
+  parseInt(countPriceRubM(values) * coeff)
+
+const coeffWithPrice = (values, coeff = 1) =>
+  `${coeff}: ${priceRubM(values, coeff)}`
+
+export const prices = (_, {
   PriceCoeffs = [],
-  ...rest
-}) => PriceCoeffs.reduce((result, coeff) =>
-  result += `${coeff}: ${parseInt(priceRubM(rest) * coeff)} / `, '')
+  ...values
+} = {}) => PriceCoeffs.reduce((result, coeff) => {
+    result.push(coeffWithPrice(values, coeff))
+    return result
+  }, []).join(' / ')
 
 export const calculator = createDecorator({
   field: 'weight_for_count',
-  updates: {
-    density_for_count: (_, values) => densityForCount(values),
-  },
+  updates: {density_for_count: densityForCount},
 }, {
   field: 'length_for_count',
-  updates: {
-    density_for_count: (_, values) => densityForCount(values),
-  },
+  updates: {density_for_count: densityForCount},
 }, {
   field: 'width',
   updates: {
-    density_for_count: (_, values) => densityForCount(values),
-    meters_in_roll: (width, values) => metersInRoll(values),
-    prices: (_, values) => prices(values),
+    density_for_count: densityForCount,
+    meters_in_roll: metersInRoll,
+    prices,
   },
 }, {
   field: 'weight',
-  updates: {
-    meters_in_roll: (_, values) => metersInRoll(values),
-  },
+  updates: {meters_in_roll: metersInRoll,},
 }, {
   field: 'density',
   updates: {
-    meters_in_roll: (_, values) => metersInRoll(values),
-    prices: (_, values) => prices(values),
+    meters_in_roll: metersInRoll,
+    prices,
   },
 }, {
   field: 'dollar_price',
-  updates: {
-    prices: (_, values) => prices(values),
-  },
+  updates: {prices},
 }, {
   field: 'dollar_rate',
-  updates: {
-    prices: (_, values) => prices(values),
-  },
+  updates: {prices},
 })

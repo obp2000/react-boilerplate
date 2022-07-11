@@ -1,17 +1,16 @@
-import {cityLabels} from '../cities/options'
+import PropTypes from 'prop-types'
+import React from 'react'
+import {useOutletContext} from 'react-router-dom'
+
+const emptyObject = {}
 
 export const customerCityOptions = ({
     city: {
         children
-    } = {}
-} = {}) => children
+    } = emptyObject
+} = emptyObject) => children
 
-export const customerLabels = ({ name, address } = {}) => ({
-    nameLabel: `${name?.label}:`,
-    addressLabel: `${address?.label}:`,
-})
-
-export const customerAndCityLabels = (options) => ({
-    ...customerLabels(options),
-    ...cityLabels(customerCityOptions(options)),
-})
+export const useCustomerCityOptions = () => {
+    const {options} = useOutletContext()
+    return customerCityOptions(options)
+}

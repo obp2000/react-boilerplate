@@ -16,11 +16,14 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "react-hooks",
     ],
     "rules": {
         semi: ["error", "never"],
-        "require-jsdoc": 0
+        "require-jsdoc": 0,
+        "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+        "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
     },
     "settings": {
         "react": {
