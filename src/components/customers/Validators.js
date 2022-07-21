@@ -1,4 +1,7 @@
 import {notBlank} from '../Shared/Validators'
 
-export const validate = (errorMessages) => (values) =>
-  notBlank(values, ['nick'], errorMessages?.blank)
+const emptyObject = {}
+
+export const validate = ({
+  blank,
+} = emptyObject) => (values) => notBlank(values, ['nick'], blank)

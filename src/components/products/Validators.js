@@ -1,9 +1,10 @@
 import {notBlank} from '../Shared/Validators'
 
-// export const validate = values => notInteger(values, ['price', 'price_pre'])
+const emptyObject = {}
 
-export const validate = ({blank} = {}) => (values) =>
-  ({...notBlank(values, ['price', 'name'], blank)})
+export const validate = ({
+  blank,
+} = emptyObject) => (values) => notBlank(values, ['name', 'price'], blank)
 
 
 // export const validate = ({

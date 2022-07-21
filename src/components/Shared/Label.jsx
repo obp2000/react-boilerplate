@@ -1,28 +1,19 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Label} from 'reactstrap'
-import {useOutletContext} from 'react-router-dom'
-import {fieldProps} from './FieldProps'
+import {useFieldLabel} from './FieldProps'
 
 const emptyObject = {}
 
-const LabelComp = ({
-  input: {
-    name: inputName,
-  } = emptyObject,
-  name = inputName,
-  options = useOutletContext()?.options,
-  labelColSize: sm,
-  labelSize: size,
-  check,
-}) => {
-  const {label, required} = fieldProps({name}, options)
-  return <Label {...{htmlFor: name, sm, size, check}}>
-    {label} {required ? '*' : ''}
-  </Label>
+const LabelComp = (props) => {
+  const {label, required, htmlFor, sm, size, check} = useFieldLabel(props)
+  return <Label {...{htmlFor, sm, size, check}}>
+          {label}{required && <strong>*</strong>}
+        </Label>
 }
 
 LabelComp.propTypes = {
+  props: PropTypes.object,
   input: PropTypes.object,
   name: PropTypes.string,
   options: PropTypes.object,

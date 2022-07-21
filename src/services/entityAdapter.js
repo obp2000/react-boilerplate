@@ -2,6 +2,8 @@ import {createEntityAdapter, createSelector} from '@reduxjs/toolkit'
 import {useSearchParams} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
 
+const emptyObject = {}
+
 export const objectsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.updated_at.localeCompare(a.updated_at)
 })
@@ -32,17 +34,20 @@ export const useObjectsData = (getObjects) => {
   const dispatch = useDispatch()
   dispatch(getObjects.initiate(params))
   const selectObjectsResult = getObjects.select(params)
-  const {isLoading, isFetching} = useSelector(selectObjectsResult)
-  const selectObjectsData =
-    createSelector([selectObjectsResult], ({data}) => data)
-  const {totalCount, totalPages} = useSelector(selectObjectsData) || {}
-  return {isLoading, isFetching, totalCount, totalPages, selectObjectsData}
+  const objectsResult = useSelector(selectObjectsResult)
+  // console.log('objectsResult ', objectsResult)
+  const {isLoading} = objectsResult
+  const selectObjectsData = createSelector([selectObjectsResult],
+    ({data}) => data
+  )
+  const {totalCount, totalPages} = useSelector(selectObjectsData) || emptyObject
+  return {isLoading, totalCount, totalPages, selectObjectsData}
 }
 
 export const useObjects = (getObjects) => {
-  const {isLoading, isFetching, totalCount, totalPages, selectObjectsData} =
-    useObjectsData(getObjects)
+  const {isLoading, totalCount, totalPages,
+    selectObjectsData} = useObjectsData(getObjects)
   const {selectAll} = getSelectors(selectObjectsData)
   const allObjects = useSelector(selectAll)
-  return {isLoading, isFetching, totalCount, totalPages, allObjects}
+  return {isLoading, totalCount, totalPages, allObjects}
 }

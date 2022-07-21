@@ -1,43 +1,51 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Field} from 'react-final-form'
-// import {useOutletContext} from 'react-router-dom'
 import {Form, Row, Col} from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
-import FormHeader from '../Shared/FormHeader'
+import Header from '../objectForm/Header'
 import Input from '../Shared/Input'
-// import Errors from '../Shared/Errors'
-import DropdownListFormGroup from '../Shared/DropdownListFormGroup'
-import CityName from './CityName'
+import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
+import {useCityDropdown} from './hooks'
 
 const CustomerFormRender = ({
   handleSubmit,
-  initialValues,
   ...props
 }) => {
-  const renderCity = ({item}) => <CityName {...item} />
+  const cityDropdownAttrs = useCityDropdown()
   return <Form onSubmit={handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
-    <FormHeader {...initialValues} {...props} />
-    <Field name="id" hidden component={Input} />
+    <Header {...props} />
+    <Field
+      name="id"
+      hidden
+      component={Input}
+    />
     <Row>
       <Col sm={3}>
-        <Field name="nick" component={FloatingFormGroup} />
+        <Field
+          name="nick"
+          component={FloatingFormGroup}
+        />
       </Col>
       <Col sm={6}>
-        <Field name="name" component={FloatingFormGroup} />
+        <Field
+          name="name"
+          component={FloatingFormGroup}
+        />
       </Col>
       <Col sm={6}>
-        <Field name="city"
+        <Field
+          name="city"
           component={DropdownListFormGroup}
-          textField={({city, pindex}) => [city, pindex]}
-          searchPath='/cities/'
-          renderValue={renderCity}
-          renderListItem={renderCity}
+          {...cityDropdownAttrs}
         />
       </Col>
       <Col sm={8}>
-        <Field name="address" component={FloatingFormGroup} />
+        <Field
+          name="address"
+          component={FloatingFormGroup}
+        />
       </Col>
     </Row>
   </Form>
@@ -45,7 +53,6 @@ const CustomerFormRender = ({
 
 CustomerFormRender.propTypes = {
   handleSubmit: PropTypes.func,
-  initialValues: PropTypes.object,
   props: PropTypes.object,
 }
 

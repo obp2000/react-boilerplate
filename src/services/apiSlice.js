@@ -14,5 +14,7 @@ export const apiSlice = createApi({
       },
     }),
     tagTypes: ['Customers', 'Products', 'Orders', 'CurrentUser', 'Options'],
-    endpoints: (builder) => ({}),
+    endpoints: () => ({}),
 })
+
+export const {updateQueryData} = apiSlice.util

@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {StrictMode} from 'react'
 // import * as ReactDOM from 'react-dom'
 import {createRoot} from 'react-dom/client'
 import {Provider} from 'react-redux'
-import {HashRouter} from 'react-router-dom'
+import {HashRouter as Router} from 'react-router-dom'
 import 'numeral/locales/ru'
 import numeral from 'numeral'
 import configureStore from './components/Store'
 import App from './App'
-import ToastContainer from './components/Shared/ToastContainer'
+// import ToastContainer from './components/Shared/ToastContainer'
 
 import './assets/css/App.scss'
 import 'react-widgets/scss/styles.scss'
@@ -22,11 +22,13 @@ const domContainer = document.querySelector('#root')
 const root = createRoot(domContainer)
 root.render(
     <Provider {...{store}}>
-      <HashRouter>
-        <ToastContainer />
-        <App />
-      </HashRouter>
-    </Provider>,
+      <Router>
+        {/*<ToastContainer />*/}
+          {/*<StrictMode>*/}
+            <App />
+        {/*</StrictMode>*/}
+      </Router>
+    </Provider>
 )
 
 // ReactDOM.render(<App />, document.getElementById('root'))

@@ -1,37 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
 import {Button} from 'reactstrap'
-import Loader from 'react-loader'
-import {selectAuth} from './selectors'
-import {toggleModal} from './modalSlice'
-import UserLabel from './UserLabel'
-import {useSignOutMutation} from '../auth/authApi'
+// import Loader from 'react-loader'
+import {useAuthButton} from './hooks'
 
-const emptyObject = {}
-
-const AuthButton = ({
-    commonConsts: {
-        auth_menu_item: {
-            label
-        } = emptyObject
-    } = emptyObject
-}) => {
-    const {isAuthenticated} = useSelector(selectAuth)
-    const dispatch = useDispatch()
-    const [signOutAction, signOutStatus] = useSignOutMutation()
-    const onClickAuthButton = isAuthenticated ?
-        () => signOutAction() :
-        () => dispatch(toggleModal())
-    return <Loader loaded={!signOutStatus.isLoading} >
-            <Button color='primary'
+const AuthButton = ({label}) => {
+    const buttonAttrs = useAuthButton(label)
+    return <Button
+                color='primary'
                 className='btn-outline-light'
-                onClick={onClickAuthButton}
-                aria-label='auth' >
-                {isAuthenticated ?
-                    <UserLabel {...{label}} /> : label}
-            </Button>
-        </Loader>
+                aria-label='auth'
+                {...buttonAttrs}
+            />
 }
 
 AuthButton.propTypes = {

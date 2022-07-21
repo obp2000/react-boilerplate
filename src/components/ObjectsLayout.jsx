@@ -1,16 +1,18 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, {lazy} from 'react'
 import {Outlet, useOutletContext} from 'react-router-dom'
-import {useSelector} from 'react-redux'
-import AuthModal from './auth/AuthModal'
-import {selectAuth} from './auth/selectors'
+// import AuthModal from './auth/AuthModal'
+
+const AuthModal = lazy(() => import('./auth/AuthModal'))
 
 const ObjectsLayout = (props) => {
-	const {isAuthenticated} = useSelector(selectAuth)
 	const layoutContext = useOutletContext()
+	const context = {...layoutContext, ...props}
+	// console.log('props ', props)
+	// console.log('layoutContext ', layoutContext)
 	return 	<>
-						{!isAuthenticated && <AuthModal />}
-						<Outlet context={{...layoutContext, ...props}} />
+						{!context?.isAuthenticated && <AuthModal />}
+						<Outlet context={context} />
 					</>
 }
 

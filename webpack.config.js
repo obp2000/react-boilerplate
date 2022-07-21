@@ -5,7 +5,9 @@ const entry = "./src/index.jsx"
 
 const output = {
     path: path.join(__dirname, "/dist"),
-    filename: "index-bundle.js"
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
+    // filename: "index-bundle.js"
 }
 
 const js_rules = {

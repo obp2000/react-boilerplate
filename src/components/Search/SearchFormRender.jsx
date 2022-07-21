@@ -3,26 +3,29 @@ import React from 'react'
 import {Field} from 'react-final-form'
 import {Form} from 'reactstrap'
 import Input from '../Shared/Input'
-import SubmitButton from '../Shared/SubmitButton'
+import SubmitButton from '../submitButton/SubmitButton'
 
 const SearchFormRender = ({
-  handleSubmit,
-  search,
+  label,
   ...props
-}) => <Form onSubmit={handleSubmit} inline className="d-flex mt-1">
-    <Field name='term'
+}) => <Form onSubmit={props.handleSubmit} inline className="d-flex mt-1">
+    <Field
+      name='term'
       type="search"
-      placeholder={search}
+      placeholder={label}
       className="me-2"
-      component={Input} />
-    <SubmitButton text={search}
+      component={Input}
+    />
+    <SubmitButton
+      text={label}
       className='btn-outline-light'
-      {...props} />
+      {...props}
+    />
   </Form>
 
 SearchFormRender.propTypes = {
   handleSubmit: PropTypes.func,
-  search: PropTypes.string,
+  label: PropTypes.string,
   props: PropTypes.object,
 }
 

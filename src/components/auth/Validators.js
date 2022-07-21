@@ -9,7 +9,8 @@ const emptyObject = {}
 
 export const validateLogin = ({
     blank,
-} = emptyObject) => (values) => notBlank(values, ['username', 'password'], blank)
+} = emptyObject) => (values) =>
+    notBlank(values, ['username', 'password'], blank)
 
 export const validateRegister = ({
     blank,

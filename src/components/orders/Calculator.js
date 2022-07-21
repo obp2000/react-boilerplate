@@ -2,15 +2,15 @@ import {getIn} from 'final-form'
 import createDecorator from 'final-form-calculate'
 var math = require('lodash/math')
 
-const canCountCost = ({
-  amount,
-  price
-} = {}) => amount && price
+// const canCountCost = ({
+//   amount,
+//   price
+// } = {}) => amount && price
 
 const countCost = ({
   amount = 0,
   price = 0
-} = {}) => amount * price
+}) => amount * price
 
 export const cost = (values) => countCost(values).toFixed(2)
 
@@ -33,11 +33,10 @@ export const orderItemsCost = (_, values) => sumBy(values, 'cost').toFixed(2)
 
 export const orderItemsWeight = (_, values) => sumBy(values, 'weight')
 
-export const postCostWithPacket = (_,
-  {
-    post_cost: postCost = 0,
-    packet = 0
-  } = {}) => (Number(postCost) + Number(packet)).toFixed(2)
+export const postCostWithPacket = (_, {
+  post_cost: postCost = 0,
+  packet = 0
+} = {}) => (Number(postCost) + Number(packet)).toFixed(2)
 
 const needPostDiscount = ({
   order_items_cost = 0,

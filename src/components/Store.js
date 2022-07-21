@@ -1,13 +1,12 @@
-import {logger} from 'redux-logger'
 import {configureStore} from '@reduxjs/toolkit'
+import {logger} from 'redux-logger'
 import persistState from 'redux-localstorage'
 import {apiSlice} from '../services/apiSlice'
 import {rtkQueryErrorLogger} from './ErrorMiddleware'
 import auth from './auth/authSlice'
 import authModal from './auth/modalSlice'
 
-export const configureStoreFunc = (preloadedState) => {
-  const store = configureStore({
+const configureStoreFunc = (preloadedState) => configureStore({
     reducer: {
       auth,
       authModal,
@@ -21,12 +20,5 @@ export const configureStoreFunc = (preloadedState) => {
     preloadedState,
     enhancers: [persistState('auth', {key: 'AUTH'})],
   })
-
-  // if (process.env.NODE_ENV !== 'production' && module.hot) {
-  //     module.hot.accept('./redux/index', () => store.replaceReducer(reducer))
-  // }
-
-  return store
-}
 
 export default configureStoreFunc

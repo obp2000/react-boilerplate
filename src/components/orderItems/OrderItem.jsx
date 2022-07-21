@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Field} from 'react-final-form'
-import {useOutletContext} from 'react-router-dom'
-import productsConfig from '../products/config'
-import DropdownList from '../Shared/DropdownList'
+import DropdownList from '../dropdownList/DropdownList'
 import Input from '../Shared/Input'
+import {useOrderItemOptions, useProductDropdown} from './hooks'
 import DeleteOrderItemButton from './DeleteOrderItemButton'
-import ProductName from '../products/ProductName'
-import {useOrderItemOptions, orderItemProductOptions} from './options'
 
 const OrderItem = ({
   orderItemName,
@@ -15,64 +12,59 @@ const OrderItem = ({
   fields,
 }) => {
   const options = useOrderItemOptions()
-  const productOptions = orderItemProductOptions(options)
-  const renderProduct = ({item}) =>
-    <ProductName {...item} options={productOptions} />
+  const productDropdownAttrs = useProductDropdown()
+  // console.log('orderItemName ', orderItemName)
+  // console.log('fields ', fields)
   return <tr>
     <th scope="row">
-      {index+1}
+      {index + 1}
     </th>
     <td className="min-vw-35">
-      <Field name={`${orderItemName}.product`}
-        // placeholder={options?.product?.label}
-        options={options}
-        containerClassName='form-field'
+      <Field
+        name={[orderItemName, 'product'].join('.')}
         component={DropdownList}
-        textField={({
-          get_product_type_display: getProductTypeDisplay,
-          get_threads_display: getThreadsDisplay,
-          get_contents_display: getContentsDisplay,
-          name,
-        }) => [
-            getProductTypeDisplay,
-            getThreadsDisplay,
-            getContentsDisplay,
-            name,
-          ]}
-        searchPath={productsConfig.searchUrl}
-        renderListItem={renderProduct}
-        renderValue={renderProduct}
+        {...productDropdownAttrs}
+        {...{options}}
+        containerClassName='form-field'
       />
     </td>
     <td>
-      <Field name={`${orderItemName}.price`}
+      <Field
+        name={`${orderItemName}.price`}
         type='number'
-        options={options}
+        {...{options}}
         step={1}
         min={0}
-        component={Input} />
+        component={Input}
+      />
     </td>
     <td>
-      <Field name={`${orderItemName}.amount`}
+      <Field
+        name={`${orderItemName}.amount`}
         type='number'
-        options={options}
+        {...{options}}
         step={0.1}
         min={0}
-        component={Input} />
+        component={Input}
+      />
     </td>
     <td>
-      <Field name={`${orderItemName}.cost`}
+      <Field
+        name={`${orderItemName}.cost`}
         type="number"
-        options={options}
+        {...{options}}
         disabled
-        component={Input} />
+        component={Input}
+      />
     </td>
     <td>
-      <Field name={`${orderItemName}.weight`}
+      <Field
+        name={`${orderItemName}.weight`}
         type="number"
-        options={options}
+        {...{options}}
         disabled
-        component={Input} />
+        component={Input}
+      />
     </td>
     <td>
       <DeleteOrderItemButton {...{index, fields}} />

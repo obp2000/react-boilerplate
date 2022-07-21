@@ -1,16 +1,20 @@
 import createDecorator from 'final-form-calculate'
 
+const emptyObject = {}
+
+const emptyArray = []
+
 const canCountDensityForCount = ({
   weight_for_count: weightForCount,
   length_for_count: lengthForCount,
   width,
-} = {}) => lengthForCount && width
+} = emptyObject) => lengthForCount && width
 
 const countDensityForCount = ({
   weight_for_count: weightForCount = 0,
   length_for_count: lengthForCount,
   width,
-} = {}) => weightForCount / lengthForCount / width * 100
+} = emptyObject) => weightForCount / lengthForCount / width * 100
 
 export const densityForCount = (_, values) => canCountDensityForCount(values)
   ? parseInt(countDensityForCount(values))
@@ -20,13 +24,13 @@ const canCountMetersInRoll = ({
   weight,
   density,
   width,
-} = {}) => density && width
+} = emptyObject) => density && width
 
 const countMetersInRoll = ({
   weight = 0,
   density,
   width,
-} = {}) => weight * 100000 / density / width
+} = emptyObject) => weight * 100000 / density / width
 
 export const metersInRoll = (_, values) => canCountMetersInRoll(values)
   ? countMetersInRoll(values).toFixed(2)
@@ -37,7 +41,7 @@ const countPriceRubM = ({
   dollar_rate: dollarRate = 0,
   density = 0,
   width = 0,
-} = {}) => dollarPrice * dollarRate * density * width / 100000
+} = emptyObject) => dollarPrice * dollarRate * density * width / 100000
 
 const priceRubM = (values, coeff = 1) =>
   parseInt(countPriceRubM(values) * coeff)
@@ -46,9 +50,9 @@ const coeffWithPrice = (values, coeff = 1) =>
   `${coeff}: ${priceRubM(values, coeff)}`
 
 export const prices = (_, {
-  PriceCoeffs = [],
+  PriceCoeffs = emptyArray,
   ...values
-} = {}) => PriceCoeffs.reduce((result, coeff) => {
+} = emptyObject) => PriceCoeffs.reduce((result, coeff) => {
     result.push(coeffWithPrice(values, coeff))
     return result
   }, []).join(' / ')

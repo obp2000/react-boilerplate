@@ -1,6 +1,6 @@
 import {apiSlice} from '../../services/apiSlice'
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
+const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getUser: builder.query({
         query: () => '/user/',
@@ -11,5 +11,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetUserQuery,
-    useLazyGetUserQuery,
+    // useLazyGetUserQuery,
 } = extendedApiSlice
+
+export default extendedApiSlice

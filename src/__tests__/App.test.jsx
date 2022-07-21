@@ -138,7 +138,7 @@ test('displays existing object form and updates object', async () => {
   await userEvent.click(linksToEdit[2])
   const formHeader =
     await screen.findByRole('heading', {name: options.name_singular})
-  expect(getObject).toHaveBeenCalledTimes(1)
+  expect(getObject).toHaveBeenCalledTimes(0)
   expect(formHeader).toHaveTextContent(options.name_singular)
   expect(formHeader).toHaveTextContent(objects.results[2].id)
   // expect(searchCities).toHaveBeenCalledTimes(1)

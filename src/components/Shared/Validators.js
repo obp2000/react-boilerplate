@@ -6,7 +6,7 @@ export const notBlank = (
   errorText = emptyString
 ) =>
   fields.reduce((errors, field) => {
-    if (!values[field] || (field == 'city' && !values[field].pindex)) {
+    if (!values[field] || (field === 'city' && !values[field].pindex)) {
       errors[field] = errorText
     }
     return errors
@@ -44,7 +44,7 @@ export const validPasswordConfirmation = (
     errorText = emptyString,
 ) => {
   const error = {}
-  if (values[passwordField] != values[passwordConfirmationField]) {
+  if (values[passwordField] !== values[passwordConfirmationField]) {
     error[passwordConfirmationField] = errorText
   }
   return error

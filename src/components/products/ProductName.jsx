@@ -15,8 +15,8 @@ const ProductName = ({
 }) => {
     return <>
         {getProductTypeDisplay && (getProductTypeDisplay + ' ')}
-        {(threads != null) && (getThreadsDisplay + ' ')}
-        {(contents != null) && (getContentsDisplay + ' ')}
+        {(threads !== null) && (getThreadsDisplay + ' ')}
+        {(contents !== null) && (getContentsDisplay + ' ')}
         <Fleece fleece={fleece} label={options?.fleece?.label} />
         {name}
     </>

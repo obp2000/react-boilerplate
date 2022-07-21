@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import OrderItem from './OrderItem'
-import OrderItemsTableFieldNames from './OrderItemsTableFieldNames'
-import AddOrderItemButton from './AddOrderItemButton'
 import OrderItemsTotals from '../orders/OrderItemsTotals'
 
 const OrderItems = ({fields}) => <>

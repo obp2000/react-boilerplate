@@ -1,15 +1,15 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import {useSearchParams} from 'react-router-dom'
 import {Form} from 'react-final-form'
-import SearchFormRender from './SearchFormRender'
+import {useSearchForm} from './hooks'
 
-const SearchForm = (props) => {
-  const [_, setSearchParams] = useSearchParams()
-  return <Form name='search'
-    onSubmit={({term}) => setSearchParams({term})}
-    render={SearchFormRender}
-    {...props}
-  />
+const SearchForm = ({label}) => {
+  const searchFormAttrs = useSearchForm(label)
+  return <Form {...searchFormAttrs} />
+}
+
+SearchForm.propTypes = {
+  label: PropTypes.string,
 }
 
 export default SearchForm

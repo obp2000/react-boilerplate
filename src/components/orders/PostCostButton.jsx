@@ -2,37 +2,20 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {useOutletContext} from 'react-router-dom'
 import {Button} from 'reactstrap'
+import {usePostCostButton} from './hooks'
 
-const emptyObject = {}
-
-const PostCostButton = ({
-	form: {
-		mutators: {
-			postCostCount
-		}
-	},
-	values: {
-		customer,
-		total_weight: totalWeight
-	} = emptyObject
-}) => {
-	const {commonConsts} = useOutletContext()
-	return <Button
-              name='post_cost_button'
-              type = "button"
+const PostCostButton = (props) => {
+	const buttonAttrs = usePostCostButton(props)
+	return 	<Button
               color = "primary"
               outline
               size = "sm"
-              onClick={() => postCostCount()}
-              disabled={!customer?.city?.pindex || !totalWeight}>
-              {commonConsts?.count}
-            </Button>
+              {...buttonAttrs}
+            />
 }
 
 PostCostButton.propTypes = {
-	postCostCount: PropTypes.func,
-	customer: PropTypes.object,
-	totalWeight: PropTypes.number,
+	props: PropTypes.object,
 }
 
 export default PostCostButton

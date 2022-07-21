@@ -1,72 +1,102 @@
-import React from 'react'
+import React, {Suspense, lazy} from 'react'
 import {Routes, Route} from 'react-router-dom'
 import {Container} from 'reactstrap'
 import Loader from 'react-loader'
 import {useSelector} from 'react-redux'
+import {ToastContainer} from 'react-toastify'
 import {selectAuth} from './components/auth/selectors'
 import Layout from './components/Layout'
-import customersConfig from './components/customers/config'
-import productsConfig from './components/products/config'
-import ordersConfig from './components/orders/config'
-import User from './components/users/User'
-import NotFound from './components/NotFound'
-import ObjectsTable from './components/Shared/ObjectsTable'
-import ObjectForm from './components/Shared/ObjectForm'
-import AuthModal from './components/auth/AuthModal'
+
 import {getOptions} from './components/options/optionsApi'
-import ProtectedRoute from './components/Shared/ProtectedRoute'
-import ValidateId from './components/Shared/ValidateId'
+// import ProtectedRoute from './components/Shared/ProtectedRoute'
+// import ValidateId from './components/Shared/ValidateId'
 import ObjectsLayout from './components/ObjectsLayout'
 import {useOptions} from './components/options/hooks'
 
-// const ObjectsRoute = ({path, config}) =>
-//   <Route  path={path} element={<ObjectsLayout {...config} />}>
-//             <Route index element={<ObjectsTable />} />
-//             <Route path=':id' element={<ValidateId />} />
-//             <Route path='new' element={<ObjectForm />} />
-//           </Route>
+import {useCustomersTable, useCustomerForm} from './components/customers/hooks'
+import {useGetCustomerQuery} from './components/customers/apiSlice'
+import {useProductsTable, useProductForm} from './components/products/hooks'
+import {useGetProductQuery} from './components/products/apiSlice'
+
+import {useOrdersTable, useOrderForm} from './components/orders/hooks'
+import {useGetOrderQuery} from './components/orders/apiSlice'
+import User from './components/users/User'
+
+// const ObjectsLayout = lazy(() => import('./components/ObjectsLayout'))
+const ObjectsTable = lazy(() => import('./components/objectsTable/ObjectsTable'))
+const ValidateId = lazy(() => import('./components/objectForm/ValidateId'))
+const ObjectForm = lazy(() => import('./components/objectForm/ObjectForm'))
+// const ProtectedRoute = lazy(() => import('./components/Shared/ProtectedRoute'))
+// const User = lazy(() => import('./components/users/User'))
+const NotFound = lazy(() => import('./components/NotFound'))
 
 const App = () => {
   const [optionsTrigger, url] = getOptions.useLazyQuerySubscription()
   const optionsResult = useOptions(url)
+  // console.log('optionsResult ', optionsResult)
   const {isAuthenticated} = useSelector(selectAuth)
   return <Container fluid="sm" className="bg-light border">
-      {/*{!isAuthenticated && <AuthModal {...{url}} />}*/}
-      <Routes>
-        <Route  path="/"
-                element={<Layout {...{optionsTrigger, ...optionsResult}} />}>
-{/*          <Route  index
-                  element={<ObjectsTable {...customersConfig} />} />*/}
-          <Route  path='/'
-                  element={<ObjectsLayout {...customersConfig} />}>
-            <Route index element={<ObjectsTable />} />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route  path="/"
+                  element={<Layout {...{
+                    isAuthenticated,
+                    optionsTrigger,
+                    ...optionsResult,
+                  }} />}>
+            <Route  path='/'
+                    element={<ObjectsLayout />}>
+              <Route index element={
+                <ObjectsTable useObjectsTable={useCustomersTable} />
+              } />
+            </Route>
+            <Route  path='customers'
+                    element={<ObjectsLayout />}>
+              <Route index element={
+                <ObjectsTable useObjectsTable={useCustomersTable} />
+              }/>
+              <Route path=':id' element={
+                <ValidateId useObjectForm={useCustomerForm}
+                            useGetObjectQuery={useGetCustomerQuery} />
+              } />
+              <Route path='new' element={
+                <ObjectForm useObjectForm={useCustomerForm} />
+              }/>
+            </Route>
+            <Route  path='products'
+                    element={<ObjectsLayout />}>
+              <Route index element={
+                <ObjectsTable useObjectsTable={useProductsTable} />
+              }/>
+              <Route path=':id' element={
+                <ValidateId useObjectForm={useProductForm}
+                            useGetObjectQuery={useGetProductQuery} />
+              }/>
+              <Route path='new' element={
+                <ObjectForm useObjectForm={useProductForm} />
+              }/>
+            </Route>
+            <Route  path='orders'
+                    element={<ObjectsLayout />}>
+              <Route index element={
+                <ObjectsTable useObjectsTable={useOrdersTable} />
+              }/>
+              <Route path=':id' element={
+                <ValidateId useObjectForm={useOrderForm}
+                            useGetObjectQuery={useGetOrderQuery} />
+              } />
+              <Route path='new' element={
+                <ObjectForm useObjectForm={useOrderForm} />
+              }/>
+            </Route>
+            {/*<Route element={<ProtectedRoute allow={isAuthenticated} />}>*/}
+              <Route path='user' element={<User />} />
+            {/*</Route>*/}
           </Route>
-          <Route  path='customers'
-                  element={<ObjectsLayout {...customersConfig} />}>
-            {/*<ObjectsRoutes />*/}
-            <Route index element={<ObjectsTable />} />
-            <Route path=':id' element={<ValidateId />} />
-            <Route path='new' element={<ObjectForm />} />
-          </Route>
-          {/*<ObjectsRoute path='customers' config={customersConfig} />*/}
-          <Route  path='products'
-                  element={<ObjectsLayout {...productsConfig} />}>
-            <Route index element={<ObjectsTable />} />
-            <Route path=':id' element={<ValidateId />} />
-            <Route path='new' element={<ObjectForm />} />
-          </Route>
-          <Route  path='orders'
-                  element={<ObjectsLayout {...ordersConfig} />}>
-            <Route index element={<ObjectsTable />} />
-            <Route path=':id' element={<ValidateId />} />
-            <Route path='new' element={<ObjectForm />} />
-          </Route>
-           <Route element={<ProtectedRoute allow={isAuthenticated} />}>
-            <Route path='user' element={<User />} />
-          </Route>
-        </Route>
-        <Route path='*' element={<NotFound />} />
-      </Routes>
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <ToastContainer />
     </Container>
 }
 

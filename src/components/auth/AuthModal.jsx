@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types'
 import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
 import {
   Modal,
   ModalHeader,
@@ -8,39 +6,18 @@ import {
   Button,
 } from 'reactstrap'
 import Loader from 'react-loader'
-import {useOutletContext} from 'react-router-dom'
-import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
-import {toggleModal, toggleLogin} from './modalSlice'
-import {selectAuthModal} from './selectors'
-
-const emptyObject = {}
+import AuthForm from './AuthForm'
+import {useAuthModal, useToggleLoginButton} from './hooks'
 
 const AuthModal = () => {
-  const {modal, isLogin} = useSelector(selectAuthModal)
-  const {
-    commonConsts,
-    commonConsts: {
-      login,
-      register
-    } = emptyObject,
-    isFetching
-  } = useOutletContext()
-  const [headerLabel, toggleLabel, AuthComponent] = isLogin ?
-    [login, register, LoginForm] : [register, login, RegisterForm]
-  const dispatch = useDispatch()
-  return <Loader loaded={!isFetching}>
-      <Modal isOpen={modal}>
-        <ModalHeader toggle={() => dispatch(toggleModal())}>
-          {headerLabel}
-        </ModalHeader>
+  const {loaded, isOpen, headerAttrs, authHook} = useAuthModal()
+  const toggleLoginButtonAttrs = useToggleLoginButton()
+  return <Loader {...{loaded}} >
+      <Modal {...{isOpen}} >
+        <ModalHeader {...headerAttrs} />
         <ModalBody>
-          <AuthComponent {...commonConsts} />
-          <Button size='sm'
-                  outline
-                  onClick={() => dispatch(toggleLogin())}>
-            {toggleLabel}
-          </Button>
+          <AuthForm {...{authHook}} />
+          <Button size='sm' outline {...toggleLoginButtonAttrs} />
         </ModalBody>
       </Modal>
     </Loader>

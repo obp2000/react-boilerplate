@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import {Button} from 'reactstrap'
-import orderItemsConfig from './config'
+import {useAddOrderItem} from './hooks'
 
-const addOrderItemButton = ({push}) => {
-	const {commonConsts} = useOutletContext()
-	return  <Button size='sm'
+const AddOrderItemButton = (props) => {
+  const buttonAttrs = useAddOrderItem(props)
+  return  <Button
+            size='sm'
             outline
-            onClick={() => orderItemsConfig.addOrderItemAction(push)}>
-            {commonConsts?.add}
-          </Button>
+            {...buttonAttrs}
+          />
 }
 
-addOrderItemButton.propTypes = {
-  push: PropTypes.func,
+AddOrderItemButton.propTypes = {
+  props: PropTypes.object,
 }
 
-export default addOrderItemButton
+export default AddOrderItemButton

@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types'
 import React from 'react'
-import {useSelector} from 'react-redux'
 import {
   Card,
   CardBody,
@@ -8,33 +6,31 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import {useOutletContext} from 'react-router-dom'
 import Loader from 'react-loader'
-import {useGetUserQuery} from './apiSlice'
-import {userFieldNames} from './config'
-import {useOptionsTrigger, useOptions} from '../options/hooks'
-
-const emptyObject = {}
+import {useOutletContext, Navigate} from 'react-router-dom'
+import {useUserForm} from './hooks'
 
 const User = () => {
-  const indexUrl = '/user/'
-  useOptionsTrigger(indexUrl)
-  const {options = emptyObject} = useOutletContext()
-  // console.log('options ', options)
+  const {isAuthenticated} = useOutletContext()
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
   const {
-    data: user = emptyObject,
-    isFetching
-  } = useGetUserQuery()
-  return <Loader loaded={!isFetching} >
+    isFetchingOptions,
+    isLoadingUser,
+    nameSingular,
+    tableData,
+  } = useUserForm()
+  return <Loader loaded={!isFetchingOptions && !isLoadingUser} >
     <Card>
       <CardBody>
         <CardTitle>
-          <h3>{options?.name_singular}</h3>
+          <h3>{nameSingular}</h3>
         </CardTitle>
-        {userFieldNames.map((fieldName, key) =>
-          <Row key={key}>
-            <Col sm={2}>{options[fieldName]?.label}</Col>
-            <Col sm={8}>{user[fieldName]}</Col>
+        {tableData.map((dataRow, key) =>
+          <Row {...{key}}>
+            <Col sm={2}>{dataRow.label}</Col>
+            <Col sm={8}>{dataRow.value}</Col>
           </Row>
         )}
       </CardBody>

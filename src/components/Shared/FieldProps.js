@@ -1,23 +1,26 @@
-import {invalid, valid} from './FieldStatus'
+import {useOutletContext} from 'react-router-dom'
 
 const emptyObject = {}
 
-export const fieldProps = (
-  {name} = emptyObject,
-  options = emptyObject
-) => options[name] || emptyObject
+const invalid = ({visited, error}) => (visited && !!error ? true : null)
 
-export const getFormText = (input, options, {help_text: helpText}) =>
-  helpText || fieldProps(input, options).help_text
+const valid = ({visited, error}) => (visited && !error ? true : null)
 
-export const getFieldAttrs = ({
-  name,
-  type,
-  onChange,
-},
-meta,
-options,
-) => {
+export const useFieldProps = ({
+  input = emptyObject,
+  name = input.name,
+  options = useOutletContext()?.options || emptyObject
+}) => options[name.split('.').pop()] || emptyObject
+
+export const useFormText = (props) =>
+  props.helpText || useFieldProps(props).help_text
+
+export const useFieldAttrs = ({
+  input = emptyObject,
+  name = input.name,
+  meta = emptyObject,
+  options,
+}) => {
   const {
     label,
     required,
@@ -25,7 +28,7 @@ options,
     choices,
     min_value: min,
     max_value: max,
-  } = fieldProps({name: name.split('.').pop()}, options)
+  } = useFieldProps({input: {name}, options})
   const attrs = {
     name,
     'id': name,
@@ -35,21 +38,60 @@ options,
     'aria-label': label,
     choices,
   }
-  if (meta) {
+  if ([ undefined,
+        'text',
+        'number',
+        'password',
+        'email',
+      ].includes(input.type)) {
+    // console.log('meta ', name, meta)
     attrs.invalid = invalid(meta)
     attrs.valid = valid(meta)
   }
-  if (type == 'number') {
+  if (input.type === 'number') {
     attrs.min = min
     attrs.max = max
   }
-  if (type == 'file') {
+  if (input.type === 'file') {
     attrs.accept = '.jpg, .png, .jpeg'
     attrs.onChange = ({
       target: {
         files,
       },
-    }) => onChange(files[0])
+    }) => input.onChange(files[0])
   }
   return attrs
+}
+
+export const useFieldLabel = (props) => {
+  const {label, required = props.required} = useFieldProps(props)
+  return {
+    label,
+    required,
+    htmlFor: props.name || props.input.name,
+    sm: props.labelColSize,
+    size: props.labelSize,
+    check: props.check,
+  }
+}
+
+export const useInput = (props) => {
+  const {input, meta, options, searchPath, ...rest} = props
+  if (input.type === 'file') {delete input.value}
+  return {
+    ...input,
+    ...useFieldAttrs(props),
+    ...rest
+  }
+}
+
+export const useSelectField = (props) => {
+  const {choices, ...fieldAttrs} = useFieldAttrs(props)
+  const {options, dataKey, textField, ...rest} = props
+  const selectOptions = choices?.map(
+    ({[dataKey]: value, [textField]: label}) => ({value: value ?? '', label}))
+  return {
+    fieldAttrs: {...fieldAttrs, ...rest},
+    selectOptions,
+  }
 }

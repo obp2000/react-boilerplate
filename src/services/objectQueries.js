@@ -2,7 +2,9 @@ import {objectToFormData} from 'object-to-formdata'
 import {
     setAll,
     objectsInitialState,
+    upsertOne,
 } from './entityAdapter'
+import {updateQueryData} from './apiSlice'
 
 export const getObjectsQuery = (url, type) => ({
     query: (params) => ({url, params}),
@@ -39,7 +41,24 @@ export const updateObjectMutation = (url, type) => ({
         method: 'PUT',
         body: toFormData ? objectToFormData(values) : values,
     }),
-    invalidatesTags: (result, error, arg) => [{type, id: 'LIST'}],
+    onQueryStarted({
+        id,
+        toFormData,
+        ...values
+    }, {
+        dispatch,
+        queryFulfilled
+    }) {
+        const {undo} = dispatch(
+            updateQueryData(
+                `get${type.slice(0, -1)}`,
+                {id: id.toString()},
+                (draftObject) => ({...draftObject, ...values})
+            )
+        )
+        queryFulfilled.catch(undo)
+    },
+    invalidatesTags: (result, error) => [{type, id: 'LIST'}],
 })
 
 export const deleteObjectMutation = (url, type) => ({

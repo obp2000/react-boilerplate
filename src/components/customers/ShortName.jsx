@@ -7,11 +7,9 @@ const ShortName = ({
     nick,
     name,
     options = useOutletContext().options
-}) => {
-  return <>
+}) => <>
   		{nick + ' '}
   		<Name name={name} label={options?.name?.label} />
   	</>
-}
 
 export default ShortName

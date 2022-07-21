@@ -9,23 +9,28 @@ import {
   NavItem,
   Badge,
 } from 'reactstrap'
-import {NavLink} from 'react-router-dom'
 import Loader from 'react-loader'
 import SearchForm from '../Search/SearchForm'
-import AuthButton from '../auth/AuthButton'
+import NavLink from './NavLink'
+import {useNavBar} from './hooks'
 
-const NavBar = ({
-  commonConsts,
-  isFetching
-}) => {
-    return <Loader loaded={!isFetching} >
+const NavBar = (props) => {
+    const {
+      brandText,
+      mainMenu,
+      isLoadingOptions,
+      AuthButtonComp,
+      authButtonLabel,
+      searchLabel,
+    } = useNavBar(props)
+    return <Loader loaded={!isLoadingOptions}>
       <Navbar color="primary"
         expand="md"
         dark
         className="py-0 mb-1" >
         <NavbarBrand href="/">
           <h3>
-            <Badge pill size='lg'>{commonConsts?.brand_text}</Badge>
+            <Badge pill size='lg'>{brandText}</Badge>
           </h3>
         </NavbarBrand>
         <NavbarToggler className="me-2"
@@ -36,27 +41,23 @@ const NavBar = ({
           aria-label="Toggle navigation" />
         <Collapse navbar id="navbarContent">
           <Nav className="me-auto" navbar>
-            {commonConsts?.main_menu?.map(({path: to, label}, key) =>
-              <NavItem key={key}>
-                <NavLink to={to} className={({isActive}) =>
-                  'nav-link' + (isActive ? ' active' : '')}>
-                  {label}
-                </NavLink>
-              </NavItem>,
+            {mainMenu?.map((menuItem, key) =>
+              <NavItem {...{key}}>
+                <NavLink {...menuItem} />
+              </NavItem>
             )}
             <NavItem>
-              <AuthButton {...{commonConsts}} />
+              <AuthButtonComp label={authButtonLabel} />
             </NavItem>
           </Nav>
-          <SearchForm {...commonConsts} />
+          <SearchForm label={searchLabel} />
         </Collapse>
       </Navbar>
     </Loader>
 }
 
 NavBar.propTypes = {
-  commonConsts: PropTypes.object,
-  isFetching: PropTypes.bool,
+  props: PropTypes.object,
 }
 
 export default NavBar

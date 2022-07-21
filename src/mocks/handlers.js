@@ -356,6 +356,31 @@ export const cities = {
   ],
 }
 
+const newCustomer = ({
+  id,
+  nick,
+  name,
+  city_id,
+  address,
+}) => ({
+  id: 100,
+  nick,
+  name,
+  city: cities.results.find(({id}) => id === city_id),
+  address,
+  created_at: '16.05.2022 21:42:22',
+  updated_at: '16.05.2022 21:42:22',
+})
+
+
+const user = {
+    pk: 3,
+    username: "oleg2",
+    email: "obp2000@test.com",
+    first_name: "",
+    last_name: ""
+}
+
 export const handlers = [
   // rest.get(`${baseUrl}/customers/new`, (req, res, ctx) => {
   //   return res(ctx.json(objects[0]))
@@ -365,7 +390,7 @@ export const handlers = [
   }),
   rest.get(`${baseUrl}/customers/:id/`, (req, res, ctx) => {
     // console.log('request get customer ', req.params.id)
-    const object = objects.results.find(({id}) => id == parseInt(req.params.id))
+    const object = objects.results.find(({id}) => id === parseInt(req.params.id))
     // console.log('customer ', customer)
     return res(ctx.json(object))
   }),
@@ -374,16 +399,7 @@ export const handlers = [
   }),
   rest.post(`${baseUrl}/customers/`, (req, res, ctx) => {
     // console.log('body ', req.body)
-    const city = cities.results.find(({id}) => id == req.body.city_id)
-    const result = {
-      id: 100,
-      nick: req.body.nick,
-      name: req.body.name,
-      city,
-      address: req.body.address,
-      created_at: '16.05.2022 21:42:22',
-      updated_at: '16.05.2022 21:42:22',
-    }
+    const result = newCustomer(req.body)
     // console.log('result ', result)
     return res(ctx.json(result))
   }),
@@ -393,7 +409,7 @@ export const handlers = [
   }),
   rest.put(`${baseUrl}/customers/:id/`, (req, res, ctx) => {
     // console.log('body ', req.body)
-    const city = cities.results.find(({id}) => id == req.body.city_id)
+    const city = cities.results.find(({id}) => id === req.body.city_id)
     const result = {
       id: parseInt(req.params.id),
       nick: req.body.nick,
@@ -408,7 +424,11 @@ export const handlers = [
   }),
   rest.get(`${baseUrl}/cities`, (req, res, ctx) => {
     // console.log('term ', req.url.searchParams.get('term'))
-    const result = req.url.searchParams.get('term') == 'Фу' ? cities : {}
+    // console.log('page_size ', req.url.searchParams.get('page_size'))
+    const result = req.url.searchParams.get('term') === 'Фу' ? cities : {}
     return res(ctx.json(result))
+  }),
+  rest.get(`${baseUrl}/user/`, (req, res, ctx) => {
+    return res(ctx.json(user))
   }),
 ]
