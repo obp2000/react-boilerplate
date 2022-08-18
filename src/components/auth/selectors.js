@@ -1,7 +1,7 @@
 import {createSelector} from '@reduxjs/toolkit'
 
 export const selectAuth = createSelector(
-    [({ auth }) => auth],
+    [({auth}) => auth],
     (auth) => auth
 )
 

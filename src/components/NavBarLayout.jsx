@@ -12,17 +12,17 @@ import {
 } from 'reactstrap'
 
 const NavBarLayout = (props) => {
-	const layoutContext = useOutletContext()
-	const context = {...layoutContext, ...props}
-	// console.log('props ', props)
-	// console.log('layoutContext ', layoutContext)
-	return <>
-			<Outlet {...{context}} />
-		</>
+  const layoutContext = useOutletContext()
+  const context = {...layoutContext, ...props}
+  // console.log('props ', props)
+  // console.log('layoutContext ', layoutContext)
+  return <>
+    <Outlet {...{context}} />
+  </>
 }
 
 NavBarLayout.propTypes = {
-  props: PropTypes.object
+  props: PropTypes.object,
 }
 
 export default NavBarLayout

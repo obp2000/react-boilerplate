@@ -1,12 +1,11 @@
-import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {useOutletContext} from 'react-router-dom'
+import {useRouter} from 'next/dist/client/router'
 import {validateLogin, validateRegister} from './Validators'
-import {useGetOptionsQuery} from '../options/optionsApi'
+import {useGetOptionsQuery} from '../options/apiSlice'
 import {
   useLoginMutation,
   useRegisterMutation,
-  useSignOutMutation
+  useSignOutMutation,
 } from './authApi'
 import {toggleModal, toggleLogin} from './modalSlice'
 import {selectAuth, selectAuthModal} from './selectors'
@@ -14,124 +13,107 @@ import {useGetUserQuery} from '../users/apiSlice'
 
 const emptyObject = {}
 
-export const useAuthModal = () => {
+export const useAuthModal = ({commonConsts}) => {
   const {modal, isLogin} = useSelector(selectAuthModal)
-  const {
-    commonConsts: {
-      login,
-      register
-    } = emptyObject,
-    isLoading,
-    isFetching
-  } = useOutletContext()
-  const [headerLabel,  authHook] = isLogin ?
-    [login, useLogin] : [register, useRegister]
+  const [headerLabel, authHook] = isLogin ?
+    [commonConsts?.login, useLogin] : [commonConsts?.register, useRegister]
   const dispatch = useDispatch()
   return {
-    loaded: !isLoading,
+    loaded: true,
     isOpen: modal,
     headerAttrs: {
       toggle: () => dispatch(toggleModal()),
-      children: headerLabel
+      children: headerLabel,
     },
     authHook,
   }
 }
 
-export const useToggleLoginButton = () => {
+export const useToggleLoginButton = ({commonConsts}) => {
   const {isLogin} = useSelector(selectAuthModal)
-  const {
-    commonConsts: {
-      login,
-      register
-    } = emptyObject,
-  } = useOutletContext()
   const dispatch = useDispatch()
   return {
     onClick: () => dispatch(toggleLogin()),
-    children: isLogin ? register : login,
+    children: isLogin ? commonConsts?.register : commonConsts?.login,
   }
 }
 
-export const useLogin = () => {
-  const {
-      commonConsts: {
-          error_messages,
-          login
-      } = emptyObject
-  } = useOutletContext()
+export const useLogin = ({commonConsts}) => {
   const {
     data: {
-      options
+      options,
     } = emptyObject,
     isLoading: isLoadingOptions,
   } = useGetOptionsQuery('/login/')
   const [loginAction, {isLoading: isProcessing}] = useLoginMutation()
   const formFields = [
-    {name: 'username', required: true, autoComplete: "username"},
-    {name: 'password', type: 'password', autoComplete: "current-password"},
+    {name: 'username', required: true, autoComplete: 'username'},
+    {name: 'password', type: 'password', autoComplete: 'current-password'},
   ]
   return {
     options,
     formFields,
-    submitButtonText: login,
+    submitButtonText: commonConsts?.login,
     isLoadingOptions,
     isProcessing,
     name: 'Login',
-    validate: validateLogin(error_messages),
+    validate: validateLogin(commonConsts?.error_messages),
     onSubmit: (values) => loginAction(values),
   }
 }
 
-export const useRegister = () => {
-  const {
-      commonConsts: {
-          error_messages,
-          register
-      } = emptyObject
-  } = useOutletContext()
+export const useRegister = ({commonConsts}) => {
   const {
     data: {
-      options
+      options,
     } = emptyObject,
     isLoading: isLoadingOptions,
   } = useGetOptionsQuery('/register/')
   const [registerAction, {isLoading: isProcessing}] = useRegisterMutation()
   const formFields = [
-    {name: 'username', autoComplete: "username"},
-    {name: 'email', type: 'email', autoComplete: "email"},
-    {name: 'first_name', autoComplete: "first-name"},
-    {name: 'last_name', autoComplete: "last-name"},
-    {name: 'password1', type: 'password', autoComplete: "new-password"},
-    {name: 'password2', type: 'password', autoComplete: "new-password"},
+    {name: 'username', autoComplete: 'username'},
+    {name: 'email', type: 'email', autoComplete: 'email'},
+    {name: 'first_name', autoComplete: 'first-name'},
+    {name: 'last_name', autoComplete: 'last-name'},
+    {name: 'password1', type: 'password', autoComplete: 'new-password'},
+    {name: 'password2', type: 'password', autoComplete: 'new-password'},
   ]
   return {
     options,
     formFields,
-    submitButtonText: register,
+    submitButtonText: commonConsts?.register,
     isLoadingOptions,
     isProcessing,
     name: 'Register',
-    validate: validateRegister(error_messages),
+    validate: validateRegister(commonConsts?.error_messages),
     onSubmit: (values) => registerAction(values),
   }
 }
 
-export const useLogoutButton = (label) => {
-    const [signOutAction, {isLoading: isSigningOut}] = useSignOutMutation()
-    const {data: user, isLoading: isLoadingUser} = useGetUserQuery()
-    return {
-      onClick: () => signOutAction(),
-      children: `${label} (${user?.username})`,
-      loaded: !(isSigningOut || isLoadingUser),
-    }
+export const useAuthButton = ({commonConsts}) => {
+  const {isAuthenticated} = useSelector(selectAuth)
+  const router = useRouter()
+  const {isFallback} = router
+  const [
+    signOutAction,
+    {isLoading: isSigningOut},
+  ] = useSignOutMutation()
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    isSuccess: isSuccessLoadingUser,
+  } = useGetUserQuery(undefined, {skip: !isAuthenticated || isFallback})
+  const dispatch = useDispatch()
+  const onClick = isAuthenticated ?
+      () => signOutAction() :
+      () => dispatch(toggleModal())
+  let label = commonConsts?.auth_menu_item.label
+  if (isAuthenticated && user) {
+    label = `${label} (${user.username})`
+  }
+  return {
+    onClick,
+    loaded: !(isSigningOut || isLoadingUser),
+    children: label,
+  }
 }
-
-export const useAuthButton = (label) => {
-    const dispatch = useDispatch()
-    return {
-      onClick: () => dispatch(toggleModal()),
-      children: label,
-    }
-}
-

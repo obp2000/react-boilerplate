@@ -1,5 +1,3 @@
-import {useOutletContext} from 'react-router-dom'
-
 const emptyObject = {}
 
 const invalid = ({visited, error}) => (visited && !!error ? true : null)
@@ -9,11 +7,13 @@ const valid = ({visited, error}) => (visited && !error ? true : null)
 export const useFieldProps = ({
   input = emptyObject,
   name = input.name,
-  options = useOutletContext()?.options || emptyObject
+  options = emptyObject,
 }) => options[name.split('.').pop()] || emptyObject
 
-export const useFormText = (props) =>
-  props.helpText || useFieldProps(props).help_text
+export const useFormText = (props) => {
+  const helpText = useFieldProps(props).help_text
+  return props.helpText || helpText
+}
 
 export const useFieldAttrs = ({
   input = emptyObject,
@@ -38,12 +38,12 @@ export const useFieldAttrs = ({
     'aria-label': label,
     choices,
   }
-  if ([ undefined,
-        'text',
-        'number',
-        'password',
-        'email',
-      ].includes(input.type)) {
+  if ([undefined,
+    'text',
+    'number',
+    'password',
+    'email',
+  ].includes(input.type)) {
     // console.log('meta ', name, meta)
     attrs.invalid = invalid(meta)
     attrs.valid = valid(meta)
@@ -77,11 +77,13 @@ export const useFieldLabel = (props) => {
 
 export const useInput = (props) => {
   const {input, meta, options, searchPath, ...rest} = props
-  if (input.type === 'file') {delete input.value}
+  if (input.type === 'file') {
+    delete input.value
+  }
   return {
     ...input,
     ...useFieldAttrs(props),
-    ...rest
+    ...rest,
   }
 }
 
@@ -89,7 +91,7 @@ export const useSelectField = (props) => {
   const {choices, ...fieldAttrs} = useFieldAttrs(props)
   const {options, dataKey, textField, ...rest} = props
   const selectOptions = choices?.map(
-    ({[dataKey]: value, [textField]: label}) => ({value: value ?? '', label}))
+      ({[dataKey]: value, [textField]: label}) => ({value: value ?? '', label}))
   return {
     fieldAttrs: {...fieldAttrs, ...rest},
     selectOptions,

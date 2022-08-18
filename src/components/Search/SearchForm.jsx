@@ -3,13 +3,13 @@ import React from 'react'
 import {Form} from 'react-final-form'
 import {useSearchForm} from './hooks'
 
-const SearchForm = ({label}) => {
-  const searchFormAttrs = useSearchForm(label)
+const SearchForm = (props) => {
+  const searchFormAttrs = useSearchForm(props)
   return <Form {...searchFormAttrs} />
 }
 
 SearchForm.propTypes = {
-  label: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default SearchForm

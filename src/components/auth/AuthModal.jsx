@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import {
   Modal,
@@ -5,22 +6,24 @@ import {
   ModalBody,
   Button,
 } from 'reactstrap'
-import Loader from 'react-loader'
 import AuthForm from './AuthForm'
 import {useAuthModal, useToggleLoginButton} from './hooks'
 
-const AuthModal = () => {
-  const {loaded, isOpen, headerAttrs, authHook} = useAuthModal()
-  const toggleLoginButtonAttrs = useToggleLoginButton()
-  return <Loader {...{loaded}} >
-      <Modal {...{isOpen}} >
-        <ModalHeader {...headerAttrs} />
-        <ModalBody>
-          <AuthForm {...{authHook}} />
-          <Button size='sm' outline {...toggleLoginButtonAttrs} />
-        </ModalBody>
-      </Modal>
-    </Loader>
+const AuthModal = (props) => {
+  // console.log('props .............', props)
+  const {loaded, isOpen, headerAttrs, authHook} = useAuthModal(props)
+  const toggleLoginButtonAttrs = useToggleLoginButton(props)
+  return <Modal {...{isOpen}} >
+    <ModalHeader {...headerAttrs} />
+    <ModalBody>
+      <AuthForm {...authHook(props)} />
+      <Button size='sm' outline {...toggleLoginButtonAttrs} />
+    </ModalBody>
+  </Modal>
+}
+
+AuthModal.propTypes = {
+  props: PropTypes.object,
 }
 
 export default AuthModal

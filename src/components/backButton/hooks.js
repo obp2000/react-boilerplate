@@ -1,14 +1,9 @@
-import {useOutletContext, useNavigate} from 'react-router-dom'
+import {useRouter} from 'next/router'
 
-const emptyObject = {}
-
-export const useBackButton = () => {
-  const navigate = useNavigate()
-  const {commonConsts: {
-  	back
-  } = emptyObject} = useOutletContext()
+export const useBackButton = ({commonConsts}) => {
+  const router = useRouter()
   return {
-  	onClick: () => navigate(-1),
-  	children: back,
+  	onClick: () => router.back(),
+  	children: commonConsts?.back,
   }
 }

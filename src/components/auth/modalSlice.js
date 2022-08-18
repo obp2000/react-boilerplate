@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
+import {HYDRATE} from 'next-redux-wrapper'
 import {signOut} from '../auth/authApi'
 
 const initialState = {
@@ -22,9 +23,14 @@ const modalSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addMatcher(signOut.matchFulfilled, (state, {payload}) => {
-        state.modal = false
-      })
+    // .addCase(HYDRATE, (state, {payload}) => {
+    //   console.log('payload............', payload)
+    //   // state.isLogin = payload.authModal.isLogin
+    //   // state.modal = payload.authModal.modal
+    // })
+        .addMatcher(signOut.matchFulfilled, (state, {payload}) => {
+          state.modal = false
+        })
   },
 })
 

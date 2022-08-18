@@ -1,0 +1,41 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets":
+        {
+          "browsers": "> 1%"
+        },
+        "modules": false,
+        "corejs": "3.x",
+        "useBuiltIns": "entry",
+        "forceAllTransforms": true
+      }
+    ],
+    "@babel/react"
+  ],
+  "plugins": [
+    "@babel/transform-runtime",
+    "@babel/transform-async-to-generator",
+    "@babel/transform-arrow-functions",
+    "@babel/proposal-object-rest-spread",
+    "@babel/proposal-class-properties"
+  ],
+  "env":
+  {
+    "test":
+    {
+      "presets": [
+        ["@babel/env",
+        {
+          "modules": false
+        }],
+        "@babel/react"
+      ],
+      // "plugins": [
+      //     "react-hot-loader/babel",
+      // ]
+    }
+  }
+}

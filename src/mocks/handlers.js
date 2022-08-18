@@ -374,11 +374,11 @@ const newCustomer = ({
 
 
 const user = {
-    pk: 3,
-    username: "oleg2",
-    email: "obp2000@test.com",
-    first_name: "",
-    last_name: ""
+  pk: 3,
+  username: 'oleg2',
+  email: 'obp2000@test.com',
+  first_name: '',
+  last_name: '',
 }
 
 export const handlers = [

@@ -27,10 +27,10 @@ const deleteOrderItemAction = (id, fields) => {
 }
 
 export const formInitialOrderItem = (orderItem) => ({
-      ...orderItem,
-      cost: cost(orderItem),
-      weight: weight(orderItem),
-  })
+  ...orderItem,
+  cost: cost(orderItem),
+  weight: weight(orderItem),
+})
 
 export const formInitialOrderItems = (orderItems = emptyArray) =>
   orderItems.map((orderItem, index) => formInitialOrderItem(orderItem)
@@ -38,11 +38,11 @@ export const formInitialOrderItems = (orderItems = emptyArray) =>
 
 const config = {
   initOrderItem,
-	tableFieldNames,
-	addOrderItemAction,
-	deleteOrderItemAction,
+  tableFieldNames,
+  addOrderItemAction,
+  deleteOrderItemAction,
   formInitialOrderItems,
-  formInitialOrderItem
+  formInitialOrderItem,
 }
 
 export default config

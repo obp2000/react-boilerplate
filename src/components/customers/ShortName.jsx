@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import Name from './Name'
+import {useShortName} from './hooks'
 
-const ShortName = ({
-    nick,
-    name,
-    options = useOutletContext().options
-}) => <>
+const ShortName = (props) => {
+  const {nick, nameProps} = useShortName(props)
+  return <>
   		{nick + ' '}
-  		<Name name={name} label={options?.name?.label} />
+  		<Name {...nameProps} />
   	</>
+}
+
+ShortName.propTypes = {
+  props: PropTypes.string,
+}
 
 export default ShortName

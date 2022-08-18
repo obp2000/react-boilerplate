@@ -1,16 +1,16 @@
-import {useSearchParams} from 'react-router-dom'
+import {useRouter} from 'next/dist/client/router'
 import SearchFormRender from './SearchFormRender'
 
-const emptyObject = {}
-
-export const useSearchForm = (label) => {
-    const [searchParams, setSearchParams] = useSearchParams()
-    const term = searchParams.get('term')
-    return {
-      name: 'search',
-      onSubmit: ({term}) => setSearchParams({term}),
-      initialValues: {term},
-      render: SearchFormRender,
-      label,
-    }
+export const useSearchForm = ({commonConsts}) => {
+  const router = useRouter()
+  const {query} = router
+  return {
+    name: 'search',
+    // onSubmit: ({term}) => setSearchParams({term}),
+    onSubmit: ({term}) =>
+      router.push({query: {term}}, undefined, {shallow: true}),
+    initialValues: {term: query.term},
+    render: SearchFormRender,
+    label: commonConsts?.search,
+  }
 }

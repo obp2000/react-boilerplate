@@ -6,10 +6,10 @@ import FormTextList from './FormTextList'
 import {useInput, useFormText} from './FieldProps'
 
 const InputComp = (props) => <>
-    <Input {...useInput(props)} />
-    <WidgetErrors {...props.meta} />
-    <FormTextList formText={useFormText(props)} />
-  </>
+  <Input {...useInput(props)} />
+  <WidgetErrors {...props.meta} />
+  <FormTextList formText={useFormText(props)} />
+</>
 
 InputComp.propTypes = {
   props: PropTypes.object,

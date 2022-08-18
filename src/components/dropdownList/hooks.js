@@ -1,4 +1,3 @@
-import {useOutletContext, useNavigate} from 'react-router-dom'
 import {useLazySearchObjectsQuery} from '../Search/apiSlice'
 import {useInput} from '../Shared/FieldProps'
 
@@ -9,26 +8,27 @@ const widgetMessages = (notFound) => ({
   emptyList: () => notFound,
 })
 
-export const useSearchObjects = ({searchPath: url, renderValue}) => {
-	const [searchTrigger, {data, isFetching}] = useLazySearchObjectsQuery()
-  	const onSearch = (term) => {
-    	if (term.length === 2) {searchTrigger({url, params: {term}}, true)}
-  	}
-    const {
-        commonConsts: {
-            not_found: notFound
-        } = emptyObject
-    } = useOutletContext()
-	  return {
-	  	data,
-	  	onSearch,
-	  	busy: isFetching,
-      	renderListItem: renderValue,
-	  	messages: widgetMessages(notFound),
-	  }
+export const useSearchObjects = ({
+  searchPath: url,
+  renderValue,
+  commonConsts,
+}) => {
+  const [searchTrigger, {data, isFetching}] = useLazySearchObjectsQuery()
+  const onSearch = (term) => {
+   	if (term.length === 2) {
+   		searchTrigger({url, params: {term}}, true)
+   	}
+  }
+ 	return {
+	 	data,
+	 	onSearch,
+	 	busy: isFetching,
+    renderListItem: renderValue,
+	 	messages: widgetMessages(commonConsts?.not_found),
+  }
 }
 
-export const useDropdownList = (props) => ({
-  	...useSearchObjects(props),
-  	...useInput(props)
-  })
+export const useDropdownList = ({commonConsts, ...props}) => ({
+  	...useSearchObjects({commonConsts, ...props}),
+  	...useInput(props),
+})

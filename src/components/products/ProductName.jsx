@@ -1,25 +1,27 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import Fleece from './Fleece'
+import {useProductName} from './hooks'
 
-const ProductName = ({
-  get_product_type_display: getProductTypeDisplay,
-  threads,
-  get_threads_display: getThreadsDisplay,
-  contents,
-  get_contents_display: getContentsDisplay,
-  fleece,
-  name,
-  options = useOutletContext().options
-}) => {
-    return <>
-        {getProductTypeDisplay && (getProductTypeDisplay + ' ')}
-        {(threads !== null) && (getThreadsDisplay + ' ')}
-        {(contents !== null) && (getContentsDisplay + ' ')}
-        <Fleece fleece={fleece} label={options?.fleece?.label} />
-        {name}
-    </>
+const ProductName = (props) => {
+  const {
+    productType,
+    threads,
+    contents,
+    fleeceProps,
+    name,
+  } = useProductName(props)
+  return <>
+    {productType}
+    {threads}
+    {contents}
+    <Fleece {...fleeceProps} />
+    {name}
+  </>
+}
+
+ProductName.propTypes = {
+  props: PropTypes.object,
 }
 
 export default ProductName

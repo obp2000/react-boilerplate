@@ -8,8 +8,8 @@ const emptyObject = {}
 const LabelComp = (props) => {
   const {label, required, htmlFor, sm, size, check} = useFieldLabel(props)
   return <Label {...{htmlFor, sm, size, check}}>
-          {label}{required && <strong>*</strong>}
-        </Label>
+    {label}{required && <strong>*</strong>}
+  </Label>
 }
 
 LabelComp.propTypes = {

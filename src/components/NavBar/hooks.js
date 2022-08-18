@@ -1,28 +1,30 @@
-import { useOutletContext } from 'react-router-dom'
-import AuthButton from '../auth/AuthButton'
-import LogoutButton from '../auth/LogoutButton'
+import {useRouter} from 'next/dist/client/router'
 
 const emptyObject = {}
 
-export const useNavBar = ({
-    commonConsts: {
-        brand_text: brandText,
-        main_menu: mainMenu,
-        auth_menu_item: {
-            label: authButtonLabel
-        } = emptyObject,
-        search: searchLabel,
-    } = emptyObject,
-    isLoadingOptions,
-    isAuthenticated,
-}) => {
-    const AuthButtonComp = isAuthenticated ? LogoutButton : AuthButton
-    return {
-        brandText,
-        mainMenu,
-        isLoadingOptions,
-        AuthButtonComp,
-        authButtonLabel,
-        searchLabel,
-    }
+const navLinkClassName = ({isActive}) => 'nav-link' + (isActive ? ' active' : '')
+
+export const useNavLink = ({
+  path,
+  label,
+}) => ({
+  to: path,
+  className: navLinkClassName,
+  label,
+})
+
+export const useNavbarBrand = ({commonConsts}) => ({
+  brandText: commonConsts?.brand_text,
+})
+
+export const useMainMenu = ({commonConsts}) => {
+  const router = useRouter()
+  const {pathname} = router
+  return commonConsts?.main_menu.map(({path, label}, key) =>
+    ({
+      path,
+      className: `nav-link${(pathname === path) || (`${pathname}/` === path) ? ' active' : ''}`,
+      label,
+    })
+  )
 }

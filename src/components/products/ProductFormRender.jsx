@@ -10,14 +10,17 @@ import Input from '../Shared/Input'
 // import { formatPrice, normalizePhone } from '../Shared/Formatters'
 import ProductImage from './ProductImage'
 
-const ProductFormRender = ({
-  handleSubmit,
-  ...props
-}) => {
-  return <Form onSubmit={handleSubmit}
+const ProductFormRender = (props) => {
+  const options = {options: props.options}
+  return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <Header {...props} />
-    <Field name="id" hidden component={Input} />
+    <Field
+      name="id"
+      hidden
+      component={Input}
+      {...options}
+    />
     <Row>
       {/* <Row>*/}
       <fieldset className="row my-2 py-2 border shadow">
@@ -30,33 +33,48 @@ const ProductFormRender = ({
               <SelectFloatingFormGroup
                 name="product_type"
                 dataKey='id'
-                textField='name' />
+                textField='name'
+                {...options}
+              />
             </Col>
             <Col sm={2}>
               <SelectFloatingFormGroup
                 name="threads"
                 dataKey='value'
-                textField='display_name' />
+                textField='display_name'
+                {...options}
+              />
             </Col>
             <Col sm={2}>
-              <Field name="fleece"
+              <Field
+                name="fleece"
                 type='checkbox'
-                component={SwitchFormGroup}/>
+                component={SwitchFormGroup}
+                {...options}
+              />
             </Col>
             <Col sm={2}>
               <SelectFloatingFormGroup
                 name="contents"
                 dataKey='value'
-                textField='display_name' />
+                textField='display_name'
+                {...options}
+              />
             </Col>
             <Col sm={8}>
-              <Field name="name"
-                component={FloatingFormGroup} />
+              <Field
+                name="name"
+                component={FloatingFormGroup}
+                {...options}
+              />
             </Col>
             <Col sm={3}>
-              <Field name="new_image"
+              <Field
+                name="new_image"
                 type='file'
-                component={FloatingFormGroup} />
+                component={FloatingFormGroup}
+                {...options}
+              />
             </Col>
           </Row>
         </Col>
@@ -64,83 +82,125 @@ const ProductFormRender = ({
       {/* </Row>*/}
       <fieldset className="row my-2 border shadow">
         <Col sm={2}>
-          <Field name="dollar_price"
+          <Field
+            name="dollar_price"
             type='number'
             step='0.1'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="dollar_rate"
+          <Field
+            name="dollar_rate"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="width"
+          <Field
+            name="width"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="density"
+          <Field
+            name="density"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="price"
+          <Field
+            name="price"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={9}>
-          <Field name="prices"
+          <Field
+            name="prices"
             disabled
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
       </fieldset>
       <fieldset className="row my-2 py-1 border shadow">
         <Col sm={2}>
-          <Field name="weight_for_count"
+          <Field
+            name="weight_for_count"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="length_for_count"
+          <Field
+            name="length_for_count"
             type='number'
             step="0.1"
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={3}>
-          <Field name="density_for_count"
+          <Field
+            name="density_for_count"
             disabled
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
       </fieldset>
       <fieldset className="row my-2 py-2 border shadow">
         <Col sm={2}>
-          <Field name="weight"
+          <Field
+            name="weight"
             type='number'
             step='0.1'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="meters_in_roll"
+          <Field
+            name="meters_in_roll"
             disabled
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
       </fieldset>
       <fieldset className="row my-2 border shadow">
         <Col sm={2}>
-          <Field name="price_pre"
+          <Field
+            name="price_pre"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="width_shop"
+          <Field
+            name="width_shop"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
         <Col sm={2}>
-          <Field name="density_shop"
+          <Field
+            name="density_shop"
             type='number'
-            component={FloatingFormGroup} />
+            component={FloatingFormGroup}
+            {...options}
+          />
         </Col>
       </fieldset>
     </Row>

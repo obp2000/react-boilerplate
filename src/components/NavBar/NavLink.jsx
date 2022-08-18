@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {NavLink} from 'react-router-dom'
+import {useNavLink} from './hooks'
 
-const className = ({isActive}) => 'nav-link' + (isActive ? ' active' : '')
-
-const NavLinkComp = ({
-  path: to,
-  label
-}) => <NavLink {...{to, className}}>
-      	{label}
-      </NavLink>
+const NavLinkComp = (props) => {
+  const {to, className, label} = useNavLink(props)
+  return <NavLink {...{to, className}}>
+    {label}
+  </NavLink>
+}
 
 NavLinkComp.propTypes = {
-  to: PropTypes.string,
-  label: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default NavLinkComp

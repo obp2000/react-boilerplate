@@ -7,10 +7,10 @@ import {
 } from 'react-router-dom'
 
 const ProtectedRoute = ({allow, children}) => {
+  const context = useOutletContext()
   if (!allow) {
     return <Navigate to="/" replace />
   }
-  const context = useOutletContext()
   return children || <Outlet {...{context}} />
 }
 

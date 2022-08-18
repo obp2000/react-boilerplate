@@ -1,71 +1,65 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-// import {useOutletContext} from 'react-router-dom'
+import {useSelector} from 'react-redux'
 import {Table, Row, Col, Badge, Button} from 'reactstrap'
-import Loader from 'react-loader'
+import {selectAuth} from '../auth/selectors'
 import Pagination from '../Pagination/Pagination'
-// import {useObjects} from '../../services/entityAdapter'
 import FieldLabels from './FieldLabels'
 import DeleteObjectButton from '../deleteObjectButton/DeleteObjectButton'
 import Header from './Header'
 import LinkToNewOrEditObject from
   '../linkToNewOrEditObject/LinkToNewOrEditObject'
-// import {useObjectsTable} from './hooks'
-// import {useCustomersTable} from '../customers/hooks'
 import FieldValues from './FieldValues'
 
-const ObjectsTable = ({useObjectsTable}) => {
-  const {
-    indexUrl,
-    nameSingular,
-    tableFieldNames,
-    useTableFieldValues,
-    isAuthenticated,
-    isLoadingObjects,
-    allObjects,
-    totalCount,
-    totalPages,
-    useDeleteObjectMutation,
-  } = useObjectsTable()
-  return <Loader loaded={!isLoadingObjects}>
-    <Header {...{totalCount}} />
+const ObjectsTable = ({
+  busyLoadingObjects,
+  allObjects,
+  ...props
+}) => {
+  const {isAuthenticated} = useSelector(selectAuth)
+  // if (busyLoadingObjects) {return <Loader />}
+  return <>
+    <Header {...props} />
     <Table size='sm' bordered striped hover className='table-secondary'>
       <thead className="thead-light">
         <tr>
-          <FieldLabels {...{tableFieldNames}} />
-          {isAuthenticated &&
-                            <th scope="col" colSpan={2}>
-                              <LinkToNewOrEditObject {...{indexUrl}} />
-                            </th>}
+          <FieldLabels {...props} />
+          {allObjects?.slice(0, 1).map((object, key) =>
+            <>
+              {isAuthenticated &&
+                <th scope="col" colSpan={2}>
+                  <LinkToNewOrEditObject {...props} />
+                </th>
+              }
+            </>
+          )}
         </tr>
       </thead>
       <tbody>
         {allObjects?.map((object, key) =>
-          <tr key={key} aria-label={nameSingular}>
-
-            <FieldValues {...{useTableFieldValues, object}} />
-
+          <tr key={key} aria-label={props.options?.name_singular}>
+            <FieldValues {...{object}} {...props} />
             {isAuthenticated && <>
-                                  <td>
-                                    <LinkToNewOrEditObject
-                                      {...{indexUrl, object}} />
-                                  </td>
-                                  <td>
-                                    <DeleteObjectButton
-                                      {...{useDeleteObjectMutation, object}} />
-                                  </td>
-                                </>
-            }
+              <td>
+                <LinkToNewOrEditObject {...{object}} {...props} />
+              </td>
+              <td>
+                <DeleteObjectButton {...{object}} {...props} />
+              </td>
+            </>}
           </tr>
         )}
       </tbody>
     </Table>
-    <Pagination {...{totalPages}} />
-  </Loader>
+    <Pagination {...props} />
+  </>
 }
 
 ObjectsTable.propTypes = {
-  useObjectsTable: PropTypes.func,
+  isLoadingObjects: PropTypes.bool,
+  allObjects: PropTypes.array,
+  props: PropTypes.object,
 }
+
 
 export default ObjectsTable

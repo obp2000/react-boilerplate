@@ -1,29 +1,21 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
-import blank from '../../assets/img/blank.png'
+import Image from 'next/image'
+import {useProductImage} from './hooks'
 
-const emptyObject = {}
-
-const ProductImage = ({
-    initialValues: {
-        image = String(blank)
-    }
-} = emptyObject) => {
-  const {options: {
-    image: {
-      label
-    } = emptyObject
-  } = emptyObject} = useOutletContext()
-  return  <img
-            alt={label}
-            src={image}
-            className='img-thumbnail rounded float-start'
-          />
+const ProductImage = (props) => {
+  const {image, label} = useProductImage(props)
+  return <Image
+    src={image}
+    alt={label}
+    width={500}
+    height={500}
+    className='img-thumbnail rounded float-start'
+  />
 }
 
 ProductImage.propTypes = {
-  image: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default ProductImage

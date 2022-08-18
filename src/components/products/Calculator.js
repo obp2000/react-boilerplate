@@ -5,7 +5,6 @@ const emptyObject = {}
 const emptyArray = []
 
 const canCountDensityForCount = ({
-  weight_for_count: weightForCount,
   length_for_count: lengthForCount,
   width,
 } = emptyObject) => lengthForCount && width
@@ -16,12 +15,11 @@ const countDensityForCount = ({
   width,
 } = emptyObject) => weightForCount / lengthForCount / width * 100
 
-export const densityForCount = (_, values) => canCountDensityForCount(values)
-  ? parseInt(countDensityForCount(values))
-  : null
+export const densityForCount = (_, values) => canCountDensityForCount(values) ?
+    parseInt(countDensityForCount(values)) :
+    null
 
 const canCountMetersInRoll = ({
-  weight,
   density,
   width,
 } = emptyObject) => density && width
@@ -32,9 +30,9 @@ const countMetersInRoll = ({
   width,
 } = emptyObject) => weight * 100000 / density / width
 
-export const metersInRoll = (_, values) => canCountMetersInRoll(values)
-  ? countMetersInRoll(values).toFixed(2)
-  : null
+export const metersInRoll = (_, values) => canCountMetersInRoll(values) ?
+    countMetersInRoll(values).toFixed(2) :
+    null
 
 const countPriceRubM = ({
   dollar_price: dollarPrice = 0,
@@ -53,36 +51,53 @@ export const prices = (_, {
   PriceCoeffs = emptyArray,
   ...values
 } = emptyObject) => PriceCoeffs.reduce((result, coeff) => {
-    result.push(coeffWithPrice(values, coeff))
-    return result
-  }, []).join(' / ')
+  result.push(coeffWithPrice(values, coeff))
+  return result
+}, []).join(' / ')
 
-export const calculator = createDecorator({
-  field: 'weight_for_count',
-  updates: {density_for_count: densityForCount},
-}, {
-  field: 'length_for_count',
-  updates: {density_for_count: densityForCount},
-}, {
-  field: 'width',
-  updates: {
+export const calculator = ({Consts: productConsts} = emptyObject) => {
+  // console.log('Consts ', Consts)
+  // const prices = (_, values) => countPrices(_, {...values, ...productConsts})
+
+  const updatePrices = {
+    prices: (_, values) => prices(_, {...values, ...productConsts}),
+  }
+
+  const updateDensityForCount = {
     density_for_count: densityForCount,
+  }
+
+  const updateMetersInRoll = {
     meters_in_roll: metersInRoll,
-    prices,
-  },
-}, {
-  field: 'weight',
-  updates: {meters_in_roll: metersInRoll,},
-}, {
-  field: 'density',
-  updates: {
-    meters_in_roll: metersInRoll,
-    prices,
-  },
-}, {
-  field: 'dollar_price',
-  updates: {prices},
-}, {
-  field: 'dollar_rate',
-  updates: {prices},
-})
+  }
+
+  return createDecorator({
+    field: 'weight_for_count',
+    updates: updateDensityForCount,
+  }, {
+    field: 'length_for_count',
+    updates: updateDensityForCount,
+  }, {
+    field: 'width',
+    updates: {
+      ...updateDensityForCount,
+      ...updateMetersInRoll,
+      ...updatePrices,
+    },
+  }, {
+    field: 'weight',
+    updates: updateMetersInRoll,
+  }, {
+    field: 'density',
+    updates: {
+      ...updateMetersInRoll,
+      ...updatePrices,
+    },
+  }, {
+    field: 'dollar_price',
+    updates: updatePrices,
+  }, {
+    field: 'dollar_rate',
+    updates: updatePrices,
+  })
+}

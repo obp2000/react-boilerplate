@@ -2,17 +2,17 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {useFieldLabels} from './hooks'
 
-const FieldLabels = ({tableFieldNames}) => {
-  const fieldLabels = useFieldLabels(tableFieldNames)
+const FieldLabels = (props) => {
+  const fieldLabels = useFieldLabels(props)
   return fieldLabels.map((fieldLabel, key) =>
-            <th scope="col" {...{key}}>
-              {fieldLabel}
-            </th>
-          )
+    <th scope="col" key={key}>
+      {fieldLabel}
+    </th>
+  )
 }
 
 FieldLabels.propTypes = {
-  tableFieldNames: PropTypes.array,
+  props: PropTypes.object,
 }
 
 export default FieldLabels

@@ -3,32 +3,22 @@ import React from 'react'
 import {Row, Col} from 'reactstrap'
 import SubmitButton from '../submitButton/SubmitButton'
 import BackButton from '../backButton/BackButton'
-import {useOutletContext} from 'react-router-dom'
+import {useHeader} from './hooks'
 
-const emptyObject = {}
-
-const Header = ({
-  initialValues: {
-    id,
-    created_at
-  } = {},
-  ...props
-}) => {
+const Header = (props) => {
   const {
-    options: {
-      name_singular: nameSingular,
-    } = {},
-    commonConsts: {
-      from,
-    } = {}
-  } = useOutletContext()
+    nameSingular,
+    from,
+    id,
+    createdAt,
+  } = useHeader(props)
   return <Row>
     <Col sm={2}>
-      <BackButton />
+      <BackButton {...props} />
     </Col>
     <Col sm={6}>
       <h4 aria-label={nameSingular}>
-        {nameSingular} № {id} {from} {created_at}
+        {nameSingular} № {id} {from} {createdAt}
       </h4>
     </Col>
     <Col sm={2}>
@@ -38,8 +28,6 @@ const Header = ({
 }
 
 Header.propTypes = {
-  id: PropTypes.number,
-  created_at: PropTypes.string,
   props: PropTypes.object,
 }
 

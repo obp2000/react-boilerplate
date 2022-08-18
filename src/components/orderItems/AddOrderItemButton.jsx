@@ -5,11 +5,11 @@ import {useAddOrderItem} from './hooks'
 
 const AddOrderItemButton = (props) => {
   const buttonAttrs = useAddOrderItem(props)
-  return  <Button
-            size='sm'
-            outline
-            {...buttonAttrs}
-          />
+  return <Button
+    size='sm'
+    outline
+    {...buttonAttrs}
+  />
 }
 
 AddOrderItemButton.propTypes = {

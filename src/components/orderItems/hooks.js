@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import {orderOrderItemOptions} from '../orders/hooks'
 import confirmAction from '../confirmation/ConfirmAction'
 import ProductName from '../products/ProductName'
 import {useDropdown as useProductDropdownAttrs} from '../products/hooks'
 import {cost, weight} from '../orders/Calculator'
+import DropdownList from '../dropdownList/DropdownList'
 
 const emptyObject = {}
 
@@ -21,14 +21,9 @@ export const tableFieldNames = [
 
 export const orderItemProductOptions = ({
   product: {
-    children
-  } = emptyObject
+    children,
+  } = emptyObject,
 } = emptyObject) => children
-
-export const useOrderItemOptions = () => {
-  const {options} = useOutletContext()
-  return orderOrderItemOptions(options) ?? emptyObject
-}
 
 const initOrderItem = {
   product: undefined,
@@ -44,18 +39,16 @@ const deleteOrderItemAction = (id, fields) => {
   fields.remove(id)
 }
 
-export const useDeleteOrderItem = (index, fields) => {
-  const {
-    commonConsts: {
-      delete: textDelete,
-      yes,
-      no
-    } = emptyObject,
-  } = useOutletContext()
+export const useDeleteOrderItem = ({
+  index,
+  fields,
+  commonConsts,
+}) => {
   const onConfirm = () => deleteOrderItemAction(index, fields)
   return {
-      onClick: confirmAction(onConfirm, textDelete, yes, no),
-      children: textDelete,
+    onClick: confirmAction(
+        onConfirm, commonConsts?.delete, commonConsts?.yes, commonConsts?.no),
+    children: commonConsts?.delete,
   }
 }
 
@@ -64,38 +57,35 @@ const addOrderItemAction = (push) => push('order_items', initOrderItem)
 export const useAddOrderItem = ({
   form: {
     mutators: {
-      push
-    }
-  }
-}) => {
-  const {
-    commonConsts: {
-      add,
-    } = emptyObject,
-  } = useOutletContext()
-  return {
-      onClick: () => addOrderItemAction(push),
-      children: add,
-  }
-}
+      push,
+    },
+  },
+  commonConsts,
+}) => ({
+  onClick: () => addOrderItemAction(push),
+  children: commonConsts?.add,
+})
 
-export const useProductDropdown = () => {
-    const options = orderItemProductOptions(useOrderItemOptions())
-    return useProductDropdownAttrs(options)
+export const useProductDropdown = ({options}) => {
+  return {
+    ...useProductDropdownAttrs(orderItemProductOptions(orderOrderItemOptions(options))),
+    component: DropdownList,
+    options,
+  }
 }
 
 export const formInitialOrderItem = (orderItem) => ({
-      ...orderItem,
-      cost: cost(orderItem),
-      weight: weight(orderItem),
-  })
+  ...orderItem,
+  cost: cost(orderItem),
+  weight: weight(orderItem),
+})
 
 export const formInitialOrderItems = (orderItems = emptyArray) =>
   orderItems.map((orderItem, index) => formInitialOrderItem(orderItem)
   )
 
-export const useFieldLabels = () => {
-  const orderItemOptions = useOrderItemOptions()
+export const useFieldLabels = ({options}) => {
+  const orderItemOptions = orderOrderItemOptions(options)
   return tableFieldNames.map((tableFieldName) =>
-          orderItemOptions[tableFieldName]?.label)
+    orderItemOptions[tableFieldName]?.label)
 }

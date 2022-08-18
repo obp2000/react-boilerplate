@@ -1,9 +1,9 @@
 const emptyString = ''
 
 export const notBlank = (
-  values,
-  fields,
-  errorText = emptyString
+    values,
+    fields,
+    errorText = emptyString
 ) =>
   fields.reduce((errors, field) => {
     if (!values[field] || (field === 'city' && !values[field].pindex)) {
@@ -13,9 +13,9 @@ export const notBlank = (
   }, {})
 
 export const validEmail = (
-  values,
-  field,
-  errorText = emptyString
+    values,
+    field,
+    errorText = emptyString
 ) => {
   const error = {}
   if (values[field] && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
@@ -26,9 +26,9 @@ export const validEmail = (
 }
 
 export const passwordLength = (
-  values,
-  field,
-  errorText = emptyString
+    values,
+    field,
+    errorText = emptyString
 ) => {
   const error = {}
   if (values[field] && (values[field].length < 8)) {
@@ -51,9 +51,9 @@ export const validPasswordConfirmation = (
 }
 
 export const isInteger = (
-  values,
-  fields,
-  errorText = emptyString
+    values,
+    fields,
+    errorText = emptyString
 ) =>
   fields.reduce((errors, field) => {
     if (values[field] && !Number.isInteger(Number(values[field]))) {

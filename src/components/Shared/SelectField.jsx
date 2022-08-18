@@ -9,7 +9,7 @@ const SelectField = (props) => {
   return <>
     <Field {...fieldAttrs} className='form-select' component='select'>
       {selectOptions?.map(({value, label}, key) =>
-        <option {...{value, key}}>{label}</option>
+        <option key={key} {...{value}}>{label}</option>
       )}
     </Field>
     <FormTextList formText={useFormText(props)} />

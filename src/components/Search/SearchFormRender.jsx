@@ -9,19 +9,19 @@ const SearchFormRender = ({
   label,
   ...props
 }) => <Form onSubmit={props.handleSubmit} inline className="d-flex mt-1">
-    <Field
-      name='term'
-      type="search"
-      placeholder={label}
-      className="me-2"
-      component={Input}
-    />
-    <SubmitButton
-      text={label}
-      className='btn-outline-light'
-      {...props}
-    />
-  </Form>
+  <Field
+    name='term'
+    type="search"
+    placeholder={label}
+    className="me-2"
+    component={Input}
+  />
+  <SubmitButton
+    text={label}
+    className='btn-outline-light'
+    {...props}
+  />
+</Form>
 
 SearchFormRender.propTypes = {
   handleSubmit: PropTypes.func,

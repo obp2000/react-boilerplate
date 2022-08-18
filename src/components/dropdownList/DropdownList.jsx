@@ -14,9 +14,6 @@ const DropdownListComp = (props) => {
 
 DropdownListComp.propTypes = {
   props: PropTypes.string,
-  input: PropTypes.object,
-  meta: PropTypes.object,
-  options: PropTypes.object,
 }
 
 export default DropdownListComp

@@ -10,12 +10,12 @@ import {
 import {confirmable, createConfirmation} from 'react-confirm'
 
 const ProceedButton = ({label, onClick}) => <Button
-      size='sm'
-      aria-labelledby={label}
-      outline
-      onClick={onClick}>
-      {label}
-    </Button>
+  size='sm'
+  aria-labelledby={label}
+  outline
+  onClick={onClick}>
+  {label}
+</Button>
 
 const Confirmation = ({
   proceedLabel,

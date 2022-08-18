@@ -9,7 +9,6 @@ import OrderItems from '../orderItems/OrderItems'
 // import Gift from './Gift'
 import Header from '../objectForm/Header'
 import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
-import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
 import OrderItemsTotals from './OrderItemsTotals'
 // import {ConditionGte, ConditionGt} from '../Shared/FormConditions'
 import Samples from './Samples'
@@ -21,7 +20,7 @@ import AddOrderItemButton from '../orderItems/AddOrderItemButton'
 import {GiftIfNeeded} from './Gift'
 
 const OrderFormRender = (props) => {
-  const customerDropdownAttrs = useCustomerDropdown()
+  const options = {options: props.options}
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <Header {...props} />
@@ -29,12 +28,12 @@ const OrderFormRender = (props) => {
       name="id"
       hidden
       component={Input}
+      {...options}
     />
     <Row>
       <Field
         name="customer"
-        component={DropdownListFormGroup}
-        {...customerDropdownAttrs}
+        {...useCustomerDropdown(props)}
       />
     </Row>
     <Row>
@@ -43,12 +42,14 @@ const OrderFormRender = (props) => {
           name="delivery_type"
           dataKey='value'
           textField='display_name'
+          {...options}
         />
       </Col>
       <Col sm={6}>
         <Field
           name="address"
           component={FloatingFormGroup}
+          {...options}
         />
       </Col>
     </Row>
@@ -56,7 +57,7 @@ const OrderFormRender = (props) => {
       <thead>
         <tr>
           <th scope="col">№</th>
-          <OrderItemFieldLabels />
+          <OrderItemFieldLabels {...props} />
           <th scope='col'>
             <AddOrderItemButton {...props} />
           </th>
@@ -66,17 +67,19 @@ const OrderFormRender = (props) => {
         <FieldArray
           name="order_items"
           component={OrderItems}
+          {...options}
+          commonConsts={props.commonConsts}
         />
       </tbody>
       <tfoot>
-        <GiftIfNeeded />
-        {/*<ConditionGt when="order_items_amount" gt={0}>*/}
-          <>
-            <Samples />
-            <Postals {...props} />
-            <OrderTotals />
-          </>
-        {/*</ConditionGt>*/}
+        <GiftIfNeeded {...props} />
+        {/* <ConditionGt when="order_items_amount" gt={0}>*/}
+        <>
+          <Samples />
+          <Postals {...props} />
+          <OrderTotals />
+        </>
+        {/* </ConditionGt>*/}
       </tfoot>
     </Table>
   </Form>

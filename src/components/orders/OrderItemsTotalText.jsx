@@ -1,21 +1,24 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import {ConditionGte} from '../Shared/FormConditions'
+import {useOrderItemsTotalText} from './hooks'
 
-const OrderItemsTotalText = () => {
-    const {
-        options: {
-            order_items_cost: orderItemsCost,
-            need_gift: needGift,
-            Consts,
-        } = {}
-    } = useOutletContext()
-	return <span>
-			{orderItemsCost?.label}
-			<ConditionGte when="order_items_cost" gte={Consts?.SUM_FOR_GIFT}>
-				{' - '}{needGift?.label}
-			</ConditionGte>
-		</span>
+const OrderItemsTotalText = (props) => {
+  	const {
+	    orderItemsCostLabel,
+	    needGiftLabel,
+	    gte,
+	 } = useOrderItemsTotalText(props)
+  return <span>
+    {orderItemsCostLabel}
+    <ConditionGte when="order_items_cost" gte={gte}>
+      {' - '}{needGiftLabel}
+    </ConditionGte>
+  </span>
+}
+
+OrderItemsTotalText.propTypes = {
+  props: PropTypes.object,
 }
 
 export default OrderItemsTotalText

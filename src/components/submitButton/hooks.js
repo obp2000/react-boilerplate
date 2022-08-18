@@ -1,54 +1,39 @@
-// import PropTypes from 'prop-types'
-import {useOutletContext} from 'react-router-dom'
-import {calculatedFields as productCalculatedFields} from '../products/hooks'
-import {calculatedFields as orderCalculatedFields} from '../orders/hooks'
+const array = require('lodash/array')
 
 const emptyObject = {}
 
-const calculatedFields = [...productCalculatedFields, ...orderCalculatedFields]
+const isCalculatedFields = (fields = emptyObject, calculatedFields = []) =>
+  // Object.keys(fields).every((field) => calculatedFields.includes(field))
+  array.intersection(Object.keys(fields), calculatedFields) == fields
 
-const isCalculatedFields = (fields) =>
-  Object.keys(fields).every((field) => calculatedFields.includes(field))
-
-export const useSubmitButton = ({
+const disabled = ({
   submitting,
   pristine,
   hasSubmitErrors,
   hasValidationErrors,
   dirtySinceLastSubmit,
-  dirtyFields = emptyObject,
+  dirtyFields,
+  isLoading,
+  calculatedFields,
+}) => submitting ||
+      pristine ||
+      isCalculatedFields(dirtyFields, calculatedFields) ||
+      hasValidationErrors ||
+      isLoading ||
+      (hasSubmitErrors && !dirtySinceLastSubmit)
+
+export const useSubmitButton = ({
   text,
   className,
-  isLoading,
+  commonConsts,
+  ...rest
 }) => {
-  const {
-    commonConsts: {
-        save
-    } = emptyObject
-  } = useOutletContext() || {}
-  const label = text || save
+  const label = text || commonConsts?.save
   return {
-  	type: "submit",
+  	'type': 'submit',
     className,
     'aria-labelledby': label,
-    disabled: submitting ||
-              pristine ||
-              isCalculatedFields(dirtyFields) ||
-              hasValidationErrors ||
-              isLoading ||
-              (hasSubmitErrors && !dirtySinceLastSubmit),
-    children: label,
+    'disabled': disabled(rest),
+    'children': label,
   }
 }
-
-// useSubmitButton.propTypes = {
-//   submitting: PropTypes.bool,
-//   pristine: PropTypes.bool,
-//   hasSubmitErrors: PropTypes.bool,
-//   hasValidationErrors: PropTypes.bool,
-//   dirtySinceLastSubmit: PropTypes.bool,
-//   dirtyFields: PropTypes.object,
-//   text: PropTypes.string,
-//   className: PropTypes.string,
-//   isLoading: PropTypes.bool,
-// }

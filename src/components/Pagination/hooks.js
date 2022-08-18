@@ -1,21 +1,19 @@
-import React from 'react'
-import {
-  useSearchParams,
-  createSearchParams,
-} from 'react-router-dom'
-// import {useObjectsData} from '../../services/entityAdapter'
+import {useRouter} from 'next/dist/client/router'
 
-export const usePagination = (totalPages) => {
-  // const {getObjects} = useOutletContext()
-  // const {totalPages = 0} = useObjectsData(getObjects)
-  const [searchParams] = useSearchParams()
-  const currentPage = parseInt(searchParams.get('page') || 1)
-  const urlSearchParams = createSearchParams(searchParams)
+export const usePagination = ({totalPages}) => {
+  const router = useRouter()
+  const {query} = router
+  const search = new URLSearchParams(query)
+  const currentPage = parseInt(search.get('page') || 1)
   const setSearch = (page) => {
-        page
-        ? urlSearchParams.set('page', page)
-        : urlSearchParams.delete('page')
-        return urlSearchParams.toString()
+        page ?
+        search.set('page', page) :
+        search.delete('page')
+        // let query = {}
+        // for (const [key, value] of search.entries()) {
+        //   query[key] = value
+        // }
+        return search.toString()
   }
   const pages = []
   if (currentPage > 1) {
@@ -25,7 +23,7 @@ export const usePagination = (totalPages) => {
     })
   }
   if (totalPages > 1) {
-    Array(totalPages).fill().reduce((page, index) => {
+    Array(totalPages).fill().reduce((page) => {
       pages.push({
         label: page,
         search: setSearch(page === 1 ? null : page),
@@ -40,5 +38,5 @@ export const usePagination = (totalPages) => {
       search: setSearch(currentPage + 1),
     })
   }
-  return {pages}
+  return pages
 }

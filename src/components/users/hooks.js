@@ -1,8 +1,12 @@
-import {useOutletContext} from 'react-router-dom'
+import {useRouter} from 'next/dist/client/router'
+import {useSelector} from 'react-redux'
+import {selectAuth} from '../auth/selectors'
 import {useGetUserQuery} from './apiSlice'
-import {useOptionsTrigger} from '../options/hooks'
+import {useOptionsOuery} from '../options/hooks'
 
 const emptyObject = {}
+
+export const indexUrl = '/user/'
 
 export const userFieldNames = [
   'username',
@@ -12,21 +16,14 @@ export const userFieldNames = [
 ]
 
 export const useUserForm = () => {
-  const {
-    options = emptyObject,
-    options: {
-      name_singular: nameSingular,
-    } = emptyObject,
-    isFetchingOptions,
-  } = useOutletContext()
-  // console.log('options ', options)
-  // console.log('currentOptions ', currentOptions)
-  const indexUrl = '/user/'
-  useOptionsTrigger(indexUrl)
+  const {isAuthenticated} = useSelector(selectAuth)
+  const router = useRouter()
+  const {isFallback} = router
+  const {commonConsts, options, isFetchingOptions} = useOptionsOuery(indexUrl)
   const {
     data: user = emptyObject,
     isLoading: isLoadingUser,
-  } = useGetUserQuery()
+  } = useGetUserQuery(undefined, {skip: isFallback})
   const tableData = userFieldNames.map((fieldName) => ({
     label: options[fieldName]?.label,
     value: user[fieldName],
@@ -34,7 +31,8 @@ export const useUserForm = () => {
   return {
     isFetchingOptions,
   	isLoadingUser,
-    nameSingular,
+    nameSingular: options?.name_singular,
     tableData,
+    isAuthenticated,
   }
 }

@@ -1,31 +1,27 @@
-import {useOutletContext} from 'react-router-dom'
-import {useOptionsTrigger} from '../options/hooks'
+import {useRouter} from 'next/dist/client/router'
 import {useObjects, useObjectsData} from '../../services/entityAdapter'
+import {useOptionsOuery} from '../options/hooks'
 
-const emptyObject = {}
-
-export const useObjectsTable = ({indexUrl, getObjects}) => {
-	const {
-	    options: {
-	    	name_singular: nameSingular
-	    } = emptyObject,
-	    isAuthenticated,
-	} = useOutletContext()
-  	useOptionsTrigger(indexUrl)
-  	const {isLoading: isLoadingObjects, allObjects} = useObjects(getObjects)
-  	const {totalCount = 0, totalPages = 0} = useObjectsData(getObjects)
-  	return {
-  		nameSingular,
-  		isAuthenticated,
-	    isLoadingObjects,
-	    allObjects,
-	    totalCount,
-	    totalPages,
-  	}
+export const useObjectsTable = ({
+  getObjects,
+  indexUrl,
+}) => {
+  const router = useRouter()
+  const {isFallback} = router
+  const {commonConsts, options} = useOptionsOuery(indexUrl)
+  const {isLoading: isLoadingObjects, allObjects} = useObjects(getObjects)
+  const {totalCount = 0, totalPages = 0} = useObjectsData(getObjects)
+  return {
+    commonConsts,
+    options,
+    busyLoadingObjects: isLoadingObjects || isFallback,
+    allObjects,
+    totalCount,
+    totalPages,
+  }
 }
 
-export const useFieldLabels = (tableFieldNames) => {
-  const {options = emptyObject} = useOutletContext()
-  return tableFieldNames.map((tableFieldName) =>
-          options[tableFieldName]?.label)
-}
+export const useFieldLabels = ({
+  tableFieldNames,
+  options = {}}
+) => tableFieldNames.map((tableFieldName) => options[tableFieldName]?.label)

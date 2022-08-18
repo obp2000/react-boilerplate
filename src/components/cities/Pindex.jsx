@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import {usePindex} from './hooks'
 
-const emptyString = ''
-
-const Pindex = ({
-  pindex,
-  label = emptyString
-}) => {
-  if (!pindex) {return null}
-  return <>{label.substring(0, 3).toLowerCase()}.{pindex}</>
+const Pindex = (props) => {
+  const {pindex, label} = usePindex(props)
+  if (!pindex) {
+    return null
+  }
+  return <>{label}.{pindex}</>
 }
 
 Pindex.propTypes = {
-	pindex: PropTypes.string,
-  label: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default Pindex

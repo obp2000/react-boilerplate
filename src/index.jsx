@@ -1,34 +1,28 @@
-import React, {StrictMode} from 'react'
-// import * as ReactDOM from 'react-dom'
-import {createRoot} from 'react-dom/client'
+import React from 'react'
+import {createRoot, hydrateRoot} from 'react-dom/client'
 import {Provider} from 'react-redux'
-import {HashRouter as Router} from 'react-router-dom'
-import 'numeral/locales/ru'
-import numeral from 'numeral'
+import {BrowserRouter, HashRouter} from 'react-router-dom'
+import {hydrate} from 'react-dom'
+import 'react-widgets/scss/styles.scss'
+import './assets/css/App.scss'
 import configureStore from './components/Store'
 import App from './App'
-// import ToastContainer from './components/Shared/ToastContainer'
 
-import './assets/css/App.scss'
-import 'react-widgets/scss/styles.scss'
-import 'react-toastify/dist/ReactToastify.min.css'
-import 'bootstrap/dist/js/bootstrap.min.js'
-import './assets/css/App.css'
-
-numeral.locale('ru')
-
-const store = configureStore()
 const domContainer = document.querySelector('#root')
-const root = createRoot(domContainer)
-root.render(
-    <Provider {...{store}}>
-      <Router>
-        {/*<ToastContainer />*/}
-          {/*<StrictMode>*/}
-            <App />
-        {/*</StrictMode>*/}
-      </Router>
-    </Provider>
-)
+const store = configureStore()
+const Router = HashRouter
 
-// ReactDOM.render(<App />, document.getElementById('root'))
+const IndexComp = <Provider store={store}>
+  <Router>
+    <App />
+  </Router>
+</Provider>
+
+createRoot(domContainer).render(IndexComp)
+
+// if (window.__PRELOADED_STATE__) {
+//   delete window.__PRELOADED_STATE__
+//   hydrateRoot(domContainer, IndexComp)
+// } else {
+//   createRoot(domContainer).render(IndexComp)
+// }

@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import {useAddress} from './hooks'
 
-const emptyString = ''
-
-const Address = ({
-  address,
-  label = emptyString
-}) => {
-  if (!address) {return null}
+const Address = (props) => {
+  const {address, label} = useAddress(props)
+  if (!address) {
+    return null
+  }
   return <>{label}: {address}</>
 }
 
 Address.propTypes = {
-  address: PropTypes.string,
-  label: PropTypes.string,
+  props: PropTypes.object,
 }
 
 export default Address

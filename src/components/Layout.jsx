@@ -7,20 +7,20 @@ import NavBarLayout from './NavBarLayout'
 const Layout = (props) => {
   // console.log('layout props ', props)
   return <>
-        <NavBar {...props} />
-        {/*<React.StrictMode>*/}
-{/*        <Routes>
+    <NavBar {...props} />
+    {/* <React.StrictMode>*/}
+    {/*        <Routes>
             <Route element={<NavBarLayout {...props}/>}>
               <Route path='*' element={<NavBar />} />
             </Route>
         </Routes>*/}
-        <Outlet context={props}/>
-        {/*</React.StrictMode>*/}
+    <Outlet />
+    {/* </React.StrictMode>*/}
   </>
 }
 
 Layout.propTypes = {
-  props: PropTypes.object
+  props: PropTypes.object,
 }
 
 export default Layout

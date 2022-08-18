@@ -1,30 +1,25 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Field} from 'react-final-form'
-import DropdownList from '../dropdownList/DropdownList'
 import Input from '../Shared/Input'
-import {useOrderItemOptions, useProductDropdown} from './hooks'
+import {useProductDropdown} from './hooks'
+import {orderOrderItemOptions} from '../orders/hooks'
 import DeleteOrderItemButton from './DeleteOrderItemButton'
 
 const OrderItem = ({
   orderItemName,
-  index,
-  fields,
+  ...props
 }) => {
-  const options = useOrderItemOptions()
-  const productDropdownAttrs = useProductDropdown()
-  // console.log('orderItemName ', orderItemName)
+  const options = {options: props.options}
   // console.log('fields ', fields)
   return <tr>
     <th scope="row">
-      {index + 1}
+      {props.index + 1}
     </th>
     <td className="min-vw-35">
       <Field
         name={[orderItemName, 'product'].join('.')}
-        component={DropdownList}
-        {...productDropdownAttrs}
-        {...{options}}
+        {...useProductDropdown(props)}
         containerClassName='form-field'
       />
     </td>
@@ -32,7 +27,7 @@ const OrderItem = ({
       <Field
         name={`${orderItemName}.price`}
         type='number'
-        {...{options}}
+        {...options}
         step={1}
         min={0}
         component={Input}
@@ -42,7 +37,7 @@ const OrderItem = ({
       <Field
         name={`${orderItemName}.amount`}
         type='number'
-        {...{options}}
+        {...options}
         step={0.1}
         min={0}
         component={Input}
@@ -52,7 +47,7 @@ const OrderItem = ({
       <Field
         name={`${orderItemName}.cost`}
         type="number"
-        {...{options}}
+        {...options}
         disabled
         component={Input}
       />
@@ -61,21 +56,20 @@ const OrderItem = ({
       <Field
         name={`${orderItemName}.weight`}
         type="number"
-        {...{options}}
+        {...options}
         disabled
         component={Input}
       />
     </td>
     <td>
-      <DeleteOrderItemButton {...{index, fields}} />
+      <DeleteOrderItemButton {...props} />
     </td>
   </tr>
 }
 
 OrderItem.propTypes = {
   orderItemName: PropTypes.string,
-  index: PropTypes.number,
-  fields: PropTypes.object,
+  props: PropTypes.object,
 }
 
 export default OrderItem

@@ -1,23 +1,21 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {useOutletContext} from 'react-router-dom'
 import Pindex from './Pindex'
+import {useCityName} from './hooks'
 
-const emptyString = ''
-
-const CityName = ({
-  city = emptyString,
-  pindex = emptyString,
-  options = useOutletContext().options,
-}) => <>
-  	<Pindex pindex={pindex} label={options?.pindex?.label} />
+const CityName = (props) => {
+  const {city, pindexProps} = useCityName(props)
+  if (!city) {
+    return null
+  }
+  return <>
+  	<Pindex {...pindexProps} />
   	{' ' + city}
   </>
+}
 
 CityName.propTypes = {
-  city: PropTypes.string,
-  pindex: PropTypes.string,
-  options: PropTypes.object,
+  props: PropTypes.object,
 }
 
 export default CityName

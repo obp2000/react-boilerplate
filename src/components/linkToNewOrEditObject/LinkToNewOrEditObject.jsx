@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import Link from 'next/link'
 import {useLinkToNewOrEditObject} from './hooks'
 
-const LinkToNewOrEditObject = ({indexUrl, object}) => {
-	const linkAttrs = useLinkToNewOrEditObject(indexUrl, object)
-	return 	<Link className="btn btn-outline-primary btn-sm"
-				  {...linkAttrs}
-			/>
+const LinkToNewOrEditObject = (props) => {
+  const {label, ...linkAttrs} = useLinkToNewOrEditObject(props)
+  return 	<Link {...linkAttrs} shallow={true}>
+    <a className="btn btn-outline-primary btn-sm">
+      {label}
+    </a>
+  </Link>
 }
 
 LinkToNewOrEditObject.propTypes = {
-	indexUrl: PropTypes.string,
-  	object: PropTypes.object,
+  	props: PropTypes.object,
 }
 
 export default LinkToNewOrEditObject

@@ -12,31 +12,31 @@ ConditionIs.propTypes = {
   is: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.array, PropTypes.object,
-  ])
+  ]),
 }
 
 export const ConditionGt = ({when, gt, children}) =>
-    <Field name={when} subscription={{value: true}}>
-      {({input: {value}}) => (value > gt ? children : null)}
-    </Field>
+  <Field name={when} subscription={{value: true}}>
+    {({input: {value}}) => (value > gt ? children : null)}
+  </Field>
 
 ConditionGt.propTypes = {
   when: PropTypes.string,
   gt: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.array, PropTypes.object,
-  ])
+  ]),
 }
 
 export const ConditionGte = ({when, gte, children}) =>
-    <Field name={when} subscription={{value: true}}>
-      {({input: {value}}) => (value >= gte ? children : null)}
-    </Field>
+  <Field name={when} subscription={{value: true}}>
+    {({input: {value}}) => (value >= gte ? children : null)}
+  </Field>
 
 ConditionGte.propTypes = {
   when: PropTypes.string,
   gte: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.array, PropTypes.object,
-  ])
+  ]),
 }
