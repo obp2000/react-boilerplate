@@ -11,6 +11,7 @@ const toastConfig = {
   hideProgressBar: true,
   limit: 1,
   role: 'alert',
+  'aria-label': 'toast',
 }
 
 export const toastError = (message) => {

@@ -1,0 +1,32 @@
+import React from 'react'
+import ShortName from '../customers/ShortName'
+import Date from '../Shared/date'
+import { Order } from '../../../interfaces'
+import { useOptionsOuery } from '../options/hooks'
+
+type Props = {
+	object: Order
+	indexUrl: string
+}
+
+export default ({ object, indexUrl }: Props) => {
+	const { options } = useOptionsOuery(indexUrl)
+	return <>
+		<td scope="row">
+			{object.id}
+		</td>
+		<td scope="row">
+			<ShortName object={object?.customer}
+				options={options?.customer.children} />
+		</td>
+		<td scope="row">
+			{object.order_items_cost}
+		</td>
+		<td scope="row">
+			<Date dateString={object.created_at} />
+		</td>
+		<td scope="row">
+			<Date dateString={object.updated_at} />
+		</td>
+	</>
+}

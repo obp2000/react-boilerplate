@@ -1,148 +1,147 @@
 import {rest} from 'msw'
+import 'whatwg-fetch'
 import {baseUrl} from '../services/apiSlice'
 
 export const optionsData = {
-  'name': 'Customer List',
-  'description': 'API endpoint that allows customers to be viewed or edited.',
-  'renders': [
-    'application/json',
-    'text/html',
-  ],
-  'parses': [
-    'application/json',
-    'application/x-www-form-urlencoded',
-    'multipart/form-data',
-  ],
-  'actions': {
-    'POST': {
-      'id': {
-        'type': 'integer',
-        'required': false,
-        'read_only': true,
-        'label': 'ID',
-      },
-      'nick': {
-        'type': 'string',
-        'required': true,
-        'read_only': false,
-        'label': 'Ник',
-        'max_length': 255,
-      },
-      'name': {
-        'type': 'string',
-        'required': false,
-        'read_only': false,
-        'label': 'Имя',
-        'max_length': 255,
-      },
-      'city': {
-        'type': 'nested object',
-        'required': true,
-        'read_only': false,
-        'label': 'Город',
-        'children': {
-          'id': {
-            'type': 'integer',
-            'required': false,
-            'read_only': true,
-            'label': 'ID',
-          },
-          'pindex': {
-            'type': 'string',
-            'required': false,
-            'read_only': false,
-            'label': 'Индекс',
-            'max_length': 6,
-          },
-          'city': {
-            'type': 'string',
-            'required': true,
-            'read_only': false,
-            'label': 'Город',
-            'max_length': 80,
-          },
-        },
-      },
-      'address': {
-        'type': 'string',
-        'required': false,
-        'read_only': false,
-        'label': 'Адрес',
-        'max_length': 255,
-      },
-      'created_at': {
-        'type': 'datetime',
-        'required': false,
-        'read_only': true,
-        'label': 'Создан',
-      },
-      'updated_at': {
-        'type': 'datetime',
-        'required': false,
-        'read_only': true,
-        'label': 'Обновлен',
-      },
-      'name_singular': 'Покупатель',
-      'name_plural': 'Покупатели',
-    },
-  },
-  'common_consts': {
-    'new': 'Новый',
-    'edit': 'Редактировать',
-    'delete': 'Удалить',
-    'add': 'Добавить',
-    'save': 'Сохранить',
-    'successfully': 'Успешно!',
-    'yes': 'Да',
-    'no': 'Нет',
-    'search': 'Поиск',
-    'login': 'Войти',
-    'register': 'Регистрация',
-    'main_menu': [
-      {
-        'path': '/',
-        'label': 'Главная',
-      },
-      {
-        'path': '/customers/',
-        'label': 'Покупатели',
-      },
-      {
-        'path': '/products/',
-        'label': 'Ткани',
-      },
-      {
-        'path': '/orders/',
-        'label': 'Заказы',
-      },
-      {
-        'path': '/user/',
-        'label': 'Пользователь',
-      },
+    "name": "Customer List",
+    "description": "API endpoint that allows customers to be viewed or edited.",
+    "renders": [
+        "application/json",
+        "text/html"
     ],
-    'auth_menu_item': {
-      'path': '/logout/',
-      'label': 'Выйти',
+    "parses": [
+        "application/json",
+        "application/x-www-form-urlencoded",
+        "multipart/form-data"
+    ],
+    "actions": {
+        "POST": {
+            "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": true,
+                "label": "ID"
+            },
+            "nick": {
+                "type": "string",
+                "required": true,
+                "read_only": false,
+                "label": "Ник",
+                "max_length": 255
+            },
+            "name": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Имя",
+                "max_length": 255
+            },
+            "city": {
+                "type": "nested object",
+                "required": true,
+                "read_only": false,
+                "label": "Город",
+                "children": {
+                    "id": {
+                        "type": "integer",
+                        "required": false,
+                        "read_only": true,
+                        "label": "ID"
+                    },
+                    "pindex": {
+                        "type": "string",
+                        "required": false,
+                        "read_only": false,
+                        "label": "Индекс",
+                        "max_length": 6
+                    },
+                    "city": {
+                        "type": "string",
+                        "required": true,
+                        "read_only": false,
+                        "label": "Город",
+                        "max_length": 80
+                    }
+                }
+            },
+            "address": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Адрес",
+                "max_length": 255
+            },
+            "created_at": {
+                "type": "datetime",
+                "required": false,
+                "read_only": true,
+                "label": "Создан"
+            },
+            "updated_at": {
+                "type": "datetime",
+                "required": false,
+                "read_only": true,
+                "label": "Обновлен"
+            },
+            "name_singular": "Покупатель",
+            "name_plural": "Покупатели"
+        }
     },
-    'brand_text': 'Best & C',
-    'error_messages': {
-      'invalid_choice': 'Значения %(value)r нет среди допустимых вариантов.',
-      'null': 'Это поле не может иметь значение NULL.',
-      'blank': 'Это поле не может быть пустым.',
-      'unique': '%(model_name)s с таким %(field_label)s уже существует.',
-      'unique_for_date': 'Значение в поле «%(field_label)s» должно быть' +
-        ' уникальным для фрагмента «%(lookup_type)s» даты' +
-        ' в поле %(date_field_label)s.',
-      'password_mismatch': 'Введенные пароли не совпадают.',
-      'invalid_email': 'Введите правильный адрес электронной почты.',
-      'short_password': 'Введённый пароль слишком короткий. ' +
-        'Он должен содержать как минимум 8 символов.',
-      'not_integer': 'Введите правильное число.',
-    },
-    'from': 'от',
-    'back': 'Назад',
-    'not_found': 'Не найдено',
-  },
+    "common_consts": {
+        "new": "Новый",
+        "edit": "Редактировать",
+        "delete": "Удалить",
+        "add": "Добавить",
+        "save": "Сохранить",
+        "successfully": "Успешно!",
+        "yes": "Да",
+        "no": "Нет",
+        "search": "Поиск",
+        "login": "Войти",
+        "register": "Регистрация",
+        "main_menu": [
+            {
+                "path": "/",
+                "label": "Главная"
+            },
+            {
+                "path": "/customers/",
+                "label": "Покупатели"
+            },
+            {
+                "path": "/products/",
+                "label": "Ткани"
+            },
+            {
+                "path": "/orders/",
+                "label": "Заказы"
+            },
+            {
+                "path": "/user/",
+                "label": "Пользователь"
+            }
+        ],
+        "auth_menu_item": {
+            "path": "/logout/",
+            "label": "Выйти"
+        },
+        "brand_text": "Best & C",
+        "error_messages": {
+            "invalid_choice": "Значения %(value)r нет среди допустимых вариантов.",
+            "null": "Это поле не может иметь значение NULL.",
+            "blank": "Это поле не может быть пустым.",
+            "unique": "%(model_name)s с таким %(field_label)s уже существует.",
+            "unique_for_date": "Значение в поле «%(field_label)s» должно быть уникальным для фрагмента «%(lookup_type)s» даты в поле %(date_field_label)s.",
+            "password_mismatch": "Введенные пароли не совпадают.",
+            "invalid_email": "Введите правильный адрес электронной почты.",
+            "short_password": "Введённый пароль слишком короткий. Он должен содержать как минимум 8 символов.",
+            "not_integer": "Введите правильное число."
+        },
+        "from": "от",
+        "back": "Назад",
+        "not_found": "Не найдено",
+        "count": "Рассчитать"
+    }
 }
 
 export const options = optionsData.actions.POST
@@ -155,15 +154,15 @@ export const objects = {
   'results': [{
     'id': 34,
     'nick': 'oleg4',
-    'name': 'dddd',
+    'name': 'dddd mocks',
     'city': {
       'id': 22799,
       'pindex': '410049',
       'city': 'Саратов',
     },
     'address': 'ыафыафафыа',
-    'created_at': '18.01.2022 17:38:01',
-    'updated_at': '02.04.2022 18:12:32',
+    "created_at": "2022-01-28T11:24:35.286490+03:00",
+    "updated_at": "2022-08-19T23:30:43.274130+03:00",
   },
   {
     'id': 79,
@@ -175,8 +174,8 @@ export const objects = {
       'city': 'Саратов',
     },
     'address': '',
-    'created_at': '31.03.2022 18:22:17',
-    'updated_at': '01.04.2022 19:49:34',
+    "created_at": "2022-02-01T18:52:26.630389+03:00",
+    "updated_at": "2022-08-19T23:24:58.498819+03:00",
   },
   {
     'id': 59,
@@ -188,8 +187,8 @@ export const objects = {
       'city': 'Александровка, 61, Матвеево-Курганский',
     },
     'address': '',
-    'created_at': '30.01.2022 15:09:10',
-    'updated_at': '29.03.2022 23:45:52',
+    "created_at": "2022-01-28T17:35:21.329605+03:00",
+    "updated_at": "2022-08-19T16:02:54.367960+03:00",
   },
   {
     'id': 58,
@@ -201,8 +200,8 @@ export const objects = {
       'city': 'Москва',
     },
     'address': '',
-    'created_at': '30.01.2022 14:56:06',
-    'updated_at': '29.03.2022 23:35:16',
+    "created_at": "2022-08-14T23:24:24.473169+03:00",
+    "updated_at": "2022-08-17T19:58:05.350752+03:00",
   },
   {
     'id': 46,
@@ -214,8 +213,8 @@ export const objects = {
       'city': 'Саранск',
     },
     'address': 'ыафыафафыа',
-    'created_at': '23.01.2022 11:35:40',
-    'updated_at': '28.03.2022 21:09:08',
+    "created_at": "2022-08-16T13:07:57.579899+03:00",
+    "updated_at": "2022-08-16T13:07:57.579939+03:00",
   },
   {
     'id': 39,
@@ -227,8 +226,8 @@ export const objects = {
       'city': 'Владимир',
     },
     'address': 'gggggggggg',
-    'created_at': '18.01.2022 17:50:32',
-    'updated_at': '26.03.2022 12:40:03',
+    "created_at": "2022-07-15T18:11:55.583758+03:00",
+    "updated_at": "2022-08-15T01:13:25.962097+03:00",
   },
   {
     'id': 76,
@@ -240,8 +239,8 @@ export const objects = {
       'city': 'Кострома',
     },
     'address': '',
-    'created_at': '19.03.2022 22:32:29',
-    'updated_at': '22.03.2022 21:26:46',
+    "created_at": "2022-05-16T21:42:22.005831+03:00",
+    "updated_at": "2022-08-15T01:03:40.901699+03:00",
   },
   {
     'id': 77,
@@ -253,8 +252,8 @@ export const objects = {
       'city': 'Иваново',
     },
     'address': '',
-    'created_at': '19.03.2022 22:36:00',
-    'updated_at': '19.03.2022 22:36:00',
+    "created_at": "2022-08-14T23:45:58.701990+03:00",
+    "updated_at": "2022-08-14T23:45:58.702044+03:00",
   },
   ],
 }
@@ -372,29 +371,28 @@ const newCustomer = ({
   updated_at: '16.05.2022 21:42:22',
 })
 
-
 const user = {
   pk: 3,
-  username: 'oleg2',
+  username: 'testUser',
   email: 'obp2000@test.com',
   first_name: '',
   last_name: '',
 }
 
-export const handlers = [
-  // rest.get(`${baseUrl}/customers/new`, (req, res, ctx) => {
-  //   return res(ctx.json(objects[0]))
-  // }),
+export default [
   rest.options(`${baseUrl}/customers/`, (req, res, ctx) => {
+    console.log('get options...........................')
     return res(ctx.json(optionsData))
   }),
   rest.get(`${baseUrl}/customers/:id/`, (req, res, ctx) => {
     // console.log('request get customer ', req.params.id)
+    console.log('get customer...........................')
     const object = objects.results.find(({id}) => id === parseInt(req.params.id))
-    // console.log('customer ', customer)
+    console.log('customer ', customer)
     return res(ctx.json(object))
   }),
   rest.get(`${baseUrl}/customers/`, (req, res, ctx) => {
+    // console.log('get customers...........................')
     return res(ctx.json(objects))
   }),
   rest.post(`${baseUrl}/customers/`, (req, res, ctx) => {
@@ -417,7 +415,7 @@ export const handlers = [
       city,
       address: req.body.address,
       created_at: req.body.created_at,
-      updated_at: '17.05.2022 21:42:22',
+      updated_at: "2022-08-14T23:45:58.702044+03:00",
     }
     // console.log('result ', result)
     return res(ctx.json(result))
@@ -429,6 +427,14 @@ export const handlers = [
     return res(ctx.json(result))
   }),
   rest.get(`${baseUrl}/user/`, (req, res, ctx) => {
+    // console.log('get user...........................')
     return res(ctx.json(user))
   }),
+  // rest.options(`${baseUrl}/login/`, (req, res, ctx) => {
+  //   console.log('get login options...........................')
+  //   return res(ctx.json(optionsData))
+  // }),
+  // rest.get(`${baseUrl}/customers/new`, (req, res, ctx) => {
+  //   return res(ctx.json(objects[0]))
+  // }),
 ]

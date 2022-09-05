@@ -1,0 +1,16 @@
+{
+  "cookies": [
+    {
+      "name": "auth",
+      "value": "N4IglgzgggrgLgCwKYDs5gMYEM5ICYgBccATjEgDQhYYZIQQAqA9gNapEgBGAZkj1gDsAVi5csAFgCMSDFL7ZBSKXgBMWJAE5JANjoTNXKTskBmEAF8gA",
+      "domain": "localhost",
+      "path": "/",
+      "httpOnly": false,
+      "hostOnly": true,
+      "secure": false,
+      "sameSite": "Strict"
+    }
+
+  ],
+  "origins": []
+}
