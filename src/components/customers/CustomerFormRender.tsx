@@ -1,4 +1,4 @@
-import {FormEvent} from 'react'
+// import {FormEvent} from 'react'
 import {Field} from 'react-final-form'
 import type {FormRenderProps} from 'react-final-form'
 import {Form, Row, Col} from 'reactstrap'
@@ -14,13 +14,12 @@ import {
 } from '../../../interfaces'
 
 type Props = FormRenderProps & {
-  object: Customer
-  options: CustomerOptions
-  commonConsts: CommonConsts
-  // handleSubmit: (event: FormEvent<HTMLFormElement>) => void
+  object?: Customer
+  options?: CustomerOptions
+  commonConsts?: CommonConsts
 }
 
-export default (props: Props): JSX.Element => {
+const CustomerFormRender = (props: Props): JSX.Element => {
   const options = {options: props.options}
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
@@ -65,3 +64,5 @@ export default (props: Props): JSX.Element => {
     </Row>
   </Form>
 }
+
+export default CustomerFormRender

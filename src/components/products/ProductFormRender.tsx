@@ -1,13 +1,12 @@
-import {FormEvent} from 'react'
+// import {FormEvent} from 'react'
 import {Field} from 'react-final-form'
 import type {FormRenderProps} from 'react-final-form'
 import {Form, Row, Col} from 'reactstrap'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
-import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
+import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import SwitchFormGroup from '../Shared/SwitchFormGroup'
 import Header from '../objectForm/Header'
 import Input from '../Shared/Input'
-// import { formatPrice, normalizePhone } from '../Shared/Formatters'
 import ProductImage from './ProductImage'
 import {
   Product,
@@ -16,13 +15,13 @@ import {
 } from '../../../interfaces'
 
 type Props = FormRenderProps & {
-  object: Product
-  options: ProductOptions
-  commonConsts: CommonConsts
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void
+  object?: Product
+  options?: ProductOptions
+  commonConsts?: CommonConsts
+  // handleSubmit: (event: FormEvent<HTMLFormElement>) => void
 }
 
-const ProductFormRender = (props: Props): JSX.Element => {
+const PropductFormRender = (props: Props): JSX.Element => {
   const options = {options: props.options}
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
@@ -219,4 +218,4 @@ const ProductFormRender = (props: Props): JSX.Element => {
   </Form>
 }
 
-export default ProductFormRender
+export default PropductFormRender

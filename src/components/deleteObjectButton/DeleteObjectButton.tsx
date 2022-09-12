@@ -1,18 +1,25 @@
 import {Button} from 'reactstrap'
 import {useDeleteObject} from './hooks'
-import type {TableConfig} from '../objectsTable/ObjectsTable'
-import {
-  Customer,
-  Product,
-  Order,
-} from '../../../interfaces'
+import { useDeleteCustomerMutation } from '../customers/apiSlice'
+import { useDeleteProductMutation } from '../products/apiSlice'
+import { useDeleteOrderMutation } from '../orders/apiSlice'
+import { anyObject } from '../../../interfaces'
 
-type Props = TableConfig & {
-  object: Customer | Product | Order
+export type UseDeleteObjectMutation = typeof useDeleteCustomerMutation |
+  typeof useDeleteProductMutation | typeof useDeleteOrderMutation
+
+export type Props = {
+  object: anyObject
+  indexUrl: string
+  useDeleteObjectMutation: UseDeleteObjectMutation
 }
 
 const DeleteObjectButton = (props: Props) => {
-  const {isAuthenticated, isDeletingObject, ...buttonAttrs} = useDeleteObject(props)
+  const {
+    isAuthenticated,
+    isDeletingObject,
+    ...buttonAttrs
+  } = useDeleteObject(props)
   if (!isAuthenticated) {return null}
   return 	<Button
     size='sm'

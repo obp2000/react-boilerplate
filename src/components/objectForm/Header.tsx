@@ -1,25 +1,21 @@
-import {Row, Col} from 'reactstrap'
-import type {FormRenderProps} from 'react-final-form'
+import { Row, Col } from 'reactstrap'
+import type { FormRenderProps } from 'react-final-form'
 import SubmitButton from '../submitButton/SubmitButton'
 import BackButton from '../backButton/BackButton'
 import Date from '../Shared/date'
 import {
-  Customer,
-  Product,
-  Order,
-  CustomerOptions,
-  ProductOptions,
-  OrderOptions,
   CommonConsts,
+  anyObject,
+  anyObjectOptions,
 } from '../../../interfaces'
 
 type Props = FormRenderProps & {
-  object: Customer | Product | Order
-  options: CustomerOptions | ProductOptions | OrderOptions
-  commonConsts: CommonConsts
+  object?: anyObject
+  options?: anyObjectOptions
+  commonConsts?: CommonConsts
 }
 
-export default function ({object, options, ...props}: Props): JSX.Element {
+const Header = ({ object, options, ...props }: Props): JSX.Element => {
   const label = object?.id
     ? `${options?.name_singular} № ${object?.id} ${props.commonConsts?.from} `
     : `${props.commonConsts?.new} ${options?.name_singular.toLowerCase()} `
@@ -38,3 +34,5 @@ export default function ({object, options, ...props}: Props): JSX.Element {
     </Col>
   </Row>
 }
+
+export default Header

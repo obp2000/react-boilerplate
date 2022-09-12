@@ -14,24 +14,20 @@ import CustomerName from './CustomerName'
 import TableRow from './tableRow'
 import TableLabels from './tableLabels'
 import {
-  CityOptions,
   Customer,
   CustomerFormValues,
-  CustomerCityOptions,
   CustomerOptions,
 } from '../../../interfaces'
-// import {GetObjectsEndpoint} from '../../services/entityAdapter'
 
-// const emptyObject = {}
+export const initFormValues: CustomerFormValues = {
+  id: undefined,
+  nick: undefined,
+  name: undefined,
+  city: undefined,
+  address: undefined,
+}
 
 export const indexUrl = '/customers/'
-
-// type CustomerCityOptionsProps = {
-//   city: CustomerCityOptions
-// }
-
-// export const customerCityOptions = (
-//   options: Test1): CityOptions => options?.city.children
 
 export type CustomersTableConfig = {
   indexUrl: string
@@ -70,18 +66,34 @@ const submitListener: Decorator = createDecorator({
   },
 })
 
-const formInitialValues = (
-  object: Customer
-): CustomerFormValues => {
-  let objectValues: CustomerFormValues = object
+type CustomerWithOptions = {
+  object?: Customer
+  options?: CustomerOptions
+}
+
+const formInitialValues = ({object}: CustomerWithOptions): CustomerFormValues => {
+  let objectValues = object || initFormValues
   return objectValues
 }
 
-const formDecorators = () => [submitListener]
+const formDecorators = (): Decorator[] => [submitListener]
 
 const mutators = {}
 
-export const objectFormConfig = {
+export type CustomerFormConfig = {
+  indexUrl: string
+  useGetObjectQuery: typeof useGetObjectQuery
+  formInitialValues: typeof formInitialValues
+  formDecorators: typeof formDecorators
+  mutators: typeof mutators
+  validate: typeof validate
+  useUpdateObjectMutation: typeof useUpdateObjectMutation
+  useCreateObjectMutation: typeof useCreateObjectMutation
+  objectFormRender: typeof objectFormRender
+  calculatedFields: typeof calculatedFields
+}
+
+export const objectFormConfig: CustomerFormConfig = {
   indexUrl,
   useGetObjectQuery,
   formInitialValues,

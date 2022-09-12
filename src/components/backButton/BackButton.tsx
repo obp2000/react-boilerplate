@@ -3,10 +3,10 @@ import {Button} from 'reactstrap'
 import {CommonConsts} from '../../../interfaces'
 
 type Props = {
-  commonConsts: CommonConsts
+  commonConsts?: CommonConsts
 }
 
-export default function ({commonConsts}: Props): JSX.Element {
+const BackButton = ({commonConsts}: Props): JSX.Element => {
   const router = useRouter()
   return <Button
     color = 'primary'
@@ -17,3 +17,5 @@ export default function ({commonConsts}: Props): JSX.Element {
     {commonConsts?.back}
   </Button>
 }
+
+export default BackButton

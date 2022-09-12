@@ -30,12 +30,31 @@ import {
   OrderFormValues,
   OrderOptions,
   OrderItemFormValues,
-  CustomerOptions,
   OrderItemOptions,
 } from '../../../interfaces'
 
-const emptyObject = {}
-const emptyArray = []
+export const initFormValues: OrderFormValues = {
+  id: undefined,
+  customer: undefined,
+  post_cost: undefined,
+  packet: undefined,
+  delivery_type: undefined,
+  address: undefined,
+  gift: undefined,
+  order_items: undefined,
+  order_items_amount: undefined,
+  order_items_cost: undefined,
+  order_items_weight: undefined,
+  samples_weight: undefined,
+  packet_weight: undefined,
+  gift_weight: undefined,
+  post_cost_with_packet: undefined,
+  post_discount: undefined,
+  total_postals: undefined,
+  total_sum: undefined,
+  total_weight: undefined,
+  consts: undefined,
+}
 
 export const indexUrl = '/orders/'
 
@@ -88,12 +107,14 @@ const preSubmitAction = (values: OrderFormValues): void => {
   if (values.customer) {
     values.customer_id = values.customer.id
   }
-  (values.order_items ?? emptyArray).map((orderItem: OrderItemFormValues) => {
-    orderItem.product_id = orderItem.product?.id
-    deleteOrderItemValues.map((deleteValue) => {
-      delete orderItem[deleteValue as keyof OrderItemFormValues]
+  if (values.order_items) {
+    values.order_items.map((orderItem: OrderItemFormValues) => {
+      orderItem.product_id = orderItem.product?.id
+      deleteOrderItemValues.map((deleteValue) => {
+        delete orderItem[deleteValue as keyof OrderItemFormValues]
+      })
     })
-  })
+  }
   deleteValues.map((deleteValue) => {
     delete values[deleteValue as keyof OrderFormValues]
   })
@@ -104,11 +125,15 @@ const submitListener: Decorator = createDecorator({
     preSubmitAction(form.getState().values)
 })
 
-const formInitialValues = (
-  object: Order,
-  options: OrderOptions
-): OrderFormValues => {
-  // let {created_at, updated_at, ...object1} = object || emptyObject
+type OrderWithOptions = {
+  object?: Order
+  options?: OrderOptions
+}
+
+const formInitialValues = ({
+  object,
+  options
+}: OrderWithOptions): OrderFormValues => {
   const orderItems = {
     order_items: formInitialOrderItems(object?.order_items),
   }
@@ -160,12 +185,25 @@ const postCostCount: Mutator = (
     .catch((e) => console.error(e))
 }
 
-const formDecorators = (options: OrderOptions): any[] =>
+const formDecorators = (options: OrderOptions): Decorator[] =>
   [calculator(options), submitListener]
 
 const mutators = { postCostCount, ...arrayMutators }
 
-export const objectFormConfig = {
+export type OrderFormConfig = {
+  indexUrl: string
+  useGetObjectQuery: typeof useGetObjectQuery
+  formInitialValues: typeof formInitialValues
+  formDecorators: typeof formDecorators
+  mutators: typeof mutators
+  validate: typeof validate
+  useUpdateObjectMutation: typeof useUpdateObjectMutation
+  useCreateObjectMutation: typeof useCreateObjectMutation
+  objectFormRender: typeof objectFormRender
+  calculatedFields: typeof calculatedFields
+}
+
+export const objectFormConfig: OrderFormConfig = {
   indexUrl,
   useGetObjectQuery,
   formInitialValues,

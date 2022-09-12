@@ -6,8 +6,9 @@ export type Login = {
 }
 
 export type LoginFormValues = {
-  email: string
-  password: string
+  username?: string
+  email?: string
+  password?: string
 }
 
 export type LoginOptions = {
@@ -19,12 +20,12 @@ export type LoginOptions = {
 export type Register = Login
 
 export type RegisterFormValues = {
-  username: string
-  email: string
+  username?: string
+  email?: string
   first_name?: string
   last_name?: string
-  password1: string
-  password2: string
+  password1?: string
+  password2?: string
 }
 
 export type RegisterOptions = {

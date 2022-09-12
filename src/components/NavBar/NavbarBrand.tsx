@@ -1,17 +1,19 @@
 import { NavbarBrand, Badge } from 'reactstrap'
-import { CommonConsts } from '../../../interfaces'
+import { useOptionsOuery } from '../options/hooks'
 
 type Props = {
-  options: object
-  commonConsts: CommonConsts
-  isLoadingOptions?: boolean
-  isFetchingOptions?: boolean
+  indexUrl: string
 }
 
-export default ({ commonConsts }: Props) => <NavbarBrand href="/">
-  <h3>
-    <Badge pill size='lg'>
-      {commonConsts?.brand_text}
-    </Badge>
-  </h3>
-</NavbarBrand>
+const NavBarBrand = ({ indexUrl }: Props) => {
+  const { commonConsts } = useOptionsOuery(indexUrl)
+  return <NavbarBrand href="/">
+    <h3>
+      <Badge pill size='lg'>
+        {commonConsts?.brand_text}
+      </Badge>
+    </h3>
+  </NavbarBrand>
+}
+
+export default NavBarBrand

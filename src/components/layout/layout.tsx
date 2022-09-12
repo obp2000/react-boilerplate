@@ -8,7 +8,8 @@ import NavBar from '../NavBar/navBar'
 import AuthModal from '../auth/AuthModal'
 // import {selectAuth} from '../src/components/auth/selectors'
 // import {useOptionsOuery} from '../src/components/options/hooks'
-import {useLayout} from './hooks'
+import {useAppSelector} from '../hooks'
+import {selectAuth} from '../auth/selectors'
 
 type Props = {
   indexUrl: string
@@ -18,7 +19,9 @@ type Props = {
 const name = "Best&C"
 
 const Layout = ({indexUrl, children}: Props) => {
-  const {isAuthenticated, commonConsts, ...props} = useLayout({indexUrl})
+  // const {isAuthenticated} = useLayout({indexUrl})
+  const {isAuthenticated} = useAppSelector(selectAuth)
+  console.log('isAuthenticated ', isAuthenticated)
   // if (isLoadingOptions) {return <Loader />}
   return <Container fluid="sm" className="bg-light border mt-2">
       <Head>
@@ -30,12 +33,12 @@ const Layout = ({indexUrl, children}: Props) => {
         <meta name='theme-color' content ='#000000' />
       </Head>
       <header>
-        <NavBar {...props} />
+        <NavBar {...{indexUrl}} />
       </header>
       <main>
         {children}
       </main>
-      {!isAuthenticated && <AuthModal {...{commonConsts}} />}
+      {!isAuthenticated && <AuthModal {...{indexUrl}} />}
       <ToastContainer />
     </Container>
 }

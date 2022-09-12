@@ -1,17 +1,23 @@
-import {NavItem} from 'reactstrap'
+import React from 'react'
+import { NavItem } from 'reactstrap'
 import NavLink from './NavLink'
-import {CommonConsts} from '../../../interfaces'
+import { useOptionsOuery } from '../options/hooks'
+import { CommonConsts, MainMenuItem } from '../../../interfaces'
 
 type Props = {
-  options: object
-  commonConsts: CommonConsts
-  isLoadingOptions?: boolean
-  isFetchingOptions?: boolean
+  indexUrl: string
+  commonConsts?: CommonConsts
 }
 
-export default ({commonConsts}: Props): JSX.Element => <>
-  {commonConsts?.main_menu?.map((mainMenuItem, key) =>
-    <NavItem key={key}>
-      <NavLink {...mainMenuItem} />
-    </NavItem>)}
-</>
+const MainMenu = ({ indexUrl, commonConsts }: Props): JSX.Element => {
+  // const { commonConsts } = useOptionsOuery(indexUrl)
+  // console.log('commonConsts ', commonConsts)
+  return <>
+    {commonConsts?.main_menu.map((mainMenuItem: MainMenuItem, key: number) =>
+      <NavItem key={key}>
+        <NavLink {...mainMenuItem} />
+      </NavItem>)}
+  </>
+}
+
+export default MainMenu

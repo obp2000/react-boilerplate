@@ -1,24 +1,31 @@
-import {Form} from 'react-final-form'
-import type {FormProps} from 'react-final-form'
-import {useSearchForm} from './hooks'
-import {
-  CommonConsts,
-  CustomerOptions,
-  ProductOptions,
-  OrderOptions,
-  UserOptions,
-} from '../../../interfaces'
+import { Form } from 'react-final-form'
+import {useRouter} from 'next/dist/client/router'
+import type {FormProps } from 'react-final-form'
+import {useOptionsOuery} from '../options/hooks'
+import SearchFormRender from './SearchFormRender'
+import {SearchTerm, CommonConsts} from '../../../interfaces'
 
-type Props = FormProps & {
-  options: CustomerOptions | ProductOptions | OrderOptions | UserOptions
+type Props = {
+  indexUrl: string
+}
+
+type SearchFormAttrs = FormProps & {
   commonConsts?: CommonConsts
-  isLoadingOptions?: boolean
-  isFetchingOptions?: boolean
-  calculatedFields?: string[]
 }
 
-export default (props: Props) => {
-  const searchFormAttrs = useSearchForm()
-  // console.log('searchFormAttrs ', searchFormAttrs)
-  return <Form {...searchFormAttrs} {...props} />
+const SearchForm = ({indexUrl}: Props) => {
+  const router = useRouter()
+  const {query} = router
+  const { commonConsts } = useOptionsOuery(indexUrl)
+  const searchFormAttrs: SearchFormAttrs = {
+    name: 'search',
+    onSubmit: ({term}: SearchTerm) =>
+      router.push({query: {term}}, undefined, {shallow: true}),
+    initialValues: {term: query.term},
+    render: SearchFormRender,
+    commonConsts,
+  }
+  return <Form  {...searchFormAttrs} />
 }
+
+export default SearchForm

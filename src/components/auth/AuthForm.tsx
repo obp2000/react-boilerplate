@@ -1,55 +1,62 @@
-import {Form, Field} from 'react-final-form'
-import type {FormProps} from 'react-final-form'
-import {Form as FormStrap} from 'reactstrap'
-import RowFormGroup from '../Shared/RowFormGroup'
-import SubmitButton from '../submitButton/SubmitButton'
+import { Form } from 'react-final-form'
+import { useAppSelector } from '../hooks'
+import { useGetOptionsQuery } from '../options/apiSlice'
+import { selectAuthModal } from './selectors'
+import AuthFormRender from './AuthFormRender'
+
 import {
-  LoginOptions,
-  RegisterOptions,
+  LoginFormValues,
+  RegisterFormValues,
 } from '../../../interfaces/auth'
 import {
   CommonConsts
 } from '../../../interfaces'
-import type {FormFields} from './hooks'
+import type { LoginFormConfig, RegisterFormConfig } from './hooks'
 
-type AuthFormProps = FormProps & {
-  loaded: boolean
-  isOpen: boolean
-  headerAttrs: {
-    toggle: () => void
-    children: string
-  }
-  toggleLoginButtonAttrs: {
-    onClick: () => void
-    children: string
-  }
-  commonConsts: CommonConsts
-  options?: LoginOptions & RegisterOptions
-  formFields: FormFields[]
-  isLoadingOptions: boolean
-  isProcessing: boolean
-  name: string
-  submitButtonLabel: string
+type FormValues = LoginFormValues & RegisterFormValues
+
+type LoginProps = LoginFormConfig & {
+  commonConsts?: CommonConsts,
 }
 
-export default ({
-  options,
+type RegisterProps = RegisterFormConfig & {
+  commonConsts?: CommonConsts,
+}
+
+function AuthForm(props: LoginProps): JSX.Element
+function AuthForm(props: RegisterProps): JSX.Element
+function AuthForm({
+  indexUrl,
+  name,
+  useAuthMutation,
   formFields,
-  submitButtonLabel,
-  isLoadingOptions,
-  isProcessing,
-  ...formAttrs
-}: AuthFormProps) => <Form {...formAttrs}>
-  {(props) => <FormStrap
-    onSubmit={props.handleSubmit}
-    className="shadow p-3 mb-5 bg-body rounded">
-    {formFields.map((field, key) =>
-      <Field
-        key={key}
-        {...field}
-        component={RowFormGroup}
-        {...{options}}
-      />)}
-    <SubmitButton text={submitButtonLabel} {...props} />
-  </FormStrap>}
-</Form>
+  validate,
+  commonConsts,
+}: any): JSX.Element {
+  const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
+  const submitButtonLabel =
+    isLogin ? commonConsts?.login : commonConsts?.register
+  const {
+    data,
+    isLoading: isLoadingOptions,
+  } = useGetOptionsQuery(indexUrl, { skip: !isOpen })
+  const options = data?.options
+  const [authAction, { isLoading: isProcessing }] = useAuthMutation()
+  // const initialValues = isLogin ? initLoginValues : initRegisterValues
+  const formAttrs = {
+    commonConsts,
+    options,
+    formFields,
+    isLoadingOptions,
+    isProcessing,
+    name,
+    validate: validate(commonConsts?.error_messages),
+    // initialValues,
+    onSubmit: (values: FormValues) => authAction(values),
+    render: AuthFormRender,
+    submitButtonLabel,
+  }
+  return <Form {...formAttrs} />
+}
+
+export default AuthForm

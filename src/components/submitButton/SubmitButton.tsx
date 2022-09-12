@@ -1,4 +1,3 @@
-// import { FormEvent } from 'react'
 import type { FormRenderProps } from 'react-final-form'
 import { Button } from 'reactstrap'
 import { disabled } from './hooks'

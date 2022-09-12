@@ -1,5 +1,5 @@
-import {apiSlice} from '../../services/apiSlice'
-import {User as GetObject} from '../../../interfaces'
+import { apiSlice } from '../../services/apiSlice'
+import { User as GetObject } from '../../../interfaces'
 
 const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +10,8 @@ const extendedApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
-export const {useGetUserQuery} = extendedApiSlice
+export const { useGetUserQuery } = extendedApiSlice
 
 export default extendedApiSlice
 
-export const {getUser} = extendedApiSlice.endpoints
+export const { getUser } = extendedApiSlice.endpoints

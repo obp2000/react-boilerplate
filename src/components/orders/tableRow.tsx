@@ -9,7 +9,7 @@ type Props = {
 	indexUrl: string
 }
 
-export default ({ object, indexUrl }: Props) => {
+const TableRow = ({ object, indexUrl }: Props) => {
 	const { options } = useOptionsOuery(indexUrl)
 	return <>
 		<td scope="row">
@@ -30,3 +30,5 @@ export default ({ object, indexUrl }: Props) => {
 		</td>
 	</>
 }
+
+export default TableRow

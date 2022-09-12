@@ -1,5 +1,5 @@
 import createDecorator from 'final-form-submit-listener'
-import type {Decorator} from 'final-form'
+import type { Decorator } from 'final-form'
 import type { FormProps } from 'react-final-form'
 import {
   getProducts as getObjects,
@@ -25,6 +25,31 @@ import {
   ProductFormValues,
   ProductOptions
 } from '../../../interfaces'
+
+export const initFormValues: ProductFormValues = {
+  id: undefined,
+  name: undefined,
+  product_type: undefined,
+  threads: undefined,
+  contents: undefined,
+  fleece: undefined,
+  price: undefined,
+  weight: undefined,
+  width: undefined,
+  density: undefined,
+  dollar_price: undefined,
+  dollar_rate: undefined,
+  width_shop: undefined,
+  density_shop: undefined,
+  weight_for_count: undefined,
+  length_for_count: undefined,
+  price_pre: undefined,
+  image: undefined,
+  density_for_count: undefined,
+  meters_in_roll: undefined,
+  prices: undefined,
+  consts: undefined,
+}
 
 export const indexUrl = '/products/'
 
@@ -77,10 +102,15 @@ const preSubmitAction = (values: ProductFormValues): void => {
   values.toFormData = true
 }
 
-const formInitialValues = (
-  object: Product,
-  options: ProductOptions,
-): ProductFormValues => {
+type ProductWithOptions = {
+  object?: Product
+  options?: ProductOptions
+}
+
+const formInitialValues = ({
+  object,
+  options
+}: ProductWithOptions): ProductFormValues => {
   let objectValues: ProductFormValues = {
     ...object,
     consts: options?.Consts,
@@ -100,12 +130,25 @@ const submitListener: Decorator = createDecorator({
   },
 })
 
-const formDecorators = (options: ProductOptions): any[] =>
+const formDecorators = (options: ProductOptions): Decorator[] =>
   [calculator(options), submitListener]
 
 const mutators = {}
 
-export const objectFormConfig = {
+export type ProductFormConfig = {
+  indexUrl: string
+  useGetObjectQuery: typeof useGetObjectQuery
+  formInitialValues: typeof formInitialValues
+  formDecorators: typeof formDecorators
+  mutators: typeof mutators
+  validate: typeof validate
+  useUpdateObjectMutation: typeof useUpdateObjectMutation
+  useCreateObjectMutation: typeof useCreateObjectMutation
+  objectFormRender: typeof objectFormRender
+  calculatedFields: typeof calculatedFields
+}
+
+export const objectFormConfig: ProductFormConfig = {
   indexUrl,
   useGetObjectQuery,
   formInitialValues,

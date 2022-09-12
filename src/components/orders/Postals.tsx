@@ -1,11 +1,11 @@
-import {Field} from 'react-final-form'
-import type {FormRenderProps} from 'react-final-form'
-import {Row, Col} from 'reactstrap'
+import { Field } from 'react-final-form'
+import type { FormRenderProps } from 'react-final-form'
+import { Row, Col } from 'reactstrap'
 import Input from '../Shared/Input'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
-import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
+import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import PostCostButton from './PostCostButton'
-import {OrderOptions, CommonConsts} from '../../../interfaces'
+import { OrderOptions, CommonConsts } from '../../../interfaces'
 
 type Props = FormRenderProps & {
   options: OrderOptions
@@ -21,7 +21,7 @@ const Postals = (props: Props): JSX.Element => <tr>
           step={1}
           component={FloatingFormGroup} />
       </Col>
-                                +
+      +
       <Col sm={2}>
         <SelectFloatingFormGroup
           name="packet"
@@ -29,14 +29,14 @@ const Postals = (props: Props): JSX.Element => <tr>
           textField='display_name'
           options={props.options} />
       </Col>
-                                =
+      =
       <Col sm={3}>
         <Field name="post_cost_with_packet"
           type="number"
           disabled
           component={FloatingFormGroup} />
       </Col>
-                                -
+      -
       <Col sm={3}>
         <Field name="post_discount"
           type="number"

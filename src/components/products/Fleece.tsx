@@ -7,10 +7,8 @@ type Props = {
 }
 
 const Fleece = ({object, options}: Props) => {
-  if (!object?.fleece) {
-    return null
-  }
-  return <>{options?.fleece.label.toLowerCase()}{' '}</>
+  if (!object?.fleece) { return null }
+  return <>{options?.fleece?.label?.toLowerCase()}{' '}</>
 }
 
 export default Fleece

@@ -1,13 +1,15 @@
 import {Row, Col, Badge} from 'reactstrap'
 import {useOptionsOuery} from '../options/hooks'
-import type {TableConfig} from '../objectsTable/ObjectsTable'
+import { useObjects } from '../../services/entityAdapter'
+import type {GetObjectsEndpoint} from '../../services/entityAdapter'
 
-export type Props = TableConfig & {
-  totalCount?: number
+export type Props = {
+  indexUrl: string
+  getObjects: GetObjectsEndpoint
 }
 
-export default ({totalCount = 0, indexUrl}: Props): JSX.Element => {
-  // const {totalCount = 0} = useObjects(getObjects)
+const Header = ({indexUrl, getObjects}: Props): JSX.Element => {
+  const {totalCount = 0} = useObjects(getObjects)
   const {options} = useOptionsOuery(indexUrl)
   return <Row>
   <Col sm={2}>
@@ -22,3 +24,5 @@ export default ({totalCount = 0, indexUrl}: Props): JSX.Element => {
   </Col>
 </Row>
 }
+
+export default Header

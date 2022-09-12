@@ -59,6 +59,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       ],
     }),
   }),
+  overrideExisting: true,
 })
 
 export const {

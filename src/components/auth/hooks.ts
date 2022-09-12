@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router'
+import {useDispatch} from 'react-redux'
 import { useAppSelector, useAppDispatch } from '../hooks'
 import { validateLogin, validateRegister } from './Validators'
-import { useGetOptionsQuery } from '../options/apiSlice'
 import {
   useLoginMutation,
   useRegisterMutation,
@@ -10,15 +10,16 @@ import {
 import { toggleModal, toggleLogin } from './modalSlice'
 import { selectAuth, selectAuthModal } from './selectors'
 import { useGetUserQuery } from '../users/apiSlice'
+import { useOptionsOuery } from '../options/hooks'
 import { CommonConsts } from '../../../interfaces'
 import {
   LoginFormValues,
   RegisterFormValues,
 } from '../../../interfaces/auth'
-import {ErrorMessages} from '../../../interfaces'
+// import {ErrorMessages} from '../../../interfaces'
 
 type Props = {
-  commonConsts: CommonConsts
+  commonConsts?: CommonConsts
 }
 
 export type FormFields = {
@@ -28,7 +29,7 @@ export type FormFields = {
   autoComplete?: string
 }
 
-type LoginFormConfig = {
+export type LoginFormConfig = {
   indexUrl: string
   name: string
   useAuthMutation: typeof useLoginMutation
@@ -36,12 +37,26 @@ type LoginFormConfig = {
   validate: typeof validateLogin
 }
 
-type RegisterFormConfig = {
+export type RegisterFormConfig = {
   indexUrl: string
   name: string
   useAuthMutation: typeof useRegisterMutation
   formFields: FormFields[]
   validate: typeof validateRegister
+}
+
+export const initLoginValues: LoginFormValues = {
+  username: undefined,
+  password: undefined,
+}
+
+export const initRegisterValues: RegisterFormValues = {
+  username: undefined,
+  email: undefined,
+  first_name: undefined,
+  last_name: undefined,
+  password1: undefined,
+  password2: undefined,
 }
 
 export const loginFormConfig: LoginFormConfig = {
@@ -53,9 +68,6 @@ export const loginFormConfig: LoginFormConfig = {
     { name: 'password', type: 'password', autoComplete: 'current-password' },
   ],
   validate: validateLogin,
-  // headerLabel: 'login',
-  // toggleLoginButtonLabel: 'register',
-  // submitButtonLabel: 'login',
 }
 
 export const registerFormConfig: RegisterFormConfig = {
@@ -71,22 +83,19 @@ export const registerFormConfig: RegisterFormConfig = {
     { name: 'password2', type: 'password', autoComplete: 'new-password' },
   ],
   validate: validateRegister,
-  // headerLabel: 'register',
-  // toggleLoginButtonLabel: 'login',
-  // submitButtonLabel: 'register',
 }
 
-export const useAuthModal = ({ commonConsts }: Props) => {
+export const useAuthModal = ({ indexUrl }: { indexUrl: string }) => {
   const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
+  const { commonConsts } = useOptionsOuery(indexUrl)
   const login = commonConsts?.login
   const register = commonConsts?.register
   const [ authFormConfig,
           headerLabel,
-          toggleLoginButtonLabel,
-          submitButtonLabel] = isLogin
-      ? [loginFormConfig, login, register, login]
-      : [registerFormConfig, register, login, register]
-  const dispatch = useAppDispatch()
+          toggleLoginButtonLabel,] = isLogin
+      ? [loginFormConfig, login, register,]
+      : [registerFormConfig, register, login,]
+  const dispatch = useDispatch()
   const headerAttrs = {
     toggle: () => dispatch(toggleModal()),
     children: headerLabel,
@@ -95,38 +104,18 @@ export const useAuthModal = ({ commonConsts }: Props) => {
     onClick: () => dispatch(toggleLogin()),
     children: toggleLoginButtonLabel,
   }
-  const {
-    indexUrl,
-    name,
-    useAuthMutation,
-    formFields,
-    validate,
-  } = authFormConfig
-  const {
-    data,
-    isLoading: isLoadingOptions,
-  } = useGetOptionsQuery(indexUrl, { skip: !isOpen })
-  const options = data?.options
-  const [authAction, { isLoading: isProcessing }] = useAuthMutation()
   return {
     loaded: true,
     isOpen,
     headerAttrs,
     toggleLoginButtonAttrs,
+    authFormConfig,
     commonConsts,
-    options,
-    formFields,
-    isLoadingOptions,
-    isProcessing,
-    name,
-    validate: validate(commonConsts?.error_messages),
-    onSubmit: (values: LoginFormValues & RegisterFormValues) =>
-      authAction(values),
-    submitButtonLabel,
   }
 }
 
-export const useAuthButton = ({ commonConsts }: Props) => {
+export const useAuthButton = ({ indexUrl }: { indexUrl: string }) => {
+  const { commonConsts } = useOptionsOuery(indexUrl)
   const [
     signOutAction,
     { isLoading: isSigningOut },
@@ -152,6 +141,59 @@ export const useAuthButton = ({ commonConsts }: Props) => {
     children: label,
   }
 }
+
+
+
+// export const useAuthForm111 = ({ commonConsts }: Props) => {
+//   const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
+//   const login = commonConsts?.login
+//   const register = commonConsts?.register
+//   const [ authFormConfig,
+//           headerLabel,
+//           toggleLoginButtonLabel,
+//           submitButtonLabel] = isLogin
+//       ? [loginFormConfig, login, register, login]
+//       : [registerFormConfig, register, login, register]
+//   const dispatch = useAppDispatch()
+//   const headerAttrs = {
+//     toggle: () => dispatch(toggleModal()),
+//     children: headerLabel,
+//   }
+//   const toggleLoginButtonAttrs = {
+//     onClick: () => dispatch(toggleLogin()),
+//     children: toggleLoginButtonLabel,
+//   }
+//   const {
+//     indexUrl,
+//     name,
+//     useAuthMutation,
+//     formFields,
+//     validate,
+//   } = authFormConfig
+//   const {
+//     data,
+//     isLoading: isLoadingOptions,
+//   } = useGetOptionsQuery(indexUrl, { skip: !isOpen })
+//   const options = data?.options
+//   const [authAction, { isLoading: isProcessing }] = useAuthMutation()
+//   return {
+//     loaded: true,
+//     isOpen,
+//     headerAttrs,
+//     toggleLoginButtonAttrs,
+//     commonConsts,
+//     options,
+//     formFields,
+//     isLoadingOptions,
+//     isProcessing,
+//     name,
+//     validate: validate(commonConsts?.error_messages),
+//     onSubmit: (values: LoginFormValues & RegisterFormValues) =>
+//       authAction(values),
+//     submitButtonLabel,
+//   }
+// }
+
 
 
 // export const useAuthForm = ({

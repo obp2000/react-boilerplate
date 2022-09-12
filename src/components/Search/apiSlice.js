@@ -10,7 +10,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         url,
         params: {...params, page_size: 1000000},
       }),
-      transformResponse: ({results}, meta, arg) => results,
+      transformResponse: ({results}) => results,
     }),
   }),
 })

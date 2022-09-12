@@ -4,7 +4,7 @@ type Props = {
     indexUrl: string
 }
 
-export default ({ indexUrl }: Props): JSX.Element | null => {
+const TableLabels = ({ indexUrl }: Props): JSX.Element | null => {
     const { options } = useOptionsOuery(indexUrl)
     if (!options) { return null }
     return <>
@@ -28,3 +28,5 @@ export default ({ indexUrl }: Props): JSX.Element | null => {
         </th>
     </>
 }
+
+export default TableLabels

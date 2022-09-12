@@ -1,10 +1,10 @@
-import type { FormProps } from 'react-final-form'
+import type { FieldArrayRenderProps } from 'react-final-form-arrays'
 import { Button } from 'reactstrap'
-import {initOrderItem} from './hooks'
+import { initOrderItem } from './hooks'
 import confirmAction from '../confirmation/ConfirmAction'
-import { CommonConsts } from '../../../interfaces'
+import { CommonConsts, OrderItem } from '../../../interfaces'
 
-type Props = FormProps & {
+type Props = FieldArrayRenderProps<OrderItem, HTMLElement> & {
   commonConsts: CommonConsts
   index: number
 }
@@ -12,17 +12,20 @@ type Props = FormProps & {
 const DeleteOrderItemButton = ({
   commonConsts,
   index,
-  fields
+  fields,
 }: Props): JSX.Element => {
   const onConfirm = (): void => {
-      fields.update(index, initOrderItem)
-      fields.remove(index)
+    fields.update(index, initOrderItem)
+    fields.remove(index)
   }
   return <Button
     size='sm'
     outline
     onClick={confirmAction(
-        onConfirm, commonConsts?.delete, commonConsts?.yes, commonConsts?.no)}
+      onConfirm,
+      commonConsts?.delete,
+      commonConsts?.yes,
+      commonConsts?.no)}
   >
     {commonConsts?.delete}
   </Button>

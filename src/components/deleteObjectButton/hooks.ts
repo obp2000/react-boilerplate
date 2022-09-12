@@ -3,21 +3,12 @@ import {selectAuth} from '../auth/selectors'
 import {toastSuccess, toastError} from '../Shared/Toast'
 import confirmAction from '../confirmation/ConfirmAction'
 import {useOptionsOuery} from '../options/hooks'
-import type {TableConfig} from '../objectsTable/ObjectsTable'
-import {
-  Customer,
-  Product,
-  Order,
-} from '../../../interfaces'
-
-type Props = TableConfig & {
-  object: Customer | Product | Order
-}
+import { Props } from './DeleteObjectButton'
 
 export const useDeleteObject = ({
+  object,
   indexUrl,
   useDeleteObjectMutation,
-  object,
 }: Props) => {
   const {isAuthenticated} = useAppSelector(selectAuth)
   const {commonConsts} = useOptionsOuery(indexUrl)

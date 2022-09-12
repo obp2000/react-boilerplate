@@ -10,12 +10,12 @@
 // }
 
 export type FieldProps = {
-  type: string
-  required: boolean
-  read_only: boolean
-  label: string
-  min_length?: number
-  max_length?: number
+  type?: string
+  required?: boolean
+  read_only?: boolean
+  label?: string
+  min_value?: number
+  max_value?: number
   help_text?: string
 }
 
@@ -105,14 +105,14 @@ export type ProductConsts = {
 }
 
 export type ProductFormValues = {
-  id: number
-  name: string
+  id?: number
+  name?: string
   product_type?: number
   product_type_id?: number
   threads?: number
   contents?: number
   fleece?: boolean
-  price: number
+  price?: number
   weight?: number
   width?: number
   density?: number
@@ -196,7 +196,7 @@ export type ProductOptions = {
 }
 
 export type OrderItem = {
-  id: number
+  id?: number
   order?: number
   product?: Product
   amount?: number
@@ -206,7 +206,7 @@ export type OrderItem = {
 }
 
 export type OrderItemFormValues = {
-  id: number
+  id?: number
   order?: number
   product?: Product
   product_id?: number
@@ -280,7 +280,7 @@ export type OrderFormValues = {
   total_postals?: number | string
   total_sum?: number | string
   total_weight?: number
-  consts: OrderConsts
+  consts?: OrderConsts
 }
 
 export type PacketChoice = {
@@ -348,11 +348,11 @@ export type OrderOptions = {
 }
 
 export type User = {
-  pk: number
-  username: string
-  email: string
-  first_name: string
-  last_name: string
+  pk?: number
+  username?: string
+  email?: string
+  first_name?: string
+  last_name?: string
 }
 
 export type UserOptions = {
@@ -420,3 +420,7 @@ export type Confirmation = {
   proceed: Function
   enableEscape: boolean
 }
+
+export type anyObject = Customer | Product | Order
+
+export type anyObjectOptions = CustomerOptions | ProductOptions | OrderOptions

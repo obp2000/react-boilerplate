@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Modal,
   ModalHeader,
@@ -6,19 +7,26 @@ import {
 } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { useAuthModal } from './hooks'
-import { CommonConsts } from '../../../interfaces'
 
 type Props = {
-  commonConsts: CommonConsts
+  indexUrl: string
 }
 
-export default (props: Props): JSX.Element => {
-  const formAttrs = useAuthModal(props)
-  return <Modal isOpen={formAttrs.isOpen} >
-    <ModalHeader {...formAttrs.headerAttrs} />
+const AuthModal = (props: Props): JSX.Element => {
+  const {
+    isOpen,
+    headerAttrs,
+    toggleLoginButtonAttrs,
+    authFormConfig,
+  } = useAuthModal(props)
+  console.log('modal props ', props)
+  return <Modal isOpen={isOpen} >
+    <ModalHeader {...headerAttrs} />
     <ModalBody>
-      <AuthForm {...formAttrs} />
-      <Button size='sm' outline {...formAttrs.toggleLoginButtonAttrs} />
+      <AuthForm {...authFormConfig} {...props} />
+      <Button size='sm' outline {...toggleLoginButtonAttrs} />
     </ModalBody>
   </Modal>
 }
+
+export default AuthModal

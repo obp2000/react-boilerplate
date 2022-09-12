@@ -1,15 +1,15 @@
-import {FormEvent} from 'react'
 import {Field} from 'react-final-form'
 import type {FormRenderProps} from 'react-final-form'
 import {Form, Row, Col, Table} from 'reactstrap'
 import {FieldArray} from 'react-final-form-arrays'
+import type { FieldArrayRenderProps } from 'react-final-form-arrays'
 // import type {FieldArrayRenderProps} from 'react-final-form-arrays'
 import Input from '../Shared/Input'
 import FloatingFormGroup from '../Shared/FloatingFormGroup'
 import OrderItem from '../orderItems/OrderItem'
 // import Gift from './Gift'
 import Header from '../objectForm/Header'
-import SelectFloatingFormGroup from '../Shared/SelectFloatingFormGroup'
+import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import OrderItemsTotals from './OrderItemsTotals'
 import Samples from './Samples'
 import Postals from './Postals'
@@ -21,14 +21,15 @@ import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
 import {
   Order,
   OrderOptions,
-  CommonConsts
+  OrderItem as OrderItemType,
+  CommonConsts,
 } from '../../../interfaces'
 
 type Props = FormRenderProps & {
   object: Order
   options: OrderOptions
   commonConsts: CommonConsts
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void
+  // handleSubmit: (event: FormEvent<HTMLFormElement>) => void
 }
 
 const OrderFormRender = (props: Props): JSX.Element => {
@@ -76,7 +77,7 @@ const OrderFormRender = (props: Props): JSX.Element => {
       </thead>
       <tbody>
         <FieldArray name="order_items">
-          {({fields}) => <>
+          {({fields}: FieldArrayRenderProps<OrderItemType, HTMLElement>) => <>
             {fields.map((
               orderItemName: string,
               index: number): JSX.Element => <OrderItem key={index} {...{
@@ -85,6 +86,7 @@ const OrderFormRender = (props: Props): JSX.Element => {
                   fields,
                   options: props.options,
                   commonConsts: props.commonConsts,
+                  meta: {}
                 }} />
             )}
             {Number(fields?.length) > 1 && <OrderItemsTotals {...props} />}

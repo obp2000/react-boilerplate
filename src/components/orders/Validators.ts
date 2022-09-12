@@ -1,5 +1,5 @@
-import {notBlank} from '../Shared/Validators'
-import {OrderFormValues, ErrorMessages} from '../../../interfaces'
+import { notBlank } from '../Shared/Validators'
+import { OrderFormValues, ErrorMessages } from '../../../interfaces'
 
 export const validate = (errorMessages: ErrorMessages) =>
   (values: OrderFormValues) =>

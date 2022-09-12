@@ -30,11 +30,21 @@ export const objectsAdapter = createEntityAdapter<ObjectType>({
   sortComparer: (a, b) => b.updated_at.localeCompare(a.updated_at),
 })
 
-export const objectsInitialState = objectsAdapter.getInitialState()
+// const initState = {
+//   ids: [],
+//   entities: {},
+//   totalCount: 0,
+//   totalPages: 0,
+// }
+
+export const objectsInitialState = objectsAdapter.getInitialState({
+  totalCount: 0,
+  totalPages: 0,
+})
 
 export const getSelectors = (selectObjectsData: SelectObjectsData) =>
   objectsAdapter.getSelectors((state: RootState) =>
-    selectObjectsData(state) ?? objectsInitialState)
+    (selectObjectsData(state) || objectsInitialState))
 
 export const getObjectByIdSelector =
   (selectObjectsData: SelectObjectsData, id: number) =>
@@ -47,25 +57,39 @@ export const {
   removeOne,
 } = objectsAdapter
 
+export const useSelectors = (getObjects: GetObjectsEndpoint) => {
+  const {query} = useRouter()
+  const selectObjectsResult = getObjects.select(query)
+  const selectObjectsData =
+    createSelector([selectObjectsResult], ({data}) => data)
+  const {selectAll} = getSelectors(selectObjectsData)
+  return {
+    selectObjectsResult,
+    selectObjectsData,
+    selectAll,
+  }
+}
+
 export const useObjectsData = (getObjects: GetObjectsEndpoint) => {
   const dispatch = useAppDispatch()
-  const router = useRouter()
-  const {query, isFallback} = router
+  const {query, isFallback} = useRouter()
   if (!isFallback) {
     dispatch(getObjects.initiate(query))
   }
-  const selectObjectsResult = getObjects.select(query)
-  const objectsResult = useAppSelector(selectObjectsResult)
-  // console.log('objectsResult ', objectsResult)
-  const {isLoading} = objectsResult
-  const selectObjectsData =
-    createSelector([selectObjectsResult], ({data}) => data)
-  const objectsData = useAppSelector(selectObjectsData)
+  const {
+    selectObjectsResult,
+    selectObjectsData,
+    selectAll,
+  } = useSelectors(getObjects)
+  const {isLoading, isSuccess} = useAppSelector(selectObjectsResult)
+  const {totalCount, totalPages} =
+    useAppSelector(selectObjectsData) || objectsInitialState
   return {
     busyLoadingObjects: isLoading || isFallback,
-    totalCount: objectsData?.totalCount,
-    totalPages: objectsData?.totalPages,
-    selectObjectsData
+    isSuccess,
+    totalCount,
+    totalPages,
+    selectAll,
   }
 }
 
@@ -73,31 +97,31 @@ export type UseObjects = {
   busyLoadingObjects: boolean
   totalCount?: number
   totalPages?: number
-  allObjects: ObjectType[]
+  allObjects?: ObjectType[]
+  selectAll: Function
 }
 
-export const useObjects = (getObjects: GetObjectsEndpoint): UseObjects => {
+export const useObjects = (getObjects: GetObjectsEndpoint) => {
   const {
     busyLoadingObjects,
     totalCount,
     totalPages,
-    selectObjectsData,
+    selectAll,
   } = useObjectsData(getObjects)
-  const {selectAll} = getSelectors(selectObjectsData)
-  const allObjects = useAppSelector(selectAll)
+  const allObjects = useAppSelector(selectAll) || objectsInitialState
   return {
     busyLoadingObjects,
     totalCount,
     totalPages,
-    allObjects
+    allObjects,
+    // selectAll,
+    // isSuccess,
   }
 }
 
 export const useObject = (getObjects: GetObjectsEndpoint, id: number) => {
-  const {
-    busyLoadingObjects,
-    selectObjectsData,
-  } = useObjectsData(getObjects)
+  const { busyLoadingObjects, } = useObjectsData(getObjects)
+  const { selectObjectsData, } = useSelectors(getObjects)
   const objectByIdSelector = getObjectByIdSelector(selectObjectsData, id)
   const object = useAppSelector(objectByIdSelector)
   return {

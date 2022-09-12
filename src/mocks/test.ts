@@ -1,16 +1,16 @@
-import { test as base, expect } from "@playwright/test";
-import { createServer, MockServiceWorker } from "playwright-msw";
+import { test as base, expect } from "@playwright/test"
+import { createServer, MockServiceWorker } from "playwright-msw"
 
-import handlers from "./handlers";
+import handlers from "./handlers"
 
 const test = base.extend<{
   worker: MockServiceWorker;
 }>({
   worker: [
     async ({ page }, use) => {
-      const server = await createServer(page, ...handlers);
+      const server = await createServer(page, ...handlers)
       // Test has not started to execute...
-      await use(server);
+      await use(server)
       // Test has finished executing...
       // [insert any cleanup actions here]
     },
@@ -30,6 +30,6 @@ const test = base.extend<{
       auto: true,
     },
   ],
-});
+})
 
-export { test, expect };
+export { test, expect }

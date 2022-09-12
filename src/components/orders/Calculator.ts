@@ -45,7 +45,8 @@ export const postCostWithPacket = (_: null, values: any): string =>
   (Number(values?.post_cost) + Number(values?.packet)).toFixed(2)
 
 const needPostDiscount = (values: OrderFormValues): boolean =>
-  Number(values?.order_items_cost) >= values?.consts?.SUM_FOR_POST_DISCOUNT
+  Number(values?.order_items_cost) >=
+    Number(values?.consts?.SUM_FOR_POST_DISCOUNT)
 
 export const postDiscount = (_: null, values: OrderFormValues): string =>
   (needPostDiscount(values) ?
@@ -61,7 +62,7 @@ export const totalSum = (_: null, values: any): string =>
     Number(totalPostals(null, values))).toFixed(2)
 
 export const needGift = (values: OrderFormValues): boolean =>
-  Number(values?.order_items_cost) >= values?.consts?.SUM_FOR_GIFT
+  Number(values?.order_items_cost) >= Number(values?.consts?.SUM_FOR_GIFT)
 
 export const totalWeight = (_: null, values: OrderFormValues): number =>
   Number(values?.order_items_weight) +
