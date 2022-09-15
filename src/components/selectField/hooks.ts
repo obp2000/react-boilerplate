@@ -1,5 +1,5 @@
-import {getFieldOptions} from '../Shared/FieldProps'
-import type {AllOptions, HtmlAttrs, AllChoices} from '../Shared/FieldProps'
+import { getFieldOptions } from '../Shared/fieldProps'
+import type { AllOptions, HtmlAttrs, AllChoices } from '../Shared/fieldProps'
 
 export type SelectFieldAttrs = {
   name: string
@@ -34,7 +34,6 @@ export const useSelectFieldAttrs = (fieldAttrs: SelectFieldAttrs) => {
 }
 
 export const useSelectField = (props: SelectFieldAttrs) => {
-  // console.log('select props ', props)
   const { choices, label, helpText, ...fieldAttrs } = useSelectFieldAttrs(props)
   const { options, dataKey, textField, ...rest } = props
   const selectOptions = choices?.map(

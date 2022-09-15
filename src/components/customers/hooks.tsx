@@ -1,6 +1,7 @@
+import React from 'react'
 import createDecorator from 'final-form-submit-listener'
-import type {Decorator} from 'final-form'
-import type {FormProps} from 'react-final-form'
+import type { Decorator } from 'final-form'
+import type { FormProps } from 'react-final-form'
 import {
   getCustomers as getObjects,
   useGetCustomerQuery as useGetObjectQuery,
@@ -9,10 +10,10 @@ import {
   useDeleteCustomerMutation as useDeleteObjectMutation,
 } from './apiSlice'
 import objectFormRender from './CustomerFormRender'
-import {validate} from './Validators'
+import { validate } from './validators'
 import CustomerName from './CustomerName'
-import TableRow from './tableRow'
-import TableLabels from './tableLabels'
+import TableRow from './TableRow'
+import TableLabels from './TableLabels'
 import {
   Customer,
   CustomerFormValues,
@@ -71,12 +72,16 @@ type CustomerWithOptions = {
   options?: CustomerOptions
 }
 
-const formInitialValues = ({object}: CustomerWithOptions): CustomerFormValues => {
+const formInitialValues = ({
+  object
+}: CustomerWithOptions): CustomerFormValues => {
   let objectValues = object || initFormValues
   return objectValues
 }
 
-const formDecorators = (): Decorator[] => [submitListener]
+const formDecorators: Decorator[] = [submitListener]
+
+// const formDecorators = (): Decorator[] => [submitListener]
 
 const mutators = {}
 
@@ -112,17 +117,17 @@ const dropdownListTextField = ({
   city,
   address,
 }: Customer): string[] => [
-  String(nick),
-  String(name),
-  String(city?.pindex),
-  String(city?.city),
-  String(address)
-]
+    String(nick),
+    String(name),
+    String(city?.pindex),
+    String(city?.city),
+    String(address)
+  ]
 
 export const useDropdown = (options: CustomerOptions) => ({
   textField: dropdownListTextField,
   dataKey: 'id',
   searchPath: indexUrl,
-  renderValue: ({item}: {item: Customer}): JSX.Element =>
+  renderValue: ({ item }: { item: Customer }): JSX.Element =>
     <CustomerName object={item} options={options} />,
 })

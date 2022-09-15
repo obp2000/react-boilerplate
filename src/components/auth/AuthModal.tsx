@@ -18,12 +18,13 @@ const AuthModal = (props: Props): JSX.Element => {
     headerAttrs,
     toggleLoginButtonAttrs,
     authFormConfig,
+    commonConsts,
   } = useAuthModal(props)
-  console.log('modal props ', props)
+  // console.log('modal props ', props)
   return <Modal isOpen={isOpen} >
     <ModalHeader {...headerAttrs} />
     <ModalBody>
-      <AuthForm {...authFormConfig} {...props} />
+      <AuthForm {...authFormConfig} {...{ commonConsts }} />
       <Button size='sm' outline {...toggleLoginButtonAttrs} />
     </ModalBody>
   </Modal>

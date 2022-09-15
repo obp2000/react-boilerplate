@@ -1,3 +1,4 @@
+import React from 'react'
 import ShortName from './ShortName'
 import CityName from '../cities/CityName'
 import Date from '../Shared/date'

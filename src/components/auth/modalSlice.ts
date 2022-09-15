@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit'
-import {signOut} from '../auth/authApi'
+import { createSlice } from '@reduxjs/toolkit'
+import { signOut } from '../auth/authApi'
 
 interface ModalState {
   isLogin: boolean
@@ -29,8 +29,7 @@ const modalSlice = createSlice({
     builder
       .addMatcher(signOut.matchFulfilled, (state) => {
         state.modal = false
-      }
-    )
+      })
   },
 })
 

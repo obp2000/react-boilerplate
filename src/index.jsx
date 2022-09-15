@@ -5,7 +5,7 @@ import {BrowserRouter, HashRouter} from 'react-router-dom'
 import {hydrate} from 'react-dom'
 import 'react-widgets/scss/styles.scss'
 import './assets/css/App.scss'
-import configureStore from './components/Store'
+import configureStore from './components/store'
 import App from './App'
 
 const domContainer = document.querySelector('#root')

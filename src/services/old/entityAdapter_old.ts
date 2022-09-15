@@ -4,7 +4,7 @@ import {createEntityAdapter, createSelector, EntityState} from '@reduxjs/toolkit
 import {useRouter} from 'next/dist/client/router'
 // import type {EntityId, Dictionary} from '@reduxjs/toolkit'
 import {useAppSelector, useAppDispatch} from '../components/hooks'
-import type {RootState} from '../components/Store'
+import type {RootState} from '../components/store'
 import {GetObjects} from '../components/customers/apiSlice'
 import {getProducts} from '../components/products/apiSlice'
 import {getOrders} from '../components/orders/apiSlice'

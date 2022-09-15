@@ -5,10 +5,10 @@ import {
   Row,
 } from 'reactstrap'
 // import Loader from 'react-loader'
-import {useUser, userFieldNames} from './hooks'
-import TableRow from './tableRow'
+import { useUser, userFieldNames } from './hooks'
+import TableRow from './TableRow'
 import Header from './Header'
-import {User, UserOptions} from '../../../interfaces'
+import { User, UserOptions } from '../../../interfaces'
 
 type Props = {
   object: User
@@ -17,11 +17,11 @@ type Props = {
 }
 
 const UserComp = (): JSX.Element => {
-  const {object, options, loaded}: Props = useUser()
-// {<Loader loaded={loaded}>
+  const { object, options, loaded }: Props = useUser()
+  // {<Loader loaded={loaded}>
   return <Card>
     <CardBody>
-      <Header {...{options}} />
+      <Header {...{ options }} />
       {userFieldNames.map((fieldName, key) => <Row key={key}>
         <TableRow {...{ object, options, fieldName }} />
       </Row>

@@ -1,14 +1,14 @@
-import {objectToFormData} from 'object-to-formdata'
-import {apiSlice} from '../../services/apiSlice'
+import { objectToFormData } from 'object-to-formdata'
+import { apiSlice } from '../../services/apiSlice'
 import {
   setAll,
   objectsInitialState,
   ObjectsWithTotals,
-  RawObjectsWithTotals
 } from '../../services/entityAdapter'
 import {
   Product as GetObject,
-  ProductFormValues as ObjectFormValues
+  ProductFormValues as ObjectFormValues,
+  RawObjectsWithTotals,
 } from '../../../interfaces'
 
 type GetObjectsArg = {
@@ -52,39 +52,39 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: (_, __, { id }) => [{ type, id }],
     }),
     createProduct: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({toFormData, ...values}) => ({
+      query: ({ toFormData, ...values }) => ({
         url,
         method: 'POST',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      invalidatesTags: [{type, id: 'LIST'}],
+      invalidatesTags: [{ type, id: 'LIST' }],
     }),
     updateProduct: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({id, toFormData, ...values}) => ({
+      query: ({ id, toFormData, ...values }) => ({
         url: `${url}${id}/`,
         method: 'PUT',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      onQueryStarted({id, toFormData, ...values},
-        {dispatch, queryFulfilled}) {
+      onQueryStarted({ id, toFormData, ...values },
+        { dispatch, queryFulfilled }) {
         // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
-        const {undo} = dispatch(
+        const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getProduct',
-            {id},
-            (draftObject) => ({...draftObject, ...values})
+            { id },
+            (draftObject) => ({ ...draftObject, ...values })
           )
         )
         queryFulfilled.catch(undo)
       },
-      invalidatesTags: (_, __) => [{type, id: 'LIST'}],
+      invalidatesTags: (_, __) => [{ type, id: 'LIST' }],
     }),
     deleteProduct: builder.mutation<void, DeleteObjectArg>({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, {id}) => [{type, id}, {type, id: 'LIST'}],
+      invalidatesTags: (_, __, { id }) => [{ type, id }, { type, id: 'LIST' }],
     }),
   }),
 })
@@ -96,7 +96,7 @@ export const {
   useDeleteProductMutation,
 } = extendedApiSlice
 
-export const {getProducts, getProduct} = extendedApiSlice.endpoints
+export const { getProducts, getProduct } = extendedApiSlice.endpoints
 
 
 // import {objectToFormData} from 'object-to-formdata'

@@ -1,4 +1,4 @@
-import { cost, weight } from '../orders/Calculator'
+import { cost, weight } from '../orders/calculator'
 import {
   OrderItem,
   OrderItemFormValues,

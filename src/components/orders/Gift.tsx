@@ -1,8 +1,8 @@
+import React from 'react'
 import { Field } from 'react-final-form'
-import Input from '../Shared/Input'
-import FloatingFormGroup from '../Shared/FloatingFormGroup'
+import Input from '../formInput/Input'
+import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import { ConditionGte } from '../Shared/FormConditions'
-// import {useGiftIfNeeded} from './hooks'
 import { OrderOptions } from '../../../interfaces'
 
 type GiftProps = {

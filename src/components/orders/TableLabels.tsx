@@ -1,30 +1,27 @@
+import React from 'react'
 import { useOptionsOuery } from '../options/hooks'
 
 type Props = {
     indexUrl: string
 }
 
-const TableLabels = ({ indexUrl }: Props): JSX.Element | null => {
+const TableLabels = ({ indexUrl }: Props): JSX.Element => {
     const { options } = useOptionsOuery(indexUrl)
-    if (!options) { return null }
     return <>
         <th scope="col">
-            {options.id.label}
+            {options?.id.label}
         </th>
         <th scope="col">
-            {options.name.label}
+            {options?.customer.label}
         </th>
         <th scope="col">
-            {options.city.label}
+            {options?.order_items_cost.label}
         </th>
         <th scope="col">
-            {options.address.label}
+            {options?.created_at.label}
         </th>
         <th scope="col">
-            {options.created_at.label}
-        </th>
-        <th scope="col">
-            {options.updated_at.label}
+            {options?.updated_at.label}
         </th>
     </>
 }

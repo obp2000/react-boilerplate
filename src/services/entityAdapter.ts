@@ -1,23 +1,19 @@
-import {createEntityAdapter, createSelector, EntityState} from '@reduxjs/toolkit'
-import {useRouter} from 'next/dist/client/router'
-import {useAppSelector, useAppDispatch} from '../components/hooks'
-import {getCustomers} from '../components/customers/apiSlice'
-import {getProducts} from '../components/products/apiSlice'
-import {getOrders} from '../components/orders/apiSlice'
-import {Customer, Product, Order} from '../../interfaces'
-import type {RootState} from '../components/Store'
+import {
+  createEntityAdapter,
+  createSelector,
+  EntityState
+} from '@reduxjs/toolkit'
+import { useRouter } from 'next/dist/client/router'
+import { useAppSelector, useAppDispatch } from '../components/hooks'
+import { getCustomers } from '../components/customers/apiSlice'
+import { getProducts } from '../components/products/apiSlice'
+import { getOrders } from '../components/orders/apiSlice'
+import { anyObject } from '../../interfaces'
+import type { RootState } from '../components/store'
 
-type ObjectType = Customer & Product & Order
-
-export type ObjectsWithTotals = EntityState<ObjectType> & {
+export type ObjectsWithTotals = EntityState<anyObject> & {
   totalCount: number
   totalPages: number
-}
-
-export type RawObjectsWithTotals = {
-  totalCount: number
-  totalPages: number
-  results: ObjectType[]
 }
 
 export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
@@ -26,7 +22,7 @@ export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
 export type SelectObjectsData = (state: RootState) =>
   ObjectsWithTotals | undefined
 
-export const objectsAdapter = createEntityAdapter<ObjectType>({
+export const objectsAdapter = createEntityAdapter<anyObject>({
   sortComparer: (a, b) => b.updated_at.localeCompare(a.updated_at),
 })
 
@@ -42,9 +38,11 @@ export const objectsInitialState = objectsAdapter.getInitialState({
   totalPages: 0,
 })
 
+// export const objectsInitialState = objectsAdapter.getInitialState()
+
 export const getSelectors = (selectObjectsData: SelectObjectsData) =>
   objectsAdapter.getSelectors((state: RootState) =>
-    (selectObjectsData(state) || objectsInitialState))
+    selectObjectsData(state) ?? objectsInitialState)
 
 export const getObjectByIdSelector =
   (selectObjectsData: SelectObjectsData, id: number) =>
@@ -58,11 +56,12 @@ export const {
 } = objectsAdapter
 
 export const useSelectors = (getObjects: GetObjectsEndpoint) => {
-  const {query} = useRouter()
+  const { query } = useRouter()
   const selectObjectsResult = getObjects.select(query)
   const selectObjectsData =
-    createSelector([selectObjectsResult], ({data}) => data)
-  const {selectAll} = getSelectors(selectObjectsData)
+    createSelector([selectObjectsResult], ({ data }) => data)
+  // const selectObjectsData = (state) => selectObjectsResult(state)?.data
+  const { selectAll } = getSelectors(selectObjectsData)
   return {
     selectObjectsResult,
     selectObjectsData,
@@ -72,7 +71,7 @@ export const useSelectors = (getObjects: GetObjectsEndpoint) => {
 
 export const useObjectsData = (getObjects: GetObjectsEndpoint) => {
   const dispatch = useAppDispatch()
-  const {query, isFallback} = useRouter()
+  const { query, isFallback } = useRouter()
   if (!isFallback) {
     dispatch(getObjects.initiate(query))
   }
@@ -81,8 +80,8 @@ export const useObjectsData = (getObjects: GetObjectsEndpoint) => {
     selectObjectsData,
     selectAll,
   } = useSelectors(getObjects)
-  const {isLoading, isSuccess} = useAppSelector(selectObjectsResult)
-  const {totalCount, totalPages} =
+  const { isLoading, isSuccess } = useAppSelector(selectObjectsResult)
+  const { totalCount, totalPages } =
     useAppSelector(selectObjectsData) || objectsInitialState
   return {
     busyLoadingObjects: isLoading || isFallback,
@@ -97,7 +96,7 @@ export type UseObjects = {
   busyLoadingObjects: boolean
   totalCount?: number
   totalPages?: number
-  allObjects?: ObjectType[]
+  allObjects?: anyObject[]
   selectAll: Function
 }
 

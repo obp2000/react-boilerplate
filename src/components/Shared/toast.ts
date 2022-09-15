@@ -1,5 +1,5 @@
-import {toast, Zoom} from 'react-toastify'
-import type {ToastOptions} from 'react-toastify'
+import { toast, Zoom } from 'react-toastify'
+import type { ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 
 type ToastConfig = ToastOptions & {
@@ -23,7 +23,7 @@ const toastConfig: ToastConfig = {
 
 export const toastError = (message: string | undefined) => {
   toast.dismiss()
-  toast.error(message, {autoClose: false, ...toastConfig})
+  toast.error(message, { autoClose: false, ...toastConfig })
 }
 
 export const toastSuccess = (message: string | undefined) => {

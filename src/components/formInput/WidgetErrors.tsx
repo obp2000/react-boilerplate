@@ -1,4 +1,5 @@
-import {FormFeedback} from 'reactstrap'
+import React from 'react'
+import { FormFeedback } from 'reactstrap'
 
 type Props = {
   touched?: boolean
@@ -9,7 +10,7 @@ const WidgetErrors = ({
   touched,
   error,
   // warning,
-}: Props) => {
+}: Props): JSX.Element | null => {
   if (touched && !!error) {
     return <FormFeedback>
       {error}

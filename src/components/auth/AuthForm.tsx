@@ -1,6 +1,8 @@
+import React from 'react'
 import { Form } from 'react-final-form'
 import { useAppSelector } from '../hooks'
 import { useGetOptionsQuery } from '../options/apiSlice'
+// import { useOptionsOuery } from '../options/hooks'
 import { selectAuthModal } from './selectors'
 import AuthFormRender from './AuthFormRender'
 
@@ -42,7 +44,6 @@ function AuthForm({
   } = useGetOptionsQuery(indexUrl, { skip: !isOpen })
   const options = data?.options
   const [authAction, { isLoading: isProcessing }] = useAuthMutation()
-  // const initialValues = isLogin ? initLoginValues : initRegisterValues
   const formAttrs = {
     commonConsts,
     options,
@@ -51,7 +52,6 @@ function AuthForm({
     isProcessing,
     name,
     validate: validate(commonConsts?.error_messages),
-    // initialValues,
     onSubmit: (values: FormValues) => authAction(values),
     render: AuthFormRender,
     submitButtonLabel,

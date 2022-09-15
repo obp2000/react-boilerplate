@@ -1,7 +1,5 @@
 import { useRouter } from 'next/dist/client/router'
 import { ParsedUrlQuery } from 'querystring'
-import { useObjects } from '../../services/entityAdapter'
-import type {GetObjectsEndpoint} from '../../services/entityAdapter'
 
 type Page = {
   label: string
@@ -9,11 +7,10 @@ type Page = {
   active?: boolean
 }
 type Props = {
-  getObjects: GetObjectsEndpoint
+  totalPages: number
 }
 
-export const usePagination = ({ getObjects }: Props): Page[] => {
-  const { totalPages = 0 } = useObjects(getObjects)
+export const usePagination = ({ totalPages }: Props): Page[] => {
   const { query } = useRouter()
   const { page, ...rest } = query
   const currentPage = parseInt(String(page)) || 1

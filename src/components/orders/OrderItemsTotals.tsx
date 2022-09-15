@@ -1,5 +1,6 @@
+import React from 'react'
 import { Field } from 'react-final-form'
-import Input from '../Shared/Input'
+import Input from '../formInput/Input'
 import OrderItemsTotalText from './OrderItemsTotalText'
 import { OrderOptions } from '../../../interfaces'
 

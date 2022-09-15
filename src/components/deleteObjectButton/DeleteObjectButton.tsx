@@ -1,5 +1,6 @@
-import {Button} from 'reactstrap'
-import {useDeleteObject} from './hooks'
+import React from 'react'
+import { Button } from 'reactstrap'
+import { useDeleteObject } from './hooks'
 import { useDeleteCustomerMutation } from '../customers/apiSlice'
 import { useDeleteProductMutation } from '../products/apiSlice'
 import { useDeleteOrderMutation } from '../orders/apiSlice'
@@ -20,8 +21,8 @@ const DeleteObjectButton = (props: Props) => {
     isDeletingObject,
     ...buttonAttrs
   } = useDeleteObject(props)
-  if (!isAuthenticated) {return null}
-  return 	<Button
+  if (!isAuthenticated) { return null }
+  return <Button
     size='sm'
     outline
     {...buttonAttrs}

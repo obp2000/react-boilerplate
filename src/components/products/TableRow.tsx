@@ -16,7 +16,7 @@ const TableRow = ({ object, indexUrl }: Props) => {
 			{object?.id}
 		</td>
 		<td scope="row">
-			<ProductName {...{ object, options }} />,
+			<ProductName {...{ object, options }} />
 		</td>
 		<td scope="row">
 			{object?.price}

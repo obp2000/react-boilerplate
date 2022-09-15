@@ -1,26 +1,19 @@
-import {objectToFormData} from 'object-to-formdata'
-// import type { EntityId, Dictionary, } from '@reduxjs/toolkit/dist/entities/models'
-import {apiSlice} from '../../services/apiSlice'
+import { objectToFormData } from 'object-to-formdata'
+import { apiSlice } from '../../services/apiSlice'
 import {
   setAll,
   objectsInitialState,
   ObjectsWithTotals,
-  RawObjectsWithTotals
 } from '../../services/entityAdapter'
 import {
   Customer as GetObject,
-  CustomerFormValues as ObjectFormValues
+  CustomerFormValues as ObjectFormValues,
+  RawObjectsWithTotals,
 } from '../../../interfaces'
 
 type GetObjectsArg = {
   params?: Object
 }
-
-// type RawGetObjects = {
-//   totalCount: number
-//   totalPages: number
-//   results: GetObject[]
-// }
 
 type GetObjectArg = {
   id?: number
@@ -42,12 +35,22 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCustomers: builder.query<ObjectsWithTotals, GetObjectsArg>({
       query: (params) => ({ url, params }),
+      // transformResponse: ({
+      //   results,
+      //   ...rest
+      // }: RawObjectsWithTotals) => ({
+      //   ...setAll(objectsInitialState, results),
+      //   ...rest
+      // }),
       transformResponse: ({
         results,
-        ...rest
-      }: RawObjectsWithTotals) => ({
+        totalCount,
+        totalPages,
+      }: RawObjectsWithTotals) =>
+      ({
         ...setAll(objectsInitialState, results),
-        ...rest
+        totalCount,
+        totalPages,
       }),
       providesTags: (result) =>
         result
@@ -59,39 +62,38 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: (_, __, { id }) => [{ type, id }],
     }),
     createCustomer: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({toFormData, ...values}) => ({
+      query: ({ toFormData, ...values }) => ({
         url,
         method: 'POST',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      invalidatesTags: [{type, id: 'LIST'}],
+      invalidatesTags: [{ type, id: 'LIST' }],
     }),
     updateCustomer: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({id, toFormData, ...values}) => ({
+      query: ({ id, toFormData, ...values }) => ({
         url: `${url}${id}/`,
         method: 'PUT',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      onQueryStarted({id, toFormData, ...values},
-        {dispatch, queryFulfilled}) {
-        // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
-        const {undo} = dispatch(
+      onQueryStarted({ id, toFormData, ...values },
+        { dispatch, queryFulfilled }) {
+        const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getCustomer',
-            {id},
-            (draftObject) => ({...draftObject, ...values})
+            { id },
+            (draftObject) => ({ ...draftObject, ...values })
           )
         )
         queryFulfilled.catch(undo)
       },
-      invalidatesTags: (_, __) => [{type, id: 'LIST'}],
+      invalidatesTags: (_, __) => [{ type, id: 'LIST' }],
     }),
     deleteCustomer: builder.mutation<void, DeleteObjectArg>({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, {id}) => [{type, id}, {type, id: 'LIST'}],
+      invalidatesTags: (_, __, { id }) => [{ type, id }, { type, id: 'LIST' }],
     }),
   }),
 })
@@ -104,7 +106,7 @@ export const {
   useDeleteCustomerMutation,
 } = extendedApiSlice
 
-export const {getCustomers, getCustomer} = extendedApiSlice.endpoints
+export const { getCustomers, getCustomer } = extendedApiSlice.endpoints
 
 
 // export const extendedApiSlice = apiSlice.injectEndpoints({

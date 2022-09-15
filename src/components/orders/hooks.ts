@@ -10,7 +10,7 @@ import {
   useDeleteOrderMutation as useDeleteObjectMutation,
 } from './apiSlice'
 import objectFormRender from './OrderFormRender'
-import { validate } from './Validators'
+import { validate } from './validators'
 import { formInitialOrderItems } from '../orderItems/hooks'
 import {
   calculator,
@@ -22,9 +22,9 @@ import {
   totalPostals,
   totalSum,
   totalWeight,
-} from './Calculator'
-import TableRow from './tableRow'
-import TableLabels from './tableLabels'
+} from './calculator'
+import TableRow from './TableRow'
+import TableLabels from './TableLabels'
 import {
   Order,
   OrderFormValues,
@@ -185,8 +185,10 @@ const postCostCount: Mutator = (
     .catch((e) => console.error(e))
 }
 
-const formDecorators = (options: OrderOptions): Decorator[] =>
-  [calculator(options), submitListener]
+const formDecorators: Decorator[] = [calculator, submitListener]
+
+// const formDecorators = (options: OrderOptions): Decorator[] =>
+//   [calculator(options), submitListener]
 
 const mutators = { postCostCount, ...arrayMutators }
 

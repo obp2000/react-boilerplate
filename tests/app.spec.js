@@ -211,7 +211,7 @@ test.describe.parallel("Customers CRUD functionality", () => {
 })
 
 // import {getCustomers as getObjects} from '../src/components/customers/apiSlice'
-// import {wrappedMakeStore} from '../src/components/Store'
+// import {wrappedMakeStore} from '../src/components/store'
 
 // test('homepage has Playwright in title and get started link linking to the intro page', async ({ page }) => {
 //   await page.goto('https://playwright.dev/');

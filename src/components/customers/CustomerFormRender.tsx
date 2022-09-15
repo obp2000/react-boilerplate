@@ -1,11 +1,12 @@
+import React from 'react'
 // import {FormEvent} from 'react'
-import {Field} from 'react-final-form'
-import type {FormRenderProps} from 'react-final-form'
-import {Form, Row, Col} from 'reactstrap'
-import FloatingFormGroup from '../Shared/FloatingFormGroup'
+import { Field } from 'react-final-form'
+import type { FormRenderProps } from 'react-final-form'
+import { Form, Row, Col } from 'reactstrap'
+import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import Header from '../objectForm/Header'
-import Input from '../Shared/Input'
-import {useDropdown as useCityDropdownAttrs} from '../cities/hooks'
+import Input from '../formInput/Input'
+import { useDropdown as useCityDropdownAttrs } from '../cities/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
 import {
   Customer,
@@ -20,7 +21,7 @@ type Props = FormRenderProps & {
 }
 
 const CustomerFormRender = (props: Props): JSX.Element => {
-  const options = {options: props.options}
+  const options = { options: props.options }
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <Header {...props} />

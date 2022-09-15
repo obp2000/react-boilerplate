@@ -1,3 +1,4 @@
+import React from 'react'
 import { useOptionsOuery } from '../options/hooks'
 
 type Props = {
@@ -11,10 +12,16 @@ const TableLabels = ({ indexUrl }: Props): JSX.Element => {
             {options?.id.label}
         </th>
         <th scope="col">
-            {options?.customer.label}
+            {options?.name.label}
         </th>
         <th scope="col">
-            {options?.order_items_cost.label}
+            {options?.price.label}
+        </th>
+        <th scope="col">
+            {options?.width.label}
+        </th>
+        <th scope="col">
+            {options?.density.label}
         </th>
         <th scope="col">
             {options?.created_at.label}
@@ -26,3 +33,4 @@ const TableLabels = ({ indexUrl }: Props): JSX.Element => {
 }
 
 export default TableLabels
+

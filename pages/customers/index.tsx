@@ -2,19 +2,14 @@ import React from 'react'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
-import Layout from '../../src/components/layout/layout'
+import Layout from '../../src/components/layout/Layout'
 import { getOptions } from '../../src/components/options/apiSlice'
 import { getRunningOperationPromises } from '../../src/services/apiSlice'
-import { wrapper } from '../../src/components/Store'
+import { wrapper } from '../../src/components/store'
 import ObjectsTable from '../../src/components/objectsTable/ObjectsTable'
 import { objectsTableConfig } from '../../src/components/customers/hooks'
-// import {
-//   getCustomers as getObjects,
-// } from '../../src/components/customers/apiSlice'
 import { getUser } from '../../src/components/users/apiSlice'
 import { selectAuth } from '../../src/components/auth/selectors'
-// import { useObjects } from '../../src/services/entityAdapter'
-import Pagination from '../../src/components/Pagination/Pagination'
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(({ dispatch, getState }) => async ({ query }) => {
@@ -29,7 +24,7 @@ export const getServerSideProps: GetServerSideProps =
       props: {},
     }
   }
-)
+  )
 
 const List: NextPage = () => <Layout indexUrl={objectsTableConfig.indexUrl}>
   {/* <Head>
@@ -37,7 +32,7 @@ const List: NextPage = () => <Layout indexUrl={objectsTableConfig.indexUrl}>
         <link rel="icon" href="/favicon.ico" />
       </Head>*/}
   <ObjectsTable {...objectsTableConfig} />
-  <Pagination getObjects={objectsTableConfig.getObjects} />
+  {/*<Pagination getObjects={objectsTableConfig.getObjects} />*/}
 </Layout>
 
 export default List

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
 import { selectAuth } from '../components/auth/selectors'
-import type { RootState } from '../components/Store'
+import type { RootState } from '../components/store'
 
 export const baseUrl = 'http://127.0.0.1:8000/api'
 

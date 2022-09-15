@@ -1,20 +1,20 @@
+import React from 'react'
 import { Pagination, PaginationItem } from 'reactstrap'
 import Link from 'next/link'
 import { usePagination } from './hooks'
-import type {GetObjectsEndpoint} from '../../services/entityAdapter'
+// import type {GetObjectsEndpoint} from '../../services/entityAdapter'
 
 type Props = {
-  getObjects: GetObjectsEndpoint
+  totalPages: number
 }
 
 const PaginationComp = (props: Props): JSX.Element | null => {
-  // const {pathname} = useRouter()
   const pages = usePagination(props)
   if (pages.length === 0) return null
   return <Pagination>
     {pages.map(({ label, query, active }, key) =>
       <PaginationItem key={key} {...{ active }} >
-        <Link href={{ query }} replace>
+        <Link href={{ query }} replace shallow={true} >
           <a className='page-link'>
             {label}
           </a>

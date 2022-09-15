@@ -1,22 +1,21 @@
-import {Field} from 'react-final-form'
-import type {FormRenderProps} from 'react-final-form'
-import {Form, Row, Col, Table} from 'reactstrap'
-import {FieldArray} from 'react-final-form-arrays'
+import React from 'react'
+import { Field } from 'react-final-form'
+import type { FormRenderProps } from 'react-final-form'
+import { Form, Row, Col, Table } from 'reactstrap'
+import { FieldArray } from 'react-final-form-arrays'
 import type { FieldArrayRenderProps } from 'react-final-form-arrays'
-// import type {FieldArrayRenderProps} from 'react-final-form-arrays'
-import Input from '../Shared/Input'
-import FloatingFormGroup from '../Shared/FloatingFormGroup'
+import Input from '../formInput/Input'
+import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import OrderItem from '../orderItems/OrderItem'
-// import Gift from './Gift'
 import Header from '../objectForm/Header'
 import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import OrderItemsTotals from './OrderItemsTotals'
 import Samples from './Samples'
 import Postals from './Postals'
 import OrderTotals from './OrderTotals'
-import OrderItemsTableLabels from '../orderItems/tableLabels'
+import OrderItemsTableLabels from '../orderItems/TableLabels'
 import GiftIfNeeded from './Gift'
-import {useDropdown as useCustomerDropdownAttrs} from '../customers/hooks'
+import { useDropdown as useCustomerDropdownAttrs } from '../customers/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
 import {
   Order,
@@ -33,9 +32,7 @@ type Props = FormRenderProps & {
 }
 
 const OrderFormRender = (props: Props): JSX.Element => {
-  // console.log({props})
-  const options = {options: props.options}
-  // const orderItemOptions = orderOrderItemOptions(props.options)
+  const options = { options: props.options }
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
     <Header {...props} />
@@ -77,17 +74,17 @@ const OrderFormRender = (props: Props): JSX.Element => {
       </thead>
       <tbody>
         <FieldArray name="order_items">
-          {({fields}: FieldArrayRenderProps<OrderItemType, HTMLElement>) => <>
+          {({ fields }: FieldArrayRenderProps<OrderItemType, HTMLElement>) => <>
             {fields.map((
               orderItemName: string,
               index: number): JSX.Element => <OrderItem key={index} {...{
-                  orderItemName,
-                  index,
-                  fields,
-                  options: props.options,
-                  commonConsts: props.commonConsts,
-                  meta: {}
-                }} />
+                orderItemName,
+                index,
+                fields,
+                options: props.options,
+                commonConsts: props.commonConsts,
+                meta: {}
+              }} />
             )}
             {Number(fields?.length) > 1 && <OrderItemsTotals {...props} />}
           </>

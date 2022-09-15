@@ -1,16 +1,16 @@
-import {apiSlice} from '../../services/apiSlice'
+import { apiSlice } from '../../services/apiSlice'
 import {
   Login,
   LoginFormValues,
   Register,
   RegisterFormValues,
   SignOut,
- } from '../../../interfaces/auth'
+} from '../../../interfaces/auth'
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<Login, LoginFormValues>({
-    	query: (credentials) => ({
+      query: (credentials) => ({
         url: '/login/',
         method: 'POST',
         body: credentials,
@@ -53,9 +53,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
       invalidatesTags: [
-        {type: 'Options', id: '/customers/'},
-        {type: 'Options', id: '/products/'},
-        {type: 'Options', id: '/orders/'},
+        { type: 'Options', id: '/customers/' },
+        { type: 'Options', id: '/products/' },
+        { type: 'Options', id: '/orders/' },
       ],
     }),
   }),

@@ -1,3 +1,4 @@
+import React from 'react'
 import createDecorator from 'final-form-submit-listener'
 import type { Decorator } from 'final-form'
 import type { FormProps } from 'react-final-form'
@@ -9,17 +10,17 @@ import {
   useDeleteProductMutation as useDeleteObjectMutation,
 } from './apiSlice'
 import objectFormRender from './ProductFormRender'
-import { validate } from './Validators'
+import { validate } from './validators'
 import {
   calculator,
   densityForCount,
   metersInRoll,
   prices,
-} from './Calculator'
+} from './calculator'
 // import { useObjectsTable } from '../objectsTable/hooks'
 import ProductName from './ProductName'
-import TableRow from './tableRow'
-import TableLabels from './tableLabels'
+import TableRow from './TableRow'
+import TableLabels from './TableLabels'
 import {
   Product,
   ProductFormValues,
@@ -130,8 +131,10 @@ const submitListener: Decorator = createDecorator({
   },
 })
 
-const formDecorators = (options: ProductOptions): Decorator[] =>
-  [calculator(options), submitListener]
+const formDecorators: Decorator[] = [calculator, submitListener]
+
+// const formDecorators = (options: ProductOptions): Decorator[] =>
+//   [calculator(options), submitListener]
 
 const mutators = {}
 
@@ -166,7 +169,11 @@ const dropdownListTextField = ({
   get_threads_display: getThreadsDisplay,
   get_contents_display: getContentsDisplay,
   name,
-}: Product) => [getProductTypeDisplay, getThreadsDisplay, getContentsDisplay, name]
+}: Product) => [
+    getProductTypeDisplay,
+    getThreadsDisplay,
+    getContentsDisplay,
+    name]
 
 export const useDropdown = (options: ProductOptions) => ({
   textField: dropdownListTextField,

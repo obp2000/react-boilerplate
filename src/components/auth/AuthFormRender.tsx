@@ -1,13 +1,14 @@
+import React from 'react'
 import { Field } from 'react-final-form'
 import type { FormRenderProps } from 'react-final-form'
 import { Form } from 'reactstrap'
-import RowFormGroup from '../Shared/RowFormGroup'
+import RowFormGroup from '../formInput/RowFormGroup'
 import SubmitButton from '../submitButton/SubmitButton'
 import {
 	LoginOptions,
 	RegisterOptions,
 } from '../../../interfaces/auth'
-import {CommonConsts} from '../../../interfaces'
+import { CommonConsts } from '../../../interfaces'
 import type { FormFields } from './hooks'
 
 type Props = FormRenderProps & {
@@ -17,7 +18,7 @@ type Props = FormRenderProps & {
 	submitButtonLabel?: string
 }
 
-const AuthFormRender = (props: Props): JSX.Element  => {
+const AuthFormRender = (props: Props): JSX.Element => {
 	const options = { options: props.options }
 	return <Form
 		onSubmit={props.handleSubmit}

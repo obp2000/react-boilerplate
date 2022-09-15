@@ -1,14 +1,14 @@
-import {objectToFormData} from 'object-to-formdata'
-import {apiSlice} from '../../services/apiSlice'
+import { objectToFormData } from 'object-to-formdata'
+import { apiSlice } from '../../services/apiSlice'
 import {
   setAll,
   objectsInitialState,
   ObjectsWithTotals,
-  RawObjectsWithTotals
 } from '../../services/entityAdapter'
 import {
   Order as GetObject,
-  OrderFormValues as ObjectFormValues
+  OrderFormValues as ObjectFormValues,
+  RawObjectsWithTotals,
 } from '../../../interfaces'
 
 type GetObjectsArg = {
@@ -35,7 +35,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getOrders: builder.query<ObjectsWithTotals, GetObjectsArg>({
       query: (params) => ({ url, params }),
-      transformResponse: ({results, ...rest}: RawObjectsWithTotals) => ({
+      transformResponse: ({ results, ...rest }: RawObjectsWithTotals) => ({
         ...setAll(objectsInitialState, results),
         ...rest
       }),
@@ -49,39 +49,39 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: (_, __, { id }) => [{ type, id }],
     }),
     createOrder: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({toFormData, ...values}) => ({
+      query: ({ toFormData, ...values }) => ({
         url,
         method: 'POST',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      invalidatesTags: [{type, id: 'LIST'}],
+      invalidatesTags: [{ type, id: 'LIST' }],
     }),
     updateOrder: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({id, toFormData, ...values}) => ({
+      query: ({ id, toFormData, ...values }) => ({
         url: `${url}${id}/`,
         method: 'PUT',
         body: toFormData ? objectToFormData(values) : values,
       }),
-      onQueryStarted({id, toFormData, ...values},
-        {dispatch, queryFulfilled}) {
+      onQueryStarted({ id, toFormData, ...values },
+        { dispatch, queryFulfilled }) {
         // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
-        const {undo} = dispatch(
+        const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getOrder',
-            {id},
-            (draftObject) => ({...draftObject, ...values})
+            { id },
+            (draftObject) => ({ ...draftObject, ...values })
           )
         )
         queryFulfilled.catch(undo)
       },
-      invalidatesTags: (_, __) => [{type, id: 'LIST'}],
+      invalidatesTags: (_, __) => [{ type, id: 'LIST' }],
     }),
     deleteOrder: builder.mutation<void, DeleteObjectArg>({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, {id}) => [{type, id}, {type, id: 'LIST'}],
+      invalidatesTags: (_, __, { id }) => [{ type, id }, { type, id: 'LIST' }],
     }),
   }),
 })
@@ -93,7 +93,7 @@ export const {
   useDeleteOrderMutation,
 } = extendedApiSlice
 
-export const {getOrders, getOrder} = extendedApiSlice.endpoints
+export const { getOrders, getOrder } = extendedApiSlice.endpoints
 
 
 // import {objectToFormData} from 'object-to-formdata'

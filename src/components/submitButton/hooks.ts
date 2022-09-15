@@ -6,14 +6,12 @@ type Props = FormRenderProps & {
   calculatedFields?: string[]
 }
 
-const emptyObject = {}
-const emptyArray: any[] = []
-
 const isCalculatedFields = ({
-  fields = emptyObject,
-  calculatedFields = emptyArray }:
-  { fields?: {}; calculatedFields?: any[] } = emptyObject
-): boolean => array.intersection(Object.keys(fields), calculatedFields) == fields
+  fields = {},
+  calculatedFields = [] }:
+  { fields?: {}; calculatedFields?: any[] } = {}
+): boolean =>
+  array.intersection(Object.keys(fields), calculatedFields) == fields
 
 export const disabled = ({
   submitting,

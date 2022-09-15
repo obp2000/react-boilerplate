@@ -1,4 +1,4 @@
-import {apiSlice} from '../../services/apiSlice'
+import { apiSlice } from '../../services/apiSlice'
 import {
   CommonConsts,
   CustomerOptions,
@@ -10,8 +10,6 @@ import {
   LoginOptions,
   RegisterOptions,
 } from '../../../interfaces/auth'
-
-// const emptyObject = {}
 
 export type TableOptions = CustomerOptions & ProductOptions & OrderOptions
 
@@ -30,8 +28,6 @@ export type OptionsAndCommonConsts = {
 type RawOptionsAndCommonConsts = {
   common_consts?: CommonConsts
   actions?: {
-    // POST?: AllOptions
-    // PUT?: AllOptions
     [index: string]: AllOptions
   }
 }
@@ -39,16 +35,16 @@ type RawOptionsAndCommonConsts = {
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getOptions: builder.query<OptionsAndCommonConsts, string>({
-      query: (url) => ({url, method: 'OPTIONS',}),
+      query: (url) => ({ url, method: 'OPTIONS', }),
       transformResponse: (
-      {
-        common_consts: commonConsts,
-        actions,
-      }: RawOptionsAndCommonConsts) => ({
+        {
+          common_consts: commonConsts,
+          actions,
+        }: RawOptionsAndCommonConsts) => ({
           commonConsts,
           options: actions?.POST ?? actions?.PUT,
         }),
-      providesTags: (_, __, arg) => [{type: 'Options', id: arg}],
+      providesTags: (_, __, arg) => [{ type: 'Options', id: arg }],
     }),
   }),
 })
@@ -58,4 +54,4 @@ export const {
   useLazyGetOptionsQuery,
 } = extendedApiSlice
 
-export const {getOptions} = extendedApiSlice.endpoints
+export const { getOptions } = extendedApiSlice.endpoints

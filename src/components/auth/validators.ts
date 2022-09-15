@@ -3,12 +3,12 @@ import {
   validEmail,
   passwordLength,
   validPasswordConfirmation,
-} from '../Shared/Validators'
+} from '../Shared/validators'
 import {
   LoginFormValues,
   RegisterFormValues,
- } from '../../../interfaces/auth'
-import {ErrorMessages} from '../../../interfaces'
+} from '../../../interfaces/auth'
+import { ErrorMessages } from '../../../interfaces'
 
 export const validateLogin = (errorMessages: ErrorMessages) =>
   (values: LoginFormValues) =>
@@ -16,13 +16,13 @@ export const validateLogin = (errorMessages: ErrorMessages) =>
 
 export const validateRegister = (errorMessages: ErrorMessages) =>
   (values: RegisterFormValues) => ({
-  ...notBlank(values, ['username', 'email', 'password1', 'password2'],
-    errorMessages?.blank),
-  ...validEmail(values, 'email', errorMessages?.invalid_email),
-  ...passwordLength(values, 'password1', errorMessages?.short_password),
-  ...validPasswordConfirmation(values, 'password1', 'password2',
-    errorMessages?.password_mismatch),
-})
+    ...notBlank(values, ['username', 'email', 'password1', 'password2'],
+      errorMessages?.blank),
+    ...validEmail(values, 'email', errorMessages?.invalid_email),
+    ...passwordLength(values, 'password1', errorMessages?.short_password),
+    ...validPasswordConfirmation(values, 'password1', 'password2',
+      errorMessages?.password_mismatch),
+  })
 
 // export const validateRegister = values =>
 //     notBlank(values, ['username', 'password'])

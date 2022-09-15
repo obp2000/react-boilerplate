@@ -1,21 +1,25 @@
+import React from 'react'
 import Head from 'next/head'
 import { GetStaticPaths, GetStaticProps, GetServerSideProps } from 'next'
+import { Form } from 'react-final-form'
 import type { NextPage } from 'next'
 import { createSelector } from '@reduxjs/toolkit'
 import type { EntityId, Dictionary, } from '@reduxjs/toolkit'
-import Layout from '../../src/components/layout/layout'
+import Layout from '../../src/components/layout/Layout'
 import { getOptions } from '../../src/components/options/apiSlice'
 import { getRunningOperationPromises } from '../../src/services/apiSlice'
-import { wrapper } from '../../src/components/Store'
-import ObjectForm from '../../src/components/objectForm/ObjectForm'
+import { wrapper } from '../../src/components/store'
 import { objectFormConfig } from '../../src/components/customers/hooks'
 import {
   getCustomers as getObjects,
   getCustomer as getObject
 } from '../../src/components/customers/apiSlice'
 import { getUser } from '../../src/components/users/apiSlice'
-import { useTestObjectId } from '../../src/components/objectForm/hooks'
-import { makeStore } from '../../src/components/Store'
+import {
+  useTestObjectId,
+  useObjectForm
+} from '../../src/components/objectForm/hooks'
+import { makeStore } from '../../src/components/store'
 import { getSelectors } from '../../src/services/entityAdapter'
 
 // export const getStaticPaths: GetStaticPaths = async () => {
@@ -73,7 +77,7 @@ const EditObject: NextPage = () => <Layout indexUrl={objectFormConfig.indexUrl}>
         <title>Best&C</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>*/}
-  <ObjectForm {...objectFormConfig} />
+  <Form {...useObjectForm(objectFormConfig)} />
 </Layout>
 
 export default EditObject

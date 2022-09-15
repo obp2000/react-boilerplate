@@ -1,6 +1,6 @@
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import type { Middleware } from '@reduxjs/toolkit'
-import { toastError } from './Shared/Toast'
+import { toastError } from './Shared/toast'
 
 export const rtkQueryErrorLogger: Middleware = (_) =>
   (next) => (action) => {

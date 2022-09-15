@@ -1,3 +1,4 @@
+import React from 'react'
 import type { MouseEvent } from 'react'
 import {
   Modal,
@@ -22,8 +23,8 @@ const ProceedButton = ({
   aria-labelledby={label}
   outline
   onClick={onClick}>
-  {label}
-</Button>
+    {label}
+  </Button>
 
 const ConfirmationComp = ({
   proceedLabel,

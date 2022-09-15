@@ -1,5 +1,5 @@
-import {useFieldProps, getName} from '../Shared/FieldProps'
-import type {AnyFieldAttrs} from '../Shared/FieldProps'
+import { useFieldProps, getName } from '../Shared/fieldProps'
+import type { AnyFieldAttrs } from '../Shared/fieldProps'
 
 export type LabelAttrs = {
   label?: string

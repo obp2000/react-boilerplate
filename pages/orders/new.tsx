@@ -1,14 +1,16 @@
+import React from 'react'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
+import { Form } from 'react-final-form'
 import type { NextPage } from 'next'
-import Layout from '../../src/components/layout/layout'
+import Layout from '../../src/components/layout/Layout'
 // import {Form} from 'react-final-form'
 import { getOptions } from '../../src/components/options/apiSlice'
 import { getRunningOperationPromises } from '../../src/services/apiSlice'
-import { wrapper } from '../../src/components/Store'
-import ObjectForm from '../../src/components/objectForm/ObjectForm'
+import { wrapper } from '../../src/components/store'
 import { objectFormConfig } from '../../src/components/orders/hooks'
 import { getUser } from '../../src/components/users/apiSlice'
+import { useObjectForm } from '../../src/components/objectForm/hooks'
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(({ dispatch, getState }) => async (context) => {
@@ -26,7 +28,7 @@ const NewObject: NextPage = () => <Layout indexUrl={objectFormConfig.indexUrl}>
         <title>Best&C</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>*/}
-  <ObjectForm {...objectFormConfig} />
+  <Form {...useObjectForm(objectFormConfig)} />
 </Layout>
 
 export default NewObject

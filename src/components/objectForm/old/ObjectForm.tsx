@@ -1,17 +1,24 @@
+import React from 'react'
 import { Form } from 'react-final-form'
 import { useRouter } from 'next/dist/client/router'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { useTestObjectId } from './hooks'
-import { toastSuccess, toastError } from '../Shared/Toast'
+import { toastSuccess, toastError } from '../Shared/toast'
 import { useOptionsOuery } from '../options/hooks'
 import {
   CustomerFormValues,
   ProductFormValues,
   OrderFormValues,
+  SerializedError,
 } from '../../../interfaces'
 import { CustomerFormConfig } from '../customers/hooks'
 import { ProductFormConfig } from '../products/hooks'
 import { OrderFormConfig } from '../orders/hooks'
+import {
+  isFetchBaseQueryError,
+  isErrorWithMessage
+} from '../../services/helpers'
 
 type FormValues = CustomerFormValues & ProductFormValues & OrderFormValues
 
@@ -59,12 +66,22 @@ function ObjectForm({
       router.push(indexUrl, undefined, { shallow: true })
       toastSuccess(commonConsts?.successfully)
     }).
-    catch(({ detail }: { detail: string }) => toastError(detail))
+    catch((err: FetchBaseQueryError | SerializedError): void => {
+      if (isFetchBaseQueryError(err)) {
+        // you can access all properties of `FetchBaseQueryError` here
+        const message = 'error' in err ? err.error : JSON.stringify(err.data)
+        toastError(message)
+      } else if (isErrorWithMessage(err)) {
+        // you can access a string 'message' property here
+        toastError(err.message)
+      }
+    })
+    // catch(({ detail }: { detail: string }) => toastError(detail))
   const formProps = {
     name: 'objectForm',
     initialValues: formInitialValues({ object, options }),
     validate: validate(commonConsts?.error_messages),
-    decorators: formDecorators(options),
+    decorators: formDecorators,
     mutators,
     onSubmit,
     render: objectFormRender,

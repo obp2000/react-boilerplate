@@ -423,4 +423,20 @@ export type Confirmation = {
 
 export type anyObject = Customer | Product | Order
 
+export type RawObjectsWithTotals = {
+  totalCount: number
+  totalPages: number
+  results: anyObject[]
+}
+
 export type anyObjectOptions = CustomerOptions | ProductOptions | OrderOptions
+
+export type anyObjectFormValues = CustomerFormValues | ProductFormValues |
+  OrderFormValues
+
+export interface SerializedError {
+  name?: string
+  message?: string
+  stack?: string
+  code?: string
+}

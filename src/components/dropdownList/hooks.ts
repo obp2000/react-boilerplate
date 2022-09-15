@@ -1,7 +1,12 @@
+import type { DropdownProps } from 'react-widgets/cjs/DropdownList'
 import { useLazySearchObjectsQuery } from '../Search/apiSlice'
-import { useInput } from '../Shared/FieldProps'
-import type { FieldAttrs } from '../Shared/FieldProps'
-import { CommonConsts } from '../../../interfaces'
+import { useInput } from '../formInput/hooks'
+import type { FieldAttrs } from '../Shared/fieldProps'
+import {
+  CommonConsts,
+  City,
+  anyObject,
+} from '../../../interfaces'
 
 type SearchObjectsProps = {
   searchPath: string
@@ -9,7 +14,11 @@ type SearchObjectsProps = {
   commonConsts: CommonConsts
 }
 
-export type DropdownListProps = FieldAttrs & SearchObjectsProps
+export type DropdownListAttrs = FieldAttrs & SearchObjectsProps
+
+type DropdownListProps = DropdownProps<anyObject | City> & {
+  helpText?: string
+}
 
 const widgetMessages = (notFound: string) => ({
   emptyFilter: notFound,
@@ -39,7 +48,10 @@ export const useSearchObjects = ({
 export const useDropdownList = ({
   commonConsts,
   ...props
-}: DropdownListProps) => ({
-  ...useSearchObjects({ commonConsts, ...props }),
-  ...useInput(props),
-})
+}: DropdownListAttrs): DropdownListProps => {
+  const { onChange, ...inputProps } = useInput(props)
+  return {
+    ...useSearchObjects({ commonConsts, ...props }),
+    ...inputProps,
+  }
+}
