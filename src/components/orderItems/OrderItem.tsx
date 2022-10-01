@@ -1,32 +1,19 @@
 import React from 'react'
 import { Field } from 'react-final-form'
-import type { FieldArrayRenderProps } from 'react-final-form-arrays'
 import Input from '../formInput/Input'
-import { orderOrderItemOptions } from '../orders/hooks'
 import { useDropdown as useProductDropdownAttrs } from '../products/hooks'
-import { orderItemProductOptions } from './hooks'
-
 import DropdownList from '../dropdownList/DropdownList'
 import DeleteOrderItemButton from './DeleteOrderItemButton'
-import {
-  OrderOptions,
-  CommonConsts,
-  OrderItem,
-} from '../../../interfaces'
+import type { OrderItemFormRender } from '../../../interfaces'
 
-type OrderItemProps = FieldArrayRenderProps<OrderItem, HTMLElement> & {
+type Props = OrderItemFormRender & {
   orderItemName: string
   index: number
-  options: OrderOptions
-  commonConsts: CommonConsts
 }
 
-const OrderItem = ({
-  orderItemName,
-  ...props
-}: OrderItemProps): JSX.Element => {
-  const orderItemOptions = orderOrderItemOptions(props.options)
-  const productOptions = orderItemProductOptions(orderItemOptions)
+const OrderItem = ({ orderItemName, ...props }: Props): JSX.Element => {
+  const orderItemOptions = props.options?.order_items?.child?.children
+  const productOptions = orderItemOptions?.product?.children
   const options = { options: orderItemOptions }
   return <tr>
     <th scope="row">

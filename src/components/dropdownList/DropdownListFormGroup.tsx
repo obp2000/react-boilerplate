@@ -2,7 +2,7 @@ import React from 'react'
 import { FormGroup, Col } from 'reactstrap'
 import DropdownList from './DropdownList'
 import Label from '../inputLabel/Label'
-import type { DropdownListAttrs } from './hooks'
+import type { DropdownListAttrs } from '../../../interfaces'
 
 const DropdownListFormGroup = (
   props: DropdownListAttrs

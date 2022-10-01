@@ -1,16 +1,9 @@
 import { getFieldOptions } from '../Shared/fieldProps'
-import type { AllOptions, HtmlAttrs, AllChoices } from '../Shared/fieldProps'
-
-export type SelectFieldAttrs = {
-  name: string
-  dataKey: string
-  textField: string
-  options?: AllOptions
-  label?: string
-  helpText?: string
-  required?: boolean
-  readOnly?: boolean
-}
+import type {
+  AllChoices,
+  HtmlAttrs,
+  SelectFieldAttrs
+} from '../../../interfaces'
 
 export const useSelectFieldAttrs = (fieldAttrs: SelectFieldAttrs) => {
   const name = fieldAttrs.name

@@ -1,12 +1,11 @@
 import React from 'react'
-import { useOptionsOuery } from '../options/hooks'
+import type { CustomerOptions } from '../../../interfaces'
 
 type Props = {
-    indexUrl: string
+    options?: CustomerOptions
 }
 
-const TableLabels = ({ indexUrl }: Props): JSX.Element | null => {
-    const { options } = useOptionsOuery(indexUrl)
+const TableLabels = ({ options }: Props): JSX.Element | null => {
     if (!options) { return null }
     return <>
         <th scope="col">

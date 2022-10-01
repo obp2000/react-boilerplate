@@ -1,5 +1,4 @@
 import React from 'react'
-import type { MouseEvent } from 'react'
 import {
   Modal,
   ModalHeader,
@@ -8,7 +7,8 @@ import {
   Button,
 } from 'reactstrap'
 import { confirmable, createConfirmation } from 'react-confirm'
-import { Confirmation } from '../../../interfaces'
+import type { MouseEvent } from 'react'
+import type { Confirmation } from '../../../interfaces'
 
 type ProceedButtonProps = {
   label: string

@@ -4,11 +4,11 @@ import {
   passwordLength,
   validPasswordConfirmation,
 } from '../Shared/validators'
-import {
+import type {
   LoginFormValues,
   RegisterFormValues,
 } from '../../../interfaces/auth'
-import { ErrorMessages } from '../../../interfaces'
+import type { ErrorMessages } from '../../../interfaces'
 
 export const validateLogin = (errorMessages: ErrorMessages) =>
   (values: LoginFormValues) =>

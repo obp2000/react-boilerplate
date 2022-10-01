@@ -3,7 +3,7 @@ import { Field } from 'react-final-form'
 import type { FormRenderProps } from 'react-final-form'
 import { Form, Row, Col, Table } from 'reactstrap'
 import { FieldArray } from 'react-final-form-arrays'
-import type { FieldArrayRenderProps } from 'react-final-form-arrays'
+// import type { FieldArrayRenderProps } from 'react-final-form-arrays'
 import Input from '../formInput/Input'
 import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import OrderItem from '../orderItems/OrderItem'
@@ -17,19 +17,9 @@ import OrderItemsTableLabels from '../orderItems/TableLabels'
 import GiftIfNeeded from './Gift'
 import { useDropdown as useCustomerDropdownAttrs } from '../customers/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
-import {
-  Order,
-  OrderOptions,
-  OrderItem as OrderItemType,
-  CommonConsts,
-} from '../../../interfaces'
+import { OrderWithOptions, CommonConstsType } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  object: Order
-  options: OrderOptions
-  commonConsts: CommonConsts
-  // handleSubmit: (event: FormEvent<HTMLFormElement>) => void
-}
+type Props = FormRenderProps & CommonConstsType & OrderWithOptions
 
 const OrderFormRender = (props: Props): JSX.Element => {
   const options = { options: props.options }
@@ -46,7 +36,7 @@ const OrderFormRender = (props: Props): JSX.Element => {
       <Field
         name="customer"
         component={DropdownListFormGroup}
-        {...useCustomerDropdownAttrs(props.options?.customer.children)}
+        {...useCustomerDropdownAttrs(props.options?.customer?.children)}
         commonConsts={props.commonConsts}
         {...options}
       />
@@ -69,12 +59,16 @@ const OrderFormRender = (props: Props): JSX.Element => {
       </Col>
     </Row>
     <Table size="sm" responsive bordered hover>
-      <thead>
+{/*      <thead>
         <OrderItemsTableLabels {...props} />
-      </thead>
-      <tbody>
-        <FieldArray name="order_items">
-          {({ fields }: FieldArrayRenderProps<OrderItemType, HTMLElement>) => <>
+      </thead>*/}
+      {/*<tbody>*/}
+      <FieldArray name="order_items">
+        {({ fields }) => <>
+          <thead>
+            <OrderItemsTableLabels {...props} {...{fields}} meta={{}} />
+          </thead>
+          <tbody>
             {fields.map((
               orderItemName: string,
               index: number): JSX.Element => <OrderItem key={index} {...{
@@ -87,10 +81,11 @@ const OrderFormRender = (props: Props): JSX.Element => {
               }} />
             )}
             {Number(fields?.length) > 1 && <OrderItemsTotals {...props} />}
-          </>
-          }
-        </FieldArray>
-      </tbody>
+          </tbody>
+        </>
+        }
+      </FieldArray>
+      {/*</tbody>*/}
       <tfoot>
         <GiftIfNeeded {...props} />
         {/* <ConditionGt when="order_items_amount" gt={0}>*/}

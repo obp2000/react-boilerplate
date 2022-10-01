@@ -2,13 +2,9 @@ import React from 'react'
 import { Pagination, PaginationItem } from 'reactstrap'
 import Link from 'next/link'
 import { usePagination } from './hooks'
-// import type {GetObjectsEndpoint} from '../../services/entityAdapter'
+import type { TotalPages } from '../../../interfaces'
 
-type Props = {
-  totalPages: number
-}
-
-const PaginationComp = (props: Props): JSX.Element | null => {
+const PaginationComp = (props: TotalPages): JSX.Element | null => {
   const pages = usePagination(props)
   if (pages.length === 0) return null
   return <Pagination>

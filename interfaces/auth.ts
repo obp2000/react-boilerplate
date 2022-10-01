@@ -1,4 +1,13 @@
-import type {FieldProps} from './index'
+import type { FieldProps, IndexUrl } from './index'
+import {
+  useLoginMutation,
+  useRegisterMutation,
+  useSignOutMutation,
+} from '../src/components/auth/authApi'
+import {
+  validateLogin,
+  validateRegister
+} from '../src/components/auth/validators'
 
 export type Login = {
   key: string
@@ -39,4 +48,25 @@ export type RegisterOptions = {
 
 export type SignOut = {
   detail: string
+}
+
+export type FormFields = {
+  name: string
+  type?: string
+  required?: boolean
+  autoComplete?: string
+}
+
+export type LoginFormConfig = IndexUrl & {
+  name: string
+  useAuthMutation: typeof useLoginMutation
+  formFields: FormFields[]
+  validate: typeof validateLogin
+}
+
+export type RegisterFormConfig = IndexUrl & {
+  name: string
+  useAuthMutation: typeof useRegisterMutation
+  formFields: FormFields[]
+  validate: typeof validateRegister
 }

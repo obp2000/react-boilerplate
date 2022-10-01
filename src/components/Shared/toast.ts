@@ -1,12 +1,6 @@
 import { toast, Zoom } from 'react-toastify'
-import type { ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-
-type ToastConfig = ToastOptions & {
-  limit: number
-  role: string
-  'aria-label': string
-}
+import type { ToastConfig } from '../../../interfaces'
 
 const toastConfig: ToastConfig = {
   position: toast.POSITION.TOP_CENTER,

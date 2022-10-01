@@ -1,23 +1,19 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 import type { FormRenderProps } from 'react-final-form'
-import { CommonConsts } from '../../../interfaces'
-
-type Props = FormRenderProps & {
-  commonConsts: CommonConsts
-}
+import { CommonConstsType } from '../../../interfaces'
 
 const PostCostButton = ({
   form,
   values,
   commonConsts
-}: Props): JSX.Element => <Button
+}: FormRenderProps & CommonConstsType): JSX.Element => <Button
   name='post_cost_button'
   color='primary'
   outline
   size='sm'
   onClick={() => form?.mutators.postCostCount()}
-  disabled={!values?.customer?.city?.pindex || !values?.totalWeight}
+  disabled={!values?.customer?.city?.pindex || !values?.total_weight}
 >
     {commonConsts?.count}
   </Button>

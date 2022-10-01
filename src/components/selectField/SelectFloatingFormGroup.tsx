@@ -2,7 +2,7 @@ import React from 'react'
 import { FormGroup } from 'reactstrap'
 import Label from '../inputLabel/Label'
 import SelectField from './SelectField'
-import type { SelectFieldAttrs } from './hooks'
+import type { SelectFieldAttrs } from '../../../interfaces'
 
 const SelectFloatingFormGroup =
   (props: SelectFieldAttrs): JSX.Element => <FormGroup floating >

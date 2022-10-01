@@ -1,10 +1,8 @@
 import React from 'react'
 import { Col } from 'reactstrap'
-import { User, UserOptions } from '../../../interfaces'
+import { User, UserWithOptions } from '../../../interfaces'
 
-type Props = {
-	object: User
-	options?: UserOptions
+type Props = UserWithOptions & {
 	fieldName: string
 }
 
@@ -13,7 +11,7 @@ const tableRow = ({ object, options, fieldName }: Props) => <>
 		{options && options[fieldName as keyof User]?.label}
 	</Col>
 	<Col sm={8}>
-		{object[fieldName as keyof User]}
+		{object && object[fieldName as keyof User]}
 	</Col>
 </>
 

@@ -8,22 +8,16 @@ import {
 import { useUser, userFieldNames } from './hooks'
 import TableRow from './TableRow'
 import Header from './Header'
-import { User, UserOptions } from '../../../interfaces'
-
-type Props = {
-  object: User
-  options?: UserOptions
-  loaded: boolean
-}
+import { UserOptions } from '../../../interfaces'
 
 const UserComp = (): JSX.Element => {
-  const { object, options, loaded }: Props = useUser()
+  const { object, options } = useUser()
   // {<Loader loaded={loaded}>
   return <Card>
     <CardBody>
-      <Header {...{ options }} />
+      <Header options={options as UserOptions} />
       {userFieldNames.map((fieldName, key) => <Row key={key}>
-        <TableRow {...{ object, options, fieldName }} />
+        <TableRow {...{ object, fieldName }} options={options as UserOptions} />
       </Row>
       )}
     </CardBody>

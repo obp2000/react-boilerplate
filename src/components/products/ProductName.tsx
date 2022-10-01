@@ -3,14 +3,9 @@ import ProductType from './ProductType'
 import Threads from './Threads'
 import Contents from './Contents'
 import Fleece from './Fleece'
-import { Product, ProductOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces'
 
-type Props = {
-  object: Product
-  options?: ProductOptions
-}
-
-const ProductName = ({ object, options }: Props) => <>
+const ProductName = ({ object, options }: ProductWithOptions) => <>
   <ProductType {...{ object, options }} />
   <Threads {...{ object, options }} />
   <Contents {...{ object, options }} />

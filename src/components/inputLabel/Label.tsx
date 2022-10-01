@@ -1,8 +1,7 @@
 import React from 'react'
 import { Label } from 'reactstrap'
 import { useFieldLabel } from './hooks'
-import type { FieldAttrs } from '../Shared/fieldProps'
-import type { SelectFieldAttrs } from '../selectField/hooks'
+import type { SelectFieldAttrs, FieldAttrs, } from '../../../interfaces'
 
 type LabelSizes = {
   labelSize?: string

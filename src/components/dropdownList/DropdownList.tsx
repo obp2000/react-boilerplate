@@ -2,12 +2,12 @@ import React from 'react'
 import DropdownList from 'react-widgets/DropdownList'
 import FormTextList from '../Shared/FormTextList'
 import { useDropdownList } from './hooks'
-import type { DropdownListAttrs } from './hooks'
+import type { DropdownListAttrs } from '../../../interfaces'
 
 const DropdownListComp = (props: DropdownListAttrs) => {
-  const { helpText, ...DropdownListProps } = useDropdownList(props)
+  const { helpText, ...dropdownListProps } = useDropdownList(props)
   return <>
-    <DropdownList filter='contains' {...DropdownListProps} />
+    <DropdownList filter='contains' {...dropdownListProps} />
     <FormTextList formText={helpText} />
   </>
 }

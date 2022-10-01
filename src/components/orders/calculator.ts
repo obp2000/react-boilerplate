@@ -1,8 +1,8 @@
 import { getIn } from 'final-form'
 import createDecorator from 'final-form-calculate'
 import type { Calculation } from 'final-form-calculate'
-import type { Decorator } from 'final-form'
-const math = require('lodash/math')
+import type { Decorator, Mutator } from 'final-form'
+// const math = require('lodash/math')
 import {
   OrderFormValues,
   OrderItemFormValues,
@@ -17,18 +17,30 @@ const countCost = ({
 export const cost = (values: OrderItemFormValues): string =>
   countCost(values).toFixed(2)
 
-const countWeight = ({ amount = 0, product }: OrderItemFormValues): number =>
-  amount * Number(product?.density) * Number(product?.width) / 100
+const countWeight = ({ amount, product }: OrderItemFormValues): number =>
+  Number(amount) * Number(product?.density) * Number(product?.width) / 100
 
 export const weight = (values: OrderItemFormValues): string =>
   countWeight(values).toFixed(0)
 
+// export const sumBy1 = (
+//   values: any,
+//   field: string
+// ): number => math.sumBy(values?.order_items,
+//   (oderItem: OrderItemFormValues) =>
+//     Number(oderItem[field as keyof OrderItemFormValues] || 0))
+
 export const sumBy = (
   values: any,
   field: string
-): number => math.sumBy(values?.order_items || [],
-  (oderItem: OrderItemFormValues) =>
-    Number(oderItem[field as keyof OrderItemFormValues]))
+): number => (values?.order_items || [])
+  .reduce((sum: number, oderItem: OrderItemFormValues) => {
+    let fieldValue = oderItem[field as keyof OrderItemFormValues] === 'NaN'
+      ? 0
+      : oderItem[field as keyof OrderItemFormValues]
+    sum += Number(fieldValue)
+    return sum
+  }, 0)
 
 export const orderItemsAmount = (_: null, values: any): string =>
   sumBy(values, 'amount').toFixed(2)
@@ -207,6 +219,32 @@ const calculations: Calculation[] = [
 ]
 
 export const calculator: Decorator = createDecorator(...calculations)
+
+export const postCostCount: Mutator = (
+  _,
+  state,
+  { getIn, changeValue, resetFieldState }
+): void => {
+  const pindex = getIn(state, 'formState.values.customer.city.pindex')
+  const totalWeight = getIn(state, 'formState.values.total_weight')
+  const postBaseUrl = 'http://api.print-post.com/api/sendprice/v2/'
+
+  const params = new URLSearchParams()
+  params.set('from_index', '153038')
+  params.set('to_index', pindex)
+  params.set('weight', totalWeight)
+
+  fetch(`${postBaseUrl}?${params.toString()}`)
+    .then((response) => response.json())
+    .then(({ posilka_nds: posilkaNds }) => {
+      changeValue(state, 'post_cost', () => posilkaNds ?? 0)
+      return resetFieldState('post_cost')
+    })
+    .catch((e) => console.error(e))
+}
+
+
+// console.log({calculator})
 
 // export const calculator = (options): Decorator => {
 //   // console.log('order Consts ', orderConsts)

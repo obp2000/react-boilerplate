@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import Head from "next/head"
 import { Container } from 'reactstrap'
 import { ToastContainer } from 'react-toastify'
@@ -7,17 +7,12 @@ import NavBar from '../NavBar/NavBar'
 import AuthModal from '../auth/AuthModal'
 import { useAppSelector } from '../hooks'
 import { selectAuth } from '../auth/selectors'
-
-type Props = {
-  indexUrl: string
-  children?: ReactNode
-}
+import type { LayoutType } from '../../../interfaces'
 
 const name = "Best&C"
 
-const Layout = ({ indexUrl, children }: Props): JSX.Element => {
+const Layout = ({ indexUrl, children }: LayoutType): JSX.Element => {
   const { isAuthenticated } = useAppSelector(selectAuth)
-  console.log('isAuthenticated ', isAuthenticated)
   // if (isLoadingOptions) {return <Loader />}
   return <Container fluid="sm" className="bg-light border mt-2">
     <Head>

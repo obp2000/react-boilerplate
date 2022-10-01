@@ -6,12 +6,9 @@ import Input from '../formInput/Input'
 import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import PostCostButton from './PostCostButton'
-import { OrderOptions, CommonConsts } from '../../../interfaces'
+import { OrderOptionsType, CommonConstsType } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  options: OrderOptions
-  commonConsts: CommonConsts
-}
+type Props = FormRenderProps & CommonConstsType & OrderOptionsType
 
 const Postals = (props: Props): JSX.Element => <tr>
   <td colSpan={4}>

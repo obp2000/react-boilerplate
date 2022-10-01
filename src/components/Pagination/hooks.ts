@@ -1,16 +1,7 @@
 import { useRouter } from 'next/dist/client/router'
-import { ParsedUrlQuery } from 'querystring'
+import type { Page, TotalPages } from '../../../interfaces'
 
-type Page = {
-  label: string
-  query: ParsedUrlQuery
-  active?: boolean
-}
-type Props = {
-  totalPages: number
-}
-
-export const usePagination = ({ totalPages }: Props): Page[] => {
+export const usePagination = ({ totalPages }: TotalPages): Page[] => {
   const { query } = useRouter()
   const { page, ...rest } = query
   const currentPage = parseInt(String(page)) || 1

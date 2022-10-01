@@ -1,15 +1,8 @@
 import React from 'react'
-import { Product, ProductOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces'
 
-type Props = {
-  object: Product
-  options?: ProductOptions
-}
-
-const Threads = ({ object }: Props) => {
-  if (object?.threads == null) {
-    return null
-  }
+const Threads = ({ object }: ProductWithOptions) => {
+  if (object?.threads == null) { return null }
   return <>{object?.get_threads_display}{' '}</>
 }
 

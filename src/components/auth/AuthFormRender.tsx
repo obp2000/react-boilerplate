@@ -4,16 +4,15 @@ import type { FormRenderProps } from 'react-final-form'
 import { Form } from 'reactstrap'
 import RowFormGroup from '../formInput/RowFormGroup'
 import SubmitButton from '../submitButton/SubmitButton'
-import {
+import type {
 	LoginOptions,
 	RegisterOptions,
+	FormFields,
 } from '../../../interfaces/auth'
-import { CommonConsts } from '../../../interfaces'
-import type { FormFields } from './hooks'
+import type { CommonConstsType } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-	options?: LoginOptions & RegisterOptions
-	commonConsts?: CommonConsts
+type Props = FormRenderProps & CommonConstsType & {
+	options?: LoginOptions | RegisterOptions
 	formFields?: FormFields[]
 	submitButtonLabel?: string
 }

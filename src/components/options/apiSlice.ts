@@ -1,40 +1,18 @@
 import { apiSlice } from '../../services/apiSlice'
-import {
+import type {
   CommonConsts,
-  CustomerOptions,
-  ProductOptions,
-  OrderOptions,
-  UserOptions,
+  AnyOptions,
+  AnyOptionsAndCommonConsts,
 } from '../../../interfaces'
-import {
-  LoginOptions,
-  RegisterOptions,
-} from '../../../interfaces/auth'
-
-export type TableOptions = CustomerOptions & ProductOptions & OrderOptions
-
-export type TableOptionsAndCommonConsts = {
-  commonConsts: CommonConsts
-  options: TableOptions
-}
-
-type AllOptions = TableOptions & UserOptions & LoginOptions & RegisterOptions
-
-export type OptionsAndCommonConsts = {
-  commonConsts?: CommonConsts
-  options?: AllOptions
-}
 
 type RawOptionsAndCommonConsts = {
   common_consts?: CommonConsts
-  actions?: {
-    [index: string]: AllOptions
-  }
+  actions?: { [index: string]: AnyOptions }
 }
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getOptions: builder.query<OptionsAndCommonConsts, string>({
+    getOptions: builder.query<AnyOptionsAndCommonConsts, string>({
       query: (url) => ({ url, method: 'OPTIONS', }),
       transformResponse: (
         {

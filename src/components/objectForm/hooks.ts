@@ -1,34 +1,26 @@
-import type { FormProps } from 'react-final-form'
 import { useRouter } from 'next/dist/client/router'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { toastSuccess, toastError } from '../Shared/toast'
 import { useOptionsOuery } from '../options/hooks'
 import {
-  SerializedError,
-  CommonConsts,
-  anyObjectOptions,
-  anyObject,
-  anyObjectFormValues,
-} from '../../../interfaces'
-import { CustomerFormConfig } from '../customers/hooks'
-import { ProductFormConfig } from '../products/hooks'
-import { OrderFormConfig } from '../orders/hooks'
-import {
   isFetchBaseQueryError,
   isErrorWithMessage
 } from '../../services/helpers'
-
-type ObjectFormProps = FormProps & {
-  isMutatingObject: boolean
-  isSuccessMutatingObject: boolean
-  busyGettingObject: boolean
-  isErrorGettingObject: boolean
-  calculatedFields: string[]
-  object: anyObject
-  options?: anyObjectOptions
-  commonConsts?: CommonConsts
-}
+import type {
+  FormConfig as CustomerFormConfig
+} from '../../../interfaces/customers'
+import type {
+  FormConfig as ProductFormConfig
+} from '../../../interfaces/products'
+import type {
+  FormConfig as OrderFormConfig
+} from '../../../interfaces/orders'
+import type {
+  SerializedError,
+  AnyObjectFormValues,
+  ObjectFormProps,
+} from '../../../interfaces'
 
 export function useObjectForm(props: CustomerFormConfig): ObjectFormProps
 export function useObjectForm(props: ProductFormConfig): ObjectFormProps
@@ -68,10 +60,10 @@ export function useObjectForm({
       isSuccess: isSuccessMutatingObject
     }
   ] = mutateObjectHook()
-  const onSubmit = (values: anyObjectFormValues) =>
+  const onSubmit = (values: AnyObjectFormValues) =>
     mutateObject(values).unwrap().
       then(() => {
-        router.push(indexUrl, undefined, { shallow: true })
+        router.push(indexUrl)
         toastSuccess(commonConsts?.successfully)
       }).
       catch((err: FetchBaseQueryError | SerializedError): void => {

@@ -1,7 +1,7 @@
 import { notBlank } from '../Shared/validators'
 import { ProductFormValues, ErrorMessages } from '../../../interfaces'
 
-export const validate = (errorMessages: ErrorMessages) =>
+export const validate = (errorMessages: ErrorMessages | undefined) =>
   (values: ProductFormValues) =>
     notBlank(values, ['name', 'price'], errorMessages?.blank)
 

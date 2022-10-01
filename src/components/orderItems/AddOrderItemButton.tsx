@@ -1,20 +1,16 @@
 import React from 'react'
-import type { FormRenderProps } from 'react-final-form'
 import { Button } from 'reactstrap'
 import { initOrderItem } from './hooks'
-import { CommonConsts } from '../../../interfaces'
-
-type Props = FormRenderProps & {
-  commonConsts: CommonConsts
-}
+import type { OrderItemFormRender } from '../../../interfaces'
 
 const AddOrderItemButton = ({
-  form,
+  // form,
+  fields,
   commonConsts
-}: Props): JSX.Element => <Button
+}: OrderItemFormRender): JSX.Element => <Button
   size='sm'
   outline
-  onClick={() => form?.mutators.push('order_items', initOrderItem)}
+  onClick={() => fields.push(initOrderItem)}
 >
     {commonConsts?.add}
   </Button>

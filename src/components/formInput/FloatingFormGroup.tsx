@@ -2,7 +2,7 @@ import React from 'react'
 import { FormGroup } from 'reactstrap'
 import Input from '../formInput/Input'
 import Label from '../inputLabel/Label'
-import type { AnyFieldAttrs } from '../Shared/fieldProps'
+import type { AnyFieldAttrs } from '../../../interfaces'
 
 const FloatingFormGroup = (props: AnyFieldAttrs) =>
   <FormGroup floating >

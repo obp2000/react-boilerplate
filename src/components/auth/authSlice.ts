@@ -4,7 +4,7 @@ import { HYDRATE } from 'next-redux-wrapper'
 import { AnyAction } from "redux"
 import { toastSuccess, toastError } from '../Shared/toast'
 import { login, register, signOut } from './authApi'
-import { Login, Register, SignOut, } from '../../../interfaces/auth'
+import type { Login, Register, SignOut, } from '../../../interfaces/auth'
 // import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 // import type {RootState} from '../store'
 

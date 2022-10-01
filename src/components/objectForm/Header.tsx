@@ -4,17 +4,13 @@ import type { FormRenderProps } from 'react-final-form'
 import SubmitButton from '../submitButton/SubmitButton'
 import BackButton from '../backButton/BackButton'
 import Date from '../Shared/date'
-import {
-  CommonConsts,
-  anyObject,
-  anyObjectOptions,
+import type {
+  CommonConstsType,
+  AnyObjectWithOptions,
+  // ObjectFormProps,
 } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  object?: anyObject
-  options?: anyObjectOptions
-  commonConsts?: CommonConsts
-}
+type Props = FormRenderProps & CommonConstsType & AnyObjectWithOptions
 
 const Header = ({ object, options, ...props }: Props): JSX.Element => {
   const label = object?.id

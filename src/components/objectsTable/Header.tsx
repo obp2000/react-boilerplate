@@ -1,15 +1,13 @@
 import React from 'react'
 import { Row, Col, Badge } from 'reactstrap'
-import { useOptionsOuery } from '../options/hooks'
+import { TableOptions } from '../../../interfaces'
 
 export type Props = {
-  indexUrl: string
+  options?: TableOptions
   totalCount: number
 }
 
-const Header = ({ indexUrl, totalCount }: Props): JSX.Element => {
-  const { options } = useOptionsOuery(indexUrl)
-  return <Row>
+const Header = ({ options, totalCount }: Props): JSX.Element => <Row>
     <Col sm={2}>
       <h3 aria-label={options?.name_plural}>
         {options?.name_plural}
@@ -21,6 +19,5 @@ const Header = ({ indexUrl, totalCount }: Props): JSX.Element => {
       </h4>
     </Col>
   </Row>
-}
 
 export default Header

@@ -1,14 +1,5 @@
 import { useFieldProps, getName } from '../Shared/fieldProps'
-import type { AnyFieldAttrs } from '../Shared/fieldProps'
-
-export type LabelAttrs = {
-  label?: string
-  required?: boolean
-  htmlFor: string
-  sm: number
-  size: string
-  check: boolean
-}
+import type { AnyFieldAttrs, LabelAttrs } from '../../../interfaces'
 
 export const useFieldLabel = (props: AnyFieldAttrs): LabelAttrs => {
   const labelAttrs = useFieldProps(props)

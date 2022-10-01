@@ -1,22 +1,19 @@
+import { useFieldProps, getName } from '../Shared/fieldProps'
 import type { InputType } from 'reactstrap/types/lib/Input'
 import type { FieldMetaState } from 'react-final-form'
-import { useFieldProps, getName } from '../Shared/fieldProps'
-import type { FieldAttrs, HtmlAttrs } from '../Shared/fieldProps'
+import type { HtmlAttrs, FieldAttrs } from '../../../interfaces'
 
 export const invalid =
   ({ error }: FieldMetaState<string | number | undefined>) =>
     (!!error ? true : false)
 
 export const valid =
-  ({ dirty, active, error }: FieldMetaState<string | number | undefined>) =>
-    (dirty && !active && !error ? true : false)
-
-export type FilesHandler =
-  ({ target: { files } }: { target: { files: FileList | null } }) => void
-
-type InputHtmlAttrs = HtmlAttrs & {
-  onChange?: FilesHandler
-}
+  ({ visited,
+    dirty,
+    active,
+    error
+  }: FieldMetaState<string | number | undefined>) =>
+    (visited && dirty && !active && !error ? true : false)
 
 export const useFieldAttrs = (fieldAttrs: FieldAttrs) => {
   const props = useFieldProps(fieldAttrs)
@@ -24,7 +21,7 @@ export const useFieldAttrs = (fieldAttrs: FieldAttrs) => {
   const type: InputType = fieldAttrs.input?.type as InputType
   const label = fieldAttrs.label ?? props?.label
   const helpText = fieldAttrs.helpText ?? props?.help_text
-  let attrs: InputHtmlAttrs = {
+  let attrs: HtmlAttrs = {
     name,
     id: name,
     type,
@@ -47,26 +44,24 @@ export const useFieldAttrs = (fieldAttrs: FieldAttrs) => {
     attrs.valid = valid(fieldAttrs.meta)
   }
   if (type === 'file') {
-    const onChange: FilesHandler = ({ target }) => {
-      if (target.files) {
-        return fieldAttrs.input.onChange(target.files[0])
-      }
-    }
     attrs.accept = '.jpg, .png, .jpeg'
-    attrs.onChange = onChange
   }
   return attrs
 }
 
+export type FilesHandler =
+  ({ target: { files } }: { target: { files: FileList | null } }) => void
 
 export const useInput = (props: FieldAttrs) => {
-  const { input, meta, options, searchPath, ...rest } = props
+  const { input, meta, options, ...rest } = props
   if (input.type === 'file') {
     delete input.value
+    const onChange: FilesHandler = ({ target }) => {
+      if (target?.files) {
+        return input.onChange(target.files[0])
+      }
+    }
+    rest.onChange = onChange
   }
-  return {
-    ...input,
-    ...useFieldAttrs(props),
-    ...rest,
-  }
+  return { ...input, ...useFieldAttrs(props), ...rest }
 }

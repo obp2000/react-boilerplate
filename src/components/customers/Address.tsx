@@ -1,12 +1,10 @@
 import React from 'react'
-import { Customer, CustomerOptions } from '../../../interfaces'
+import type { CustomerWithOptions } from '../../../interfaces'
 
-type Props = {
-  object: Customer
-  options: CustomerOptions
-}
-
-const Address = ({ object, options }: Props): JSX.Element | null => {
+const Address = ({
+  object,
+  options
+}: CustomerWithOptions): JSX.Element | null => {
   if (!object?.address) {
     return null
   }

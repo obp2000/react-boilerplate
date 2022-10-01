@@ -7,12 +7,9 @@ import {
 } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { useAuthModal } from './hooks'
+import type { IndexUrl } from '../../../interfaces'
 
-type Props = {
-  indexUrl: string
-}
-
-const AuthModal = (props: Props): JSX.Element => {
+const AuthModal = (props: IndexUrl): JSX.Element => {
   const {
     isOpen,
     headerAttrs,

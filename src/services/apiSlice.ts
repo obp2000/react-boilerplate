@@ -23,12 +23,22 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes,
+  tagTypes: [
+    'Customers',
+    'Products',
+    'Orders',
+    'CurrentUser',
+    'Options'
+  ],
   endpoints: () => ({}),
-  extractRehydrationInfo(action, { reducerPath }) {
+  extractRehydrationInfo(action, test1) {
+    console.log({test1})
+    console.log('action.payload ', action.payload)
     if (action.type === HYDRATE) {
       // console.log('action.payload[reducerPath] ', action.payload[reducerPath])
-      return action.payload[reducerPath]
+      return action.payload[test1.reducerPath]
+
+
     }
   },
 })

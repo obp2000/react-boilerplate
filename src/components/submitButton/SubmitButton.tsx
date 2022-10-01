@@ -2,10 +2,9 @@ import React from 'react'
 import type { FormRenderProps } from 'react-final-form'
 import { Button } from 'reactstrap'
 import { disabled } from './hooks'
-import { CommonConsts } from '../../../interfaces'
+import { CommonConstsType } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  commonConsts?: CommonConsts
+type Props = FormRenderProps & CommonConstsType & {
   isLoadingOptions?: boolean
   isFetchingOptions?: boolean
   text?: string
@@ -13,7 +12,12 @@ type Props = FormRenderProps & {
   calculatedFields?: string[]
 }
 
-const SubmitButton = ({ commonConsts, text, className, ...rest }: Props) => {
+const SubmitButton = ({
+  commonConsts,
+  text,
+  className,
+  ...rest
+}: Props) => {
   const label = text || commonConsts?.save
   return <Button
     type='submit'

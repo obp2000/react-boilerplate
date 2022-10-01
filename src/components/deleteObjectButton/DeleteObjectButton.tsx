@@ -1,21 +1,9 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 import { useDeleteObject } from './hooks'
-import { useDeleteCustomerMutation } from '../customers/apiSlice'
-import { useDeleteProductMutation } from '../products/apiSlice'
-import { useDeleteOrderMutation } from '../orders/apiSlice'
-import { anyObject } from '../../../interfaces'
+import type { DeleteObjectButtonType } from '../../../interfaces'
 
-export type UseDeleteObjectMutation = typeof useDeleteCustomerMutation |
-  typeof useDeleteProductMutation | typeof useDeleteOrderMutation
-
-export type Props = {
-  object: anyObject
-  indexUrl: string
-  useDeleteObjectMutation: UseDeleteObjectMutation
-}
-
-const DeleteObjectButton = (props: Props) => {
+const DeleteObjectButton = (props: DeleteObjectButtonType) => {
   const {
     isAuthenticated,
     isDeletingObject,

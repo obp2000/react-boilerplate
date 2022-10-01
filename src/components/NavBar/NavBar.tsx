@@ -11,26 +11,27 @@ import NavbarBrand from './NavbarBrand'
 import NavbarToggler from './NavbarToggler'
 import MainMenu from './MainMenu'
 import AuthButton from '../auth/AuthButton'
+import { useOptionsOuery } from '../options/hooks'
+import type { IndexUrl } from '../../../interfaces'
 
-export type Props = {
-  indexUrl: string
+const NavBar = ({ indexUrl }: IndexUrl) => {
+  const { commonConsts } = useOptionsOuery(indexUrl)
+  return <Navbar
+    color="primary"
+    expand="md"
+    dark className="py-0 mb-1">
+    <NavbarBrand {...{ commonConsts }} />
+    <NavbarToggler />
+    <Collapse navbar id="navbarContent">
+      <Nav className="me-auto" navbar>
+        <MainMenu {...{ commonConsts }} />
+        <NavItem>
+          <AuthButton {...{ commonConsts }} />
+        </NavItem>
+      </Nav>
+      <SearchForm {...{ commonConsts }} />
+    </Collapse>
+  </Navbar>
 }
-
-const NavBar = (props: Props) => <Navbar
-  color="primary"
-  expand="md"
-  dark className="py-0 mb-1">
-  <NavbarBrand {...props} />
-  <NavbarToggler />
-  <Collapse navbar id="navbarContent">
-    <Nav className="me-auto" navbar>
-      <MainMenu {...props} />
-      <NavItem>
-        <AuthButton {...props} />
-      </NavItem>
-    </Nav>
-    <SearchForm {...props} />
-  </Collapse>
-</Navbar>
 
 export default NavBar

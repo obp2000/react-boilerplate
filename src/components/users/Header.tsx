@@ -1,12 +1,8 @@
 import React from 'react'
 import { CardTitle } from 'reactstrap'
-import { UserOptions } from '../../../interfaces'
+import { UserOptionsType } from '../../../interfaces'
 
-type Props = {
-  options?: UserOptions
-}
-
-const Header = ({ options }: Props) => <CardTitle>
+const Header = ({ options }: UserOptionsType) => <CardTitle>
   <h3>{options?.name_singular}</h3>
 </CardTitle>
 

@@ -11,34 +11,13 @@ import { toggleModal, toggleLogin } from './modalSlice'
 import { selectAuth, selectAuthModal } from './selectors'
 import { useGetUserQuery } from '../users/apiSlice'
 import { useOptionsOuery } from '../options/hooks'
-import {
+import type {
   LoginFormValues,
   RegisterFormValues,
+  LoginFormConfig,
+  RegisterFormConfig,
 } from '../../../interfaces/auth'
-// import {ErrorMessages} from '../../../interfaces'
-
-export type FormFields = {
-  name: string
-  type?: string
-  required?: boolean
-  autoComplete?: string
-}
-
-export type LoginFormConfig = {
-  indexUrl: string
-  name: string
-  useAuthMutation: typeof useLoginMutation
-  formFields: FormFields[]
-  validate: typeof validateLogin
-}
-
-export type RegisterFormConfig = {
-  indexUrl: string
-  name: string
-  useAuthMutation: typeof useRegisterMutation
-  formFields: FormFields[]
-  validate: typeof validateRegister
-}
+import type { IndexUrl, CommonConstsType } from '../../../interfaces'
 
 export const initLoginValues: LoginFormValues = {
   username: undefined,
@@ -80,7 +59,7 @@ export const registerFormConfig: RegisterFormConfig = {
   validate: validateRegister,
 }
 
-export const useAuthModal = ({ indexUrl }: { indexUrl: string }) => {
+export const useAuthModal = ({ indexUrl }: IndexUrl) => {
   const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
   const { commonConsts } = useOptionsOuery(indexUrl)
   const login = commonConsts?.login
@@ -109,8 +88,7 @@ export const useAuthModal = ({ indexUrl }: { indexUrl: string }) => {
   }
 }
 
-export const useAuthButton = ({ indexUrl }: { indexUrl: string }) => {
-  const { commonConsts } = useOptionsOuery(indexUrl)
+export const useAuthButton = ({ commonConsts }: CommonConstsType) => {
   const [
     signOutAction,
     { isLoading: isSigningOut },

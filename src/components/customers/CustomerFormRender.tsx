@@ -1,5 +1,4 @@
 import React from 'react'
-// import {FormEvent} from 'react'
 import { Field } from 'react-final-form'
 import type { FormRenderProps } from 'react-final-form'
 import { Form, Row, Col } from 'reactstrap'
@@ -8,17 +7,12 @@ import Header from '../objectForm/Header'
 import Input from '../formInput/Input'
 import { useDropdown as useCityDropdownAttrs } from '../cities/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
-import {
-  Customer,
-  CustomerOptions,
-  CommonConsts
+import type {
+  CommonConstsType,
+  CustomerWithOptions,
 } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  object?: Customer
-  options?: CustomerOptions
-  commonConsts?: CommonConsts
-}
+type Props = FormRenderProps & CommonConstsType & CustomerWithOptions
 
 const CustomerFormRender = (props: Props): JSX.Element => {
   const options = { options: props.options }

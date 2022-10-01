@@ -1,14 +1,11 @@
-import { objectToFormData } from 'object-to-formdata'
 import { apiSlice } from '../../services/apiSlice'
-import {
-  setAll,
-  objectsInitialState,
-  ObjectsWithTotals,
-} from '../../services/entityAdapter'
-import {
+import { indexUrl as url } from './hooks'
+import { setAll, objectsInitialState, } from '../../services/entityAdapter'
+import type {
   Customer as GetObject,
   CustomerFormValues as ObjectFormValues,
   RawObjectsWithTotals,
+  ObjectsWithTotals,
 } from '../../../interfaces'
 
 type GetObjectsArg = {
@@ -19,15 +16,9 @@ type GetObjectArg = {
   id?: number
 }
 
-type MutateObjectArg = ObjectFormValues & {
-  toFormData?: boolean
-}
-
 type DeleteObjectArg = {
   id: number
 }
-
-const url = '/customers/'
 
 const type = 'Customers'
 
@@ -35,13 +26,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCustomers: builder.query<ObjectsWithTotals, GetObjectsArg>({
       query: (params) => ({ url, params }),
-      // transformResponse: ({
-      //   results,
-      //   ...rest
-      // }: RawObjectsWithTotals) => ({
-      //   ...setAll(objectsInitialState, results),
-      //   ...rest
-      // }),
       transformResponse: ({
         results,
         totalCount,
@@ -53,47 +37,84 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         totalPages,
       }),
       providesTags: (result) =>
+        // is result available?
         result
-          ? [...result.ids.map((id) => ({ type, id })), { type, id: 'LIST' },]
-          : [{ type, id: 'LIST' }],
+          ? // successful query
+          [
+            ...result.ids.map((id) => ({ type, id } as const)),
+            { type, id: 'LIST' },
+          ]
+          : // an error occurred, but we still want to refetch this query when
+          // `{ type: 'Customers', id: 'LIST' }` is invalidated
+          [{ type, id: 'LIST' }],
+    }),
+    createCustomer: builder.mutation<GetObject, ObjectFormValues>({
+      query: ({
+        id,
+        city,
+        created_at,
+        updated_at,
+        ...values
+      }) => {
+        if (city) {
+          values.city_id = city.id
+        }
+        return {
+          url,
+          method: 'POST',
+          body: values,
+        }
+      },
+      // Invalidates all Customer-type queries providing the `LIST` id -
+      // after all, depending of the sort order,
+      // that newly created customer could show up in any lists.
+      invalidatesTags: [{ type, id: 'LIST' }],
     }),
     getCustomer: builder.query<GetObject, GetObjectArg>({
       query: ({ id }) => ({ url: `${url}${id}/` }),
-      providesTags: (_, __, { id }) => [{ type, id }],
+      // providesTags: (result, error, { id }) => [{ type: 'Customers', id }],
     }),
-    createCustomer: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({ toFormData, ...values }) => ({
-        url,
-        method: 'POST',
-        body: toFormData ? objectToFormData(values) : values,
-      }),
-      invalidatesTags: [{ type, id: 'LIST' }],
-    }),
-    updateCustomer: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({ id, toFormData, ...values }) => ({
-        url: `${url}${id}/`,
-        method: 'PUT',
-        body: toFormData ? objectToFormData(values) : values,
-      }),
-      onQueryStarted({ id, toFormData, ...values },
-        { dispatch, queryFulfilled }) {
-        const { undo } = dispatch(
+    updateCustomer: builder.mutation<GetObject, ObjectFormValues>({
+      query: ({
+        id,
+        city,
+        created_at,
+        updated_at,
+        ...values
+      }) => {
+        if (city) {
+          values.city_id = city.id
+        }
+        return {
+          url: `${url}${id}/`,
+          method: 'PUT',
+          body: values,
+        }
+      },
+      onQueryStarted(patch, { dispatch, queryFulfilled }) {
+        // console.log({ patch })
+        patch.updated_at = new Date().toISOString()
+        const { undo }  = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getCustomer',
-            { id },
-            (draftObject) => ({ ...draftObject, ...values })
+            { id: patch.id },
+            (draft) => Object.assign(draft, patch)
           )
         )
         queryFulfilled.catch(undo)
       },
-      invalidatesTags: (_, __) => [{ type, id: 'LIST' }],
+      // Invalidates all queries that subscribe to this Customer `id` only.
+      // In this case, `getCustomer` will be re-run. `getCustomers` *might*
+      // rerun, if this id was under its results.
+      invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
     deleteCustomer: builder.mutation<void, DeleteObjectArg>({
       query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, { id }) => [{ type, id }, { type, id: 'LIST' }],
+      // Invalidates all queries that subscribe to this Customer `id` only.
+      invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
   }),
 })

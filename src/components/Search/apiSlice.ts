@@ -3,6 +3,7 @@ import {
   Customer,
   Product,
   City,
+  RawObjectsWithTotals,
 } from '../../../interfaces'
 
 type SearchObjectsArg = {
@@ -15,25 +16,25 @@ type SearchObjectsArg = {
 
 type SearchResults = Customer[] | Product[] | City[]
 
-type RawCustomers = {
-  totalCount: number
-  totalPages: number
-  results: Customer[]
-}
+// type RawCustomers = {
+//   totalCount: number
+//   totalPages: number
+//   results: Customer[]
+// }
 
-type RawProducts = {
-  totalCount: number
-  totalPages: number
-  results: Product[]
-}
+// type RawProducts = {
+//   totalCount: number
+//   totalPages: number
+//   results: Product[]
+// }
 
-type RawCities = {
-  totalCount: number
-  totalPages: number
-  results: City[]
-}
+// type RawCities = {
+//   totalCount: number
+//   totalPages: number
+//   results: City[]
+// }
 
-type RawSearchResults = RawCustomers | RawProducts | RawCities
+// type RawSearchResults = RawCustomers | RawProducts | RawCities
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -45,7 +46,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         url,
         params: { ...params, page_size: 1000000 },
       }),
-      transformResponse: ({ results }: RawSearchResults) => results,
+      transformResponse: ({ results }: RawObjectsWithTotals) => results,
     }),
   }),
 })

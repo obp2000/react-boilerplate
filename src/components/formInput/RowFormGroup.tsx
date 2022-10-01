@@ -2,7 +2,7 @@ import React from 'react'
 import { FormGroup, Col } from 'reactstrap'
 import Input from '../formInput/Input'
 import Label from '../inputLabel/Label'
-import type { AnyFieldAttrs } from '../Shared/fieldProps'
+import type { AnyFieldAttrs, } from '../../../interfaces'
 
 const RowFormGroup = (props: AnyFieldAttrs) =>
   <FormGroup row>

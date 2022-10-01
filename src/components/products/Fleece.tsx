@@ -1,12 +1,7 @@
 import React from 'react'
-import { Product, ProductOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces'
 
-type Props = {
-  object: Product
-  options?: ProductOptions
-}
-
-const Fleece = ({ object, options }: Props) => {
+const Fleece = ({ object, options }: ProductWithOptions) => {
   if (!object?.fleece) { return null }
   return <>{options?.fleece?.label?.toLowerCase()}{' '}</>
 }

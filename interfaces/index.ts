@@ -9,6 +9,32 @@
 //   name: string
 // }
 
+import { ReactNode } from 'react'
+import type { EntityState } from '@reduxjs/toolkit'
+import type {
+  FormProps,
+  FormRenderProps,
+  FieldRenderProps
+} from 'react-final-form'
+import type { FieldArrayRenderProps } from 'react-final-form-arrays'
+import type { InputType } from 'reactstrap/types/lib/Input'
+import { TextAccessor } from 'react-widgets/cjs/Accessors'
+import type { ToastOptions } from 'react-toastify'
+import { ParsedUrlQuery } from 'querystring'
+import type { LoginOptions, RegisterOptions } from './auth'
+import {
+  getCustomers,
+  useDeleteCustomerMutation
+} from '../src/components/customers/apiSlice'
+import {
+  getProducts,
+  useDeleteProductMutation
+} from '../src/components/products/apiSlice'
+import {
+  getOrders,
+  useDeleteOrderMutation
+} from '../src/components/orders/apiSlice'
+
 export type FieldProps = {
   type?: string
   required?: boolean
@@ -37,7 +63,7 @@ export type CityOptions = {
 
 export type Customer = {
   id: number
-  nick: string
+  nick?: string
   name?: string
   city?: City
   address?: string
@@ -52,6 +78,8 @@ export type CustomerFormValues = {
   city?: City
   city_id?: number
   address?: string
+  created_at?: string
+  updated_at?: string
 }
 
 export type CustomerCityOptions = {
@@ -109,8 +137,11 @@ export type ProductFormValues = {
   name?: string
   product_type?: number
   product_type_id?: number
+  get_product_type_display?: string
   threads?: number
+  get_threads_display?: string
   contents?: number
+  get_contents_display?: string
   fleece?: boolean
   price?: number
   weight?: number
@@ -124,12 +155,13 @@ export type ProductFormValues = {
   length_for_count?: number
   price_pre?: number
   image?: string
-  new_image?: string
   density_for_count?: number | string
   meters_in_roll?: number | string
   prices?: string
   toFormData?: boolean
   consts?: ProductConsts
+  created_at?: string
+  updated_at?: string
 }
 
 export type ProductTypeChoice = {
@@ -188,7 +220,6 @@ export type ProductOptions = {
   updated_at: FieldProps
   name_singular: string
   name_plural: string
-  new_image: FieldLabel
   prices: FieldLabel
   density_for_count: FieldLabel
   meters_in_roll: FieldLabel
@@ -235,8 +266,8 @@ export type OrderItemOptions = {
 
 export type Order = {
   id: number
-  customer: Customer
-  post_cost?: number | string
+  customer?: Customer
+  post_cost?: number
   packet?: number
   delivery_type?: number
   address?: string
@@ -263,7 +294,7 @@ export type OrderFormValues = {
   id?: number
   customer?: Customer
   customer_id?: number
-  post_cost?: number | string
+  post_cost?: number
   packet?: number
   delivery_type?: number
   address?: string
@@ -281,6 +312,8 @@ export type OrderFormValues = {
   total_sum?: number | string
   total_weight?: number
   consts?: OrderConsts
+  created_at?: string
+  updated_at?: string
 }
 
 export type PacketChoice = {
@@ -296,11 +329,11 @@ export type DeliveryTypeChoice = {
 export type OrderOptions = {
   id: FieldProps
   customer: {
-        type: 'nested object'
-        required: boolean
-        read_only: boolean
-        label: string
-        children: CustomerOptions
+    type: 'nested object'
+    required: boolean
+    read_only: boolean
+    label: string
+    children: CustomerOptions
   }
   post_cost: FieldProps
   packet: {
@@ -372,7 +405,7 @@ export type MainMenuItem = {
 export type ErrorMessages = {
   invalid_choice?: string
   null?: string
-  blank: string
+  blank?: string
   unique?: string
   unique_for_date?: string
   password_mismatch: string
@@ -421,17 +454,22 @@ export type Confirmation = {
   enableEscape: boolean
 }
 
-export type anyObject = Customer | Product | Order
+export type AnyObject = Customer | Product | Order
 
 export type RawObjectsWithTotals = {
   totalCount: number
   totalPages: number
-  results: anyObject[]
+  results: AnyObject[]
 }
 
-export type anyObjectOptions = CustomerOptions | ProductOptions | OrderOptions
+export type ObjectsWithTotals = EntityState<AnyObject> & {
+  totalCount: number
+  totalPages: number
+}
 
-export type anyObjectFormValues = CustomerFormValues | ProductFormValues |
+export type AnyObjectOptions = CustomerOptions | ProductOptions | OrderOptions
+
+export type AnyObjectFormValues = CustomerFormValues | ProductFormValues |
   OrderFormValues
 
 export interface SerializedError {
@@ -440,3 +478,161 @@ export interface SerializedError {
   stack?: string
   code?: string
 }
+
+export type IndexUrl = {
+  indexUrl: string
+}
+
+export type TableRowType<ObjectType, OptionsType> = {
+  object: ObjectType
+  options: OptionsType
+}
+
+export type CommonConstsType = {
+  commonConsts?: CommonConsts
+}
+
+export type CustomerWithOptions = {
+  object?: Customer
+  options?: CustomerOptions
+}
+
+export type ProductWithOptions = {
+  object?: Product
+  options?: ProductOptions
+}
+
+export type OrderOptionsType = {
+  options?: OrderOptions
+}
+
+export type OrderWithOptions = OrderOptionsType & {
+  object?: Order
+}
+
+export type UserOptionsType = {
+  options?: UserOptions
+}
+
+export type UserWithOptions = UserOptionsType & {
+  object?: User
+}
+
+export type AllChoices = ProductTypeChoice & ThreadsChoice & ContentsChoice &
+  PacketChoice & DeliveryTypeChoice
+
+export type FieldPropsWithChoices = FieldProps & {
+  choices: AllChoices[]
+}
+
+export type TableOptions = CustomerOptions | ProductOptions | OrderOptions
+
+export type HtmlAttrs = {
+  name: string
+  id?: string
+  type?: InputType
+  label?: string
+  placeholder?: string
+  required?: boolean
+  readOnly?: boolean
+  'aria-label'?: string
+  min?: number
+  max?: number
+  accept?: string
+  choices?: AllChoices[]
+  helpText?: string
+  invalid?: boolean
+  valid?: boolean
+}
+
+export type AnyOptions = TableOptions | UserOptions | LoginOptions |
+  RegisterOptions
+
+export type SelectFieldAttrs = {
+  name: string
+  dataKey: string
+  textField: string
+  options?: AnyOptions
+  label?: string
+  helpText?: string
+  required?: boolean
+  readOnly?: boolean
+}
+
+export type FieldAttrs = FieldRenderProps<string | number | undefined> & {
+  options: AnyOptions
+}
+
+export type AnyFieldAttrs = FieldAttrs & SelectFieldAttrs
+
+export type LabelAttrs = {
+  label?: string
+  required?: boolean
+  htmlFor: string
+  sm: number
+  size: string
+  check: boolean
+}
+
+export type CityWithOptions = {
+  object?: City
+  options?: CityOptions
+}
+
+export type DeleteObjectButtonType = CommonConstsType & {
+  useDeleteObjectMutation: typeof useDeleteCustomerMutation |
+  typeof useDeleteProductMutation | typeof useDeleteOrderMutation
+  object: AnyObject
+}
+
+export type DropdownListAttrs = FieldAttrs & CommonConstsType & {
+  textField?: TextAccessor
+  dataKey: string
+  searchPath: string
+  renderValue: () => JSX.Element
+}
+
+export type LayoutType = IndexUrl & {
+  children?: ReactNode
+}
+
+export type AnyObjectWithOptions = {
+  object?: AnyObject
+  options?: AnyObjectOptions
+}
+
+export type ObjectFormProps = FormProps & CommonConstsType & {
+    object?: AnyObject
+    options?: AnyOptions
+    isMutatingObject: boolean
+    isSuccessMutatingObject: boolean
+    busyGettingObject: boolean
+    isErrorGettingObject: boolean
+    calculatedFields?: string[]
+  }
+
+export type AnyOptionsAndCommonConsts = CommonConstsType & {
+  options?: AnyOptions
+}
+
+export type OrderItemFormRender  = FieldArrayRenderProps<OrderItem, HTMLElement> &
+  CommonConstsType & OrderOptionsType
+
+export type Page = {
+  label: string
+  query: ParsedUrlQuery
+  active?: boolean
+}
+
+export type ToastConfig = ToastOptions & {
+  limit: number
+  role: string
+  'aria-label': string
+}
+
+export type TotalPages = {
+  totalPages: number
+}
+
+export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
+  typeof getOrders

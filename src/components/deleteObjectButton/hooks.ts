@@ -2,16 +2,14 @@ import { useAppSelector } from '../hooks'
 import { selectAuth } from '../auth/selectors'
 import { toastSuccess, toastError } from '../Shared/toast'
 import confirmAction from '../confirmation/confirmAction'
-import { useOptionsOuery } from '../options/hooks'
-import { Props } from './DeleteObjectButton'
+import type { DeleteObjectButtonType } from '../../../interfaces'
 
 export const useDeleteObject = ({
   object,
-  indexUrl,
+  commonConsts,
   useDeleteObjectMutation,
-}: Props) => {
+}: DeleteObjectButtonType) => {
   const { isAuthenticated } = useAppSelector(selectAuth)
-  const { commonConsts } = useOptionsOuery(indexUrl)
   const [deleteObject, { isLoading: isDeletingObject }] =
     useDeleteObjectMutation()
   const onConfirm = () => {

@@ -1,23 +1,25 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/dist/client/router'
-import { useOptionsOuery } from '../options/hooks'
-import { anyObject } from '../../../interfaces'
+import type { AnyObject, CommonConstsType } from '../../../interfaces'
 
-export type Props = {
-  object?: anyObject
-  indexUrl: string
+export type Props = CommonConstsType & {
+  object?: AnyObject
 }
 
-const LinkToNewOrEditObject = ({ object, indexUrl }: Props): JSX.Element => {
-  const { commonConsts } = useOptionsOuery(indexUrl)
+const LinkToNewOrEditObject = ({
+  object, commonConsts
+}: Props): JSX.Element => {
   const label = object?.id ? commonConsts?.edit : commonConsts?.new
   const { pathname } = useRouter()
+  const basePathname = pathname === '/'
+    ? commonConsts?.main_menu[1].path
+    : `${pathname}/`
   const href = {
-    pathname: pathname === '/' ? '/customers/[id]' : `${pathname}/[id]`,
+    pathname: `${basePathname}[id]`,
     query: { id: object?.id ?? 'new' }
   }
-  return <Link href={href} aria-labelledby={label} shallow={true}>
+  return <Link href={href} aria-labelledby={label}>
     <a className="btn btn-outline-primary btn-sm">
       {label}
     </a>

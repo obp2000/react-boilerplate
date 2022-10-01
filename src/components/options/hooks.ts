@@ -1,16 +1,15 @@
 // import {useEffect, useLayoutEffect} from 'react'
 import { useRouter } from 'next/dist/client/router'
 import { useGetOptionsQuery } from './apiSlice'
-import type { OptionsAndCommonConsts } from './apiSlice'
+import type { AnyOptionsAndCommonConsts } from '../../../interfaces'
 
-export type OptionsOueryResult = OptionsAndCommonConsts & {
+export type OptionsOueryResult = AnyOptionsAndCommonConsts & {
   isLoadingOptions: boolean
   isFetchingOptions: boolean
 }
 
 export const useOptionsOuery = (url: string) => {
-  const router = useRouter()
-  const { isFallback } = router
+  const { isFallback } = useRouter()
   return useGetOptionsQuery(url, {
     skip: isFallback,
     selectFromResult: ({

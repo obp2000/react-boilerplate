@@ -1,17 +1,12 @@
 import React from 'react'
 import ShortName from '../customers/ShortName'
 import Date from '../Shared/date'
-import { Order } from '../../../interfaces'
-import { useOptionsOuery } from '../options/hooks'
+import type { Order, OrderOptions, TableRowType } from '../../../interfaces'
 
-type Props = {
-	object: Order
-	indexUrl: string
-}
-
-const TableRow = ({ object, indexUrl }: Props) => {
-	const { options } = useOptionsOuery(indexUrl)
-	return <>
+const TableRow = ({
+	object,
+	options
+}: TableRowType<Order, OrderOptions>) => <>
 		<td scope="row">
 			{object.id}
 		</td>
@@ -29,6 +24,5 @@ const TableRow = ({ object, indexUrl }: Props) => {
 			<Date dateString={object.updated_at} />
 		</td>
 	</>
-}
 
 export default TableRow

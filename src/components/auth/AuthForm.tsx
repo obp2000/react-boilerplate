@@ -5,28 +5,16 @@ import { useGetOptionsQuery } from '../options/apiSlice'
 // import { useOptionsOuery } from '../options/hooks'
 import { selectAuthModal } from './selectors'
 import AuthFormRender from './AuthFormRender'
-
-import {
+import type {
   LoginFormValues,
   RegisterFormValues,
+  LoginFormConfig,
+  RegisterFormConfig,
 } from '../../../interfaces/auth'
-import {
-  CommonConsts
-} from '../../../interfaces'
-import type { LoginFormConfig, RegisterFormConfig } from './hooks'
+import type { CommonConstsType } from '../../../interfaces'
 
-type FormValues = LoginFormValues & RegisterFormValues
-
-type LoginProps = LoginFormConfig & {
-  commonConsts?: CommonConsts,
-}
-
-type RegisterProps = RegisterFormConfig & {
-  commonConsts?: CommonConsts,
-}
-
-function AuthForm(props: LoginProps): JSX.Element
-function AuthForm(props: RegisterProps): JSX.Element
+function AuthForm(props: LoginFormConfig & CommonConstsType): JSX.Element
+function AuthForm(props: RegisterFormConfig & CommonConstsType): JSX.Element
 function AuthForm({
   indexUrl,
   name,
@@ -52,7 +40,8 @@ function AuthForm({
     isProcessing,
     name,
     validate: validate(commonConsts?.error_messages),
-    onSubmit: (values: FormValues) => authAction(values),
+    onSubmit: (values: LoginFormValues & RegisterFormValues) =>
+      authAction(values),
     render: AuthFormRender,
     submitButtonLabel,
   }

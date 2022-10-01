@@ -1,7 +1,4 @@
 import React from 'react'
-import createDecorator from 'final-form-submit-listener'
-import type { Decorator } from 'final-form'
-import type { FormProps } from 'react-final-form'
 import {
   getProducts as getObjects,
   useGetProductQuery as useGetObjectQuery,
@@ -17,17 +14,33 @@ import {
   metersInRoll,
   prices,
 } from './calculator'
-// import { useObjectsTable } from '../objectsTable/hooks'
 import ProductName from './ProductName'
 import TableRow from './TableRow'
 import TableLabels from './TableLabels'
-import {
+import type {
   Product,
   ProductFormValues,
-  ProductOptions
+  ProductOptions,
+  ProductWithOptions,
 } from '../../../interfaces'
 
-export const initFormValues: ProductFormValues = {
+export const indexUrl = '/products/'
+
+export const objectsTableConfig = {
+  indexUrl,
+  getObjects,
+  TableRow,
+  TableLabels,
+  useDeleteObjectMutation,
+}
+
+export const calculatedFields = [
+  'density_for_count',
+  'meters_in_roll',
+  'prices',
+]
+
+export const initFormValues = {
   id: undefined,
   name: undefined,
   product_type: undefined,
@@ -52,68 +65,10 @@ export const initFormValues: ProductFormValues = {
   consts: undefined,
 }
 
-export const indexUrl = '/products/'
-
-export type ProductsTableConfig = {
-  indexUrl: string
-  getObjects: typeof getObjects
-  TableRow: typeof TableRow
-  TableLabels: typeof TableLabels
-  useDeleteObjectMutation: typeof useDeleteObjectMutation
-}
-
-export const objectsTableConfig = {
-  indexUrl,
-  getObjects,
-  TableRow,
-  TableLabels,
-  useDeleteObjectMutation,
-}
-
-export const calculatedFields = [
-  'density_for_count',
-  'meters_in_roll',
-  'prices',
-]
-
-const deleteValues = [
-  'get_product_type_display',
-  'get_threads_display',
-  'get_contents_display',
-  'created_at',
-  'updated_at',
-  'consts',
-  ...calculatedFields
-]
-
-const preSubmitAction = (values: ProductFormValues): void => {
-  if (values.new_image) {
-    values.image = values.new_image
-    delete values.new_image
-  } else {
-    delete values.image
-  }
-  if (values.product_type) {
-    values.product_type_id = values.product_type
-    delete values.product_type
-  }
-  deleteValues.map((deleteValue) => {
-    delete values[deleteValue as keyof ProductFormValues]
-  })
-  values.toFormData = true
-}
-
-type ProductWithOptions = {
-  object?: Product
-  options?: ProductOptions
-}
-
-const formInitialValues = ({
-  object,
-  options
-}: ProductWithOptions): ProductFormValues => {
+const formInitialValues = ({ object, options }: ProductWithOptions) => {
+  let { image, ...objectMod } = object ?? {}
   let objectValues: ProductFormValues = {
-    ...object,
+    ...objectMod,
     consts: options?.Consts,
   }
   objectValues = {
@@ -125,38 +80,14 @@ const formInitialValues = ({
   return objectValues
 }
 
-const submitListener: Decorator = createDecorator({
-  beforeSubmit: (form: FormProps) => {
-    preSubmitAction(form.getState().values)
-  },
-})
-
-const formDecorators: Decorator[] = [calculator, submitListener]
-
 // const formDecorators = (options: ProductOptions): Decorator[] =>
-//   [calculator(options), submitListener]
+//   [calculator(options)]
 
-const mutators = {}
-
-export type ProductFormConfig = {
-  indexUrl: string
-  useGetObjectQuery: typeof useGetObjectQuery
-  formInitialValues: typeof formInitialValues
-  formDecorators: typeof formDecorators
-  mutators: typeof mutators
-  validate: typeof validate
-  useUpdateObjectMutation: typeof useUpdateObjectMutation
-  useCreateObjectMutation: typeof useCreateObjectMutation
-  objectFormRender: typeof objectFormRender
-  calculatedFields: typeof calculatedFields
-}
-
-export const objectFormConfig: ProductFormConfig = {
+export const objectFormConfig = {
   indexUrl,
   useGetObjectQuery,
   formInitialValues,
-  formDecorators,
-  mutators,
+  formDecorators: [calculator],
   validate,
   useUpdateObjectMutation,
   useCreateObjectMutation,
@@ -175,10 +106,22 @@ const dropdownListTextField = ({
     getContentsDisplay,
     name]
 
-export const useDropdown = (options: ProductOptions) => ({
+export const useDropdown = (options: ProductOptions | undefined) => ({
   textField: dropdownListTextField,
   dataKey: 'id',
   searchPath: indexUrl,
   renderValue: ({ item }: { item: Product }) =>
     <ProductName object={item} options={options} />,
 })
+
+
+
+// const deleteValues = [
+//   'get_product_type_display',
+//   'get_threads_display',
+//   'get_contents_display',
+//   'created_at',
+//   'updated_at',
+//   'consts',
+//   ...calculatedFields
+// ]

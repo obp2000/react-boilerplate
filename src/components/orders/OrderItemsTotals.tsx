@@ -2,13 +2,9 @@ import React from 'react'
 import { Field } from 'react-final-form'
 import Input from '../formInput/Input'
 import OrderItemsTotalText from './OrderItemsTotalText'
-import { OrderOptions } from '../../../interfaces'
+import { OrderOptionsType } from '../../../interfaces'
 
-type Props = {
-    options: OrderOptions
-}
-
-const OrderItemsTotals = (props: Props): JSX.Element => <tr>
+const OrderItemsTotals = (props: OrderOptionsType): JSX.Element => <tr>
     <td colSpan={3}>
         <OrderItemsTotalText {...props} />
     </td>

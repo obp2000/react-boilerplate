@@ -1,5 +1,5 @@
 import { apiSlice } from '../../services/apiSlice'
-import {
+import type {
   Login,
   LoginFormValues,
   Register,
@@ -34,17 +34,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: values,
       }),
-      // async queryFn(args, { dispatch }, extraOptions, baseQuery) {
-      //     const result = await baseQuery({
-      //         url: '/register/',
-      //         method: 'POST',
-      //         body: args
-      //     })
-      //     if (result.error) return result
-      //     dispatch(setAuthenticated(result.data))
-      //     dispatch(getUser.initiate())
-      //     return result
-      // },
       invalidatesTags: (_, error) => error ? [] : ['Options', 'CurrentUser'],
     }),
     signOut: builder.mutation<SignOut, void>({
@@ -59,7 +48,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       ],
     }),
   }),
-  overrideExisting: true,
+  // overrideExisting: true,
 })
 
 export const {

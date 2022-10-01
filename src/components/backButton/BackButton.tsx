@@ -1,13 +1,9 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Button } from 'reactstrap'
-import { CommonConsts } from '../../../interfaces'
+import type { CommonConstsType } from '../../../interfaces'
 
-type Props = {
-  commonConsts?: CommonConsts
-}
-
-const BackButton = ({ commonConsts }: Props): JSX.Element => {
+const BackButton = ({ commonConsts }: CommonConstsType): JSX.Element => {
   const router = useRouter()
   return <Button
     color='primary'

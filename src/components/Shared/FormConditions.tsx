@@ -3,7 +3,7 @@ import { Field } from 'react-final-form'
 
 type ConditionIsProps = {
   when: string
-  'is': boolean
+  'is'?: boolean
   children: ReactNode
 }
 
@@ -18,7 +18,7 @@ export const ConditionIs = ({
 
 type ConditionGtProps = {
   when: string
-  gt: number
+  gt?: number
   children: ReactNode
 }
 
@@ -28,12 +28,12 @@ export const ConditionGt = ({
   children
 }: ConditionGtProps): JSX.Element => <Field name={when}
   subscription={{ value: true }}>
-    {({ input: { value } }) => (value > gt ? children : null)}
+    {({ input: { value } }) => (value > Number(gt) ? children : null)}
   </Field>
 
 type ConditionGteProps = {
   when: string
-  gte: number
+  gte?: number
   children: ReactNode
 }
 
@@ -43,5 +43,5 @@ export const ConditionGte = ({
   children
 }: ConditionGteProps) => <Field name={when}
   subscription={{ value: true }}>
-    {({ input: { value } }) => (value >= gte ? children : null)}
+    {({ input: { value } }) => (value >= Number(gte) ? children : null)}
   </Field>

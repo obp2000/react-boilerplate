@@ -2,13 +2,9 @@ import React from 'react'
 import { Field } from 'react-final-form'
 import Input from '../formInput/Input'
 import Label from '../inputLabel/Label'
-import { OrderOptions } from '../../../interfaces'
+import { OrderOptionsType } from '../../../interfaces'
 
-type Props = {
-    options: OrderOptions
-}
-
-const Samples = ({ options }: Props): JSX.Element => <tr>
+const Samples = ({ options }: OrderOptionsType): JSX.Element => <tr>
     <td colSpan={5}>
         <Label name="samples" {...{ options }} />
     </td>

@@ -4,13 +4,9 @@ import type { FormRenderProps } from 'react-final-form'
 import { Form } from 'reactstrap'
 import Input from '../formInput/Input'
 import SubmitButton from '../submitButton/SubmitButton'
-import { CommonConsts } from '../../../interfaces'
+import { CommonConstsType } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  commonConsts?: CommonConsts
-}
-
-const SearchFormRender = (props: Props) => {
+const SearchFormRender = (props: FormRenderProps & CommonConstsType) => {
   return <Form onSubmit={props.handleSubmit}
     inline='true'
     className='d-flex mt-1'>

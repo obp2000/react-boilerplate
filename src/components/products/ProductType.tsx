@@ -1,12 +1,7 @@
 import React from 'react'
-import { Product, ProductOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces'
 
-type Props = {
-  object: Product
-  options?: ProductOptions
-}
-
-const ProductType = ({ object }: Props) => {
+const ProductType = ({ object }: ProductWithOptions) => {
   if (!object?.get_product_type_display) {
     return null
   }

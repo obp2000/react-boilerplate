@@ -9,17 +9,11 @@ import Header from '../objectForm/Header'
 import Input from '../formInput/Input'
 import ProductImage from './ProductImage'
 import {
-  Product,
-  ProductOptions,
-  CommonConsts
+  ProductWithOptions,
+  CommonConstsType,
 } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-  object?: Product
-  options?: ProductOptions
-  commonConsts?: CommonConsts
-  // handleSubmit: (event: FormEvent<HTMLFormElement>) => void
-}
+type Props = FormRenderProps & CommonConstsType & ProductWithOptions
 
 const PropductFormRender = (props: Props): JSX.Element => {
   const options = { options: props.options }
@@ -81,7 +75,7 @@ const PropductFormRender = (props: Props): JSX.Element => {
             </Col>
             <Col sm={3}>
               <Field
-                name="new_image"
+                name="image"
                 type='file'
                 component={FloatingFormGroup}
                 {...options}

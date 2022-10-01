@@ -1,14 +1,12 @@
-import { objectToFormData } from 'object-to-formdata'
 import { apiSlice } from '../../services/apiSlice'
-import {
-  setAll,
-  objectsInitialState,
-  ObjectsWithTotals,
-} from '../../services/entityAdapter'
+import { indexUrl as url } from './hooks'
+import { setAll, objectsInitialState, } from '../../services/entityAdapter'
 import {
   Order as GetObject,
   OrderFormValues as ObjectFormValues,
   RawObjectsWithTotals,
+  ObjectsWithTotals,
+  OrderItemFormValues,
 } from '../../../interfaces'
 
 type GetObjectsArg = {
@@ -19,17 +17,24 @@ type GetObjectArg = {
   id?: number
 }
 
-type MutateObjectArg = ObjectFormValues & {
-  toFormData?: boolean
-}
-
 type DeleteObjectArg = {
   id: number
 }
 
-const url = '/orders/'
-
 const type = 'Orders'
+
+const orderItemsMod = (orderItems: OrderItemFormValues[]) => orderItems.map(({
+  product,
+  cost,
+  weight,
+  _destroy,
+  ...orderItem
+}) => {
+  if (product) {
+    orderItem.product_id = product.id
+  }
+  return orderItem
+})
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -40,48 +45,106 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         ...rest
       }),
       providesTags: (result) =>
+        // is result available?
         result
-          ? [...result.ids.map((id) => ({ type, id })), { type, id: 'LIST' },]
+          ? // successful query
+          [
+            ...result.ids.map((id) => ({ type, id } as const)),
+            { type, id: 'LIST' },
+          ]
           : [{ type, id: 'LIST' }],
+    }),
+    createOrder: builder.mutation<GetObject, ObjectFormValues>({
+      query: ({
+        id,
+        customer,
+        samples_weight,
+        packet_weight,
+        gift_weight,
+        order_items_amount,
+        order_items_cost,
+        order_items_weight,
+        created_at,
+        updated_at,
+        consts,
+        post_cost_with_packet,
+        post_discount,
+        total_postals,
+        total_sum,
+        total_weight,
+        ...values
+      }) => {
+        if (customer) {
+          values.customer_id = customer.id
+        }
+        if (values.order_items) {
+          values.order_items = orderItemsMod(values.order_items)
+        }
+        return {
+          url,
+          method: 'POST',
+          body: values,
+        }
+      },
+      invalidatesTags: [{ type, id: 'LIST' }],
     }),
     getOrder: builder.query<GetObject, GetObjectArg>({
       query: ({ id }) => ({ url: `${url}${id}/` }),
-      providesTags: (_, __, { id }) => [{ type, id }],
+      // providesTags: (_, __, { id }) => [{ type, id }],
     }),
-    createOrder: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({ toFormData, ...values }) => ({
-        url,
-        method: 'POST',
-        body: toFormData ? objectToFormData(values) : values,
-      }),
-      invalidatesTags: [{ type, id: 'LIST' }],
-    }),
-    updateOrder: builder.mutation<GetObject, MutateObjectArg>({
-      query: ({ id, toFormData, ...values }) => ({
-        url: `${url}${id}/`,
-        method: 'PUT',
-        body: toFormData ? objectToFormData(values) : values,
-      }),
-      onQueryStarted({ id, toFormData, ...values },
-        { dispatch, queryFulfilled }) {
+    updateOrder: builder.mutation<GetObject, ObjectFormValues>({
+      query: ({
+        id,
+        customer,
+        samples_weight,
+        packet_weight,
+        gift_weight,
+        order_items_amount,
+        order_items_cost,
+        order_items_weight,
+        created_at,
+        updated_at,
+        // order_items: orderItems,
+        consts,
+        post_cost_with_packet,
+        post_discount,
+        total_postals,
+        total_sum,
+        total_weight,
+        ...values
+      }) => {
+        if (customer) {
+          values.customer_id = customer.id
+        }
+        if (values.order_items) {
+          values.order_items = orderItemsMod(values.order_items)
+        }
+        return {
+          url: `${url}${id}/`,
+          method: 'PUT',
+          body: values,
+        }
+      },
+      onQueryStarted(patch, { dispatch, queryFulfilled }) {
         // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
+        patch.updated_at = new Date().toISOString()
         const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getOrder',
-            { id },
-            (draftObject) => ({ ...draftObject, ...values })
+            { id: patch.id },
+            (draft) => Object.assign(draft, patch)
           )
         )
         queryFulfilled.catch(undo)
       },
-      invalidatesTags: (_, __) => [{ type, id: 'LIST' }],
+      invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
     deleteOrder: builder.mutation<void, DeleteObjectArg>({
       query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_, __, { id }) => [{ type, id }, { type, id: 'LIST' }],
+      invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
   }),
 })

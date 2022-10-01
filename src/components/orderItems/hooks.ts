@@ -2,20 +2,9 @@ import { cost, weight } from '../orders/calculator'
 import {
   OrderItem,
   OrderItemFormValues,
-  ProductOptions
 } from '../../../interfaces'
 
-type OrderItemProductOptionsProps = {
-  product: {
-    children: ProductOptions
-  }
-}
-
-export const orderItemProductOptions = (props: OrderItemProductOptionsProps) =>
-  props?.product?.children
-
 export const initOrderItem = {
-  id: undefined,
   product: undefined,
   price: 0,
   amount: 0,

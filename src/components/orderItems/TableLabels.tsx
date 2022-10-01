@@ -1,16 +1,9 @@
 import React from 'react'
-import type { FormRenderProps } from 'react-final-form'
-import { orderOrderItemOptions } from '../orders/hooks'
 import AddOrderItemButton from './AddOrderItemButton'
-import { OrderOptions, CommonConsts } from '../../../interfaces'
+import { OrderItemFormRender } from '../../../interfaces'
 
-type Props = FormRenderProps & {
-    options: OrderOptions
-    commonConsts: CommonConsts
-}
-
-const TableLabels = (props: Props): JSX.Element => {
-    const options = orderOrderItemOptions(props.options)
+const TableLabels = (props: OrderItemFormRender): JSX.Element => {
+    const options = props.options?.order_items?.child?.children
     return <tr>
         <th scope="col">
             №
