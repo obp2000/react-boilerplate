@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProductWithOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces/products'
 
 const Contents = ({ object }: ProductWithOptions) => {
   if (object?.contents == null) {

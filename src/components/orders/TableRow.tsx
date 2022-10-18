@@ -1,12 +1,13 @@
-import React from 'react'
+import { useContext } from 'react'
+import type { TableRowType } from '../../../interfaces/objectsTable'
+import type { Order, OrderOptionsType } from '../../../interfaces/orders'
 import ShortName from '../customers/ShortName'
-import Date from '../Shared/date'
-import type { Order, OrderOptions, TableRowType } from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
+import Date from '../Shared/Date'
 
-const TableRow = ({
-	object,
-	options
-}: TableRowType<Order, OrderOptions>) => <>
+const TableRow = ({ object }: TableRowType<Order>) => {
+	const { options } = useContext(OptionsContext) as OrderOptionsType
+	return <>
 		<td scope="row">
 			{object.id}
 		</td>
@@ -24,5 +25,6 @@ const TableRow = ({
 			<Date dateString={object.updated_at} />
 		</td>
 	</>
+}
 
 export default TableRow

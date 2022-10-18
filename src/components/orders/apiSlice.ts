@@ -1,29 +1,15 @@
+import type {
+  GetObjectsArg, ObjectsWithTotals, RawObjectsWithTotals
+} from '../../../interfaces/api'
+import type { OrderItem } from '../../../interfaces/orderItems'
+import type { Order } from '../../../interfaces/orders'
 import { apiSlice } from '../../services/apiSlice'
-import { indexUrl as url } from './hooks'
-import { setAll, objectsInitialState, } from '../../services/entityAdapter'
-import {
-  Order as GetObject,
-  OrderFormValues as ObjectFormValues,
-  RawObjectsWithTotals,
-  ObjectsWithTotals,
-  OrderItemFormValues,
-} from '../../../interfaces'
-
-type GetObjectsArg = {
-  params?: Object
-}
-
-type GetObjectArg = {
-  id?: number
-}
-
-type DeleteObjectArg = {
-  id: number
-}
+import { objectsInitialState, setAll } from '../../services/entityAdapter'
+import { indexUrl as url } from './config'
 
 const type = 'Orders'
 
-const orderItemsMod = (orderItems: OrderItemFormValues[]) => orderItems.map(({
+const orderItemsMod = (orderItems: OrderItem[]) => orderItems.map(({
   product,
   cost,
   weight,
@@ -33,7 +19,7 @@ const orderItemsMod = (orderItems: OrderItemFormValues[]) => orderItems.map(({
   if (product) {
     orderItem.product_id = product.id
   }
-  return orderItem
+  return orderItem as OrderItem
 })
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
@@ -54,7 +40,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           ]
           : [{ type, id: 'LIST' }],
     }),
-    createOrder: builder.mutation<GetObject, ObjectFormValues>({
+    createOrder: builder.mutation<Order, Partial<Order>>({
       query: ({
         id,
         customer,
@@ -88,11 +74,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: [{ type, id: 'LIST' }],
     }),
-    getOrder: builder.query<GetObject, GetObjectArg>({
+    getOrder: builder.query<Order, { id: number }>({
       query: ({ id }) => ({ url: `${url}${id}/` }),
       // providesTags: (_, __, { id }) => [{ type, id }],
     }),
-    updateOrder: builder.mutation<GetObject, ObjectFormValues>({
+    updateOrder: builder.mutation<Order, Order>({
       query: ({
         id,
         customer,
@@ -125,13 +111,12 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           body: values,
         }
       },
-      onQueryStarted(patch, { dispatch, queryFulfilled }) {
-        // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
+      onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
         patch.updated_at = new Date().toISOString()
         const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getOrder',
-            { id: patch.id },
+            { id },
             (draft) => Object.assign(draft, patch)
           )
         )
@@ -139,7 +124,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
-    deleteOrder: builder.mutation<void, DeleteObjectArg>({
+    deleteOrder: builder.mutation<void, { id: number }>({
       query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',

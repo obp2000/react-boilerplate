@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col } from 'reactstrap'
-import { User, UserWithOptions } from '../../../interfaces'
+import type { User, UserWithOptions } from '../../../interfaces/users'
 
 type Props = UserWithOptions & {
 	fieldName: string

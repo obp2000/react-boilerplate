@@ -1,67 +1,66 @@
-import { useFieldProps, getName } from '../Shared/fieldProps'
-import type { InputType } from 'reactstrap/types/lib/Input'
-import type { FieldMetaState } from 'react-final-form'
-import type { HtmlAttrs, FieldAttrs } from '../../../interfaces'
+import type { FormEventHandler } from 'react'
+import type {
+  FieldInputProps, FieldMetaState, FieldRenderProps
+} from 'react-final-form'
+import type {
+  FieldAttrs,
+  FilesHandlerEvent
+} from '../../../interfaces/input'
+import { useMapFieldProps } from '../options/hooks'
 
-export const invalid =
-  ({ error }: FieldMetaState<string | number | undefined>) =>
-    (!!error ? true : false)
+const invalid = ({ error }: FieldMetaState<any>): boolean =>
+  !!error ? true : false
 
-export const valid =
-  ({ visited,
-    dirty,
-    active,
-    error
-  }: FieldMetaState<string | number | undefined>) =>
-    (visited && dirty && !active && !error ? true : false)
+const valid = ({
+  visited,
+  dirty,
+  active,
+  error
+}: FieldMetaState<any>): boolean =>
+  visited && dirty && !active && !error ? true : false
 
-export const useFieldAttrs = (fieldAttrs: FieldAttrs) => {
-  const props = useFieldProps(fieldAttrs)
-  const name = getName(fieldAttrs)
-  const type: InputType = fieldAttrs.input?.type as InputType
-  const label = fieldAttrs.label ?? props?.label
-  const helpText = fieldAttrs.helpText ?? props?.help_text
-  let attrs: HtmlAttrs = {
-    name,
-    id: name,
-    type,
-    required: fieldAttrs.required ?? props?.required,
-    readOnly: fieldAttrs.readOnly ?? props?.read_only,
-    label,
-    placeholder: label,
-    'aria-label': label,
-  }
-  if (type === 'number') {
-    attrs.min = fieldAttrs.min ?? props?.min_value
-    attrs.max = fieldAttrs.max ?? props?.max_value
-  }
-  if (helpText) {
-    attrs.helpText = helpText
-  }
-  if ([undefined, 'text', 'number', 'password', 'email',].includes(type) &&
-    fieldAttrs.meta) {
-    attrs.invalid = invalid(fieldAttrs.meta)
-    attrs.valid = valid(fieldAttrs.meta)
-  }
-  if (type === 'file') {
-    attrs.accept = '.jpg, .png, .jpeg'
-  }
-  return attrs
-}
+const isValidatedField = (type: string | undefined): boolean =>
+  [undefined, 'text', 'number', 'password', 'email',].includes(type)
 
-export type FilesHandler =
-  ({ target: { files } }: { target: { files: FileList | null } }) => void
+const validationProps = (meta: FieldMetaState<any>) => ({
+  invalid: invalid(meta),
+  valid: valid(meta),
+})
 
-export const useInput = (props: FieldAttrs) => {
-  const { input, meta, options, ...rest } = props
-  if (input.type === 'file') {
-    delete input.value
-    const onChange: FilesHandler = ({ target }) => {
-      if (target?.files) {
-        return input.onChange(target.files[0])
-      }
+const filesHandler = (input: FieldInputProps<any>) =>
+  ({ target }: FilesHandlerEvent) => {
+    if (target?.files) {
+      return input?.onChange(target.files[0])
     }
-    rest.onChange = onChange
   }
-  return { ...input, ...useFieldAttrs(props), ...rest }
+
+const fileTypeProps = (input: FieldInputProps<any>) => ({
+  value: undefined,
+  onChange: filesHandler(input) as FormEventHandler,
+  accept: '.jpg, .png, .jpeg',
+})
+
+export const useFieldProps = ({
+  input,
+  meta,
+  // options,
+  ...props
+}: FieldAttrs): Partial<FieldRenderProps<any>> => {
+  let {
+    type: typeFromFieldProps,
+    helpText,
+    ...result
+  } = useMapFieldProps({ input, ...props })
+  const type = input?.type ?? typeFromFieldProps
+  result = { type: typeFromFieldProps, ...result, ...input }
+  if (type === 'file') {
+    result = { ...result, ...fileTypeProps(input) }
+  }
+  if (meta && isValidatedField(type)) {
+    result = { ...result, ...validationProps(meta) }
+  }
+  return {
+    ...result,
+    ...props,
+  }
 }

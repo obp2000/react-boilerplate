@@ -1,14 +1,17 @@
-import React from 'react'
+import { useContext } from 'react'
+import type { OrderOptionsType } from '../../../interfaces/orders'
+import { OptionsContext } from '../layout/Layout'
 import { ConditionGte } from '../Shared/FormConditions'
-import { OrderOptionsType } from '../../../interfaces'
 
-const OrderItemsTotalText =
-    ({ options }: OrderOptionsType): JSX.Element => <span>
+const OrderItemsTotalText = (): JSX.Element => {
+    const { options } = useContext(OptionsContext) as OrderOptionsType
+    return <span>
         {options?.order_items_cost.label}
-        <ConditionGte when="order_items_cost"
-            gte={options?.Consts?.SUM_FOR_GIFT}>
+        <ConditionGte
+            when="order_items_cost" gte={options?.Consts?.SUM_FOR_GIFT}>
             {' - '}{options?.need_gift.label}
         </ConditionGte>
     </span>
+}
 
 export default OrderItemsTotalText

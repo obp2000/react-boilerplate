@@ -1,12 +1,11 @@
-import React from 'react'
-import { FormGroup, Col } from 'reactstrap'
-import Input from '../formInput/Input'
+import { Col, FormGroup } from 'reactstrap'
+import type { FieldAttrs } from '../../../interfaces/input'
 import Label from '../inputLabel/Label'
-import type { AnyFieldAttrs, } from '../../../interfaces'
+import Input from './Input'
 
-const RowFormGroup = (props: AnyFieldAttrs) =>
+const RowFormGroup = (props: FieldAttrs) =>
   <FormGroup row>
-    <Label {...props} labelColSize={4} />
+    <Label {...props} sm={4} />
     <Col>
       <Input {...props} />
     </Col>

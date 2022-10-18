@@ -1,18 +1,13 @@
-import React from 'react'
 import { Field } from 'react-final-form'
 import Input from '../formInput/Input'
 import Label from '../inputLabel/Label'
-import { OrderOptionsType } from '../../../interfaces'
 
-const Samples = ({ options }: OrderOptionsType): JSX.Element => <tr>
+const Samples = (): JSX.Element => <tr>
     <td colSpan={5}>
-        <Label name="samples" {...{ options }} />
+        <Label name="samples" />
     </td>
     <td>
-        <Field name="samples_weight"
-            type="number"
-            disabled
-            component={Input} />
+        <Field name="samples_weight" disabled component={Input} />
     </td>
 </tr>
 

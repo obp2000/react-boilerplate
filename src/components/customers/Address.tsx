@@ -1,5 +1,5 @@
 import React from 'react'
-import type { CustomerWithOptions } from '../../../interfaces'
+import type { CustomerWithOptions } from '../../../interfaces/customers'
 
 const Address = ({
   object,

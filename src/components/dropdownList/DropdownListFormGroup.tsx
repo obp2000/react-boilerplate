@@ -1,13 +1,10 @@
-import React from 'react'
-import { FormGroup, Col } from 'reactstrap'
-import DropdownList from './DropdownList'
+import { Col, FormGroup } from 'reactstrap'
+import type { DropdownListAttrs } from '../../../interfaces/dropdownList'
 import Label from '../inputLabel/Label'
-import type { DropdownListAttrs } from '../../../interfaces'
+import DropdownList from './DropdownList'
 
-const DropdownListFormGroup = (
-  props: DropdownListAttrs
-): JSX.Element => <FormGroup row>
-    <Label {...props} labelColSize={2} />
+const DropdownListFormGroup = (props: DropdownListAttrs) => <FormGroup row>
+    <Label {...props} sm={2} />
     <Col>
       <DropdownList {...props} />
     </Col>

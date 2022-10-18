@@ -1,14 +1,16 @@
-import React from 'react'
-import { NavbarBrand, Badge } from 'reactstrap'
-import type { CommonConstsType } from '../../../interfaces'
+import { useContext } from 'react'
+import { Badge, NavbarBrand } from 'reactstrap'
+import { OptionsContext } from '../layout/Layout'
 
-const NavBarBrand =
-  ({ commonConsts }: CommonConstsType) => <NavbarBrand href="/">
+const NavBarBrand = () => {
+  const { commonConsts } = useContext(OptionsContext)
+  return <NavbarBrand href="/">
     <h3>
       <Badge pill size='lg'>
         {commonConsts?.brand_text}
       </Badge>
     </h3>
   </NavbarBrand>
+}
 
 export default NavBarBrand

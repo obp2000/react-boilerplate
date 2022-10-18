@@ -1,26 +1,25 @@
+import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query'
 import { useRouter } from 'next/dist/client/router'
-import { skipToken } from '@reduxjs/toolkit/query'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
-import { toastSuccess, toastError } from '../Shared/toast'
-import { useOptionsOuery } from '../options/hooks'
-import {
-  isFetchBaseQueryError,
-  isErrorWithMessage
-} from '../../services/helpers'
+import { useContext } from 'react'
 import type {
   FormConfig as CustomerFormConfig
 } from '../../../interfaces/customers'
+import type { SerializedError } from '../../../interfaces/errors'
 import type {
-  FormConfig as ProductFormConfig
-} from '../../../interfaces/products'
+  AnyObjectFormValues,
+  ObjectFormProps
+} from '../../../interfaces/objectForm'
 import type {
   FormConfig as OrderFormConfig
 } from '../../../interfaces/orders'
 import type {
-  SerializedError,
-  AnyObjectFormValues,
-  ObjectFormProps,
-} from '../../../interfaces'
+  FormConfig as ProductFormConfig
+} from '../../../interfaces/products'
+import {
+  isErrorWithMessage, isFetchBaseQueryError
+} from '../../services/helpers'
+import { OptionsContext } from '../layout/Layout'
+import { toastError, toastSuccess } from '../notifications/toast'
 
 export function useObjectForm(props: CustomerFormConfig): ObjectFormProps
 export function useObjectForm(props: ProductFormConfig): ObjectFormProps
@@ -37,7 +36,8 @@ export function useObjectForm({
   objectFormRender,
   calculatedFields,
 }: any): ObjectFormProps {
-  const { commonConsts, options } = useOptionsOuery(indexUrl)
+  // const { commonConsts, options } = useOptionsOuery(indexUrl)
+  const { commonConsts, options } = useContext(OptionsContext)
   const router = useRouter()
   const { query, isFallback } = router
   const id = query.id
@@ -63,8 +63,8 @@ export function useObjectForm({
   const onSubmit = (values: AnyObjectFormValues) =>
     mutateObject(values).unwrap().
       then(() => {
-        router.push(indexUrl)
         toastSuccess(commonConsts?.successfully)
+        router.push(indexUrl)
       }).
       catch((err: FetchBaseQueryError | SerializedError): void => {
         if (isFetchBaseQueryError(err)) {
@@ -91,8 +91,8 @@ export function useObjectForm({
     isErrorGettingObject,
     calculatedFields,
     object,
-    options,
-    commonConsts,
+    // options,
+    // commonConsts,
   }
 }
 

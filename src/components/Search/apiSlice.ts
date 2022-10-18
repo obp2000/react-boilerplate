@@ -1,44 +1,11 @@
 import { apiSlice } from '../../services/apiSlice'
-import {
-  Customer,
-  Product,
-  City,
-  RawObjectsWithTotals,
-} from '../../../interfaces'
-
-type SearchObjectsArg = {
-  url: string,
-  params: {
-    term: string
-    page?: number
-  }
-}
-
-type SearchResults = Customer[] | Product[] | City[]
-
-// type RawCustomers = {
-//   totalCount: number
-//   totalPages: number
-//   results: Customer[]
-// }
-
-// type RawProducts = {
-//   totalCount: number
-//   totalPages: number
-//   results: Product[]
-// }
-
-// type RawCities = {
-//   totalCount: number
-//   totalPages: number
-//   results: City[]
-// }
-
-// type RawSearchResults = RawCustomers | RawProducts | RawCities
+import type { SearchResult } from '../../../interfaces/dropdownList'
+import type { RawObjectsWithTotals } from '../../../interfaces/api'
+import type { SearchObjectsArg } from '../../../interfaces/search'
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    searchObjects: builder.query<SearchResults, SearchObjectsArg>({
+    searchObjects: builder.query<SearchResult[], SearchObjectsArg>({
       query: ({
         url,
         params,

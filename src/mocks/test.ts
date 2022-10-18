@@ -1,11 +1,8 @@
 import { test as base, expect } from "@playwright/test"
 import { createServer, MockServiceWorker } from "playwright-msw"
-
 import handlers from "./handlers"
 
-const test = base.extend<{
-  worker: MockServiceWorker;
-}>({
+const test = base.extend<{ worker: MockServiceWorker }>({
   worker: [
     async ({ page }, use) => {
       const server = await createServer(page, ...handlers)

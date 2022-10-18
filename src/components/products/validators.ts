@@ -1,9 +1,13 @@
-import { notBlank } from '../Shared/validators'
-import { ProductFormValues, ErrorMessages } from '../../../interfaces'
+import { objectFormConfig } from './config'
+import { notBlank } from '../validators/validators'
+import type { ErrorMessages } from '../../../interfaces/commonConsts'
+import type { Product } from '../../../interfaces/products'
 
 export const validate = (errorMessages: ErrorMessages | undefined) =>
-  (values: ProductFormValues) =>
-    notBlank(values, ['name', 'price'], errorMessages?.blank)
+  (values: Partial<Product>) => notBlank(values,
+    objectFormConfig.validatedFields.notBlank,
+    errorMessages?.blank
+  )
 
 
 // export const validate = ({

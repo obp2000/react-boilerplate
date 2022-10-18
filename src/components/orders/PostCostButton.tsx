@@ -1,21 +1,22 @@
-import React from 'react'
+import { useContext } from 'react'
+import { useForm, useFormState } from 'react-final-form'
 import { Button } from 'reactstrap'
-import type { FormRenderProps } from 'react-final-form'
-import { CommonConstsType } from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
 
-const PostCostButton = ({
-  form,
-  values,
-  commonConsts
-}: FormRenderProps & CommonConstsType): JSX.Element => <Button
-  name='post_cost_button'
-  color='primary'
-  outline
-  size='sm'
-  onClick={() => form?.mutators.postCostCount()}
-  disabled={!values?.customer?.city?.pindex || !values?.total_weight}
->
+const PostCostButton = () => {
+  const { commonConsts } = useContext(OptionsContext)
+  const { mutators } = useForm()
+  const { values } = useFormState()
+  return <Button
+    name='post_cost_button'
+    color='primary'
+    outline
+    size='sm'
+    onClick={() => mutators.postCostCount()}
+    disabled={!values?.customer?.city?.pindex || !values?.total_weight}
+  >
     {commonConsts?.count}
   </Button>
+}
 
 export default PostCostButton

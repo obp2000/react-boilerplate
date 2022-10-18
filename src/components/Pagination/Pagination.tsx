@@ -1,8 +1,7 @@
-import React from 'react'
-import { Pagination, PaginationItem } from 'reactstrap'
 import Link from 'next/link'
+import { Pagination, PaginationItem } from 'reactstrap'
+import type { TotalPages } from '../../../interfaces/pagination'
 import { usePagination } from './hooks'
-import type { TotalPages } from '../../../interfaces'
 
 const PaginationComp = (props: TotalPages): JSX.Element | null => {
   const pages = usePagination(props)
@@ -10,7 +9,7 @@ const PaginationComp = (props: TotalPages): JSX.Element | null => {
   return <Pagination>
     {pages.map(({ label, query, active }, key) =>
       <PaginationItem key={key} {...{ active }} >
-        <Link href={{ query }} replace shallow={true} >
+        <Link href={{ query }} replace shallow={true}>
           <a className='page-link'>
             {label}
           </a>

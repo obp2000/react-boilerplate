@@ -7,13 +7,10 @@ import {
   Button,
 } from 'reactstrap'
 import { confirmable, createConfirmation } from 'react-confirm'
-import type { MouseEvent } from 'react'
-import type { Confirmation } from '../../../interfaces'
-
-type ProceedButtonProps = {
-  label: string
-  onClick: (event: MouseEvent<HTMLButtonElement>) => void
-}
+import type {
+  Confirmation,
+  ProceedButtonProps
+} from '../../../interfaces/confirmation'
 
 const ProceedButton = ({
   label,

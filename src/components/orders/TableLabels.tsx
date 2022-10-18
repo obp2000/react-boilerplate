@@ -1,7 +1,9 @@
-import React from 'react'
-import type { OrderOptionsType } from '../../../interfaces'
+import { useContext } from 'react'
+import type { OrderOptionsType } from '../../../interfaces/orders'
+import { OptionsContext } from '../layout/Layout'
 
-const TableLabels = ({ options }: OrderOptionsType): JSX.Element | null => {
+const TableLabels = (): JSX.Element | null => {
+    const { options } = useContext(OptionsContext) as OrderOptionsType
     if (!options) { return null }
     return <>
         <th scope="col">

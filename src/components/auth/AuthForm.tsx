@@ -1,29 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Form } from 'react-final-form'
 import { useAppSelector } from '../hooks'
 import { useGetOptionsQuery } from '../options/apiSlice'
-// import { useOptionsOuery } from '../options/hooks'
 import { selectAuthModal } from './selectors'
 import AuthFormRender from './AuthFormRender'
+import { OptionsContext } from '../layout/Layout'
 import type {
   LoginFormValues,
   RegisterFormValues,
   LoginFormConfig,
   RegisterFormConfig,
 } from '../../../interfaces/auth'
-import type { CommonConstsType } from '../../../interfaces'
+// import type { CommonConstsType } from '../../../interfaces/commonConsts'
 
-function AuthForm(props: LoginFormConfig & CommonConstsType): JSX.Element
-function AuthForm(props: RegisterFormConfig & CommonConstsType): JSX.Element
+function AuthForm(props: LoginFormConfig): JSX.Element
+function AuthForm(props: RegisterFormConfig): JSX.Element
 function AuthForm({
   indexUrl,
   name,
   useAuthMutation,
   formFields,
   validate,
-  commonConsts,
-}: any): JSX.Element {
+}: any) {
   const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
+  const { commonConsts } = useContext(OptionsContext)
   const submitButtonLabel =
     isLogin ? commonConsts?.login : commonConsts?.register
   const {
@@ -33,8 +33,6 @@ function AuthForm({
   const options = data?.options
   const [authAction, { isLoading: isProcessing }] = useAuthMutation()
   const formAttrs = {
-    commonConsts,
-    options,
     formFields,
     isLoadingOptions,
     isProcessing,
@@ -45,7 +43,9 @@ function AuthForm({
     render: AuthFormRender,
     submitButtonLabel,
   }
-  return <Form {...formAttrs} />
+  return <OptionsContext.Provider value={{ options, commonConsts }}>
+    <Form {...formAttrs} />
+  </OptionsContext.Provider>
 }
 
 export default AuthForm

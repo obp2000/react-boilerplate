@@ -1,49 +1,46 @@
-import React from 'react'
-import { useAppSelector } from '../hooks'
+import { useContext } from 'react'
 import { Table } from 'reactstrap'
+import { useAppSelector } from '../hooks'
 // import Loader from 'react-loader'
-import { selectAuth } from '../auth/selectors'
-import DeleteObjectButton from '../deleteObjectButton/DeleteObjectButton'
-import Header from './Header'
-import LinkToNewOrEditObject from
-  '../linkToNewOrEditObject/LinkToNewOrEditObject'
-import { useOptionsOuery } from '../options/hooks'
-import { useObjects } from '../../services/entityAdapter'
-import Pagination from '../Pagination/Pagination'
 import type {
   TableConfig as CustomersTableConfig
 } from '../../../interfaces/customers'
-import type {
-  TableConfig as ProductsTableConfig
-} from '../../../interfaces/products'
+import type { TableOptions } from '../../../interfaces/options'
 import type {
   TableConfig as OrdersTableConfig
 } from '../../../interfaces/orders'
-import type { TableOptions } from '../../../interfaces'
+import type {
+  TableConfig as ProductsTableConfig
+} from '../../../interfaces/products'
+import { useObjects } from '../../services/entityAdapter'
+import { selectAuth } from '../auth/selectors'
+import DeleteObjectButton from '../deleteObjectButton/DeleteObjectButton'
+import { OptionsContext } from '../layout/Layout'
+import LinkToNewOrEditObject from '../linkToNewOrEditObject/LinkToNewOrEditObject'
+import Pagination from '../Pagination/Pagination'
+import Header from './Header'
 
 function ObjectsTable(props: CustomersTableConfig): JSX.Element
 function ObjectsTable(props: ProductsTableConfig): JSX.Element
 function ObjectsTable(props: OrdersTableConfig): JSX.Element
-function ObjectsTable(props: any): JSX.Element {
-  const {
-    indexUrl,
-    getObjects,
-    TableRow,
-    TableLabels,
-    useDeleteObjectMutation,
-  } = props
+function ObjectsTable({
+  getObjects,
+  TableRow,
+  TableLabels,
+  useDeleteObjectMutation,
+}: any) {
   const { isAuthenticated } = useAppSelector(selectAuth)
-  const { options, commonConsts } = useOptionsOuery(indexUrl)
+  const { options } = useContext(OptionsContext)
   const { allObjects, totalCount, totalPages } = useObjects(getObjects)
   return <>
-    <Header {...{ totalCount }} options={options as TableOptions} />
+    <Header {...{ totalCount }} />
     <Table size='sm' bordered striped hover className='table-secondary'>
       <thead className="thead-light">
         <tr>
-          <TableLabels {...{ options }} />
+          <TableLabels />
           {isAuthenticated && allObjects?.slice(0, 1).map((_: any,
             key: number): JSX.Element => <th scope="col" colSpan={2} key={key}>
-              <LinkToNewOrEditObject {...{ commonConsts }} />
+              <LinkToNewOrEditObject />
             </th>
           )}
         </tr>
@@ -52,14 +49,14 @@ function ObjectsTable(props: any): JSX.Element {
         {allObjects?.map((object, key): JSX.Element => <tr
           key={key}
           aria-label={(options as TableOptions)?.name_singular}>
-          <TableRow {...{ object, options }} />
+          <TableRow {...{ object }} />
           {isAuthenticated && <>
             <td>
-              <LinkToNewOrEditObject {...{ object, commonConsts }} />
+              <LinkToNewOrEditObject {...{ object }} />
             </td>
             <td>
               <DeleteObjectButton
-                {...{ object, commonConsts, useDeleteObjectMutation }} />
+                {...{ object, useDeleteObjectMutation }} />
             </td>
           </>}
         </tr>
@@ -71,10 +68,3 @@ function ObjectsTable(props: any): JSX.Element {
 }
 
 export default ObjectsTable
-
-
-// export type TableConfig = CustomersTableConfig & ProductsTableConfig &
-//   OrdersTableConfig
-
-// export type Test1 = CustomersTableConfig | ProductsTableConfig |
-//   OrdersTableConfig

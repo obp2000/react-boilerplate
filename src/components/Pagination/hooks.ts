@@ -1,5 +1,5 @@
 import { useRouter } from 'next/dist/client/router'
-import type { Page, TotalPages } from '../../../interfaces'
+import type { Page, TotalPages } from '../../../interfaces/pagination'
 
 export const usePagination = ({ totalPages }: TotalPages): Page[] => {
   const { query } = useRouter()

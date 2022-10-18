@@ -1,9 +1,8 @@
-import React from 'react'
 import Link from 'next/link'
+import type { MainMenuItem } from '../../../interfaces/commonConsts'
 import { useMainMenuItemClassName } from './hooks'
-import type { MainMenuItem } from '../../../interfaces'
 
-const NavLink = ({ path, label, }: MainMenuItem) => <Link href={path} >
+const NavLink = ({ path, label, }: MainMenuItem) => <Link href={path}>
   <a className={useMainMenuItemClassName(path)}>
     {label}
   </a>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProductWithOptions } from '../../../interfaces'
+import { ProductWithOptions } from '../../../interfaces/products'
 
 const Fleece = ({ object, options }: ProductWithOptions) => {
   if (!object?.fleece) { return null }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProductWithOptions } from '../../../interfaces'
+import type { ProductWithOptions } from '../../../interfaces/products'
 
 const Threads = ({ object }: ProductWithOptions) => {
   if (object?.threads == null) { return null }

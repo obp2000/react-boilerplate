@@ -1,7 +1,9 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 import { useDeleteObject } from './hooks'
-import type { DeleteObjectButtonType } from '../../../interfaces'
+import type {
+  DeleteObjectButtonType
+} from '../../../interfaces/deleteObjectButton'
 
 const DeleteObjectButton = (props: DeleteObjectButtonType) => {
   const {

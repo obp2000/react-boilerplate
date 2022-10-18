@@ -1,11 +1,9 @@
-import React from 'react'
-import type { ProductOptions } from '../../../interfaces'
+import React, { useContext } from 'react'
+import { OptionsContext } from '../layout/Layout'
+import type { ProductOptionsType } from '../../../interfaces/products'
 
-type Props = {
-    options?: ProductOptions
-}
-
-const TableLabels = ({ options }: Props): JSX.Element | null => {
+const TableLabels = (): JSX.Element | null => {
+    const { options } = useContext(OptionsContext) as ProductOptionsType
     if (!options) { return null }
     return <>
         <th scope="col">

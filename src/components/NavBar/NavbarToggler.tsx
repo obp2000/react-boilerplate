@@ -1,4 +1,3 @@
-import React from 'react'
 import { NavbarToggler } from 'reactstrap'
 
 const Toggler = () => <NavbarToggler

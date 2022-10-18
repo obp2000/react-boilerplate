@@ -2,7 +2,7 @@ import React from 'react'
 import ShortName from './ShortName'
 import CityName from '../cities/CityName'
 import Address from './Address'
-import type { CustomerWithOptions } from '../../../interfaces'
+import type { CustomerWithOptions } from '../../../interfaces/customers'
 
 const CustomerName = ({
   object,

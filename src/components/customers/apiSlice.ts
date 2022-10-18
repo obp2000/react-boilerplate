@@ -1,24 +1,12 @@
 import { apiSlice } from '../../services/apiSlice'
-import { indexUrl as url } from './hooks'
-import { setAll, objectsInitialState, } from '../../services/entityAdapter'
+import { indexUrl as url } from './config'
+import { setAll, objectsInitialState } from '../../services/entityAdapter'
+import type { Customer } from '../../../interfaces/customers'
 import type {
-  Customer as GetObject,
-  CustomerFormValues as ObjectFormValues,
+  GetObjectsArg,
   RawObjectsWithTotals,
   ObjectsWithTotals,
-} from '../../../interfaces'
-
-type GetObjectsArg = {
-  params?: Object
-}
-
-type GetObjectArg = {
-  id?: number
-}
-
-type DeleteObjectArg = {
-  id: number
-}
+} from '../../../interfaces/api'
 
 const type = 'Customers'
 
@@ -48,7 +36,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           // `{ type: 'Customers', id: 'LIST' }` is invalidated
           [{ type, id: 'LIST' }],
     }),
-    createCustomer: builder.mutation<GetObject, ObjectFormValues>({
+    createCustomer: builder.mutation<Customer, Customer>({
       query: ({
         id,
         city,
@@ -70,11 +58,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       // that newly created customer could show up in any lists.
       invalidatesTags: [{ type, id: 'LIST' }],
     }),
-    getCustomer: builder.query<GetObject, GetObjectArg>({
+    getCustomer: builder.query<Customer, { id: number }>({
       query: ({ id }) => ({ url: `${url}${id}/` }),
       // providesTags: (result, error, { id }) => [{ type: 'Customers', id }],
     }),
-    updateCustomer: builder.mutation<GetObject, ObjectFormValues>({
+    updateCustomer: builder.mutation<Customer, Customer>({
       query: ({
         id,
         city,
@@ -91,13 +79,13 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           body: values,
         }
       },
-      onQueryStarted(patch, { dispatch, queryFulfilled }) {
+      onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
         // console.log({ patch })
         patch.updated_at = new Date().toISOString()
-        const { undo }  = dispatch(
+        const { undo } = dispatch(
           extendedApiSlice.util.updateQueryData(
             'getCustomer',
-            { id: patch.id },
+            { id },
             (draft) => Object.assign(draft, patch)
           )
         )
@@ -108,7 +96,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       // rerun, if this id was under its results.
       invalidatesTags: (_result, _error, { id }) => [{ type, id }],
     }),
-    deleteCustomer: builder.mutation<void, DeleteObjectArg>({
+    deleteCustomer: builder.mutation<void, { id: number }>({
       query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',

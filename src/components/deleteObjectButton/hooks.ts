@@ -1,15 +1,19 @@
+import { useContext } from 'react'
 import { useAppSelector } from '../hooks'
 import { selectAuth } from '../auth/selectors'
-import { toastSuccess, toastError } from '../Shared/toast'
+import { OptionsContext } from '../layout/Layout'
+import { toastSuccess, toastError } from '../notifications/toast'
 import confirmAction from '../confirmation/confirmAction'
-import type { DeleteObjectButtonType } from '../../../interfaces'
+import type {
+  DeleteObjectButtonType
+} from '../../../interfaces/deleteObjectButton'
 
 export const useDeleteObject = ({
   object,
-  commonConsts,
   useDeleteObjectMutation,
 }: DeleteObjectButtonType) => {
   const { isAuthenticated } = useAppSelector(selectAuth)
+  const { commonConsts } = useContext(OptionsContext)
   const [deleteObject, { isLoading: isDeletingObject }] =
     useDeleteObjectMutation()
   const onConfirm = () => {

@@ -49,12 +49,12 @@ const todosSlice = createSlice({
       },
     },
     todoDeleted: todosAdapter.removeOne,
-    allTodosCompleted(state, action) {
+    allTodosCompleted(state, _action) {
       Object.values(state.entities).forEach((todo) => {
         todo.completed = true
       })
     },
-    completedTodosCleared(state, action) {
+    completedTodosCleared(state, _action) {
       const completedIds = Object.values(state.entities)
         .filter((todo) => todo.completed)
         .map((todo) => todo.id)
@@ -63,7 +63,7 @@ const todosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTodos.pending, (state, action) => {
+      .addCase(fetchTodos.pending, (state, _action) => {
         state.status = 'loading'
       })
       .addCase(fetchTodos.fulfilled, (state, action) => {

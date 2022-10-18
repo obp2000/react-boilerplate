@@ -1,9 +1,9 @@
 import { apiSlice } from '../../services/apiSlice'
-import { User as GetObject } from '../../../interfaces'
+import type { User } from '../../../interfaces/users'
 
 const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<GetObject, void>({
+    getUser: builder.query<User, void>({
       query: () => '/user/',
       providesTags: ['CurrentUser'],
     }),

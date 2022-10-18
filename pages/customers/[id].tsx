@@ -1,26 +1,51 @@
 import React from 'react'
-import Head from 'next/head'
-import { GetStaticPaths, GetStaticProps, GetServerSideProps } from 'next'
-import { Form } from 'react-final-form'
+import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
-import { createSelector } from '@reduxjs/toolkit'
-import type { EntityId, Dictionary, } from '@reduxjs/toolkit'
 import Layout from '../../src/components/layout/Layout'
 import { getOptions } from '../../src/components/options/apiSlice'
 import { getRunningOperationPromises } from '../../src/services/apiSlice'
 import { wrapper } from '../../src/components/store'
-import { objectFormConfig } from '../../src/components/customers/hooks'
+import { objectFormConfig } from '../../src/components/customers/config'
 import {
-  getCustomers as getObjects,
   getCustomer as getObject
 } from '../../src/components/customers/apiSlice'
 import { getUser } from '../../src/components/users/apiSlice'
-import {
-  useTestObjectId,
-  useObjectForm
-} from '../../src/components/objectForm/hooks'
-import { makeStore } from '../../src/components/store'
-import { getSelectors } from '../../src/services/entityAdapter'
+import { useTestObjectId } from '../../src/components/objectForm/hooks'
+import Form from '../../src/components/objectForm/Form'
+
+export const getServerSideProps: GetServerSideProps =
+  wrapper.getServerSideProps(({ dispatch }) => async ({ params }) => {
+    const id = params?.id
+    if (useTestObjectId(id)) {
+      dispatch(getObject.initiate({ id: Number(id) }))
+    } else {
+      return { notFound: true }
+    }
+    dispatch(getOptions.initiate(objectFormConfig.indexUrl))
+    dispatch(getUser.initiate())
+    await Promise.all(getRunningOperationPromises())
+    return {
+      props: {},
+    }
+  })
+
+const EditObject: NextPage = () => <Layout indexUrl={objectFormConfig.indexUrl}>
+  <Form {...objectFormConfig} />
+</Layout>
+
+export default EditObject
+
+
+
+// import { GetStaticPaths, GetStaticProps } from 'next'
+// import { createSelector } from '@reduxjs/toolkit'
+// import type { EntityId, Dictionary, } from '@reduxjs/toolkit'
+// import {
+//   getCustomers as getObjects,
+// } from '../../src/components/customers/apiSlice'
+// import { makeStore } from '../../src/components/store'
+// import { getSelectors } from '../../src/services/entityAdapter'
+// import type { AppDispatch } from '../../src/components/store'
 
 // export const getStaticPaths: GetStaticPaths = async () => {
 //   const { dispatch, getState } = makeStore()
@@ -55,29 +80,3 @@ import { getSelectors } from '../../src/services/entityAdapter'
 //     return { props: {} }
 //   }
 // )
-
-export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps(({ dispatch }) => async ({ params }) => {
-    const id = params?.id
-    if (useTestObjectId(id)) {
-      dispatch(getObject.initiate({ id: Number(id) }))
-    } else {
-      return { notFound: true }
-    }
-    dispatch(getOptions.initiate(objectFormConfig.indexUrl))
-    dispatch(getUser.initiate())
-    await Promise.all(getRunningOperationPromises())
-    return {
-      props: {},
-    }
-  })
-
-const EditObject: NextPage = () => <Layout indexUrl={objectFormConfig.indexUrl}>
-  {/* <Head>
-        <title>Best&C</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>*/}
-  <Form {...useObjectForm(objectFormConfig)} />
-</Layout>
-
-export default EditObject

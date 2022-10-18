@@ -1,9 +1,10 @@
-import React from 'react'
+import { useContext } from 'react'
+import type { OrderItemOptionsType } from '../../../interfaces/orderItems'
+import { OptionsContext } from '../layout/Layout'
 import AddOrderItemButton from './AddOrderItemButton'
-import { OrderItemFormRender } from '../../../interfaces'
 
-const TableLabels = (props: OrderItemFormRender): JSX.Element => {
-    const options = props.options?.order_items?.child?.children
+const TableLabels = () => {
+    const { options } = useContext(OptionsContext) as OrderItemOptionsType
     return <tr>
         <th scope="col">
             №
@@ -24,7 +25,7 @@ const TableLabels = (props: OrderItemFormRender): JSX.Element => {
             {options?.weight.label}
         </th>
         <th scope='col'>
-            <AddOrderItemButton {...props} />
+            <AddOrderItemButton />
         </th>
     </tr>
 

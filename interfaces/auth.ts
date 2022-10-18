@@ -1,8 +1,10 @@
-import type { FieldProps, IndexUrl } from './index'
+import type { FormRenderProps } from 'react-final-form'
+import type { IndexUrl, ValidatedFields } from './index'
+import type { FieldProps } from './options'
+import type { CommonConstsType } from './commonConsts'
 import {
   useLoginMutation,
   useRegisterMutation,
-  useSignOutMutation,
 } from '../src/components/auth/authApi'
 import {
   validateLogin,
@@ -62,6 +64,7 @@ export type LoginFormConfig = IndexUrl & {
   useAuthMutation: typeof useLoginMutation
   formFields: FormFields[]
   validate: typeof validateLogin
+  validatedFields: Pick<ValidatedFields, 'notBlank'>
 }
 
 export type RegisterFormConfig = IndexUrl & {
@@ -69,4 +72,21 @@ export type RegisterFormConfig = IndexUrl & {
   useAuthMutation: typeof useRegisterMutation
   formFields: FormFields[]
   validate: typeof validateRegister
+  validatedFields: ValidatedFields
+}
+
+export interface AuthState {
+  isAuthenticated: boolean
+  accessToken: string | null
+}
+
+export interface ModalState {
+  isLogin: boolean
+  modal: boolean
+}
+
+export type AuthFormProps = FormRenderProps & CommonConstsType & {
+  options?: LoginOptions | RegisterOptions
+  formFields?: FormFields[]
+  submitButtonLabel?: string
 }

@@ -1,18 +1,19 @@
-import React from 'react'
+import { useContext } from 'react'
+import { useFieldArray } from 'react-final-form-arrays'
 import { Button } from 'reactstrap'
-import { initOrderItem } from './hooks'
-import type { OrderItemFormRender } from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
+import { initOrderItem } from './config'
 
-const AddOrderItemButton = ({
-  // form,
-  fields,
-  commonConsts
-}: OrderItemFormRender): JSX.Element => <Button
-  size='sm'
-  outline
-  onClick={() => fields.push(initOrderItem)}
->
+const AddOrderItemButton = () => {
+  const { commonConsts } = useContext(OptionsContext)
+  const { fields } = useFieldArray('order_items')
+  return <Button
+    size='sm'
+    outline
+    onClick={() => fields.push(initOrderItem)}
+  >
     {commonConsts?.add}
   </Button>
+}
 
 export default AddOrderItemButton

@@ -1,16 +1,7 @@
-import React from 'react'
+import type { FieldMetaState } from 'react-final-form'
 import { FormFeedback } from 'reactstrap'
 
-type Props = {
-  touched?: boolean
-  error?: string
-}
-
-const WidgetErrors = ({
-  touched,
-  error,
-  // warning,
-}: Props): JSX.Element | null => {
+const WidgetErrors = ({ touched, error, }: FieldMetaState<any>) => {
   if (touched && !!error) {
     return <FormFeedback>
       {error}

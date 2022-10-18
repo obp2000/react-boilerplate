@@ -1,18 +1,13 @@
-import React from 'react'
+import { useContext } from 'react'
+import { useFieldArray } from 'react-final-form-arrays'
 import { Button } from 'reactstrap'
-import { initOrderItem } from './hooks'
 import confirmAction from '../confirmation/confirmAction'
-import { OrderItemFormRender } from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
+import { initOrderItem } from './config'
 
-type Props = OrderItemFormRender & {
-  index: number
-}
-
-const DeleteOrderItemButton = ({
-  commonConsts,
-  index,
-  fields,
-}: Props): JSX.Element => {
+const DeleteOrderItemButton = ({ index }: { index: number }) => {
+  const { commonConsts } = useContext(OptionsContext)
+  const { fields } = useFieldArray('order_items')
   const onConfirm = (): void => {
     fields.update(index, initOrderItem)
     fields.remove(index)

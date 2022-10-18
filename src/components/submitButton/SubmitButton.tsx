@@ -1,23 +1,15 @@
-import React from 'react'
-import type { FormRenderProps } from 'react-final-form'
+import React, { useContext } from 'react'
 import { Button } from 'reactstrap'
-import { disabled } from './hooks'
-import { CommonConstsType } from '../../../interfaces'
-
-type Props = FormRenderProps & CommonConstsType & {
-  isLoadingOptions?: boolean
-  isFetchingOptions?: boolean
-  text?: string
-  className?: string
-  calculatedFields?: string[]
-}
+import { useDisabled } from './hooks'
+import { OptionsContext } from '../layout/Layout'
+import type { SubmitButtonProps } from '../../../interfaces/objectForm'
 
 const SubmitButton = ({
-  commonConsts,
   text,
   className,
   ...rest
-}: Props) => {
+}: SubmitButtonProps) => {
+  const { commonConsts } = useContext(OptionsContext)
   const label = text || commonConsts?.save
   return <Button
     type='submit'
@@ -26,7 +18,7 @@ const SubmitButton = ({
     size='sm'
     className={className}
     aria-labelledby={label}
-    disabled={disabled(rest)}
+    disabled={useDisabled(rest)}
   >
     {label}
   </Button>

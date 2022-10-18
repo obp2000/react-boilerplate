@@ -31,14 +31,11 @@ export const apiSlice = createApi({
     'Options'
   ],
   endpoints: () => ({}),
-  extractRehydrationInfo(action, test1) {
-    console.log({test1})
-    console.log('action.payload ', action.payload)
+  extractRehydrationInfo(action, { reducerPath }) {
+    // console.log({test1})
+    // console.log('action.payload ', action.payload)
     if (action.type === HYDRATE) {
-      // console.log('action.payload[reducerPath] ', action.payload[reducerPath])
-      return action.payload[test1.reducerPath]
-
-
+      return action.payload[reducerPath]
     }
   },
 })

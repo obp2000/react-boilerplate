@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { signOut } from '../auth/authApi'
-
-interface ModalState {
-  isLogin: boolean
-  modal: boolean
-}
+import type { ModalState } from '../../../interfaces/auth'
 
 const initialState: ModalState = {
   isLogin: true,

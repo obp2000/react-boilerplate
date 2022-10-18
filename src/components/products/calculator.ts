@@ -1,12 +1,12 @@
 import createDecorator from 'final-form-calculate'
 import type { Calculation } from 'final-form-calculate'
 import type { Decorator } from 'final-form'
-import { ProductFormValues } from '../../../interfaces'
+import { Product } from '../../../interfaces/products'
 
-const canCountDensityForCount = (values: ProductFormValues): boolean =>
+const canCountDensityForCount = (values: Product): boolean =>
   !!values?.length_for_count && !!values?.width
 
-const countDensityForCount = (values: ProductFormValues): number => {
+const countDensityForCount = (values: Product): number => {
   return Number(values?.weight_for_count) /
     Number(values?.length_for_count) /
     Number(values?.width) * 100
@@ -17,28 +17,28 @@ export const densityForCount = (_: null, values: any): string =>
     ? countDensityForCount(values)
     : 0).toFixed(0)
 
-const canCountMetersInRoll = (values: ProductFormValues): boolean =>
+const canCountMetersInRoll = (values: Product): boolean =>
   !!values?.weight && !!values?.density && !!values?.width
 
-const countMetersInRoll = (values: ProductFormValues): number =>
+const countMetersInRoll = (values: Product): number =>
   Number(values?.weight) * 100000 / Number(values?.density) /
   Number(values?.width)
 
 export const metersInRoll = (_: null, values: any): string =>
   (canCountMetersInRoll(values) ? countMetersInRoll(values) : 0).toFixed(2)
 
-const canCountPrices = (values: ProductFormValues): boolean =>
+const canCountPrices = (values: Product): boolean =>
   !!values?.dollar_price && !!values?.dollar_rate &&
   !!values?.density && !!values?.width
 
-const countPriceRubM = (values: ProductFormValues): number =>
+const countPriceRubM = (values: Product): number =>
   Number(values?.dollar_price) * Number(values?.dollar_rate) *
   Number(values?.density) * Number(values?.width) / 100000
 
-const priceRubM = (values: ProductFormValues, coeff: number = 1): string =>
+const priceRubM = (values: Product, coeff: number = 1): string =>
   (countPriceRubM(values) * coeff).toFixed(0)
 
-const coeffWithPrice = (values: ProductFormValues, coeff: number = 1): string =>
+const coeffWithPrice = (values: Product, coeff: number = 1): string =>
   `${coeff}: ${priceRubM(values, coeff)}`
 
 export const prices = (_: null, values: any): string =>

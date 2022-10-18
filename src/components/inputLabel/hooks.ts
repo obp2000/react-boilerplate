@@ -1,14 +1,68 @@
-import { useFieldProps, getName } from '../Shared/fieldProps'
-import type { AnyFieldAttrs, LabelAttrs } from '../../../interfaces'
+var object = require('lodash/fp/object')
+import type {
+  AnyFieldAttrs, LabelAttrs, LabelSizes
+} from '../../../interfaces/inputLabel'
+import { useMapFieldProps } from '../options/hooks'
 
-export const useFieldLabel = (props: AnyFieldAttrs): LabelAttrs => {
-  const labelAttrs = useFieldProps(props)
+const inputLabelProps = ({ sm, size }: AnyFieldAttrs): LabelSizes => ({
+  sm,
+  size,
+})
+
+export const useFieldProps = (props: AnyFieldAttrs): LabelAttrs => {
+  let result = useMapFieldProps({ isLabel: true, ...props })
+  let { size, ...labelProps } = inputLabelProps(props)
   return {
-    label: props.label ?? labelAttrs?.label,
-    required: props.required ?? labelAttrs?.required,
-    htmlFor: getName(props),
-    sm: props.labelColSize,
-    size: props.labelSize,
-    check: props.check,
+    ...result,
+    size: String(size),
+    ...labelProps,
+    ...object.pick(props, ['required', 'label', 'htmlFor']),
   }
 }
+
+
+// export const getFieldProps2 = ({
+//   name,
+//   id,
+//   required,
+//   readOnly,
+//   helpText,
+//   placeholder,
+//   min,
+//   max,
+//   step,
+//   input,
+//   meta,
+//   options,
+//   commonConsts,
+//   searchPath,
+//   dataKey,
+//   textField,
+//   renderValue,
+//   size,
+//   ...props
+// }: FieldAttrs & SelectFieldAttrs & DropdownListAttrs): LabelProps => {
+//   let result =
+//     mapFieldProps({ name, input, options, isLabel: true, ...props })
+//   return {
+//     ...result,
+//     size: String(size),
+//     ...props as any,
+//   }
+// }
+
+// export const inputLabelProps =
+//   ({
+//     // label,
+//     sm,
+//     size,
+//   }: Partial<LabelAttrs>) => {
+//     const result: Partial<LabelAttrs> = {
+//       sm,
+//       size,
+//     }
+//     // if (label) {
+//     //  result.label = label
+//     // }
+//     return result
+//   }

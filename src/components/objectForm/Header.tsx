@@ -1,24 +1,22 @@
-import React from 'react'
-import { Row, Col } from 'reactstrap'
-import type { FormRenderProps } from 'react-final-form'
-import SubmitButton from '../submitButton/SubmitButton'
+import { useContext } from 'react'
+import { Col, Row } from 'reactstrap'
+import type { CommonConstsType } from '../../../interfaces/commonConsts'
+import type { HeaderProps } from '../../../interfaces/objectForm'
+import type { AnyObjectOptionsType } from '../../../interfaces/options'
 import BackButton from '../backButton/BackButton'
-import Date from '../Shared/date'
-import type {
-  CommonConstsType,
-  AnyObjectWithOptions,
-  // ObjectFormProps,
-} from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
+import Date from '../Shared/Date'
+import SubmitButton from '../submitButton/SubmitButton'
 
-type Props = FormRenderProps & CommonConstsType & AnyObjectWithOptions
-
-const Header = ({ object, options, ...props }: Props): JSX.Element => {
+const Header = ({ object, ...props }: HeaderProps): JSX.Element => {
+  const { commonConsts, options } =
+    useContext(OptionsContext) as CommonConstsType & AnyObjectOptionsType
   const label = object?.id
-    ? `${options?.name_singular} № ${object?.id} ${props.commonConsts?.from} `
-    : `${props.commonConsts?.new} ${options?.name_singular.toLowerCase()} `
+    ? `${options?.name_singular} № ${object?.id} ${commonConsts?.from} `
+    : `${commonConsts?.new} ${options?.name_singular.toLowerCase()} `
   return <Row>
     <Col sm={2}>
-      <BackButton {...props} />
+      <BackButton />
     </Col>
     <Col sm={6}>
       <h4 aria-label={options?.name_singular}>

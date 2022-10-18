@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { Button } from 'reactstrap'
-import type { CommonConstsType } from '../../../interfaces'
+import { OptionsContext } from '../layout/Layout'
 
-const BackButton = ({ commonConsts }: CommonConstsType): JSX.Element => {
+const BackButton = () => {
   const router = useRouter()
+  const { commonConsts } = useContext(OptionsContext)
   return <Button
     color='primary'
     outline

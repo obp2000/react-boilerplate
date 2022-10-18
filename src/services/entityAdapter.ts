@@ -1,11 +1,12 @@
 import { createEntityAdapter, createSelector, } from '@reduxjs/toolkit'
 import { useRouter } from 'next/dist/client/router'
 import { useAppSelector, useAppDispatch } from '../components/hooks'
+// import { useDispatch } from 'react-redux'
 import type {
   AnyObject,
   ObjectsWithTotals,
   GetObjectsEndpoint
-} from '../../interfaces'
+} from '../../interfaces/api'
 import type { RootState } from '../components/store'
 
 type SelectObjectsData = (state: RootState) => ObjectsWithTotals | undefined

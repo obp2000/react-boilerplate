@@ -1,13 +1,12 @@
-import React from 'react'
 import { FormGroup } from 'reactstrap'
-import Input from '../formInput/Input'
+import type { FieldAttrs } from '../../../interfaces/input'
 import Label from '../inputLabel/Label'
-import type { AnyFieldAttrs } from '../../../interfaces'
+import Input from './Input'
 
-const FloatingFormGroup = (props: AnyFieldAttrs) =>
+const FloatingFormGroup = (props: FieldAttrs) =>
   <FormGroup floating >
     <Input {...props} />
-    <Label {...props} labelSize='sm' />
+    <Label {...props} size='sm' />
   </FormGroup>
 
 export default FloatingFormGroup

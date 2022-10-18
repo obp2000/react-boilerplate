@@ -1,8 +1,8 @@
 import { useRouter } from 'next/dist/client/router'
 import SearchFormRender from './SearchFormRender'
-import { SearchTerm, IndexUrl } from '../../../interfaces'
+import type { SearchTerm } from '../../../interfaces/search'
 
-export const useSearchForm = ({ indexUrl }: IndexUrl) => {
+export const useSearchForm = () => {
   const router = useRouter()
   const { query } = router
   return {
@@ -11,6 +11,5 @@ export const useSearchForm = ({ indexUrl }: IndexUrl) => {
       router.push({ query: { term } }),
     initialValues: { term: query.term },
     render: SearchFormRender,
-    indexUrl,
   }
 }

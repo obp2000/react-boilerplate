@@ -1,5 +1,5 @@
 import React from 'react'
-import type { CityWithOptions } from '../../../interfaces'
+import type { CityWithOptions } from '../../../interfaces/cities'
 
 const Pindex = ({ object, options }: CityWithOptions): JSX.Element | null => {
   if (!object?.pindex) { return null }

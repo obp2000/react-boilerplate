@@ -1,28 +1,16 @@
 import { objectToFormData } from 'object-to-formdata'
 import { apiSlice } from '../../services/apiSlice'
-import { indexUrl as url } from './hooks'
+import { indexUrl as url } from './config'
 import {
   setAll,
   objectsInitialState,
 } from '../../services/entityAdapter'
 import {
-  Product as GetObject,
-  ProductFormValues as ObjectFormValues,
+  GetObjectsArg,
   RawObjectsWithTotals,
   ObjectsWithTotals,
-} from '../../../interfaces'
-
-type GetObjectsArg = {
-  params?: Object
-}
-
-type GetObjectArg = {
-  id?: number
-}
-
-type DeleteObjectArg = {
-  id: number
-}
+} from '../../../interfaces/api'
+import { Product } from '../../../interfaces/products'
 
 const type = 'Products'
 
@@ -47,7 +35,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           ]
           : [{ type, id: 'LIST' }],
     }),
-    createProduct: builder.mutation<GetObject, ObjectFormValues>({
+    createProduct: builder.mutation<Product, Product>({
       query: ({
         id,
         product_type,
@@ -73,54 +61,56 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: [{ type, id: 'LIST' }],
     }),
-    getProduct: builder.query<GetObject, GetObjectArg>({
+    getProduct: builder.query<Product, { id: number }>({
       query: ({ id }) => ({ url: `${url}${id}/` }),
       // providesTags: (_, __, { id }) => [{ type, id }],
     }),
-    updateProduct: builder.mutation<GetObject, ObjectFormValues>({
-      query: ({
-        id,
-        product_type,
-        get_product_type_display,
-        get_threads_display,
-        get_contents_display,
-        created_at,
-        updated_at,
-        consts,
-        density_for_count,
-        meters_in_roll,
-        prices,
-        ...values
-      }) => {
-        if (product_type) {
-          values.product_type_id = product_type
-        }
-        return {
-          url: `${url}${id}/`,
-          method: 'PUT',
-          body: objectToFormData(values),
-        }
-      },
-      onQueryStarted({
-        image,
-        ...patch
-      },
-        { dispatch, queryFulfilled }) {
-        // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
-        console.log({ patch })
-        patch.updated_at = new Date().toISOString()
-        const { undo } = dispatch(
-          extendedApiSlice.util.updateQueryData(
-            'getProduct',
-            { id: patch.id },
-            ({ image, ...draft }) => Object.assign(draft, patch)
+    updateProduct: builder.mutation<Product,
+      Required<Pick<Product, 'id'>> & Partial<Product>>({
+        query: ({
+          id,
+          product_type,
+          get_product_type_display,
+          get_threads_display,
+          get_contents_display,
+          created_at,
+          updated_at,
+          consts,
+          density_for_count,
+          meters_in_roll,
+          prices,
+          ...values
+        }) => {
+          if (product_type) {
+            values.product_type_id = product_type
+          }
+          return {
+            url: `${url}${id}/`,
+            method: 'PUT',
+            body: objectToFormData(values),
+          }
+        },
+        onQueryStarted({
+          id,
+          image,
+          ...patch
+        },
+          { dispatch, queryFulfilled }) {
+          // const endpointName = `get${type.slice(0, -1)}` as QueryKeys
+          // console.log({ patch })
+          patch.updated_at = new Date().toISOString()
+          const { undo } = dispatch(
+            extendedApiSlice.util.updateQueryData(
+              'getProduct',
+              { id },
+              ({ image, ...draft }) => Object.assign(draft as Product, patch)
+            )
           )
-        )
-        queryFulfilled.catch(undo)
-      },
-      invalidatesTags: (_result, _error, { id }) => [{ type, id }],
-    }),
-    deleteProduct: builder.mutation<void, DeleteObjectArg>({
+          queryFulfilled.catch(undo)
+        },
+        invalidatesTags: (_result, _error, { id }) => [{ type, id }],
+      }),
+    deleteProduct: builder.mutation<void, { id: number }>({
       query: ({ id }) => ({
         url: `${url}${id}`,
         method: 'DELETE',

@@ -4,17 +4,13 @@ import {
   nextReduxCookieMiddleware,
   wrapMakeStore,
 } from 'next-redux-cookie-wrapper'
-import type { Store } from 'redux'
-import type { MakeStore } from 'next-redux-wrapper'
-// import {logger} from 'redux-logger'
 import logger from './logger'
 import { apiSlice } from '../services/apiSlice'
 import { rtkQueryErrorLogger } from './errorMiddleware'
 import auth from './auth/authSlice'
 import authModal from './auth/modalSlice'
 
-export const makeStore: MakeStore<Store> =
-  wrapMakeStore(() => configureStore({
+const makeStore = () => configureStore({
     reducer: {
       auth,
       authModal,
@@ -31,17 +27,19 @@ export const makeStore: MakeStore<Store> =
       ]
       ),
     devTools: process.env.NODE_ENV !== 'production',
-  }))
+  })
 
-// export const wrapper = createWrapper(wrappedMakeStore, { debug: false })
-export const wrapper = createWrapper(makeStore, { debug: false })
+export const wrappedMakeStore = wrapMakeStore(makeStore)
+export const wrapper = createWrapper(wrappedMakeStore, { debug: false })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<Store["getState"]>
-// Inferred type: {posts: PostsState, comments: CommentsState,
-// users: UsersState}
-export type AppDispatch = Store["dispatch"]
+export type AppStore = ReturnType<typeof makeStore>
+export type RootState = ReturnType<AppStore['getState']>
+export type AppDispatch = AppStore['dispatch']
 
+
+// import type { Action, ThunkAction } from '@reduxjs/toolkit'
+// export type AppThunk<ReturnType = void> =
+//   ThunkAction<ReturnType, RootState, unknown, Action>
 
 // export const store = configureStore({
 //   reducer: {

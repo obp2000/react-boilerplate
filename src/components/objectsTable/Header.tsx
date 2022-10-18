@@ -1,13 +1,12 @@
-import React from 'react'
-import { Row, Col, Badge } from 'reactstrap'
-import { TableOptions } from '../../../interfaces'
+import { useContext } from 'react'
+import { Badge, Col, Row } from 'reactstrap'
+import type { HeaderProps } from '../../../interfaces/objectsTable'
+import type { TableOptionsType } from '../../../interfaces/options'
+import { OptionsContext } from '../layout/Layout'
 
-export type Props = {
-  options?: TableOptions
-  totalCount: number
-}
-
-const Header = ({ options, totalCount }: Props): JSX.Element => <Row>
+const Header = ({ totalCount }: HeaderProps) => {
+  const { options } = useContext(OptionsContext) as TableOptionsType
+  return <Row>
     <Col sm={2}>
       <h3 aria-label={options?.name_plural}>
         {options?.name_plural}
@@ -19,5 +18,6 @@ const Header = ({ options, totalCount }: Props): JSX.Element => <Row>
       </h4>
     </Col>
   </Row>
+}
 
 export default Header

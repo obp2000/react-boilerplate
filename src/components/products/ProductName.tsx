@@ -3,7 +3,7 @@ import ProductType from './ProductType'
 import Threads from './Threads'
 import Contents from './Contents'
 import Fleece from './Fleece'
-import { ProductWithOptions } from '../../../interfaces'
+import type { ProductWithOptions } from '../../../interfaces/products'
 
 const ProductName = ({ object, options }: ProductWithOptions) => <>
   <ProductType {...{ object, options }} />

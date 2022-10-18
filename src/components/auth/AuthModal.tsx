@@ -7,21 +7,19 @@ import {
 } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { useAuthModal } from './hooks'
-import type { IndexUrl } from '../../../interfaces'
 
-const AuthModal = (props: IndexUrl): JSX.Element => {
+const AuthModal = () => {
   const {
     isOpen,
     headerAttrs,
     toggleLoginButtonAttrs,
     authFormConfig,
-    commonConsts,
-  } = useAuthModal(props)
+  } = useAuthModal()
   // console.log('modal props ', props)
-  return <Modal isOpen={isOpen} >
+  return <Modal {...{ isOpen }} >
     <ModalHeader {...headerAttrs} />
     <ModalBody>
-      <AuthForm {...authFormConfig} {...{ commonConsts }} />
+      <AuthForm {...authFormConfig} />
       <Button size='sm' outline {...toggleLoginButtonAttrs} />
     </ModalBody>
   </Modal>

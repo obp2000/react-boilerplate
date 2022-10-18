@@ -1,13 +1,12 @@
-import React from 'react'
 import { FormGroup } from 'reactstrap'
-import Input from '../formInput/Input'
+import type { FieldAttrs } from '../../../interfaces/input'
 import Label from '../inputLabel/Label'
-import type { AnyFieldAttrs, } from '../../../interfaces'
+import Input from './Input'
 
-const SwitchFormGroup = (props: AnyFieldAttrs) =>
+const SwitchFormGroup = (props: FieldAttrs) =>
   <FormGroup check className='form-switch'>
-    <Input {...props} type="checkbox" role="switch" />
-    <Label {...props} check={true} />
+    <Input {...props} role="switch" />
+    <Label {...props} />
   </FormGroup>
 
 export default SwitchFormGroup

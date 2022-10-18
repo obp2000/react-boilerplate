@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
 import Layout from '../../src/components/layout/Layout'
@@ -7,10 +6,7 @@ import { getOptions } from '../../src/components/options/apiSlice'
 import { getRunningOperationPromises } from '../../src/services/apiSlice'
 import { wrapper } from '../../src/components/store'
 import User from '../../src/components/users/User'
-import { indexUrl, } from '../../src/components/users/hooks'
-// import {
-//   getCustomers as getObjects
-// } from '../../src/components/customers/apiSlice'
+import { indexUrl, } from '../../src/components/users/config'
 import { getUser } from '../../src/components/users/apiSlice'
 import { selectAuth } from '../../src/components/auth/selectors'
 
@@ -31,10 +27,6 @@ export const getServerSideProps: GetServerSideProps =
   )
 
 const Home: NextPage = () => <Layout indexUrl={indexUrl}>
-  {/* <Head>
-        <title>Best&C</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>*/}
   <User />
 </Layout>
 
