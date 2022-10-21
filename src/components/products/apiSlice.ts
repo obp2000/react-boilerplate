@@ -1,16 +1,13 @@
 import { objectToFormData } from 'object-to-formdata'
-import { apiSlice } from '../../services/apiSlice'
-import { indexUrl as url } from './config'
 import {
-  setAll,
-  objectsInitialState,
-} from '../../services/entityAdapter'
-import {
-  GetObjectsArg,
-  RawObjectsWithTotals,
-  ObjectsWithTotals,
+  GetObjectsArg, ObjectsWithTotals, RawObjectsWithTotals
 } from '../../../interfaces/api'
 import { Product } from '../../../interfaces/products'
+import { apiSlice } from '../../services/apiSlice'
+import {
+  objectsInitialState, setAll
+} from '../../services/entityAdapter'
+import { indexUrl as url } from './config'
 
 const type = 'Products'
 
@@ -48,6 +45,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         density_for_count,
         meters_in_roll,
         prices,
+        imageOrig,
         ...values
       }) => {
         if (product_type) {
@@ -79,6 +77,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           density_for_count,
           meters_in_roll,
           prices,
+          imageOrig,
           ...values
         }) => {
           if (product_type) {

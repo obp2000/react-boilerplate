@@ -1,6 +1,6 @@
+import type { Product } from '../../../interfaces/products'
 import { indexUrl } from './config'
 import ProductName from './ProductName'
-import type { Product } from '../../../interfaces/products'
 
 const dropdownListTextField = ({
   get_product_type_display: getProductTypeDisplay,

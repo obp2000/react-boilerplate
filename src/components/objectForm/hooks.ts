@@ -1,14 +1,12 @@
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query'
 import { useRouter } from 'next/dist/client/router'
 import { useContext } from 'react'
+import { FormProps } from 'react-final-form'
 import type {
   FormConfig as CustomerFormConfig
 } from '../../../interfaces/customers'
 import type { SerializedError } from '../../../interfaces/errors'
-import type {
-  AnyObjectFormValues,
-  ObjectFormProps
-} from '../../../interfaces/objectForm'
+import type { AnyObjectFormValues } from '../../../interfaces/objectForm'
 import type {
   FormConfig as OrderFormConfig
 } from '../../../interfaces/orders'
@@ -21,9 +19,9 @@ import {
 import { OptionsContext } from '../layout/Layout'
 import { toastError, toastSuccess } from '../notifications/toast'
 
-export function useObjectForm(props: CustomerFormConfig): ObjectFormProps
-export function useObjectForm(props: ProductFormConfig): ObjectFormProps
-export function useObjectForm(props: OrderFormConfig): ObjectFormProps
+export function useObjectForm(props: CustomerFormConfig): FormProps
+export function useObjectForm(props: ProductFormConfig): FormProps
+export function useObjectForm(props: OrderFormConfig): FormProps
 export function useObjectForm({
   indexUrl,
   useGetObjectQuery,
@@ -35,7 +33,7 @@ export function useObjectForm({
   useCreateObjectMutation,
   objectFormRender,
   calculatedFields,
-}: any): ObjectFormProps {
+}: any): FormProps {
   // const { commonConsts, options } = useOptionsOuery(indexUrl)
   const { commonConsts, options } = useContext(OptionsContext)
   const router = useRouter()
@@ -90,9 +88,6 @@ export function useObjectForm({
     busyGettingObject: isLoadingObject || isFallback,
     isErrorGettingObject,
     calculatedFields,
-    object,
-    // options,
-    // commonConsts,
   }
 }
 

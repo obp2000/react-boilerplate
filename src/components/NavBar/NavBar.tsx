@@ -1,8 +1,6 @@
+import { FC } from 'react'
 import { Form } from 'react-final-form'
-import {
-  Collapse,
-  Nav, Navbar, NavItem
-} from 'reactstrap'
+import { Collapse, Nav, Navbar, NavItem } from 'reactstrap'
 // import Loader from 'react-loader'
 import AuthButton from '../auth/AuthButton'
 import { useSearchForm } from '../Search/hooks'
@@ -10,7 +8,7 @@ import MainMenu from './MainMenu'
 import NavbarBrand from './NavbarBrand'
 import NavbarToggler from './NavbarToggler'
 
-const NavBar = () => <Navbar
+const NavBar: FC = () => <Navbar
   color="primary"
   expand="md"
   dark className="py-0 mb-1">

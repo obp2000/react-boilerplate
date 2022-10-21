@@ -1,27 +1,32 @@
+import type {
+  Customer,
+  CustomerWithOptions
+} from '../../../interfaces/customers'
 import {
   getCustomers as getObjects,
-  useGetCustomerQuery as useGetObjectQuery,
+  getCustomer as getObject,
   useCreateCustomerMutation as useCreateObjectMutation,
-  useUpdateCustomerMutation as useUpdateObjectMutation,
   useDeleteCustomerMutation as useDeleteObjectMutation,
+  useGetCustomerQuery as useGetObjectQuery,
+  useUpdateCustomerMutation as useUpdateObjectMutation
 } from './apiSlice'
 import objectFormRender from './CustomerFormRender'
-import { validate } from './validators'
-import TableRow from './TableRow'
 import TableLabels from './TableLabels'
-import type { CustomerWithOptions } from '../../../interfaces/customers'
+import TableRow from './TableRow'
+import { validate } from './validators'
 
 export const indexUrl = '/customers/'
 
 export const objectsTableConfig = {
-  indexUrl,
   getObjects,
   TableRow,
   TableLabels,
   useDeleteObjectMutation,
 }
 
-const formInitialValues = ({ object }: CustomerWithOptions) => {
+export const formInitialValues = ({
+  object
+}: CustomerWithOptions): Customer | {} => {
   let objectValues = object ?? {}
   return objectValues
 }
@@ -31,7 +36,7 @@ const validatedFields = {
 }
 
 export const objectFormConfig = {
-  indexUrl,
+  getObject,
   useGetObjectQuery,
   formInitialValues,
   validate,

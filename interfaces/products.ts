@@ -1,21 +1,19 @@
-import type { FormRenderProps } from 'react-final-form'
 import type { Decorator } from 'final-form'
-import type { IndexUrl } from './index'
-import type { FieldLabel } from './inputLabel'
-import type { FieldProps } from './options'
-import type { CommonConstsType } from './commonConsts'
 import {
   getProducts,
-  useGetProductQuery,
+  getProduct,
   useCreateProductMutation,
-  useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetProductQuery,
+  useUpdateProductMutation
 } from '../src/components/products/apiSlice'
-import TableRow from '../src/components/products/TableRow'
-import TableLabels from '../src/components/products/TableLabels'
-import { validate } from '../src/components/products/validators'
+import { formInitialValues } from '../src/components/products/config'
 import objectFormRender from '../src/components/products/ProductFormRender'
-
+import TableLabels from '../src/components/products/TableLabels'
+import TableRow from '../src/components/products/TableRow'
+import { validate } from '../src/components/products/validators'
+import type { FieldLabel } from './inputLabel'
+import type { FieldProps } from './options'
 
 export type ProductConsts = {
   PriceCoeffs: number[]
@@ -51,39 +49,8 @@ export type Product = {
   prices?: string
   toFormData?: boolean
   consts?: ProductConsts
+  imageOrig?: string
 }
-
-// export type ProductFormValues = {
-//   id?: number
-//   name?: string
-//   product_type?: number
-//   product_type_id?: number
-//   get_product_type_display?: string
-//   threads?: number
-//   get_threads_display?: string
-//   contents?: number
-//   get_contents_display?: string
-//   fleece?: boolean
-//   price?: number
-//   weight?: number
-//   width?: number
-//   density?: number
-//   dollar_price?: number
-//   dollar_rate?: number
-//   width_shop?: number
-//   density_shop?: number
-//   weight_for_count?: number
-//   length_for_count?: number
-//   price_pre?: number
-//   image?: string
-//   density_for_count?: number | string
-//   meters_in_roll?: number | string
-//   prices?: string
-//   toFormData?: boolean
-//   consts?: ProductConsts
-//   created_at?: string
-//   updated_at?: string
-// }
 
 export type ProductTypeChoice = {
   id: number
@@ -157,16 +124,17 @@ export type ProductType = {
 
 export type ProductWithOptions = ProductType & ProductOptionsType
 
-export type TableConfig = IndexUrl & {
+export type TableConfig = {
   getObjects: typeof getProducts
   TableRow: typeof TableRow
   TableLabels: typeof TableLabels
   useDeleteObjectMutation: typeof useDeleteProductMutation
 }
 
-export type FormConfig = IndexUrl & {
+export type FormConfig = {
+  getObject: typeof getProduct
   useGetObjectQuery: typeof useGetProductQuery
-  formInitialValues: ProductWithOptions
+  formInitialValues: typeof formInitialValues
   formDecorators: Decorator[]
   validate: typeof validate
   useUpdateObjectMutation: typeof useUpdateProductMutation
@@ -175,5 +143,6 @@ export type FormConfig = IndexUrl & {
   calculatedFields: string[]
 }
 
-export type ProductFormProps = FormRenderProps & CommonConstsType &
-  ProductWithOptions
+export type FormInitialValues = Omit<Product, 'image'> & {
+  imageOrig: string
+}

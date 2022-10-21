@@ -1,6 +1,6 @@
 import { useRouter } from 'next/dist/client/router'
-import SearchFormRender from './SearchFormRender'
 import type { SearchTerm } from '../../../interfaces/search'
+import SearchFormRender from './SearchFormRender'
 
 export const useSearchForm = () => {
   const router = useRouter()

@@ -1,5 +1,5 @@
-import { apiSlice } from '../../services/apiSlice'
 import type { User } from '../../../interfaces/users'
+import { apiSlice } from '../../services/apiSlice'
 
 const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

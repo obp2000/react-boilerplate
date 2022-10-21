@@ -1,11 +1,11 @@
-import { apiSlice } from '../../services/apiSlice'
 import type {
   Login,
   LoginFormValues,
   Register,
   RegisterFormValues,
-  SignOut,
+  SignOut
 } from '../../../interfaces/auth'
+import { apiSlice } from '../../services/apiSlice'
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

@@ -1,19 +1,16 @@
-import { useContext } from 'react'
-import { Field } from 'react-final-form'
+import { FC, useContext } from 'react'
+import { Field, FormRenderProps } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
 import { Col, Form, Row, Table } from 'reactstrap'
 import type { CommonConstsType } from '../../../interfaces/commonConsts'
-import type {
-  OrderFormProps,
-  OrderOptionsType
-} from '../../../interfaces/orders'
+import type { OrderOptionsType } from '../../../interfaces/orders'
 import { useDropdown as useCustomerDropdownAttrs } from '../customers/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
 import FloatingFormGroup from '../formInput/FloatingFormGroup'
 import Input from '../formInput/Input'
 import { OptionsContext } from '../layout/Layout'
 import Header from '../objectForm/Header'
-import OrderItem from '../orderItems/OrderItem'
+import OrderItems from '../orderItems/OrderItems'
 import OrderItemsTableLabels from '../orderItems/TableLabels'
 import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import GiftIfNeeded from './Gift'
@@ -21,10 +18,8 @@ import OrderItemsTotals from './OrderItemsTotals'
 import OrderTotals from './OrderTotals'
 import Postals from './Postals'
 import Samples from './Samples'
-// import type { FieldArrayRenderProps } from 'react-final-form-arrays'
-// import type { OrderItemOptions } from '../../../interfaces/orderItems'
 
-const OrderFormRender = (props: OrderFormProps): JSX.Element => {
+const OrderFormRender: FC<FormRenderProps> = (props) => {
   const { options: orderOptions, commonConsts } =
     useContext(OptionsContext) as OrderOptionsType & CommonConstsType
   const options = orderOptions?.order_items?.child?.children
@@ -56,10 +51,10 @@ const OrderFormRender = (props: OrderFormProps): JSX.Element => {
       </thead>
       <tbody>
         <OptionsContext.Provider value={{ options, commonConsts }}>
-          <FieldArray name="order_items">
-            {({ fields }) => fields.map((orderItemName, index) => <OrderItem
+          <FieldArray name="order_items" component={OrderItems} />
+          {/*            {({ fields }) => fields.map((orderItemName, index) => <OrderItem
               key={index} {...{ orderItemName, index }} />)}
-          </FieldArray>
+          </FieldArray>*/}
         </OptionsContext.Provider>
         <OrderItemsTotals />
       </tbody>

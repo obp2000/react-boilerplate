@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import { Field } from 'react-final-form'
 import type { OrderOptionsType } from '../../../interfaces/orders'
 import FloatingFormGroup from '../formInput/FloatingFormGroup'
@@ -6,7 +6,7 @@ import Input from '../formInput/Input'
 import { OptionsContext } from '../layout/Layout'
 import { ConditionGte } from '../Shared/FormConditions'
 
-const Gift = (): JSX.Element => <tr>
+const Gift: FC = () => <tr>
   <td colSpan={3}>
     <Field name="gift" component={FloatingFormGroup} />
   </td>

@@ -1,7 +1,7 @@
-import React from 'react'
+import { FC } from 'react'
 import { ProductWithOptions } from '../../../interfaces/products'
 
-const Fleece = ({ object, options }: ProductWithOptions) => {
+const Fleece: FC<ProductWithOptions> = ({ object, options }) => {
   if (!object?.fleece) { return null }
   return <>{options?.fleece?.label?.toLowerCase()}{' '}</>
 }

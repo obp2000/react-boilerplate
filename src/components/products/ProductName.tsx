@@ -1,11 +1,11 @@
-import React from 'react'
-import ProductType from './ProductType'
-import Threads from './Threads'
+import { FC } from 'react'
+import type { ProductWithOptions } from '../../../interfaces/products'
 import Contents from './Contents'
 import Fleece from './Fleece'
-import type { ProductWithOptions } from '../../../interfaces/products'
+import ProductType from './ProductType'
+import Threads from './Threads'
 
-const ProductName = ({ object, options }: ProductWithOptions) => <>
+const ProductName: FC<ProductWithOptions> = ({ object, options }) => <>
   <ProductType {...{ object, options }} />
   <Threads {...{ object, options }} />
   <Contents {...{ object, options }} />

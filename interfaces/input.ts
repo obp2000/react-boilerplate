@@ -1,7 +1,7 @@
 import type { FieldRenderProps } from 'react-final-form'
-import type { AnyOptionsType } from './options'
+// import type { AnyOptionsType } from './options'
 
-export type FieldAttrs = FieldRenderProps<any> & AnyOptionsType
+export type FieldAttrs = FieldRenderProps<any>
 
 export type FilesHandlerEvent = { target?: { files?: FileList | null } }
 

@@ -1,16 +1,16 @@
-import { useContext } from 'react'
 import { useRouter } from 'next/dist/client/router'
-import { useAppSelector, useAppDispatch } from '../hooks'
-import { useSignOutMutation } from './authApi'
-import { toggleModal, toggleLogin } from './modalSlice'
-import { selectAuth, selectAuthModal } from './selectors'
-import { useGetUserQuery } from '../users/apiSlice'
-import { loginFormConfig, registerFormConfig } from './config'
+import { useContext } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { OptionsContext } from '../layout/Layout'
+import { useGetUserQuery } from '../users/apiSlice'
+import { useSignOutMutation } from './authApi'
+import { loginFormConfig, registerFormConfig } from './config'
+import { toggleLogin, toggleModal } from './modalSlice'
+import { selectAuth, selectAuthModal } from './selectors'
 
 export const useAuthModal = () => {
   const { modal: isOpen, isLogin } = useAppSelector(selectAuthModal)
-    const { commonConsts } = useContext(OptionsContext)
+  const { commonConsts } = useContext(OptionsContext)
   const login = commonConsts?.login
   const register = commonConsts?.register
   const [authFormConfig,

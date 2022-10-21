@@ -1,7 +1,7 @@
-import { objectFormConfig } from './config'
-import { notBlank } from '../validators/validators'
 import type { ErrorMessages } from '../../../interfaces/commonConsts'
 import type { Product } from '../../../interfaces/products'
+import { notBlank } from '../validators/validators'
+import { objectFormConfig } from './config'
 
 export const validate = (errorMessages: ErrorMessages | undefined) =>
   (values: Partial<Product>) => notBlank(values,

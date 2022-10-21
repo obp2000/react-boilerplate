@@ -1,10 +1,10 @@
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import type { AnyObjectType } from '../../../interfaces/api'
 import { OptionsContext } from '../layout/Layout'
 
-const LinkToNewOrEditObject = ({ object }: AnyObjectType): JSX.Element => {
+const LinkToNewOrEditObject: FC<AnyObjectType> = ({ object }) => {
   const { commonConsts } = useContext(OptionsContext)
   const label = object?.id ? commonConsts?.edit : commonConsts?.new
   const { pathname } = useRouter()

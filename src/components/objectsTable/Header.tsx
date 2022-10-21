@@ -1,10 +1,10 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import { Badge, Col, Row } from 'reactstrap'
 import type { HeaderProps } from '../../../interfaces/objectsTable'
 import type { TableOptionsType } from '../../../interfaces/options'
 import { OptionsContext } from '../layout/Layout'
 
-const Header = ({ totalCount }: HeaderProps) => {
+const Header: FC<HeaderProps> = ({ totalCount }) => {
   const { options } = useContext(OptionsContext) as TableOptionsType
   return <Row>
     <Col sm={2}>

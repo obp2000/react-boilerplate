@@ -1,6 +1,6 @@
 import { useRouter } from 'next/dist/client/router'
-import { useGetUserQuery } from './apiSlice'
 import { useOptionsOuery } from '../options/hooks'
+import { useGetUserQuery } from './apiSlice'
 import { indexUrl } from './config'
 
 export const useUser = () => {

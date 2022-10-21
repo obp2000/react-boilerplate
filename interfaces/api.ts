@@ -5,6 +5,7 @@ import { getOrders } from '../src/components/orders/apiSlice'
 import type { Customer } from './customers'
 import type { Product } from './products'
 import type { Order } from './orders'
+import type { RootState } from '../src/components/store'
 
 export type AnyObject = Customer | Product | Order
 
@@ -32,3 +33,6 @@ export type ObjectsWithTotals = EntityState<AnyObject> & {
 
 export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
   typeof getOrders
+
+export type SelectObjectsData =
+  (state: RootState) => ObjectsWithTotals | undefined

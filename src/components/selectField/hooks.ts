@@ -1,10 +1,9 @@
-import { useMapFieldProps } from '../options/hooks'
 import type { FieldProps } from 'react-final-form'
 import type { AnyChoices, AnyChoicesType } from '../../../interfaces/options'
 import type {
-  SelectOptions,
-  SelectFieldAttrs,
+  SelectFieldAttrs, SelectOptions
 } from '../../../interfaces/selectField'
+import { useMapFieldProps } from '../options/hooks'
 
 export const mapChoices = ({
   choices = [],
@@ -17,7 +16,6 @@ export const mapChoices = ({
     ({ value: value ?? '', label }))
 
 export const useFieldProps = ({
-  options,
   dataKey,
   textField,
   ...props
@@ -26,7 +24,7 @@ export const useFieldProps = ({
     selectOptions,
     helpText,
     ...result
-  } = useMapFieldProps({ options, dataKey, textField, ...props })
+  } = useMapFieldProps({ dataKey, textField, ...props })
   return {
     ...result,
     ...props,

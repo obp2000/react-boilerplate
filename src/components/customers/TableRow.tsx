@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import type {
   Customer,
   CustomerOptionsType
@@ -9,7 +9,7 @@ import { OptionsContext } from '../layout/Layout'
 import Date from '../Shared/Date'
 import ShortName from './ShortName'
 
-const TableRow = ({ object }: TableRowType<Customer>) => {
+const TableRow: FC<TableRowType<Customer>> = ({ object }) => {
   const { options } = useContext(OptionsContext) as CustomerOptionsType
   return <>
     <td scope="row">

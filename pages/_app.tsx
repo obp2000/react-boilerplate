@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
-import { wrapper } from '../src/components/store'
+import { FC } from 'react'
 import 'react-widgets/scss/styles.scss'
 import '../src/assets/css/App.scss'
+import { wrapper } from '../src/components/store'
 
 const App: FC<AppProps> = ({ Component, pageProps }) => <>
   <NextNProgress />

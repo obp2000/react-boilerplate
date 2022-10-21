@@ -1,13 +1,8 @@
-import React from 'react'
+import { FC } from 'react'
 import type { CustomerWithOptions } from '../../../interfaces/customers'
 
-const Address = ({
-  object,
-  options
-}: CustomerWithOptions): JSX.Element | null => {
-  if (!object?.address) {
-    return null
-  }
+const Address: FC<CustomerWithOptions> = ({ object, options }) => {
+  if (!object?.address) { return null }
   return <>{options?.address?.label}: {object.address}</>
 }
 

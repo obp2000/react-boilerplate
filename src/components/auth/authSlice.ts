@@ -1,15 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { HYDRATE } from 'next-redux-wrapper'
 import { AnyAction } from "redux"
-import { toastSuccess, toastError } from '../notifications/toast'
-import { login, register, signOut } from './authApi'
 import type {
-  Login,
+  AuthState, Login,
   Register,
-  SignOut,
-  AuthState,
+  SignOut
 } from '../../../interfaces/auth'
+import { toastError, toastSuccess } from '../notifications/toast'
+import { login, register, signOut } from './authApi'
 
 const initialState: AuthState = {
   isAuthenticated: false,

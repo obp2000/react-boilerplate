@@ -1,6 +1,6 @@
+import type { Customer } from '../../../interfaces/customers'
 import { indexUrl } from './config'
 import CustomerName from './CustomerName'
-import type { Customer } from '../../../interfaces/customers'
 
 const dropdownListTextField = ({
   nick,

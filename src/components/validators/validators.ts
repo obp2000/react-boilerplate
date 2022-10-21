@@ -1,11 +1,11 @@
-import { Customer } from '../../../interfaces/customers'
-import { Product } from '../../../interfaces/products'
-import { Order } from '../../../interfaces/orders'
 import {
   LoginFormValues,
   RegisterFormValues
 } from '../../../interfaces/auth'
+import { Customer } from '../../../interfaces/customers'
 import { Errors } from '../../../interfaces/errors'
+import { Order } from '../../../interfaces/orders'
+import { Product } from '../../../interfaces/products'
 
 const emptyString = ''
 

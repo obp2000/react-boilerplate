@@ -1,8 +1,8 @@
-import React from 'react'
-import { parseISO, format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { FC } from 'react'
 
-const Date = ({ dateString }: { dateString?: string }) => {
+const Date: FC<{ dateString?: string }> = ({ dateString }) => {
   if (!dateString) { return null }
   const date = parseISO(dateString)
   return <time dateTime={dateString}>

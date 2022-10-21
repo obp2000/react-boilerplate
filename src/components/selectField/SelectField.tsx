@@ -1,24 +1,17 @@
-import React from 'react'
+import { FC } from 'react'
 import { Field } from 'react-final-form'
-import SelectOptions from './SelectOptions'
+import type {
+  SelectFieldAttrs
+} from '../../../interfaces/selectField'
 import FormTextList from '../formInput/FormTextList'
 import { useFieldProps } from './hooks'
-import type {
-  SelectFieldAttrs,
-  // SelectOptions
-} from '../../../interfaces/selectField'
+import SelectOptions from './SelectOptions'
 
-const SelectField = (props: SelectFieldAttrs) => {
-  // const { selectOptions, ...fieldAttrs } = useFieldProps(props)
-  return <>
-    <Field {...useFieldProps(props)} className='form-select' component='select'>
-      <SelectOptions {...props} />
-{/*      {selectOptions?.map(({ value, label }: SelectOptions, key: number) =>
-        <option key={key} {...{ value }}>{label}</option>
-      )}*/}
-    </Field>
-    <FormTextList {...props} />
-  </>
-}
+const SelectField: FC<SelectFieldAttrs> = (props) => <>
+  <Field {...useFieldProps(props)} className='form-select' component='select'>
+    <SelectOptions {...props} />
+  </Field>
+  <FormTextList {...props} />
+</>
 
 export default SelectField

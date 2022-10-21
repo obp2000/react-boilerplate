@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { Field } from 'react-final-form'
 import { Col, Row } from 'reactstrap'
 import FloatingFormGroup from '../formInput/FloatingFormGroup'
@@ -5,7 +6,7 @@ import Input from '../formInput/Input'
 import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
 import PostCostButton from './PostCostButton'
 
-const Postals = () => <tr>
+const Postals: FC = () => <tr>
   <td colSpan={4}>
     <Row>
       <Col sm={3}>

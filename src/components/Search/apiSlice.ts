@@ -1,7 +1,7 @@
-import { apiSlice } from '../../services/apiSlice'
-import type { SearchResult } from '../../../interfaces/dropdownList'
 import type { RawObjectsWithTotals } from '../../../interfaces/api'
+import type { SearchResult } from '../../../interfaces/dropdownList'
 import type { SearchObjectsArg } from '../../../interfaces/search'
+import { apiSlice } from '../../services/apiSlice'
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

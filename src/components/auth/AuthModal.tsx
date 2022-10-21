@@ -1,14 +1,11 @@
-import React from 'react'
+import { FC } from 'react'
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Button,
+  Button, Modal, ModalBody, ModalHeader
 } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { useAuthModal } from './hooks'
 
-const AuthModal = () => {
+const AuthModal: FC = () => {
   const {
     isOpen,
     headerAttrs,

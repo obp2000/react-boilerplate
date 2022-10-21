@@ -1,16 +1,13 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Form } from 'react-final-form'
-import { useAppSelector } from '../hooks'
-import { useGetOptionsQuery } from '../options/apiSlice'
-import { selectAuthModal } from './selectors'
-import AuthFormRender from './AuthFormRender'
-import { OptionsContext } from '../layout/Layout'
 import type {
-  LoginFormValues,
-  RegisterFormValues,
-  LoginFormConfig,
-  RegisterFormConfig,
+  LoginFormConfig, LoginFormValues, RegisterFormConfig, RegisterFormValues
 } from '../../../interfaces/auth'
+import { useAppSelector } from '../hooks'
+import { OptionsContext } from '../layout/Layout'
+import { useGetOptionsQuery } from '../options/apiSlice'
+import AuthFormRender from './AuthFormRender'
+import { selectAuthModal } from './selectors'
 // import type { CommonConstsType } from '../../../interfaces/commonConsts'
 
 function AuthForm(props: LoginFormConfig): JSX.Element

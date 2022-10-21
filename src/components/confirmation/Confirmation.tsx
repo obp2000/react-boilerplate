@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import {
   Modal,
   ModalHeader,
@@ -6,16 +6,17 @@ import {
   ModalFooter,
   Button,
 } from 'reactstrap'
-import { confirmable, createConfirmation } from 'react-confirm'
+import {
+  confirmable,
+  createConfirmation,
+  ReactConfirmProps
+} from 'react-confirm'
 import type {
   Confirmation,
   ProceedButtonProps
 } from '../../../interfaces/confirmation'
 
-const ProceedButton = ({
-  label,
-  onClick
-}: ProceedButtonProps): JSX.Element => <Button
+const ProceedButton: FC<ProceedButtonProps> = ({ label, onClick }) => <Button
   size='sm'
   aria-labelledby={label}
   outline
@@ -31,7 +32,7 @@ const ConfirmationComp = ({
   show,
   proceed,
   // enableEscape = true,
-}: Confirmation): JSX.Element => <Modal isOpen={show}>
+}: Omit<ReactConfirmProps, 'proceed'> & Confirmation): JSX.Element => <Modal isOpen={show}>
     <ModalHeader>
       {title}
     </ModalHeader>

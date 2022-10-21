@@ -10,11 +10,12 @@ export const initOrderItem = {
   _destroy: false,
 }
 
-const formInitialOrderItem = (orderItem: OrderItem) => ({
+const formInitialOrderItem = (orderItem: OrderItem): OrderItem => ({
   ...orderItem,
   cost: cost(orderItem),
   weight: weight(orderItem),
 })
 
-export const formInitialOrderItems = (orderItems: OrderItem[] = []) =>
-  orderItems.map((orderItem) => formInitialOrderItem(orderItem))
+export const formInitialOrderItems =
+  (orderItems: OrderItem[] = []): OrderItem[] =>
+    orderItems.map((orderItem) => formInitialOrderItem(orderItem))

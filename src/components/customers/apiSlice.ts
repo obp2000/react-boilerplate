@@ -1,12 +1,10 @@
-import { apiSlice } from '../../services/apiSlice'
-import { indexUrl as url } from './config'
-import { setAll, objectsInitialState } from '../../services/entityAdapter'
-import type { Customer } from '../../../interfaces/customers'
 import type {
-  GetObjectsArg,
-  RawObjectsWithTotals,
-  ObjectsWithTotals,
+  GetObjectsArg, ObjectsWithTotals, RawObjectsWithTotals
 } from '../../../interfaces/api'
+import type { Customer } from '../../../interfaces/customers'
+import { apiSlice } from '../../services/apiSlice'
+import { objectsInitialState, setAll } from '../../services/entityAdapter'
+import { indexUrl as url } from './config'
 
 const type = 'Customers'
 

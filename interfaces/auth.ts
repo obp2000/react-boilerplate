@@ -85,7 +85,7 @@ export interface ModalState {
   modal: boolean
 }
 
-export type AuthFormProps = FormRenderProps & CommonConstsType & {
+export type AuthFormProps = FormRenderProps & {
   options?: LoginOptions | RegisterOptions
   formFields?: FormFields[]
   submitButtonLabel?: string

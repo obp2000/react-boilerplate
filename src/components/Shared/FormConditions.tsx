@@ -1,34 +1,32 @@
-import React from 'react'
+import { FC } from 'react'
 import { Field } from 'react-final-form'
 import type {
-  ConditionIsProps,
-  ConditionGtProps,
-  ConditionGteProps,
+  ConditionGteProps, ConditionGtProps, ConditionIsProps
 } from '../../../interfaces/formConditions'
 
-export const ConditionIs = ({
+export const ConditionIs: FC<ConditionIsProps> = ({
   when,
   is,
   children
-}: ConditionIsProps) => <Field name={when}
+}) => <Field name={when}
   subscription={{ value: true }}>
     {({ input: { value } }) => (value === is ? children : null)}
   </Field>
 
-export const ConditionGt = ({
+export const ConditionGt: FC<ConditionGtProps> = ({
   when,
   gt,
   children
-}: ConditionGtProps) => <Field name={when}
+}) => <Field name={when}
   subscription={{ value: true }}>
     {({ input: { value } }) => (value > Number(gt) ? children : null)}
   </Field>
 
-export const ConditionGte = ({
+export const ConditionGte: FC<ConditionGteProps> = ({
   when,
   gte,
   children
-}: ConditionGteProps) => <Field name={when}
+}) => <Field name={when}
   subscription={{ value: true }}>
     {({ input: { value } }) => (value >= Number(gte) ? children : null)}
   </Field>

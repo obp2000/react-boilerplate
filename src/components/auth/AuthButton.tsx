@@ -1,9 +1,9 @@
-import React from 'react'
+import { FC } from 'react'
 import { Button } from 'reactstrap'
 // import Loader from 'react-loader'
 import { useAuthButton } from './hooks'
 
-const AuthButton = () => {
+const AuthButton: FC = () => {
   const { loaded, ...buttonAttrs } = useAuthButton()
   // if (!loaded) {return <Loader loaded={false}/>}
   return <Button

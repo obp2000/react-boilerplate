@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
+import { FC, useContext } from 'react'
 import { Button } from 'reactstrap'
 import { OptionsContext } from '../layout/Layout'
 
-const BackButton = () => {
+const BackButton: FC = () => {
   const router = useRouter()
   const { commonConsts } = useContext(OptionsContext)
   return <Button

@@ -1,7 +1,7 @@
-import React from 'react'
+import { FC } from 'react'
 import { ProductWithOptions } from '../../../interfaces/products'
 
-const Contents = ({ object }: ProductWithOptions) => {
+const Contents: FC<ProductWithOptions> = ({ object }) => {
   if (object?.contents == null) {
     return null
   }

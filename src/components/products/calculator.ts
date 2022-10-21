@@ -1,6 +1,6 @@
-import createDecorator from 'final-form-calculate'
-import type { Calculation } from 'final-form-calculate'
 import type { Decorator } from 'final-form'
+import type { Calculation } from 'final-form-calculate'
+import createDecorator from 'final-form-calculate'
 import { Product } from '../../../interfaces/products'
 
 const canCountDensityForCount = (values: Product): boolean =>
@@ -116,74 +116,3 @@ const calculations: Calculation[] = [
 ]
 
 export const calculator: Decorator = createDecorator(...calculations)
-
-// export const calculator = (options): Decorator => {
-//   // console.log('Consts ', Consts)
-//   // const prices = (_, values) => countPrices(_, {...values, ...productConsts})
-
-//   const updatePrices = {
-//     prices: (_: null, values: any) => prices(null, values)
-//   }
-
-//   const updateDensityForCount = {
-//     density_for_count: densityForCount,
-//   }
-
-//   const updateMetersInRoll = {
-//     meters_in_roll: metersInRoll,
-//   }
-
-//   const onChangeWeightForCount = {
-//     field: 'weight_for_count',
-//     updates: updateDensityForCount,
-//   }
-
-//   const onChangeLengthForCount = {
-//     field: 'length_for_count',
-//     updates: updateDensityForCount,
-//   }
-
-//   const onChangeWidth = {
-//     field: 'width',
-//     updates: {
-//       ...updateDensityForCount,
-//       ...updateMetersInRoll,
-//       ...updatePrices,
-//     }
-//   }
-
-//   const onChangeWeight = {
-//     field: 'weight',
-//     updates: updateMetersInRoll,
-//   }
-
-//   const onChangeDensity = {
-//     field: 'density',
-//     updates: {
-//       ...updateMetersInRoll,
-//       ...updatePrices,
-//     },
-//   }
-
-//   const onChangeDollarPrice = {
-//     field: 'dollar_price',
-//     updates: updatePrices,
-//   }
-
-//   const onChangeDollarRate = {
-//     field: 'dollar_rate',
-//     updates: updatePrices,
-//   }
-
-//   const calculations: Calculation[] = [
-//     onChangeWeightForCount,
-//     onChangeLengthForCount,
-//     onChangeWidth,
-//     onChangeWeight,
-//     onChangeDensity,
-//     onChangeDollarPrice,
-//     onChangeDollarRate
-//   ]
-
-//   return createDecorator(...calculations)
-// }

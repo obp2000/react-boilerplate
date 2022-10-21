@@ -1,19 +1,18 @@
-import type { FormRenderProps } from 'react-final-form'
-import type { IndexUrl } from './index'
-import type { FieldProps } from './options'
 import type { City, CityOptions } from './cities'
-import type { CommonConstsType } from './commonConsts'
+import type { FieldProps } from './options'
 import {
   getCustomers,
-  useGetCustomerQuery,
+  getCustomer,
   useCreateCustomerMutation,
-  useUpdateCustomerMutation,
   useDeleteCustomerMutation,
+  useGetCustomerQuery,
+  useUpdateCustomerMutation
 } from '../src/components/customers/apiSlice'
-import TableRow from '../src/components/customers/TableRow'
-import TableLabels from '../src/components/customers/TableLabels'
-import { validate } from '../src/components/customers/validators'
+import { formInitialValues } from '../src/components/customers/config'
 import objectFormRender from '../src/components/customers/CustomerFormRender'
+import TableLabels from '../src/components/customers/TableLabels'
+import TableRow from '../src/components/customers/TableRow'
+import { validate } from '../src/components/customers/validators'
 
 export type Customer = {
   id: number
@@ -56,20 +55,19 @@ export type CustomerType = {
 
 export type CustomerWithOptions = CustomerType & CustomerOptionsType
 
-export type TableConfig = IndexUrl & {
+export type TableConfig = {
   getObjects: typeof getCustomers
   TableRow: typeof TableRow
   TableLabels: typeof TableLabels
   useDeleteObjectMutation: typeof useDeleteCustomerMutation
 }
 
-export type FormConfig = IndexUrl & {
+export type FormConfig = {
+  getObject: typeof getCustomer
   useGetObjectQuery: typeof useGetCustomerQuery
-  formInitialValues: CustomerWithOptions
+  formInitialValues: typeof formInitialValues
   validate: typeof validate
   useUpdateObjectMutation: typeof useUpdateCustomerMutation
   useCreateObjectMutation: typeof useCreateCustomerMutation
   objectFormRender: typeof objectFormRender
 }
-
-export type CustomerFormProps = FormRenderProps & CustomerType

@@ -1,33 +1,33 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { createWrapper } from 'next-redux-wrapper'
 import {
   nextReduxCookieMiddleware,
-  wrapMakeStore,
+  wrapMakeStore
 } from 'next-redux-cookie-wrapper'
-import logger from './logger'
+import { createWrapper } from 'next-redux-wrapper'
 import { apiSlice } from '../services/apiSlice'
-import { rtkQueryErrorLogger } from './errorMiddleware'
 import auth from './auth/authSlice'
 import authModal from './auth/modalSlice'
+import { rtkQueryErrorLogger } from './errorMiddleware'
+import logger from './logger'
 
 const makeStore = () => configureStore({
-    reducer: {
-      auth,
-      authModal,
-      [apiSlice.reducerPath]: apiSlice.reducer,
-    },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().
-      prepend(
-        nextReduxCookieMiddleware({ subtrees: ['auth'] }),
-        apiSlice.middleware,
-      ).
-      concat([
-        rtkQueryErrorLogger,
-        logger,
-      ]
-      ),
-    devTools: process.env.NODE_ENV !== 'production',
-  })
+  reducer: {
+    auth,
+    authModal,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().
+    prepend(
+      nextReduxCookieMiddleware({ subtrees: ['auth'] }),
+      apiSlice.middleware,
+    ).
+    concat([
+      rtkQueryErrorLogger,
+      logger,
+    ]
+    ),
+  devTools: process.env.NODE_ENV !== 'production',
+})
 
 export const wrappedMakeStore = wrapMakeStore(makeStore)
 export const wrapper = createWrapper(wrappedMakeStore, { debug: false })

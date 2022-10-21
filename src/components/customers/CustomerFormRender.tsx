@@ -1,14 +1,13 @@
-import React from 'react'
-import { Field } from 'react-final-form'
-import { Form, Row, Col } from 'reactstrap'
-import FloatingFormGroup from '../formInput/FloatingFormGroup'
-import Header from '../objectForm/Header'
-import Input from '../formInput/Input'
+import { FC } from 'react'
+import { Field, FormRenderProps } from 'react-final-form'
+import { Col, Form, Row } from 'reactstrap'
 import { useDropdown as useCityDropdownAttrs } from '../cities/hooks'
 import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
-import type { CustomerFormProps } from '../../../interfaces/customers'
+import FloatingFormGroup from '../formInput/FloatingFormGroup'
+import Input from '../formInput/Input'
+import Header from '../objectForm/Header'
 
-const CustomerFormRender = (props: CustomerFormProps) => <Form
+const CustomerFormRender: FC<FormRenderProps> = (props) => <Form
   onSubmit={props.handleSubmit} className="shadow p-3 mb-5 bg-body rounded">
   <Header {...props} />
   <Field name="id" hidden component={Input} />

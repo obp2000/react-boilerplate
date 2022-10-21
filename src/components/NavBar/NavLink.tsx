@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import { FC } from 'react'
 import type { MainMenuItem } from '../../../interfaces/commonConsts'
 import { useMainMenuItemClassName } from './hooks'
 
-const NavLink = ({ path, label, }: MainMenuItem) => <Link href={path}>
+const NavLink: FC<MainMenuItem> = ({ path, label, }) => <Link href={path}>
   <a className={useMainMenuItemClassName(path)}>
     {label}
   </a>

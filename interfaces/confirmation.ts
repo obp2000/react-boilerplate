@@ -4,10 +4,7 @@ export type Confirmation = {
   proceedLabel: string
   cancelLabel: string
   title: string
-  confirmation: string
-  show: boolean
-  proceed: Function
-  enableEscape: boolean
+  proceed: (value?: boolean) => void
 }
 
 export type ProceedButtonProps = {

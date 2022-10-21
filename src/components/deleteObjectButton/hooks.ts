@@ -1,12 +1,12 @@
 import { useContext } from 'react'
-import { useAppSelector } from '../hooks'
-import { selectAuth } from '../auth/selectors'
-import { OptionsContext } from '../layout/Layout'
-import { toastSuccess, toastError } from '../notifications/toast'
-import confirmAction from '../confirmation/confirmAction'
 import type {
   DeleteObjectButtonType
 } from '../../../interfaces/deleteObjectButton'
+import { selectAuth } from '../auth/selectors'
+import confirmAction from '../confirmation/confirmAction'
+import { useAppSelector } from '../hooks'
+import { OptionsContext } from '../layout/Layout'
+import { toastError, toastSuccess } from '../notifications/toast'
 
 export const useDeleteObject = ({
   object,

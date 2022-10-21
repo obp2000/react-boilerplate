@@ -1,15 +1,10 @@
-import { createEntityAdapter, createSelector, } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector } from '@reduxjs/toolkit'
 import { useRouter } from 'next/dist/client/router'
-import { useAppSelector, useAppDispatch } from '../components/hooks'
-// import { useDispatch } from 'react-redux'
 import type {
-  AnyObject,
-  ObjectsWithTotals,
-  GetObjectsEndpoint
+  AnyObject, GetObjectsEndpoint, SelectObjectsData
 } from '../../interfaces/api'
+import { useAppDispatch, useAppSelector } from '../components/hooks'
 import type { RootState } from '../components/store'
-
-type SelectObjectsData = (state: RootState) => ObjectsWithTotals | undefined
 
 export const objectsAdapter = createEntityAdapter<AnyObject>({
   sortComparer: (a, b) => b.updated_at.localeCompare(a.updated_at),
@@ -71,15 +66,6 @@ export const useObjectsData = (getObjects: GetObjectsEndpoint) => {
   const { totalCount, totalPages } =
     useAppSelector(selectObjectsData) || objectsInitialState
   const { selectAll } = getSelectors(selectObjectsData)
-
-  // const {
-  // selectObjectsResult,
-  // selectObjectsData,
-  // selectAll,
-  // } = useSelectors(getObjects)
-  // const { isLoading, isSuccess } = useAppSelector(selectObjectsResult)
-  // const { totalCount, totalPages } =
-  //   useAppSelector(selectObjectsData) || objectsInitialState
   return {
     busyLoadingObjects: isLoading || isFallback,
     isSuccess,

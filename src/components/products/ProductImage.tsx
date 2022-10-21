@@ -1,19 +1,18 @@
-import React, { useContext } from 'react'
 import Image from 'next/image'
-import { OptionsContext } from '../layout/Layout'
+import { FC, useContext } from 'react'
+import { FormRenderProps } from 'react-final-form'
+import type { ProductOptionsType } from '../../../interfaces/products'
 import blank from '../../assets/img/blank.png'
-import type {
-  ProductType,
-  ProductOptionsType
-} from '../../../interfaces/products'
+import { OptionsContext } from '../layout/Layout'
 
-const ProductImage = ({ object }: ProductType): JSX.Element => {
+const ProductImage: FC<FormRenderProps> = ({ values }) => {
   const { options } = useContext(OptionsContext) as ProductOptionsType
+  const { imageOrig } = values
   return <Image
-    src={object?.image || blank}
+    src={imageOrig || blank}
     alt={options?.image.label}
     width={500}
-    height={object?.image ? 500 : 300}
+    height={imageOrig ? 500 : 300}
     className='img-thumbnail rounded float-start'
   />
 }

@@ -1,7 +1,7 @@
-import React from 'react'
-import type { CustomerWithOptions} from '../../../interfaces/customers'
+import { FC } from 'react'
+import type { CustomerWithOptions } from '../../../interfaces/customers'
 
-const Name = ({ object, options }: CustomerWithOptions): JSX.Element | null => {
+const Name: FC<CustomerWithOptions> = ({ object, options }) => {
   if (!object?.name) { return null }
   return <>{options?.name?.label}: {object.name}</>
 }

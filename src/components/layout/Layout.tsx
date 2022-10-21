@@ -1,5 +1,5 @@
 import Head from "next/head"
-import React from 'react'
+import React, { FC } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container } from 'reactstrap'
 // import Loader from 'react-loader'
@@ -19,7 +19,7 @@ export const OptionsContext = React.createContext({
   commonConsts: undefined
 } as AnyOptionsType & CommonConstsType)
 
-const Layout = ({ indexUrl, children }: LayoutType): JSX.Element => {
+const Layout: FC<LayoutType> = ({ indexUrl, children }) => {
   const { isAuthenticated } = useAppSelector(selectAuth)
   const { options, commonConsts } = useOptionsOuery(indexUrl)
   // if (isLoadingOptions) {return <Loader />}

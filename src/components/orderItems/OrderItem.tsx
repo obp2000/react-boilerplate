@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { Field } from 'react-final-form'
 import type { OrderItemForm } from '../../../interfaces/orderItems'
 import DropdownList from '../dropdownList/DropdownList'
@@ -5,7 +6,7 @@ import Input from '../formInput/Input'
 import { useDropdown as useProductDropdownAttrs } from '../products/hooks'
 import DeleteOrderItemButton from './DeleteOrderItemButton'
 
-const OrderItem = ({ orderItemName, index }: OrderItemForm) => <tr>
+const OrderItem: FC<OrderItemForm> = ({ orderItemName, index }) => <tr>
   <th scope="row">
     {index + 1}
   </th>
@@ -19,19 +20,11 @@ const OrderItem = ({ orderItemName, index }: OrderItemForm) => <tr>
   </td>
   <td>
     <Field
-      name={`${orderItemName}.price`}
-      step={1}
-      min={0}
-      component={Input}
-    />
+      name={`${orderItemName}.price`} step={1} min={0} component={Input} />
   </td>
   <td>
     <Field
-      name={`${orderItemName}.amount`}
-      step={0.1}
-      min={0}
-      component={Input}
-    />
+      name={`${orderItemName}.amount`} step={0.1} min={0} component={Input} />
   </td>
   <td>
     <Field name={`${orderItemName}.cost`} disabled component={Input} />

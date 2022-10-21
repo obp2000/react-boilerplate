@@ -1,12 +1,12 @@
-import { validateLogin, validateRegister } from './validators'
-import {
-  useLoginMutation,
-  useRegisterMutation,
-} from './authApi'
 import type {
   LoginFormConfig,
-  RegisterFormConfig,
+  RegisterFormConfig
 } from '../../../interfaces/auth'
+import {
+  useLoginMutation,
+  useRegisterMutation
+} from './authApi'
+import { validateLogin, validateRegister } from './validators'
 
 export const loginFormConfig: LoginFormConfig = {
   indexUrl: '/login/',

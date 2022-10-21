@@ -1,18 +1,13 @@
-import React from 'react'
-import ShortName from './ShortName'
+import { FC } from 'react'
+import type { CustomerWithOptions } from '../../../interfaces/customers'
 import CityName from '../cities/CityName'
 import Address from './Address'
-import type { CustomerWithOptions } from '../../../interfaces/customers'
+import ShortName from './ShortName'
 
-const CustomerName = ({
-  object,
-  options
-}: CustomerWithOptions): JSX.Element => {
-  return <>
-    <ShortName {...{ object, options }} />{' '}
-    <CityName object={object?.city} options={options?.city.children} />{' '}
-    <Address {...{ object, options }} />
-  </>
-}
+const CustomerName: FC<CustomerWithOptions> = ({ object, options }) => <>
+  <ShortName {...{ object, options }} />{' '}
+  <CityName object={object?.city} options={options?.city.children} />{' '}
+  <Address {...{ object, options }} />
+</>
 
 export default CustomerName

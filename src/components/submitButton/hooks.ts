@@ -1,19 +1,20 @@
-import array from 'lodash/array'
+// import array from 'lodash/array'
 import { useFormState } from 'react-final-form'
 import type { SubmitButtonProps } from '../../../interfaces/objectForm'
 
-const useDirtyOnlyCalculatedFields = ({
-  calculatedFields
-}: SubmitButtonProps): boolean => {
-  const { dirtyFields } = useFormState()
-  return array.intersection(Object.keys(dirtyFields), calculatedFields) ==
-    dirtyFields
+const useHasDirtyAndVisitedFields = (): boolean => {
+  const { dirtyFields, visited = {} } = useFormState()
+  const result = Object.keys(dirtyFields).reduce(
+    (dirtyAndVisited: string[], field) => {
+      if (visited[field as keyof typeof visited]) {
+        dirtyAndVisited.push(field)
+      }
+      return dirtyAndVisited
+    }, [])
+  return result.length > 0
 }
 
-export const useDisabled = ({
-  isLoading,
-  ...props
-}: SubmitButtonProps): boolean => {
+export const useDisabled = ({ isLoading }: SubmitButtonProps): boolean => {
   const {
     submitting,
     pristine,
@@ -21,16 +22,23 @@ export const useDisabled = ({
     hasValidationErrors,
     dirtySinceLastSubmit,
   } = useFormState()
-  // console.log('rest useForm ', useForm())
-  const dirtyOnlyCalculatedFields = useDirtyOnlyCalculatedFields(props)
+  const hasDirtyAndVisitedFields = useHasDirtyAndVisitedFields()
   return submitting ||
     pristine ||
-    dirtyOnlyCalculatedFields ||
+    !hasDirtyAndVisitedFields ||
     hasValidationErrors ||
     isLoading ||
     (hasSubmitErrors && !dirtySinceLastSubmit)
 }
 
+
+// const useDirtyOnlyCalculatedFields = ({
+//   calculatedFields
+// }: SubmitButtonProps): boolean => {
+//   const { dirtyFields, visited } = useFormState()
+//   return array.intersection(Object.keys(dirtyFields), calculatedFields) ==
+//     dirtyFields
+// }
 
 // export const disabled = ({
 //   submitting,

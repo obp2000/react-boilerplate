@@ -1,18 +1,19 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
+import type { FormRenderProps } from 'react-final-form'
 import { Col, Row } from 'reactstrap'
 import type { CommonConstsType } from '../../../interfaces/commonConsts'
-import type { HeaderProps } from '../../../interfaces/objectForm'
 import type { AnyObjectOptionsType } from '../../../interfaces/options'
 import BackButton from '../backButton/BackButton'
 import { OptionsContext } from '../layout/Layout'
 import Date from '../Shared/Date'
 import SubmitButton from '../submitButton/SubmitButton'
 
-const Header = ({ object, ...props }: HeaderProps): JSX.Element => {
+const Header: FC<FormRenderProps> = (props) => {
+  const { id, created_at } = props.initialValues
   const { commonConsts, options } =
     useContext(OptionsContext) as CommonConstsType & AnyObjectOptionsType
-  const label = object?.id
-    ? `${options?.name_singular} № ${object?.id} ${commonConsts?.from} `
+  const label = id
+    ? `${options?.name_singular} № ${id} ${commonConsts?.from} `
     : `${commonConsts?.new} ${options?.name_singular.toLowerCase()} `
   return <Row>
     <Col sm={2}>
@@ -21,7 +22,7 @@ const Header = ({ object, ...props }: HeaderProps): JSX.Element => {
     <Col sm={6}>
       <h4 aria-label={options?.name_singular}>
         {label}
-        <Date dateString={object?.created_at} />
+        <Date dateString={created_at} />
       </h4>
     </Col>
     <Col sm={2}>

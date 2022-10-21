@@ -1,15 +1,12 @@
-import { loginFormConfig, registerFormConfig } from './config'
-import {
-  notBlank,
-  validEmail,
-  passwordLength,
-  validPasswordConfirmation,
-} from '../validators/validators'
 import type {
   LoginFormValues,
-  RegisterFormValues,
+  RegisterFormValues
 } from '../../../interfaces/auth'
 import type { ErrorMessages } from '../../../interfaces/commonConsts'
+import {
+  notBlank, passwordLength, validEmail, validPasswordConfirmation
+} from '../validators/validators'
+import { loginFormConfig, registerFormConfig } from './config'
 
 export const validateLogin = (errorMessages: ErrorMessages) =>
   (values: LoginFormValues) =>

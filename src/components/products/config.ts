@@ -1,26 +1,29 @@
+import type {
+  ProductWithOptions,
+  FormInitialValues
+} from '../../../interfaces/products'
 import {
   getProducts as getObjects,
-  useGetProductQuery as useGetObjectQuery,
+  getProduct as getObject,
   useCreateProductMutation as useCreateObjectMutation,
-  useUpdateProductMutation as useUpdateObjectMutation,
   useDeleteProductMutation as useDeleteObjectMutation,
+  useGetProductQuery as useGetObjectQuery,
+  useUpdateProductMutation as useUpdateObjectMutation
 } from './apiSlice'
-import objectFormRender from './ProductFormRender'
-import { validate } from './validators'
 import {
   calculator,
   densityForCount,
   metersInRoll,
-  prices,
+  prices
 } from './calculator'
-import TableRow from './TableRow'
+import objectFormRender from './ProductFormRender'
 import TableLabels from './TableLabels'
-import type { Product, ProductWithOptions } from '../../../interfaces/products'
+import TableRow from './TableRow'
+import { validate } from './validators'
 
 export const indexUrl = '/products/'
 
 export const objectsTableConfig = {
-  indexUrl,
   getObjects,
   TableRow,
   TableLabels,
@@ -33,9 +36,12 @@ export const calculatedFields = [
   'prices',
 ]
 
-const formInitialValues = ({ object, options }: ProductWithOptions) => {
-  let { image, ...objectMod } = object ?? {}
-  let objectValues: Partial<Product> = {
+export const formInitialValues = ({
+  object, options
+}: ProductWithOptions): FormInitialValues | {} => {
+  let { image: imageOrig, ...objectMod } = object ?? {}
+  let objectValues = {
+    imageOrig,
     ...objectMod,
     consts: options?.Consts,
   }
@@ -56,7 +62,7 @@ const validatedFields = {
 }
 
 export const objectFormConfig = {
-  indexUrl,
+  getObject,
   useGetObjectQuery,
   formInitialValues,
   formDecorators: [calculator],

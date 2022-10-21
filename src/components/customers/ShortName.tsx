@@ -1,8 +1,8 @@
-import React from 'react'
-import Name from './Name'
+import { FC } from 'react'
 import type { CustomerWithOptions } from '../../../interfaces/customers'
+import Name from './Name'
 
-const ShortName = ({ object, options }: CustomerWithOptions): JSX.Element => <>
+const ShortName: FC<CustomerWithOptions> = ({ object, options }) => <>
   {object?.nick + ' '}
   <Name {...{ object, options }} />
 </>

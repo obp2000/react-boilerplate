@@ -1,9 +1,10 @@
 import Link from 'next/link'
+import { FC } from 'react'
 import { Pagination, PaginationItem } from 'reactstrap'
 import type { TotalPages } from '../../../interfaces/pagination'
 import { usePagination } from './hooks'
 
-const PaginationComp = (props: TotalPages): JSX.Element | null => {
+const PaginationComp: FC<TotalPages> = (props) => {
   const pages = usePagination(props)
   if (pages.length === 0) return null
   return <Pagination>

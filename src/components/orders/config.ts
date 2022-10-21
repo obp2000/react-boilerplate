@@ -3,6 +3,7 @@ import type { Order, OrderWithOptions } from '../../../interfaces/orders'
 import { formInitialOrderItems } from '../orderItems/config'
 import {
   getOrders as getObjects,
+  getOrder as getObject,
   useCreateOrderMutation as useCreateObjectMutation,
   useDeleteOrderMutation as useDeleteObjectMutation,
   useGetOrderQuery as useGetObjectQuery,
@@ -26,7 +27,6 @@ import { validate } from './validators'
 export const indexUrl = '/orders/'
 
 export const objectsTableConfig = {
-  indexUrl,
   getObjects,
   TableRow,
   TableLabels,
@@ -41,11 +41,14 @@ export const calculatedFields = [
   'total_weight',
 ]
 
-export const formInitialValues = ({ object, options }: OrderWithOptions) => {
+export const formInitialValues = ({
+  object,
+  options
+}: OrderWithOptions): Order | {} => {
   const orderItems = {
     order_items: formInitialOrderItems(object?.order_items),
   }
-  let objectValues: Partial<Order> = {
+  let objectValues = {
     ...object,
     consts: options?.Consts,
     samples_weight: options?.Consts.SAMPLES_WEIGHT,
@@ -74,7 +77,7 @@ const validatedFields = {
 }
 
 export const objectFormConfig = {
-  indexUrl,
+  getObject,
   useGetObjectQuery,
   formInitialValues,
   formDecorators: [calculator],

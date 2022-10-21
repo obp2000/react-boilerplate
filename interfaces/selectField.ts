@@ -5,7 +5,7 @@ export type SelectOptions = {
   label: string
 }
 
-export type SelectFieldAttrs = AnyOptionsType & {
+export type SelectFieldAttrs = {
   name: string
   dataKey: string
   textField: string

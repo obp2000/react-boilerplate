@@ -8,13 +8,15 @@ import type { Order } from '../../../interfaces/orders'
 import type { Product } from '../../../interfaces/products'
 
 const countCost = ({ amount, price }: Partial<OrderItem>) =>
-  Number(amount) * Number(price)
+  amount && price ? Number(amount) * Number(price) : 0
 
 export const cost = (values: Partial<OrderItem>) =>
   countCost(values).toFixed(2)
 
 const countWeight = ({ amount, product }: Partial<OrderItem>) =>
-  Number(amount) * Number(product?.density) * Number(product?.width) / 100
+  amount && product
+    ? Number(amount) * Number(product?.density) * Number(product?.width) / 100
+    : 0
 
 export const weight = (values: Partial<OrderItem>) =>
   countWeight(values).toFixed(0)
@@ -137,10 +139,14 @@ const onChangeOrderItemPrice = {
 const onChangeOrderItemProduct = {
   field: orderItemsRegExp('product'),
   updates: (value: Product, name: string, values: any) => {
-    const orderItem = makeOrderItem(name, 'product', values)
-    return {
-      [name.replace('.product', '.price')]: value?.price,
-      [name.replace('.product', '.weight')]: weight(orderItem),
+    if (value) {
+      const orderItem = makeOrderItem(name, 'product', values)
+      return {
+        [name.replace('.product', '.price')]: value.price,
+        [name.replace('.product', '.weight')]: weight(orderItem),
+      }
+    } else {
+      return {}
     }
   },
 }
@@ -216,10 +222,12 @@ const calculations: Calculation[] = [
 
 export const calculator: Decorator = createDecorator(...calculations)
 
-export const postCostCount: Mutator = (
-  _,
-  state,
-  { getIn, changeValue, resetFieldState }
+export const postCostCount: Mutator = (_, state,
+  {
+    getIn,
+    changeValue,
+    resetFieldState
+  }
 ): void => {
   const pindex = getIn(state, 'formState.values.customer.city.pindex')
   const totalWeight = getIn(state, 'formState.values.total_weight')
@@ -234,7 +242,8 @@ export const postCostCount: Mutator = (
     .then((response) => response.json())
     .then(({ posilka_nds: posilkaNds }) => {
       changeValue(state, 'post_cost', () => posilkaNds ?? 0)
-      return resetFieldState('post_cost')
+      resetFieldState('post_cost')
+      return state.fields['post_cost'].focus()
     })
     .catch((e) => console.error(e))
 }

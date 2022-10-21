@@ -8,16 +8,16 @@ import type {
 } from '../../../interfaces/input'
 import { useMapFieldProps } from '../options/hooks'
 
-const invalid = ({ error }: FieldMetaState<any>): boolean =>
-  !!error ? true : false
+const invalid = ({ touched, error }: FieldMetaState<any>): boolean =>
+  Boolean(touched && !!error)
 
 const valid = ({
-  visited,
   dirty,
   active,
-  error
+  touched,
+  error,
 }: FieldMetaState<any>): boolean =>
-  visited && dirty && !active && !error ? true : false
+  Boolean(touched && !active && dirty && !error)
 
 const isValidatedField = (type: string | undefined): boolean =>
   [undefined, 'text', 'number', 'password', 'email',].includes(type)
@@ -43,7 +43,6 @@ const fileTypeProps = (input: FieldInputProps<any>) => ({
 export const useFieldProps = ({
   input,
   meta,
-  // options,
   ...props
 }: FieldAttrs): Partial<FieldRenderProps<any>> => {
   let {

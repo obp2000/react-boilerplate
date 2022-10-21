@@ -1,8 +1,8 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import { Badge, NavbarBrand } from 'reactstrap'
 import { OptionsContext } from '../layout/Layout'
 
-const NavBarBrand = () => {
+const NavBarBrand: FC = () => {
   const { commonConsts } = useContext(OptionsContext)
   return <NavbarBrand href="/">
     <h3>

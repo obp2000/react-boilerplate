@@ -1,9 +1,9 @@
-import { useContext } from 'react'
+import { FC, useContext } from 'react'
 import { useForm, useFormState } from 'react-final-form'
 import { Button } from 'reactstrap'
 import { OptionsContext } from '../layout/Layout'
 
-const PostCostButton = () => {
+const PostCostButton: FC = () => {
   const { commonConsts } = useContext(OptionsContext)
   const { mutators } = useForm()
   const { values } = useFormState()

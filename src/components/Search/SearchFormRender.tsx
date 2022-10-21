@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
+import { FC, useContext } from 'react'
+import type { FormRenderProps } from 'react-final-form'
 import { Field } from 'react-final-form'
 import { Form } from 'reactstrap'
 import Input from '../formInput/Input'
-import SubmitButton from '../submitButton/SubmitButton'
 import { OptionsContext } from '../layout/Layout'
-import type { SearchFormProps } from '../../../interfaces/search'
+import SubmitButton from '../submitButton/SubmitButton'
 
-const SearchFormRender = (props: SearchFormProps) => {
+const SearchFormRender: FC<FormRenderProps> = (props) => {
   const { commonConsts } = useContext(OptionsContext)
   return <Form onSubmit={props.handleSubmit}
     inline='true'

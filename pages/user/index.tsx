@@ -1,14 +1,13 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
+import { GetServerSideProps } from 'next'
+import { selectAuth } from '../../src/components/auth/selectors'
 import Layout from '../../src/components/layout/Layout'
 import { getOptions } from '../../src/components/options/apiSlice'
-import { getRunningOperationPromises } from '../../src/services/apiSlice'
 import { wrapper } from '../../src/components/store'
-import User from '../../src/components/users/User'
-import { indexUrl, } from '../../src/components/users/config'
 import { getUser } from '../../src/components/users/apiSlice'
-import { selectAuth } from '../../src/components/auth/selectors'
+import { indexUrl } from '../../src/components/users/config'
+import User from '../../src/components/users/User'
+import { getRunningOperationPromises } from '../../src/services/apiSlice'
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(({ dispatch, getState }) => async () => {
@@ -23,10 +22,9 @@ export const getServerSideProps: GetServerSideProps =
     return {
       props: {},
     }
-  }
-  )
+  })
 
-const Home: NextPage = () => <Layout indexUrl={indexUrl}>
+const Home: NextPage = () => <Layout {...{ indexUrl }}>
   <User />
 </Layout>
 

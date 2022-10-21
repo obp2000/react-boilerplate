@@ -1,6 +1,6 @@
-import { indexUrl } from './config'
-import CityName from './CityName'
 import type { City } from '../../../interfaces/cities'
+import CityName from './CityName'
+import { indexUrl } from './config'
 
 const dropdownListTextField = ({ city, pindex }: City) => [city, pindex]
 
