@@ -1,57 +1,14 @@
-// import type { FormProps, FormRenderProps } from 'react-final-form'
-import type { Decorator, Mutator } from 'final-form'
-import type { IndexUrl } from '.'
-import type { Customer, CustomerWithOptions } from './customers'
-import type { Product, ProductWithOptions } from './products'
-import type { Order, OrderWithOptions } from './orders'
-// import type { CommonConstsType } from './commonConsts'
+import type { CustomerFormValues } from './customers'
+import type { ProductFormValues } from './products'
+import type { OrderFormValues } from './orders'
 import type { AnyObjectType } from './api'
-// import type { AnyOptionsType, AnyObjectOptionsType } from './options'
-// import {
-//   getCustomers,
-//   useGetCustomerQuery,
-//   useCreateCustomerMutation,
-//   useUpdateCustomerMutation,
-//   useDeleteCustomerMutation,
-// } from '../src/components/customers/apiSlice'
-// import {
-//   getProducts,
-//   useGetProductQuery,
-//   useCreateProductMutation,
-//   useUpdateProductMutation,
-//   useDeleteProductMutation,
-// } from '../src/components/products/apiSlice'
-// import {
-//   getOrders,
-//   useCreateOrderMutation,
-//   useDeleteOrderMutation,
-//   useGetOrderQuery,
-//   useUpdateOrderMutation
-// } from '../src/components/orders/apiSlice'
-// import {
-//   validate as customerValidate
-// } from '../src/components/customers/validators'
-// import {
-//   validate as productValidate
-// } from '../src/components/products/validators'
-// import {
-//   validate as orderValidate
-// } from '../src/components/orders/validators'
-// import customerFormRender from '../src/components/customers/CustomerFormRender'
-// import productFormRender from '../src/components/products/ProductFormRender'
-// import orderFormRender from '../src/components/orders/OrderFormRender'
-// import {
-//   formInitialValues as customerFormInitialValues
-// } from '../src/components/customers/config'
-// import {
-//   formInitialValues as productFormInitialValues
-// } from '../src/components/products/config'
-// import {
-//   formInitialValues as orderFormInitialValues
-// } from '../src/components/orders/config'
+import {
+  LoginFormValues,
+  RegisterFormValues
+} from './auth'
 
-export type AnyObjectFormValues = Partial<Customer> | Partial<Product> |
-  Partial<Order>
+export type AnyObjectFormValues = CustomerFormValues | ProductFormValues |
+  OrderFormValues
 
 export type IsCalculatedFields = {
   fields?: { [index: string]: boolean }
@@ -68,6 +25,11 @@ export type SubmitButtonProps = {
 }
 
 export type HeaderProps = AnyObjectType & SubmitButtonProps
+
+export type AnyFormValues = CustomerFormValues | ProductFormValues |
+  OrderFormValues | LoginFormValues | RegisterFormValues
+
+
 
 // export type FormConfig = IndexUrl & {
 //   useGetObjectQuery: typeof useGetCustomerQuery | typeof useGetProductQuery |

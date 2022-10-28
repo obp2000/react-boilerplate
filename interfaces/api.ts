@@ -1,11 +1,11 @@
 import type { EntityState } from '@reduxjs/toolkit'
-import { getCustomers } from '../src/components/customers/apiSlice'
-import { getProducts } from '../src/components/products/apiSlice'
-import { getOrders } from '../src/components/orders/apiSlice'
+import type { RootState } from '../services/store'
+import { getCustomers } from '../components/customers/apiSlice'
+import { getOrders } from '../components/orders/apiSlice'
+import { getProducts } from '../components/products/apiSlice'
 import type { Customer } from './customers'
-import type { Product } from './products'
 import type { Order } from './orders'
-import type { RootState } from '../src/components/store'
+import type { Product } from './products'
 
 export type AnyObject = Customer | Product | Order
 

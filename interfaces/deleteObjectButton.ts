@@ -1,12 +1,6 @@
-import {
-  useDeleteCustomerMutation
-} from '../src/components/customers/apiSlice'
-import {
-  useDeleteProductMutation
-} from '../src/components/products/apiSlice'
-import {
-  useDeleteOrderMutation
-} from '../src/components/orders/apiSlice'
+import { useDeleteCustomerMutation } from '../components/customers/apiSlice'
+import { useDeleteOrderMutation } from '../components/orders/apiSlice'
+import { useDeleteProductMutation } from '../components/products/apiSlice'
 import { AnyObject } from './api'
 
 export type DeleteObjectButtonType = {

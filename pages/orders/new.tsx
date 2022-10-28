@@ -1,15 +1,13 @@
 import type { NextPage } from 'next'
 import { GetServerSideProps } from 'next'
-import Layout from '../../src/components/layout/Layout'
-import Form from '../../src/components/objectForm/Form'
-import { getOptions } from '../../src/components/options/apiSlice'
-import {
-  indexUrl,
-  objectFormConfig
-} from '../../src/components/orders/config'
-import { wrapper } from '../../src/components/store'
-import { getUser } from '../../src/components/users/apiSlice'
-import { getRunningOperationPromises } from '../../src/services/apiSlice'
+import Layout from '../../components/layout/Layout'
+import Form from '../../components/objectForm/Form'
+import { getOptions } from '../../components/options/apiSlice'
+import { objectFormConfig } from '../../components/orders/config'
+import { url as indexUrl } from '../../components/orders/apiSlice'
+import { wrapper } from '../../services/store'
+import { getUser } from '../../components/users/apiSlice'
+import { getRunningOperationPromises } from '../../services/apiSlice'
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(({ dispatch }) => async () => {

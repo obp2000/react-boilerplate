@@ -8,14 +8,13 @@ import {
   useDeleteOrderMutation,
   useGetOrderQuery,
   useUpdateOrderMutation
-} from '../src/components/orders/apiSlice'
-import objectFormRender from '../src/components/orders/OrderFormRender'
-import TableLabels from '../src/components/orders/TableLabels'
-import TableRow from '../src/components/orders/TableRow'
-import { validate } from '../src/components/orders/validators'
+} from '../components/orders/apiSlice'
+import objectFormRender from '../components/orders/OrderFormRender'
+import TableLabels from '../components/orders/TableLabels'
+import TableRow from '../components/orders/TableRow'
 import { Customer, CustomerOptions } from './customers'
 import { OrderItem, OrderItemOptions } from './orderItems'
-import { formInitialValues } from '../src/components/orders/config'
+import { useFormInitialValues } from '../components/orders/hooks'
 
 export type Order = {
   id: number
@@ -136,12 +135,13 @@ export type TableConfig = {
 export type FormConfig = {
   getObject: typeof getOrder
   useGetObjectQuery: typeof useGetOrderQuery
-  formInitialValues: typeof formInitialValues
+  useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
   mutators: { [index: string]: Mutator }
-  validate: typeof validate
   useUpdateObjectMutation: typeof useUpdateOrderMutation
   useCreateObjectMutation: typeof useCreateOrderMutation
   objectFormRender: typeof objectFormRender
   calculatedFields: string[]
 }
+
+export type OrderFormValues = Order | {}

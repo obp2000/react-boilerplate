@@ -6,12 +6,11 @@ import {
   useDeleteProductMutation,
   useGetProductQuery,
   useUpdateProductMutation
-} from '../src/components/products/apiSlice'
-import { formInitialValues } from '../src/components/products/config'
-import objectFormRender from '../src/components/products/ProductFormRender'
-import TableLabels from '../src/components/products/TableLabels'
-import TableRow from '../src/components/products/TableRow'
-import { validate } from '../src/components/products/validators'
+} from '../components/products/apiSlice'
+import { useFormInitialValues } from '../components/products/hooks'
+import objectFormRender from '../components/products/ProductFormRender'
+import TableLabels from '../components/products/TableLabels'
+import TableRow from '../components/products/TableRow'
 import type { FieldLabel } from './inputLabel'
 import type { FieldProps } from './options'
 
@@ -134,9 +133,8 @@ export type TableConfig = {
 export type FormConfig = {
   getObject: typeof getProduct
   useGetObjectQuery: typeof useGetProductQuery
-  formInitialValues: typeof formInitialValues
+  useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
-  validate: typeof validate
   useUpdateObjectMutation: typeof useUpdateProductMutation
   useCreateObjectMutation: typeof useCreateProductMutation
   objectFormRender: typeof objectFormRender
@@ -146,3 +144,5 @@ export type FormConfig = {
 export type FormInitialValues = Omit<Product, 'image'> & {
   imageOrig: string
 }
+
+export type ProductFormValues = FormInitialValues | {}

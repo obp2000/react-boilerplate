@@ -1,16 +1,14 @@
 import type { NextPage } from 'next'
 import { GetServerSideProps } from 'next'
-import { selectAuth } from '../../src/components/auth/selectors'
-import {
-    indexUrl,
-    objectsTableConfig
-} from '../../src/components/products/config'
-import Layout from '../../src/components/layout/Layout'
-import ObjectsTable from '../../src/components/objectsTable/ObjectsTable'
-import { getOptions } from '../../src/components/options/apiSlice'
-import { wrapper } from '../../src/components/store'
-import { getUser } from '../../src/components/users/apiSlice'
-import { getRunningOperationPromises } from '../../src/services/apiSlice'
+import { selectAuth } from '../../components/auth/selectors'
+import { objectsTableConfig } from '../../components/products/config'
+import { url as indexUrl } from '../../components/products/apiSlice'
+import Layout from '../../components/layout/Layout'
+import ObjectsTable from '../../components/objectsTable/ObjectsTable'
+import { getOptions } from '../../components/options/apiSlice'
+import { wrapper } from '../../services/store'
+import { getUser } from '../../components/users/apiSlice'
+import { getRunningOperationPromises } from '../../services/apiSlice'
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(({ dispatch, getState }) => async ({ query }) => {

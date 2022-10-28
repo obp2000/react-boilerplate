@@ -1,12 +1,12 @@
 // @ts-check
 // const { test, expect } = require('@playwright/test')
-import { expect, test } from "../src/mocks/test"
+import { expect, test } from "../mocks/test"
 import {
   options,
   commonConsts,
   objects,
   cities,
-} from '../src/mocks/handlers'
+} from '../mocks/handlers'
 // import {devices} from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe.parallel("Customers CRUD functionality", () => {
-  test("loads and displays objects", async ({page}) => {
+  test("loads and displays objects", async ({ page }) => {
     // console.log('devices[Desktop Chrome]' , devices['Desktop Chrome'])
     await expect(page).toHaveTitle(/Best&C/)
 
@@ -45,146 +45,148 @@ test.describe.parallel("Customers CRUD functionality", () => {
   })
 
   test("displays new object form and creates new object",
-      async ({page}) => {
-    const linkToNew = page.locator(`role=link[name="${commonConsts.new}"]`)
-    await expect(linkToNew).toContainText(commonConsts.new)
-    await expect(linkToNew).toHaveAttribute('href', '/customers/new')
-    await linkToNew.click()
+    async ({ page }) => {
+      const linkToNew = page.locator(`role=link[name="${commonConsts.new}"]`)
+      await expect(linkToNew).toContainText(commonConsts.new)
+      await expect(linkToNew).toHaveAttribute('href', '/customers/new')
+      await linkToNew.click()
 
-    const formHeader =
-      page.locator(`role=heading[name="${options.name_singular}"]`)
-    await expect(formHeader).toContainText(options.name_singular)
+      const formHeader =
+        page.locator(`role=heading[name="${options.name_singular}"]`)
+      await expect(formHeader).toContainText(options.name_singular)
 
-    const submitButton =
-      page.locator(`role=button[name="${commonConsts.save}"]`)
-    await expect(submitButton).toBeDisabled()
+      const submitButton =
+        page.locator(`role=button[name="${commonConsts.save}"]`)
+      await expect(submitButton).toBeDisabled()
 
-    // const nickInput = page.locator(`text=${options.nick.label}`)
-    const nickInput = page.locator('input#nick')
-    await expect(nickInput).toHaveAttribute('placeholder', options.nick.label)
-    await expect(nickInput).toHaveAttribute('required', '')
-    await nickInput.type('obp2000')
-    await expect(nickInput).toHaveValue('obp2000')
-    await expect(nickInput).toHaveClass(/is-valid/)
-    await expect(submitButton).toBeEnabled()
-    await nickInput.fill('')
-    await expect(nickInput).toHaveClass(/is-invalid/)
-    await expect(submitButton).toBeDisabled()
-    await nickInput.type('obp2000')
+      // const nickInput = page.locator(`text=${options.nick.label}`)
+      const nickInput = page.locator('input#nick')
+      await expect(nickInput).toHaveAttribute('placeholder', options.nick.label)
+      await expect(nickInput).toHaveAttribute('required', '')
+      await nickInput.type('obp2000')
+      await expect(nickInput).toHaveValue('obp2000')
+      await expect(nickInput).toHaveClass(/is-valid/)
+      await expect(submitButton).toBeEnabled()
+      await nickInput.fill('')
+      await expect(nickInput).toHaveClass(/is-invalid/)
+      await expect(submitButton).toBeDisabled()
+      await nickInput.type('obp2000')
 
-    const nameInput = page.locator('input#name')
-    await expect(nameInput).toHaveAttribute('placeholder', options.name.label)
-    await nameInput.type('Oleg')
-    await expect(nameInput).toHaveValue('Oleg')
-    await expect(nameInput).toHaveClass(/is-valid/)
+      const nameInput = page.locator('input#name')
+      await expect(nameInput).toHaveAttribute('placeholder', options.name.label)
+      await nameInput.type('Oleg')
+      await expect(nameInput).toHaveValue('Oleg')
+      await expect(nameInput).toHaveClass(/is-valid/)
 
-    const addressInput = page.locator('input#address')
-    await expect(addressInput).toHaveAttribute('placeholder',
-      options.address.label)
-    await addressInput.type('Main street 15-17')
-    await expect(addressInput).toHaveValue('Main street 15-17')
-    await expect(addressInput).toHaveClass(/is-valid/)
+      const addressInput = page.locator('input#address')
+      await expect(addressInput).toHaveAttribute('placeholder',
+        options.address.label)
+      await addressInput.type('Main street 15-17')
+      await expect(addressInput).toHaveValue('Main street 15-17')
+      await expect(addressInput).toHaveClass(/is-valid/)
 
-    const cityCombobox =
-      page.locator(`role=combobox[name="${options.city.label}"]`)
-    await expect(cityCombobox).toHaveAttribute('id', 'city_input')
-    const cityIdInput = cityCombobox.locator('input[name="city"]')
-    const citySearchInput = cityCombobox.locator('input.rw-dropdownlist-search')
-    await cityCombobox.click()
-    await citySearchInput.type('Ф')
-    await expect(citySearchInput).toHaveValue('Ф')
-    await expect(cityCombobox).toContainText(commonConsts.not_found)
-    await citySearchInput.type('у')
-    await expect(citySearchInput).toHaveValue('Фу')
-    const cityOptions = cityCombobox.locator('role=option')
-    await expect(cityOptions).toHaveCount(18)
-    await cityOptions.nth(7).click()
-    await expect(cityIdInput).toHaveValue(cities.results[7].id.toString())
-    await submitButton.click()
-    const toast = page.locator('div.Toastify')
-    await expect(toast).toContainText(commonConsts.successfully)
-    const tableHeader =
-      page.locator(`role=heading[name="${options.name_plural}"]`)
-    await expect(tableHeader).toContainText(options.name_plural)
-  })
+      const cityCombobox =
+        page.locator(`role=combobox[name="${options.city.label}"]`)
+      await expect(cityCombobox).toHaveAttribute('id', 'city_input')
+      const cityIdInput = cityCombobox.locator('input[name="city"]')
+      const citySearchInput =
+        cityCombobox.locator('input.rw-dropdownlist-search')
+      await cityCombobox.click()
+      await citySearchInput.type('Ф')
+      await expect(citySearchInput).toHaveValue('Ф')
+      await expect(cityCombobox).toContainText(commonConsts.not_found)
+      await citySearchInput.type('у')
+      await expect(citySearchInput).toHaveValue('Фу')
+      const cityOptions = cityCombobox.locator('role=option')
+      await expect(cityOptions).toHaveCount(18)
+      await cityOptions.nth(7).click()
+      await expect(cityIdInput).toHaveValue(cities.results[7].id.toString())
+      await submitButton.click()
+      const toast = page.locator('div.Toastify')
+      await expect(toast).toContainText(commonConsts.successfully)
+      const tableHeader =
+        page.locator(`role=heading[name="${options.name_plural}"]`)
+      await expect(tableHeader).toContainText(options.name_plural)
+    })
 
   test("displays existing object form and updates object",
-      async ({page}) => {
-    const linksToEdit = page.locator(`role=link[name="${commonConsts.edit}"]`)
-    await expect(linksToEdit).toHaveCount(8)
-    await expect(linksToEdit.nth(2)).toContainText(commonConsts.edit)
-    await expect(linksToEdit.nth(2)).toHaveAttribute('href',
-      `/customers/${objects.results[2].id}`)
+    async ({ page }) => {
+      const linksToEdit = page.locator(`role=link[name="${commonConsts.edit}"]`)
+      await expect(linksToEdit).toHaveCount(8)
+      await expect(linksToEdit.nth(2)).toContainText(commonConsts.edit)
+      await expect(linksToEdit.nth(2)).toHaveAttribute('href',
+        `/customers/${objects.results[2].id}`)
 
-    await linksToEdit.nth(2).click()
-    const formHeader =
-      page.locator(`role=heading[name="${options.name_singular}"]`)
-    await expect(formHeader).toContainText(options.name_singular)
-    await expect(formHeader).toContainText(objects.results[2].id.toString())
+      await linksToEdit.nth(2).click()
+      const formHeader =
+        page.locator(`role=heading[name="${options.name_singular}"]`)
+      await expect(formHeader).toContainText(options.name_singular)
+      await expect(formHeader).toContainText(objects.results[2].id.toString())
 
-    const submitButton =
-      page.locator(`role=button[name="${commonConsts.save}"]`)
-    await expect(submitButton).toBeDisabled()
+      const submitButton =
+        page.locator(`role=button[name="${commonConsts.save}"]`)
+      await expect(submitButton).toBeDisabled()
 
-    const nickInput = page.locator('input#nick')
-    await expect(nickInput).toHaveAttribute('placeholder', options.nick.label)
-    await expect(nickInput).toHaveAttribute('required', '')
-    // await expect(nickInput).toHaveValue(objects.results[2].nick)
-    await nickInput.fill('')
-    await expect(nickInput).toHaveClass(/is-invalid/)
-    await expect(submitButton).toBeDisabled()
-    await nickInput.type('obp2000')
-    await expect(nickInput).toHaveValue('obp2000')
-    await expect(nickInput).toHaveClass(/is-valid/)
-    await expect(submitButton).toBeEnabled()
+      const nickInput = page.locator('input#nick')
+      await expect(nickInput).toHaveAttribute('placeholder', options.nick.label)
+      await expect(nickInput).toHaveAttribute('required', '')
+      // await expect(nickInput).toHaveValue(objects.results[2].nick)
+      await nickInput.fill('')
+      await expect(nickInput).toHaveClass(/is-invalid/)
+      await expect(submitButton).toBeDisabled()
+      await nickInput.type('obp2000')
+      await expect(nickInput).toHaveValue('obp2000')
+      await expect(nickInput).toHaveClass(/is-valid/)
+      await expect(submitButton).toBeEnabled()
 
-    const nameInput = page.locator('input#name')
-    await expect(nameInput).toHaveAttribute('placeholder', options.name.label)
-    // await expect(nameInput).toHaveValue(objects.results[2].name)
-    await nameInput.fill('Oleg')
-    await expect(nameInput).toHaveValue('Oleg')
-    await expect(nameInput).toHaveClass(/is-valid/)
+      const nameInput = page.locator('input#name')
+      await expect(nameInput).toHaveAttribute('placeholder', options.name.label)
+      // await expect(nameInput).toHaveValue(objects.results[2].name)
+      await nameInput.fill('Oleg')
+      await expect(nameInput).toHaveValue('Oleg')
+      await expect(nameInput).toHaveClass(/is-valid/)
 
-    const addressInput = page.locator('input#address')
-    await expect(addressInput).toHaveAttribute('placeholder',
-      options.address.label)
-    // await expect(addressInput).toHaveValue(objects.results[2].address)
-    await addressInput.fill('Main street 15-17')
-    await expect(addressInput).toHaveValue('Main street 15-17')
-    await expect(addressInput).toHaveClass(/is-valid/)
+      const addressInput = page.locator('input#address')
+      await expect(addressInput).toHaveAttribute('placeholder',
+        options.address.label)
+      // await expect(addressInput).toHaveValue(objects.results[2].address)
+      await addressInput.fill('Main street 15-17')
+      await expect(addressInput).toHaveValue('Main street 15-17')
+      await expect(addressInput).toHaveClass(/is-valid/)
 
-    const cityCombobox =
-      page.locator(`role=combobox[name="${options.city.label}"]`)
-    await expect(cityCombobox).toHaveAttribute('id', 'city_input')
-    const cityIdInput = cityCombobox.locator('input[name="city"]')
-    const citySearchInput = cityCombobox.locator('input.rw-dropdownlist-search')
-    // await expect(cityCombobox).toContainText(objects.results[2].city.city)
-    // await expect(cityCombobox).toContainText(objects.results[2].city.pindex)
+      const cityCombobox =
+        page.locator(`role=combobox[name="${options.city.label}"]`)
+      await expect(cityCombobox).toHaveAttribute('id', 'city_input')
+      const cityIdInput = cityCombobox.locator('input[name="city"]')
+      const citySearchInput =
+        cityCombobox.locator('input.rw-dropdownlist-search')
+      // await expect(cityCombobox).toContainText(objects.results[2].city.city)
+      // await expect(cityCombobox).toContainText(objects.results[2].city.pindex)
 
-    await cityCombobox.click()
-    await citySearchInput.type('Ф')
-    await expect(citySearchInput).toHaveValue('Ф')
-    await expect(cityCombobox).toContainText(commonConsts.not_found)
-    await citySearchInput.type('у')
-    await expect(citySearchInput).toHaveValue('Фу')
+      await cityCombobox.click()
+      await citySearchInput.type('Ф')
+      await expect(citySearchInput).toHaveValue('Ф')
+      await expect(cityCombobox).toContainText(commonConsts.not_found)
+      await citySearchInput.type('у')
+      await expect(citySearchInput).toHaveValue('Фу')
 
-    const cityOptions = cityCombobox.locator('role=option')
-    await expect(cityOptions).toHaveCount(18)
-    await cityOptions.nth(7).click()
-    await expect(cityIdInput).toHaveValue(cities.results[7].id.toString())
-    await expect(citySearchInput).toHaveValue('')
-    await expect(cityCombobox).toContainText(cities.results[7].city)
-    await expect(cityCombobox).toContainText(cities.results[7].pindex)
+      const cityOptions = cityCombobox.locator('role=option')
+      await expect(cityOptions).toHaveCount(18)
+      await cityOptions.nth(7).click()
+      await expect(cityIdInput).toHaveValue(cities.results[7].id.toString())
+      await expect(citySearchInput).toHaveValue('')
+      await expect(cityCombobox).toContainText(cities.results[7].city)
+      await expect(cityCombobox).toContainText(cities.results[7].pindex)
 
-    await submitButton.click()
-    const toast = page.locator('div.Toastify')
-    await expect(toast).toContainText(commonConsts.successfully)
-    const tableHeader =
-      page.locator(`role=heading[name="${options.name_plural}"]`)
-    await expect(tableHeader).toContainText(options.name_plural)
-  })
+      await submitButton.click()
+      const toast = page.locator('div.Toastify')
+      await expect(toast).toContainText(commonConsts.successfully)
+      const tableHeader =
+        page.locator(`role=heading[name="${options.name_plural}"]`)
+      await expect(tableHeader).toContainText(options.name_plural)
+    })
 
-  test("deletes object", async ({page}) => {
+  test("deletes object", async ({ page }) => {
     const deleteButtons =
       page.locator(`role=button[name="${commonConsts.delete}"]`)
     await expect(deleteButtons).toHaveCount(8)

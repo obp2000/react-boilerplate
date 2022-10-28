@@ -7,12 +7,11 @@ import {
   useDeleteCustomerMutation,
   useGetCustomerQuery,
   useUpdateCustomerMutation
-} from '../src/components/customers/apiSlice'
-import { formInitialValues } from '../src/components/customers/config'
-import objectFormRender from '../src/components/customers/CustomerFormRender'
-import TableLabels from '../src/components/customers/TableLabels'
-import TableRow from '../src/components/customers/TableRow'
-import { validate } from '../src/components/customers/validators'
+} from '../components/customers/apiSlice'
+import { useFormInitialValues } from '../components/customers/hooks'
+import objectFormRender from '../components/customers/CustomerFormRender'
+import TableLabels from '../components/customers/TableLabels'
+import TableRow from '../components/customers/TableRow'
 
 export type Customer = {
   id: number
@@ -65,9 +64,10 @@ export type TableConfig = {
 export type FormConfig = {
   getObject: typeof getCustomer
   useGetObjectQuery: typeof useGetCustomerQuery
-  formInitialValues: typeof formInitialValues
-  validate: typeof validate
+  useFormInitialValues: typeof useFormInitialValues
   useUpdateObjectMutation: typeof useUpdateCustomerMutation
   useCreateObjectMutation: typeof useCreateCustomerMutation
   objectFormRender: typeof objectFormRender
 }
+
+export type CustomerFormValues = Customer | {}

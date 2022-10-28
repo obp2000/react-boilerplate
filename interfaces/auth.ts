@@ -1,15 +1,10 @@
 import type { FormRenderProps } from 'react-final-form'
 import type { IndexUrl, ValidatedFields } from './index'
 import type { FieldProps } from './options'
-import type { CommonConstsType } from './commonConsts'
 import {
   useLoginMutation,
   useRegisterMutation,
-} from '../src/components/auth/authApi'
-import {
-  validateLogin,
-  validateRegister
-} from '../src/components/auth/validators'
+} from '../components/auth/authApi'
 
 export type Login = {
   key: string
@@ -63,7 +58,7 @@ export type LoginFormConfig = IndexUrl & {
   name: string
   useAuthMutation: typeof useLoginMutation
   formFields: FormFields[]
-  validate: typeof validateLogin
+  // validate: typeof validateLogin
   validatedFields: Pick<ValidatedFields, 'notBlank'>
 }
 
@@ -71,7 +66,7 @@ export type RegisterFormConfig = IndexUrl & {
   name: string
   useAuthMutation: typeof useRegisterMutation
   formFields: FormFields[]
-  validate: typeof validateRegister
+  // validate: typeof validateRegister
   validatedFields: ValidatedFields
 }
 
