@@ -8,3 +8,12 @@ export interface SerializedError {
   stack?: string
   code?: string
 }
+
+export type NonFieldErrors = {
+  non_field_errors: string[]
+}
+
+export type BadRequest = {
+  status: 400
+  data: NonFieldErrors
+}

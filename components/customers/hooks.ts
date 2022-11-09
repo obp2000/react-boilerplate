@@ -1,7 +1,7 @@
 import type {
   Customer, CustomerFormValues, CustomerType
-} from '../../interfaces/customers'
-import { url as indexUrl } from './apiSlice'
+} from '@/interfaces/customers'
+import { indexUrl } from './serverConfig'
 import CustomerName from './CustomerName'
 
 const dropdownListTextField = ({

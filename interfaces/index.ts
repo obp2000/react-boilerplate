@@ -3,10 +3,14 @@ export type IndexUrl = {
 }
 
 export type ValidatedFields = {
-  notBlank: string[]
-  validEmail: string
-  passwordLength: string
-  validPasswordConfirmation: string[]
+  notBlank?: string[]
+  validEmail?: string
+  passwordLength?: string
+  validPasswordConfirmation?: string[]
+}
+
+export type ValidatedFieldsType = {
+  validatedFields: ValidatedFields
 }
 
 // export type HtmlAttrs = {

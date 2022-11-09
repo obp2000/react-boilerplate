@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { ProductWithOptions } from '../../interfaces/products'
+import { ProductWithOptions } from '@/interfaces/products'
 
 const Fleece: FC<ProductWithOptions> = ({ object, options }) => {
   if (!object?.fleece) { return null }

@@ -3,9 +3,9 @@ import { getIn } from 'final-form'
 import type { Calculation } from 'final-form-calculate'
 import createDecorator from 'final-form-calculate'
 // const math = require('lodash/math')
-import type { OrderItem } from '../../interfaces/orderItems'
-import type { Order } from '../../interfaces/orders'
-import type { Product } from '../../interfaces/products'
+import type { OrderItem } from '@/interfaces/orderItems'
+import type { Order } from '@/interfaces/orders'
+import type { Product } from '@/interfaces/products'
 
 const countCost = ({ amount, price }: Partial<OrderItem>) =>
   amount && price ? Number(amount) * Number(price) : 0

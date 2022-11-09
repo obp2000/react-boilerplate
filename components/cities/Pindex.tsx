@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import type { CityWithOptions } from '../../interfaces/cities'
+import type { CityWithOptions } from '@/interfaces/cities'
 
 const Pindex: FC<CityWithOptions> = ({ object, options }) => {
   if (!object?.pindex) { return null }

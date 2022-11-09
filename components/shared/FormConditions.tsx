@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Field } from 'react-final-form'
 import type {
   ConditionGteProps, ConditionGtProps, ConditionIsProps
-} from '../../interfaces/formConditions'
+} from '@/interfaces/formConditions'
 
 export const ConditionIs: FC<ConditionIsProps> = ({
   when,

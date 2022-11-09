@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import type { ProductWithOptions } from '../../interfaces/products'
+import type { ProductWithOptions } from '@/interfaces/products'
 import Contents from './Contents'
 import Fleece from './Fleece'
 import ProductType from './ProductType'

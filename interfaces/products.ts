@@ -1,18 +1,12 @@
 import type { Decorator } from 'final-form'
-import {
-  getProducts,
-  getProduct,
-  useCreateProductMutation,
-  useDeleteProductMutation,
-  useGetProductQuery,
-  useUpdateProductMutation
-} from '../components/products/apiSlice'
-import { useFormInitialValues } from '../components/products/hooks'
-import objectFormRender from '../components/products/ProductFormRender'
-import TableLabels from '../components/products/TableLabels'
-import TableRow from '../components/products/TableRow'
+import { useFormInitialValues } from '@/products/hooks'
+import objectFormRender from '@/products/ProductFormRender'
+import TableLabels from '@/products/TableLabels'
+import TableRow from '@/products/TableRow'
 import type { FieldLabel } from './inputLabel'
 import type { FieldProps } from './options'
+import { ValidatedFields } from '.'
+import { modFormValues } from '@/products/config'
 
 export type ProductConsts = {
   PriceCoeffs: number[]
@@ -124,21 +118,16 @@ export type ProductType = {
 export type ProductWithOptions = ProductType & ProductOptionsType
 
 export type TableConfig = {
-  getObjects: typeof getProducts
   TableRow: typeof TableRow
   TableLabels: typeof TableLabels
-  useDeleteObjectMutation: typeof useDeleteProductMutation
 }
 
 export type FormConfig = {
-  getObject: typeof getProduct
-  useGetObjectQuery: typeof useGetProductQuery
   useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
-  useUpdateObjectMutation: typeof useUpdateProductMutation
-  useCreateObjectMutation: typeof useCreateProductMutation
   objectFormRender: typeof objectFormRender
-  calculatedFields: string[]
+  validatedFields: ValidatedFields
+  modFormValues: typeof modFormValues
 }
 
 export type FormInitialValues = Omit<Product, 'image'> & {

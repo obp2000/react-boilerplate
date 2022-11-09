@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import type { CustomerWithOptions } from '../../interfaces/customers'
-import CityName from '../cities/CityName'
+import type { CustomerWithOptions } from '@/interfaces/customers'
+import CityName from '@/cities/CityName'
 import Address from './Address'
 import ShortName from './ShortName'
 

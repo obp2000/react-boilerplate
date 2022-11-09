@@ -1,7 +1,7 @@
 import type { Decorator } from 'final-form'
 import type { Calculation } from 'final-form-calculate'
 import createDecorator from 'final-form-calculate'
-import { Product } from '../../interfaces/products'
+import { Product } from '@/interfaces/products'
 
 const canCountDensityForCount = (values: Product): boolean =>
   !!values?.length_for_count && !!values?.width

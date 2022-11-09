@@ -1,64 +1,52 @@
 import { useContext } from 'react'
 import { Table } from 'reactstrap'
-import { useAppSelector } from '../../services/hooks'
 // import Loader from 'react-loader'
+import DeleteObjectButton from '@/deleteObjectButton/DeleteObjectButton'
+import type { ObjectsWithTotals } from '@/interfaces/api'
 import type {
   TableConfig as CustomersTableConfig
-} from '../../interfaces/customers'
-import type { TableOptions } from '../../interfaces/options'
-import type { TableConfig as OrdersTableConfig } from '../../interfaces/orders'
-import type {
-  TableConfig as ProductsTableConfig
-} from '../../interfaces/products'
-import { useObjects } from '../../services/entityAdapter'
-import { selectAuth } from '../auth/selectors'
-import DeleteObjectButton from '../deleteObjectButton/DeleteObjectButton'
-import { OptionsContext } from '../layout/Layout'
-import LinkToNewOrEditObject from '../linkToNewOrEditObject/LinkToNewOrEditObject'
-import Pagination from '../pagination/Pagination'
+} from '@/interfaces/customers'
+import type { TableOptions } from '@/interfaces/options'
+import type { TableConfig as OrdersTableConfig } from '@/interfaces/orders'
+import type { TableConfig as ProductsTableConfig } from '@/interfaces/products'
+import LinkToNewOrEditObject from '@/linkToNewOrEditObject/LinkToNewOrEditObject'
+import Pagination from '@/pagination/Pagination'
+import { MainContext, ObjectsContext } from '@/services/context'
 import Header from './Header'
 
-function ObjectsTable(props: CustomersTableConfig): JSX.Element
-function ObjectsTable(props: ProductsTableConfig): JSX.Element
-function ObjectsTable(props: OrdersTableConfig): JSX.Element
-function ObjectsTable({
-  getObjects,
-  TableRow,
+export default function ObjectsTable(props: CustomersTableConfig): JSX.Element
+export default function ObjectsTable(props: ProductsTableConfig): JSX.Element
+export default function ObjectsTable(props: OrdersTableConfig): JSX.Element
+export default function ObjectsTable({
   TableLabels,
-  useDeleteObjectMutation,
-}: any) {
-  const { isAuthenticated } = useAppSelector(selectAuth)
-  const { options } = useContext(OptionsContext) as { options: TableOptions }
-  const { allObjects, totalCount, totalPages } = useObjects(getObjects)
+  TableRow
+}: any): JSX.Element {
+  const { options, isAuthenticated } = useContext(MainContext)
+  const { totalCount, totalPages, results } =
+    useContext(ObjectsContext) as ObjectsWithTotals
   return <>
     <Header {...{ totalCount }} />
     <Table size='sm' bordered striped hover className='table-secondary'>
       <thead className="thead-light">
         <tr>
           <TableLabels />
-{/*          {isAuthenticated && allObjects?.slice(0, 1).map((_: any,
-            key: number) => <th scope="col" colSpan={2} key={key}>
-              <LinkToNewOrEditObject />
-            </th>
-          )}*/}
           {isAuthenticated && <th scope="col" colSpan={2}>
-              <LinkToNewOrEditObject />
-            </th>
+            <LinkToNewOrEditObject {...{ id: undefined }} />
+          </th>
           }
         </tr>
       </thead>
       <tbody>
-        {allObjects?.map((object, key) => <tr
+        {results?.map((object, key) => <tr
           key={key}
-          aria-label={options?.name_singular}>
-          <TableRow {...{ object }} />
+          aria-label={(options as TableOptions)?.name_singular}>
+          <TableRow {...object} />
           {isAuthenticated && <>
             <td>
-              <LinkToNewOrEditObject {...{ object }} />
+              <LinkToNewOrEditObject {...object} />
             </td>
             <td>
-              <DeleteObjectButton
-                {...{ object, useDeleteObjectMutation }} />
+              <DeleteObjectButton {...object} />
             </td>
           </>}
         </tr>
@@ -69,4 +57,11 @@ function ObjectsTable({
   </>
 }
 
-export default ObjectsTable
+
+// export default ObjectsTable
+
+          // {          {isAuthenticated && allObjects?.slice(0, 1).map((_: any,
+          //   key: number) => <th scope="col" colSpan={2} key={key}>
+          //     <LinkToNewOrEditObject />
+          //   </th>
+          // )}}

@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Field } from 'react-final-form'
-import type { SelectFieldAttrs } from '../../interfaces/selectField'
-import FormTextList from '../formInput/FormTextList'
+import type { SelectFieldAttrs } from '@/interfaces/selectField'
+import FormTextList from '@/formInput/FormTextList'
 import { useFieldProps } from './hooks'
 import SelectOptions from './SelectOptions'
 

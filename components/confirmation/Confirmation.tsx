@@ -1,20 +1,17 @@
+import type {
+  Confirmation,
+  ProceedButtonProps
+} from '@/interfaces/confirmation'
 import { FC } from 'react'
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-} from 'reactstrap'
 import {
   confirmable,
   createConfirmation,
   ReactConfirmProps
 } from 'react-confirm'
-import type {
-  Confirmation,
-  ProceedButtonProps
-} from '../../interfaces/confirmation'
+import {
+  Button, Modal, ModalBody,
+  ModalFooter, ModalHeader
+} from 'reactstrap'
 
 const ProceedButton: FC<ProceedButtonProps> = ({ label, onClick }) => <Button
   size='sm'

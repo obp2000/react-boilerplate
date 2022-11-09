@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import { Field } from 'react-final-form'
 import { useFieldArray } from 'react-final-form-arrays'
-import Input from '../formInput/Input'
+import Input from '@/formInput/Input'
 import OrderItemsTotalText from './OrderItemsTotalText'
-// import type { OrderOptionsType } from '../../../interfaces/orders'
+// import type { OrderOptionsType } from '@/@/interfaces/orders'
 
 const OrderItemsTotals: FC = () => {
   const { fields } = useFieldArray('order_items')

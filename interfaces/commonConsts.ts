@@ -29,6 +29,9 @@ export type CommonConsts = {
 	register: string
 	main_menu: MainMenuItem[]
 	auth_menu_item: MainMenuItem
+	user_menu_item: MainMenuItem
+	login_menu_item: MainMenuItem
+	logout_menu_item: MainMenuItem
 	brand_text: string
 	error_messages: ErrorMessages
 	from: string

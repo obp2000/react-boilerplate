@@ -1,8 +1,8 @@
 import { FC, useContext } from 'react'
 import type { FormRenderProps } from 'react-final-form'
 import { Button } from 'reactstrap'
-import type { SubmitButtonProps } from '../../interfaces/objectForm'
-import { OptionsContext } from '../layout/Layout'
+import type { SubmitButtonProps } from '@/interfaces/objectForm'
+import { MainContext } from '@/services/context'
 import { useDisabled } from './hooks'
 
 const SubmitButton: FC<FormRenderProps & SubmitButtonProps> = ({
@@ -10,7 +10,7 @@ const SubmitButton: FC<FormRenderProps & SubmitButtonProps> = ({
   className,
   ...rest
 }) => {
-  const { commonConsts } = useContext(OptionsContext)
+  const { commonConsts } = useContext(MainContext)
   const label = text || commonConsts?.save
   return <Button
     type='submit'

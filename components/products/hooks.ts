@@ -1,16 +1,14 @@
-import { useContext } from 'react'
 import type {
-  Product, ProductFormValues, ProductOptionsType,
+  Product,
+  ProductFormValues,
+  ProductOptionsType,
   ProductType
-} from '../../interfaces/products'
-import { OptionsContext } from '../layout/Layout'
-import { url as indexUrl } from './apiSlice'
-import {
-  densityForCount,
-  metersInRoll,
-  prices
-} from './calculator'
+} from '@/interfaces/products'
+import { MainContext } from '@/services/context'
+import { useContext } from 'react'
+import { densityForCount, metersInRoll, prices } from './calculator'
 import ProductName from './ProductName'
+import { indexUrl } from './serverConfig'
 
 const dropdownListTextField = ({
   get_product_type_display: getProductTypeDisplay,
@@ -33,7 +31,7 @@ export const useDropdown = () => ({
 export const useFormInitialValues = ({
   object
 }: ProductType): ProductFormValues => {
-  const { options } = useContext(OptionsContext) as ProductOptionsType
+  const { options } = useContext(MainContext) as ProductOptionsType
   let { image: imageOrig, ...objectMod } = object ?? {}
   let objectValues = {
     imageOrig,

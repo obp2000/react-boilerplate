@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import {createEntityAdapter, createSelector} from '@reduxjs/toolkit'
+import {createEntityAdapter} from '@reduxjs/toolkit'
 import {objectToFormData} from 'object-to-formdata'
 import {selectAuth} from '../components/auth/selectors'
 

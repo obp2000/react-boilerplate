@@ -1,14 +1,15 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { Card, CardBody, Row } from 'reactstrap'
 // import Loader from 'react-loader'
-import type { UserOptions } from '../../interfaces/users'
+import type { UserOptions } from '@/interfaces/users'
 import { userFieldNames } from './config'
 import Header from './Header'
-import { useUser } from './hooks'
+// import { useUser } from './hooks'
 import TableRow from './TableRow'
+import { MainContext } from '@/services/context'
 
 const UserComp: FC = () => {
-  const { object, options } = useUser()
+  const { user: object, options } = useContext(MainContext)
   // {<Loader loaded={loaded}>
   return <Card>
     <CardBody>

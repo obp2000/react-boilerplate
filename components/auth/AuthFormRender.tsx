@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import { Field } from 'react-final-form'
 import { Form } from 'reactstrap'
-import type { AuthFormProps } from '../../interfaces/auth'
-import RowFormGroup from '../formInput/RowFormGroup'
-import SubmitButton from '../submitButton/SubmitButton'
+import type { AuthFormProps } from '@/interfaces/auth'
+import RowFormGroup from '@/formInput/RowFormGroup'
+import SubmitButton from '@/submitButton/SubmitButton'
 
 const AuthFormRender: FC<AuthFormProps> = ({
   formFields,

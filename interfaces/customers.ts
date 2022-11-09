@@ -1,17 +1,11 @@
+import { modFormValues } from '@/customers/config'
+import objectFormRender from '@/customers/CustomerFormRender'
+import { useFormInitialValues } from '@/customers/hooks'
+import TableLabels from '@/customers/TableLabels'
+import TableRow from '@/customers/TableRow'
+import { ValidatedFields } from '.'
 import type { City, CityOptions } from './cities'
 import type { FieldProps } from './options'
-import {
-  getCustomers,
-  getCustomer,
-  useCreateCustomerMutation,
-  useDeleteCustomerMutation,
-  useGetCustomerQuery,
-  useUpdateCustomerMutation
-} from '../components/customers/apiSlice'
-import { useFormInitialValues } from '../components/customers/hooks'
-import objectFormRender from '../components/customers/CustomerFormRender'
-import TableLabels from '../components/customers/TableLabels'
-import TableRow from '../components/customers/TableRow'
 
 export type Customer = {
   id: number
@@ -55,19 +49,15 @@ export type CustomerType = {
 export type CustomerWithOptions = CustomerType & CustomerOptionsType
 
 export type TableConfig = {
-  getObjects: typeof getCustomers
   TableRow: typeof TableRow
   TableLabels: typeof TableLabels
-  useDeleteObjectMutation: typeof useDeleteCustomerMutation
 }
 
 export type FormConfig = {
-  getObject: typeof getCustomer
-  useGetObjectQuery: typeof useGetCustomerQuery
   useFormInitialValues: typeof useFormInitialValues
-  useUpdateObjectMutation: typeof useUpdateCustomerMutation
-  useCreateObjectMutation: typeof useCreateCustomerMutation
   objectFormRender: typeof objectFormRender
+  validatedFields: ValidatedFields
+  modFormValues: typeof modFormValues
 }
 
 export type CustomerFormValues = Customer | {}

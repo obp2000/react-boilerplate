@@ -1,6 +1,5 @@
 import { toast, Zoom } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
-import type { ToastConfig } from '../../interfaces/toast'
+import type { ToastConfig } from '@/interfaces/toast'
 
 const toastConfig: ToastConfig = {
   position: toast.POSITION.TOP_CENTER,
@@ -17,7 +16,7 @@ const toastConfig: ToastConfig = {
 
 export const toastError = (message: string | undefined) => {
   toast.dismiss()
-  toast.error(message, { autoClose: false, ...toastConfig })
+  toast.error(message, { ...toastConfig, autoClose: false })
 }
 
 export const toastSuccess = (message: string | undefined) => {

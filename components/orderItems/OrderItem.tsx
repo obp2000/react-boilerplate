@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import { Field } from 'react-final-form'
-import type { OrderItemForm } from '../../interfaces/orderItems'
-import DropdownList from '../dropdownList/DropdownList'
-import Input from '../formInput/Input'
-import { useDropdown as useProductDropdownAttrs } from '../products/hooks'
+import type { OrderItemForm } from '@/interfaces/orderItems'
+import DropdownList from '@/dropdownList/DropdownList'
+import Input from '@/formInput/Input'
+import { useDropdown as useProductDropdownAttrs } from '@/products/hooks'
 import DeleteOrderItemButton from './DeleteOrderItemButton'
 
 const OrderItem: FC<OrderItemForm> = ({ orderItemName, index }) => <tr>

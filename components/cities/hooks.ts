@@ -1,4 +1,4 @@
-import type { City } from '../../interfaces/cities'
+import type { City } from '@/interfaces/cities'
 import CityName from './CityName'
 import { url as indexUrl } from './config'
 

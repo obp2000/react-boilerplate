@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import { FC, useContext } from 'react'
 import { FormRenderProps } from 'react-final-form'
-import type { ProductOptionsType } from '../../interfaces/products'
-import { OptionsContext } from '../layout/Layout'
+import type { ProductOptionsType } from '@/interfaces/products'
+import { MainContext } from '@/services/context'
 
 const ProductImage: FC<FormRenderProps> = ({ values }) => {
-  const { options } = useContext(OptionsContext) as ProductOptionsType
+  const { options } = useContext(MainContext) as ProductOptionsType
   const { imageOrig } = values
   return <Image
     src={imageOrig || '/blank.png'}

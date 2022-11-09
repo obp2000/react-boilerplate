@@ -1,9 +1,9 @@
 import type { FieldProps } from 'react-final-form'
-import type { AnyChoices, AnyChoicesType } from '../../interfaces/options'
+import type { AnyChoices, AnyChoicesType } from '@/interfaces/options'
 import type {
   SelectFieldAttrs, SelectOptions
-} from '../../interfaces/selectField'
-import { useMapFieldProps } from '../options/hooks'
+} from '@/interfaces/selectField'
+import { useMapFieldProps } from '@/options/hooks'
 
 export const mapChoices = ({
   choices = [],

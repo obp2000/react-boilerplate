@@ -1,5 +1,5 @@
-import type { OrderItem } from '../../interfaces/orderItems'
-import { cost, weight } from '../orders/calculator'
+import type { OrderItem } from '@/interfaces/orderItems'
+import { cost, weight } from '@/orders/calculator'
 
 export const initOrderItem = {
   product: undefined,

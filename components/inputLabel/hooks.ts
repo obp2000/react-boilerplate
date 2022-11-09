@@ -1,8 +1,8 @@
 var object = require('lodash/fp/object')
 import type {
   AnyFieldAttrs, LabelAttrs, LabelSizes
-} from '../../interfaces/inputLabel'
-import { useMapFieldProps } from '../options/hooks'
+} from '@/interfaces/inputLabel'
+import { useMapFieldProps } from '@/options/hooks'
 
 const inputLabelProps = ({ sm, size }: AnyFieldAttrs): LabelSizes => ({
   sm,

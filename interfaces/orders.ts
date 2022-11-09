@@ -1,20 +1,14 @@
 import type { Decorator, Mutator } from 'final-form'
 import type { FieldLabel } from './inputLabel'
 import type { FieldProps } from './options'
-import {
-  getOrders,
-  getOrder,
-  useCreateOrderMutation,
-  useDeleteOrderMutation,
-  useGetOrderQuery,
-  useUpdateOrderMutation
-} from '../components/orders/apiSlice'
-import objectFormRender from '../components/orders/OrderFormRender'
-import TableLabels from '../components/orders/TableLabels'
-import TableRow from '../components/orders/TableRow'
+import objectFormRender from '@/orders/OrderFormRender'
+import TableLabels from '@/orders/TableLabels'
+import TableRow from '@/orders/TableRow'
 import { Customer, CustomerOptions } from './customers'
 import { OrderItem, OrderItemOptions } from './orderItems'
-import { useFormInitialValues } from '../components/orders/hooks'
+import { useFormInitialValues } from '@/orders/hooks'
+import { ValidatedFields } from '.'
+import { modFormValues } from '@/orders/config'
 
 export type Order = {
   id: number
@@ -126,22 +120,17 @@ export type OrderType = {
 export type OrderWithOptions = OrderType & OrderOptionsType
 
 export type TableConfig = {
-  getObjects: typeof getOrders
   TableRow: typeof TableRow
   TableLabels: typeof TableLabels
-  useDeleteObjectMutation: typeof useDeleteOrderMutation
 }
 
 export type FormConfig = {
-  getObject: typeof getOrder
-  useGetObjectQuery: typeof useGetOrderQuery
   useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
   mutators: { [index: string]: Mutator }
-  useUpdateObjectMutation: typeof useUpdateOrderMutation
-  useCreateObjectMutation: typeof useCreateOrderMutation
   objectFormRender: typeof objectFormRender
-  calculatedFields: string[]
+  validatedFields: ValidatedFields
+  modFormValues: typeof modFormValues
 }
 
 export type OrderFormValues = Order | {}

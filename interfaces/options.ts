@@ -11,9 +11,11 @@ import type {
   DeliveryTypeChoice,
 } from './orders'
 import type { UserOptions } from './users'
-import type { LoginOptions, RegisterOptions } from './auth'
+import type { LoginOptions, RegisterOptions, AuthState } from './auth'
 import type { CommonConsts, CommonConstsType } from './commonConsts'
 import type { OrderItemOptions } from './orderItems'
+import type { IndexUrl } from '.'
+import type { UserType } from './users'
 // import type { SelectOptions } from './selectField'
 
 export type AnyChoices = ProductTypeChoice | ThreadsChoice | ContentsChoice |
@@ -62,6 +64,11 @@ export type OptionsOueryResult = AnyOptionsType & CommonConstsType & {
   isLoadingOptions: boolean
   isFetchingOptions: boolean
 }
+
+export type MainContextType =
+  AnyOptionsType & CommonConstsType & IndexUrl & AuthState & UserType
+
+// export type MainContext1 = (indexUrl: string) => Promise<MainContextType>
 
 
 // export type FieldPropsFromOptions = {

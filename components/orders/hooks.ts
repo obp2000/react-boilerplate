@@ -3,8 +3,8 @@ import type {
   OrderType,
   OrderOptionsType,
   OrderFormValues
-} from '../../interfaces/orders'
-import { formInitialOrderItems } from '../orderItems/config'
+} from '@/interfaces/orders'
+import { formInitialOrderItems } from '@/orderItems/config'
 import {
   orderItemsAmount,
   orderItemsCost,
@@ -15,12 +15,12 @@ import {
   totalSum,
   totalWeight
 } from './calculator'
-import { OptionsContext } from '../layout/Layout'
+import { MainContext } from '@/services/context'
 
 export const useFormInitialValues = ({
   object,
 }: OrderType): OrderFormValues => {
-  const { options } = useContext(OptionsContext) as OrderOptionsType
+  const { options } = useContext(MainContext) as OrderOptionsType
   const orderItems = {
     order_items: formInitialOrderItems(object?.order_items),
   }

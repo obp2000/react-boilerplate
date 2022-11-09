@@ -1,12 +1,11 @@
 import { FC, useContext } from 'react'
-import { TableRowType } from '../../interfaces/objectsTable'
-import type { Product, ProductOptionsType } from '../../interfaces/products'
-import { OptionsContext } from '../layout/Layout'
-import Date from '../Date'
+import type { Product, ProductOptionsType } from '@/interfaces/products'
+import { MainContext } from '@/services/context'
+import Date from '@/Date'
 import ProductName from './ProductName'
 
-const TableRow: FC<TableRowType<Product>> = ({ object }) => {
-  const { options } = useContext(OptionsContext) as ProductOptionsType
+const TableRow: FC<Product> = (object) => {
+  const { options } = useContext(MainContext) as ProductOptionsType
   return <>
     <td scope="row">
       {object?.id}

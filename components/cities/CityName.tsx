@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import type { CityWithOptions } from '../../interfaces/cities'
+import type { CityWithOptions } from '@/interfaces/cities'
 import Pindex from './Pindex'
 
 const CityName: FC<CityWithOptions> = ({ object, options }) => {

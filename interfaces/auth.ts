@@ -1,10 +1,11 @@
+import { Dispatch, SetStateAction } from 'react'
 import type { FormRenderProps } from 'react-final-form'
-import type { IndexUrl, ValidatedFields } from './index'
+import type { IndexUrl, ValidatedFields } from '.'
 import type { FieldProps } from './options'
-import {
-  useLoginMutation,
-  useRegisterMutation,
-} from '../components/auth/authApi'
+// import {
+//   useLoginMutation,
+//   useRegisterMutation,
+// } from '@/auth/authApi'
 
 export type Login = {
   key: string
@@ -56,15 +57,13 @@ export type FormFields = {
 
 export type LoginFormConfig = IndexUrl & {
   name: string
-  useAuthMutation: typeof useLoginMutation
   formFields: FormFields[]
-  // validate: typeof validateLogin
-  validatedFields: Pick<ValidatedFields, 'notBlank'>
+  validatedFields: ValidatedFields
 }
 
 export type RegisterFormConfig = IndexUrl & {
   name: string
-  useAuthMutation: typeof useRegisterMutation
+  // useAuthMutation: typeof useRegisterMutation
   formFields: FormFields[]
   // validate: typeof validateRegister
   validatedFields: ValidatedFields
@@ -84,4 +83,9 @@ export type AuthFormProps = FormRenderProps & {
   options?: LoginOptions | RegisterOptions
   formFields?: FormFields[]
   submitButtonLabel?: string
+}
+
+export type AuthModalContextType = {
+  isLoginState: [boolean, Dispatch<SetStateAction<boolean>>]
+  modalState: [boolean, Dispatch<SetStateAction<boolean>>]
 }

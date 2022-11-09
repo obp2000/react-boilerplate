@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import type { ProductWithOptions } from '../../interfaces/products'
+import type { ProductWithOptions } from '@/interfaces/products'
 
 const Threads: FC<ProductWithOptions> = ({ object }) => {
   if (object?.threads == null) { return null }

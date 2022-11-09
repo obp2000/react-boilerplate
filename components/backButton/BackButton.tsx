@@ -1,11 +1,12 @@
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { FC, useContext } from 'react'
 import { Button } from 'reactstrap'
-import { OptionsContext } from '../layout/Layout'
+import { MainContext } from '@/services/context'
 
 const BackButton: FC = () => {
   const router = useRouter()
-  const { commonConsts } = useContext(OptionsContext)
+  const { commonConsts } = useContext(MainContext)
   return <Button
     color='primary'
     outline

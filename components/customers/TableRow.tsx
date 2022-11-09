@@ -1,13 +1,14 @@
 import { FC, useContext } from 'react'
-import type { Customer, CustomerOptionsType } from '../../interfaces/customers'
-import type { TableRowType } from '../../interfaces/objectsTable'
-import CityName from '../cities/CityName'
-import { OptionsContext } from '../layout/Layout'
-import Date from '../Date'
+import type { Customer, CustomerOptionsType } from '@/interfaces/customers'
+// import type { TableRowType } from '@/interfaces/objectsTable'
+import CityName from '@/cities/CityName'
+import { MainContext } from '@/services/context'
+import Date from '@/Date'
 import ShortName from './ShortName'
+// import { AnyObject } from '@/interfaces/api'
 
-const TableRow: FC<TableRowType<Customer>> = ({ object }) => {
-  const { options } = useContext(OptionsContext) as CustomerOptionsType
+const TableRow: FC<Customer> = (object) => {
+  const { options } = useContext(MainContext) as CustomerOptionsType
   return <>
     <td scope="row">
       {object.id}

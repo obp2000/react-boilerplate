@@ -10,7 +10,7 @@ import {
   Badge,
 } from 'reactstrap'
 import Loader from 'react-loader'
-import SearchForm from '../Search/SearchForm'
+import SearchForm from '@/Search/SearchForm'
 import NavLink from './NavLink'
 import {useNavBar} from './hooks'
 

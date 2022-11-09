@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import type { CustomerWithOptions } from '../../interfaces/customers'
+import type { CustomerWithOptions } from '@/interfaces/customers'
 
 const Name: FC<CustomerWithOptions> = ({ object, options }) => {
   if (!object?.name) { return null }

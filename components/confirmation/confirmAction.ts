@@ -1,7 +1,7 @@
 import confirmationComp from './Confirmation'
 
 const confirmAction = (
-  action: () => void,
+  action: Awaited<() => void>,
   text = 'Delete',
   proceedLabel = 'Ok',
   cancelLabel = 'Cancel',

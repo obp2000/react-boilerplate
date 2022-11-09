@@ -6,6 +6,7 @@ export type TotalPages = {
 
 export type Page = {
   label: string
-  query: ParsedUrlQuery
+  query?: ParsedUrlQuery
+  search: string
   active?: boolean
 }

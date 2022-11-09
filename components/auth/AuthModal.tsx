@@ -1,7 +1,5 @@
 import { FC } from 'react'
-import {
-  Button, Modal, ModalBody, ModalHeader
-} from 'reactstrap'
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { useAuthModal } from './hooks'
 

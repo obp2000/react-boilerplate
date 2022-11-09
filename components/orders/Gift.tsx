@@ -1,10 +1,10 @@
 import { FC, useContext } from 'react'
 import { Field } from 'react-final-form'
-import type { OrderOptionsType } from '../../interfaces/orders'
-import FloatingFormGroup from '../formInput/FloatingFormGroup'
-import Input from '../formInput/Input'
-import { OptionsContext } from '../layout/Layout'
-import { ConditionGte } from '../shared/FormConditions'
+import type { OrderOptionsType } from '@/interfaces/orders'
+import FloatingFormGroup from '@/formInput/FloatingFormGroup'
+import Input from '@/formInput/Input'
+import { MainContext } from '@/services/context'
+import { ConditionGte } from '@/shared/FormConditions'
 
 const Gift: FC = () => <tr>
   <td colSpan={3}>
@@ -17,7 +17,7 @@ const Gift: FC = () => <tr>
 </tr>
 
 const GiftIfNeeded = (): JSX.Element => {
-  const { options } = useContext(OptionsContext) as OrderOptionsType
+  const { options } = useContext(MainContext) as OrderOptionsType
   return <ConditionGte
     when="order_items_cost"
     gte={options?.Consts.SUM_FOR_GIFT}>

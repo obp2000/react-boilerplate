@@ -1,7 +1,7 @@
 import { rest } from 'msw'
 import 'whatwg-fetch'
-import { baseUrl } from '../services/apiSlice'
-import type { Customer } from '../interfaces/customers'
+import { baseUrl } from '@/services/config'
+import type { Customer } from '@/interfaces/customers'
 
 export const optionsData = {
   "name": "Customer List",

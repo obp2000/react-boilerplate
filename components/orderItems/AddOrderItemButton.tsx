@@ -1,11 +1,11 @@
 import { FC, useContext } from 'react'
 import { useFieldArray } from 'react-final-form-arrays'
 import { Button } from 'reactstrap'
-import { OptionsContext } from '../layout/Layout'
+import { MainContext } from '@/services/context'
 import { initOrderItem } from './config'
 
 const AddOrderItemButton: FC = () => {
-  const { commonConsts } = useContext(OptionsContext)
+  const { commonConsts } = useContext(MainContext)
   const { fields } = useFieldArray('order_items')
   return <Button
     size='sm'

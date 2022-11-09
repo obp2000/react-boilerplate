@@ -1,9 +1,9 @@
 import { FC, useContext } from 'react'
-import type { CustomerOptionsType } from '../../interfaces/customers'
-import { OptionsContext } from '../layout/Layout'
+import type { CustomerOptionsType } from '@/interfaces/customers'
+import { MainContext } from '@/services/context'
 
 const TableLabels: FC = () => {
-  const { options } = useContext(OptionsContext) as CustomerOptionsType
+  const { options } = useContext(MainContext) as CustomerOptionsType
   if (!options) { return null }
   return <>
     <th scope="col">{options.id.label}</th>

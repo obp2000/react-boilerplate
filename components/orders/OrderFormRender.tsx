@@ -2,17 +2,17 @@ import { FC, useContext } from 'react'
 import { Field, FormRenderProps } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
 import { Col, Form, Row, Table } from 'reactstrap'
-import type { CommonConstsType } from '../../interfaces/commonConsts'
-import type { OrderOptionsType } from '../../interfaces/orders'
-import { useDropdown as useCustomerDropdownAttrs } from '../customers/hooks'
-import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
-import FloatingFormGroup from '../formInput/FloatingFormGroup'
-import Input from '../formInput/Input'
-import { OptionsContext } from '../layout/Layout'
-import Header from '../objectForm/Header'
-import OrderItems from '../orderItems/OrderItems'
-import OrderItemsTableLabels from '../orderItems/TableLabels'
-import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
+import type { CommonConstsType } from '@/interfaces/commonConsts'
+import type { OrderOptionsType } from '@/interfaces/orders'
+import { useDropdown as useCustomerDropdownAttrs } from '@/customers/hooks'
+import DropdownListFormGroup from '@/dropdownList/DropdownListFormGroup'
+import FloatingFormGroup from '@/formInput/FloatingFormGroup'
+import Input from '@/formInput/Input'
+import { MainContext } from '@/services/context'
+import Header from '@/objectForm/Header'
+import OrderItems from '@/orderItems/OrderItems'
+import OrderItemsTableLabels from '@/orderItems/TableLabels'
+import SelectFloatingFormGroup from '@/selectField/SelectFloatingFormGroup'
 import GiftIfNeeded from './Gift'
 import OrderItemsTotals from './OrderItemsTotals'
 import OrderTotals from './OrderTotals'
@@ -21,7 +21,7 @@ import Samples from './Samples'
 
 const OrderFormRender: FC<FormRenderProps> = (props) => {
   const { options: orderOptions, commonConsts } =
-    useContext(OptionsContext) as OrderOptionsType & CommonConstsType
+    useContext(MainContext) as OrderOptionsType & CommonConstsType
   const options = orderOptions?.order_items?.child?.children
   return <Form onSubmit={props.handleSubmit}
     className="shadow p-3 mb-5 bg-body rounded">
@@ -45,14 +45,14 @@ const OrderFormRender: FC<FormRenderProps> = (props) => {
     </Row>
     <Table size="sm" responsive bordered hover>
       <thead>
-        <OptionsContext.Provider value={{ options, commonConsts }}>
+        <MainContext.Provider value={{ options, commonConsts }}>
           <OrderItemsTableLabels />
-        </OptionsContext.Provider>
+        </MainContext.Provider>
       </thead>
       <tbody>
-        <OptionsContext.Provider value={{ options, commonConsts }}>
+        <MainContext.Provider value={{ options, commonConsts }}>
           <FieldArray name="order_items" component={OrderItems} />
-        </OptionsContext.Provider>
+        </MainContext.Provider>
         <OrderItemsTotals />
       </tbody>
       <tfoot>

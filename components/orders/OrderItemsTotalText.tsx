@@ -1,10 +1,10 @@
 import { FC, useContext } from 'react'
-import type { OrderOptionsType } from '../../interfaces/orders'
-import { OptionsContext } from '../layout/Layout'
-import { ConditionGte } from '../shared/FormConditions'
+import type { OrderOptionsType } from '@/interfaces/orders'
+import { MainContext } from '@/services/context'
+import { ConditionGte } from '@/shared/FormConditions'
 
 const OrderItemsTotalText: FC = () => {
-  const { options } = useContext(OptionsContext) as OrderOptionsType
+  const { options } = useContext(MainContext) as OrderOptionsType
   return <span>
     {options?.order_items_cost.label}
     <ConditionGte

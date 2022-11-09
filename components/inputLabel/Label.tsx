@@ -1,8 +1,8 @@
 import { Label } from 'reactstrap'
-import type { DropdownListAttrs } from '../../interfaces/dropdownList'
-import type { FieldAttrs } from '../../interfaces/input'
-import type { LabelSizes, AnyFieldAttrs } from '../../interfaces/inputLabel'
-import type { SelectFieldAttrs } from '../../interfaces/selectField'
+import type { DropdownListAttrs } from '@/interfaces/dropdownList'
+import type { FieldAttrs } from '@/interfaces/input'
+import type { LabelSizes } from '@/interfaces/inputLabel'
+import type { SelectFieldAttrs } from '@/interfaces/selectField'
 import { useFieldProps } from './hooks'
 
 function LabelComp(props: { name: string }): JSX.Element

@@ -1,17 +1,11 @@
-// import array from 'lodash/array'
+import type { SubmitButtonProps } from '@/interfaces/objectForm'
 import { useFormState } from 'react-final-form'
-import type { SubmitButtonProps } from '../../interfaces/objectForm'
 
 const useHasDirtyAndVisitedFields = (): boolean => {
   const { dirtyFields, visited = {} } = useFormState()
-  const result = Object.keys(dirtyFields).reduce(
-    (dirtyAndVisited: string[], field) => {
-      if (visited[field as keyof typeof visited]) {
-        dirtyAndVisited.push(field)
-      }
-      return dirtyAndVisited
-    }, [])
-  return result.length > 0
+  return Object.keys(dirtyFields)
+    .filter((field) => visited[field as keyof typeof visited])
+    .length > 0
 }
 
 export const useDisabled = ({ isLoading }: SubmitButtonProps): boolean => {

@@ -1,21 +1,13 @@
 import { FC } from 'react'
 import { Button } from 'reactstrap'
-import type {
-  DeleteObjectButtonType
-} from '../../interfaces/deleteObjectButton'
 import { useDeleteObject } from './hooks'
+import { AnyObject } from '@/interfaces/api'
 
-const DeleteObjectButton: FC<DeleteObjectButtonType> = (props) => {
-  const {
-    isAuthenticated,
-    isDeletingObject,
-    ...buttonAttrs
-  } = useDeleteObject(props)
-  if (!isAuthenticated) { return null }
+const DeleteObjectButton: FC<AnyObject> = (props) => {
   return <Button
     size='sm'
     outline
-    {...buttonAttrs}
+    {...useDeleteObject(props)}
   />
 }
 

@@ -28,3 +28,7 @@ export type UserWithOptions = UserOptionsType & {
 export type TableRowType = UserWithOptions & {
   fieldName: string
 }
+
+export type UserType = {
+  user: User
+}

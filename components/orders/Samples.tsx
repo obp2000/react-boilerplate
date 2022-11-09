@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Field } from 'react-final-form'
-import Input from '../formInput/Input'
-import Label from '../inputLabel/Label'
+import Input from '@/formInput/Input'
+import Label from '@/inputLabel/Label'
 
 const Samples: FC = () => <tr>
   <td colSpan={5}>

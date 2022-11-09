@@ -29,7 +29,7 @@ export type HeaderProps = AnyObjectType & SubmitButtonProps
 export type AnyFormValues = CustomerFormValues | ProductFormValues |
   OrderFormValues | LoginFormValues | RegisterFormValues
 
-
+export type ValidatedFields = Record<string, string[]>
 
 // export type FormConfig = IndexUrl & {
 //   useGetObjectQuery: typeof useGetCustomerQuery | typeof useGetProductQuery |

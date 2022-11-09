@@ -1,8 +1,9 @@
 import { FC } from 'react'
 import { Col } from 'reactstrap'
-import type { TableRowType, User } from '../../interfaces/users'
+import type { TableRowType, User } from '@/interfaces/users'
 
-const TableRow: FC<TableRowType> = ({ object, options, fieldName }) => <>
+const TableRow: FC<TableRowType> = ({ object, options, fieldName }) => {
+  return <>
   <Col sm={2}>
     {options && options[fieldName as keyof User]?.label}
   </Col>
@@ -10,5 +11,6 @@ const TableRow: FC<TableRowType> = ({ object, options, fieldName }) => <>
     {object && object[fieldName as keyof User]}
   </Col>
 </>
+}
 
 export default TableRow

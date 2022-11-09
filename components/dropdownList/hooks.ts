@@ -1,30 +1,44 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import type { DropdownProps } from 'react-widgets/cjs/DropdownList'
 import type {
   DropdownListAttrs,
   GetRenderValue
-} from '../../interfaces/dropdownList'
-import { OptionsContext } from '../layout/Layout'
-import { useMapFieldProps } from '../options/hooks'
-import { useLazySearchObjectsQuery } from '../search/apiSlice'
+} from '@/interfaces/dropdownList'
+import { MainContext } from '@/services/context'
+import { useMapFieldProps } from '@/options/hooks'
 import { getRenderValue } from './helpers'
+// import { fetcher } from '@/search/client'
+// import useSWR from 'swr'
+import { baseUrl } from '@/services/config'
+import type { Dispatch, SetStateAction } from 'react'
+
+const onSearch = (
+  url: string | undefined,
+  setData: Dispatch<SetStateAction<never[]>>
+) => (term: string) => {
+  if (typeof term === 'string' && term.length === 2) {
+    const searchParams = new URLSearchParams()
+    searchParams.set('page_size', '1000000')
+    searchParams.set('term', term)
+    return fetch(`${baseUrl}${url}?${searchParams}`)
+      .then(res => res.json()
+        .then(({ results }) => setData(results)))
+  }
+}
 
 export const useSearch = (url: string) => {
-  const [searchTrigger, { data, isFetching }] = useLazySearchObjectsQuery()
-  const onSearch = (term: string) => {
-    if (term.length === 2) {
-      searchTrigger({ url, params: { term } }, true)
-    }
-  }
+  // const { data, error } = useSWR(url, fetcher)
+  // console.log('data ', data)
+  const [data, setData] = useState([])
   return {
-    onSearch,
+    onSearch: onSearch(url, setData),
     data,
-    busy: isFetching
+    busy: false,
   }
 }
 
 const useWidgetMessages = () => {
-  const { commonConsts } = useContext(OptionsContext)
+  const { commonConsts } = useContext(MainContext)
   return {
     emptyFilter: commonConsts?.not_found,
     emptyList: () => commonConsts?.not_found,

@@ -1,11 +1,11 @@
 import { FC } from 'react'
 import { Field, FormRenderProps } from 'react-final-form'
 import { Col, Form, Row } from 'reactstrap'
-import FloatingFormGroup from '../formInput/FloatingFormGroup'
-import Input from '../formInput/Input'
-import SwitchFormGroup from '../formInput/SwitchFormGroup'
-import Header from '../objectForm/Header'
-import SelectFloatingFormGroup from '../selectField/SelectFloatingFormGroup'
+import FloatingFormGroup from '@/formInput/FloatingFormGroup'
+import Input from '@/formInput/Input'
+import SwitchFormGroup from '@/formInput/SwitchFormGroup'
+import Header from '@/objectForm/Header'
+import SelectFloatingFormGroup from '@/selectField/SelectFloatingFormGroup'
 import ProductImage from './ProductImage'
 
 const PropductFormRender: FC<FormRenderProps> = (props) => <Form

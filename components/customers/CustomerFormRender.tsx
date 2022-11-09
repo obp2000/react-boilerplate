@@ -1,11 +1,11 @@
+import { useDropdown as useCityDropdownAttrs } from '@/cities/hooks'
+import DropdownListFormGroup from '@/dropdownList/DropdownListFormGroup'
+import FloatingFormGroup from '@/formInput/FloatingFormGroup'
+import Input from '@/formInput/Input'
+import Header from '@/objectForm/Header'
 import { FC } from 'react'
 import { Field, FormRenderProps } from 'react-final-form'
 import { Col, Form, Row } from 'reactstrap'
-import { useDropdown as useCityDropdownAttrs } from '../cities/hooks'
-import DropdownListFormGroup from '../dropdownList/DropdownListFormGroup'
-import FloatingFormGroup from '../formInput/FloatingFormGroup'
-import Input from '../formInput/Input'
-import Header from '../objectForm/Header'
 
 const CustomerFormRender: FC<FormRenderProps> = (props) => <Form
   onSubmit={props.handleSubmit} className="shadow p-3 mb-5 bg-body rounded">

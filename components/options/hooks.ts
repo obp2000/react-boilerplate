@@ -1,34 +1,36 @@
 // import {useEffect, useLayoutEffect} from 'react'
-import { useRouter } from 'next/dist/client/router'
+import type { FieldAttrs } from '@/interfaces/input'
+import type {
+    AnyOptions,
+    FieldProps,
+    OptionsOueryResult
+} from '@/interfaces/options'
+import { MainContext } from '@/services/context'
+import { mapChoices } from '@/selectField/hooks'
+// import { useRouter } from 'next/dist/client/router'
 import { useContext } from 'react'
 import type { InputProps } from 'reactstrap'
 import type { InputType } from 'reactstrap/types/lib/Input'
-import type { FieldAttrs } from '../../interfaces/input'
-import type {
-  AnyOptions,
-  FieldProps,
-  OptionsOueryResult
-} from '../../interfaces/options'
-import { OptionsContext } from '../layout/Layout'
-import { mapChoices } from '../selectField/hooks'
-import { useGetOptionsQuery } from './apiSlice'
+// import { useGetOptionsQuery } from './apiSlice'
 
-export const useOptionsOuery = (url: string) => {
-  const { isFallback } = useRouter()
-  return useGetOptionsQuery(url, {
-    skip: isFallback,
-    selectFromResult: ({
-      data,
-      isLoading,
-      isFetching,
-    }): OptionsOueryResult => ({
-      commonConsts: data?.commonConsts,
-      options: data?.options,
-      isLoadingOptions: isLoading || isFallback,
-      isFetchingOptions: isFetching || isFallback,
-    }),
-  })
-}
+// export const useOptionsOuery = (url: string) => {
+//   // const { isFallback } = useRouter()
+//   return useGetOptionsQuery(url, {
+//     // skip: isFallback,
+//     selectFromResult: ({
+//       data,
+//       isLoading,
+//       isFetching,
+//     }): OptionsOueryResult => ({
+//       commonConsts: data?.commonConsts,
+//       options: data?.options,
+//       // isLoadingOptions: isLoading || isFallback,
+//       // isFetchingOptions: isFetching || isFallback,
+//       isLoadingOptions: isLoading,
+//       isFetchingOptions: isFetching,
+//     }),
+//   })
+// }
 
 const mapFieldType = (type: string = ''): string | undefined => {
   switch (type) {
@@ -51,7 +53,7 @@ export const useMapFieldProps = ({
   dataKey,
   textField,
 }: Partial<FieldAttrs>): InputProps => {
-  const { options = emptyObject } = useContext(OptionsContext)
+  const { options = emptyObject } = useContext(MainContext)
   const {
     type,
     required,

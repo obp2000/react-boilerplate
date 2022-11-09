@@ -1,10 +1,10 @@
-import { RegisterFormValues } from '../../interfaces/auth'
-// import { City } from '../../interfaces/cities'
-import type { ValidatedFields } from '../../interfaces'
-import type { ErrorMessages } from '../../interfaces/commonConsts'
-import { Errors } from '../../interfaces/errors'
-import type { AnyFormValues } from '../../interfaces/objectForm'
-import { Product } from '../../interfaces/products'
+import { RegisterFormValues } from '@/interfaces/auth'
+// import { City } from '@/interfaces/cities'
+import type { ValidatedFields } from '@/interfaces/index'
+import type { ErrorMessages } from '@/interfaces/commonConsts'
+import { Errors } from '@/interfaces/errors'
+import type { AnyFormValues } from '@/interfaces/objectForm'
+import { Product } from '@/interfaces/products'
 
 const emptyString = ''
 

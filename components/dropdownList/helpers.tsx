@@ -1,9 +1,6 @@
 /* eslint-disable react/display-name */
 import type { RenderValueProp } from 'react-widgets/cjs/DropdownListInput'
-import type {
-  GetRenderValue,
-  SearchResult
-} from '../../interfaces/dropdownList'
+import type { GetRenderValue, SearchResult } from '@/interfaces/dropdownList'
 
 export const getRenderValue = ({
   renderValueComponent: RenderValueComponent,

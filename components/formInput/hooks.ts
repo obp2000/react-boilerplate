@@ -2,8 +2,8 @@ import type { FormEventHandler } from 'react'
 import type {
   FieldInputProps, FieldMetaState, FieldRenderProps
 } from 'react-final-form'
-import type { FieldAttrs, FilesHandlerEvent } from '../../interfaces/input'
-import { useMapFieldProps } from '../options/hooks'
+import type { FieldAttrs, FilesHandlerEvent } from '@/interfaces/input'
+import { useMapFieldProps } from '@/options/hooks'
 
 const invalid = ({ touched, error }: FieldMetaState<any>): boolean =>
   Boolean(touched && !!error)

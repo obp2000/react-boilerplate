@@ -1,8 +1,3 @@
-import type { EntityState } from '@reduxjs/toolkit'
-import type { RootState } from '../services/store'
-import { getCustomers } from '../components/customers/apiSlice'
-import { getOrders } from '../components/orders/apiSlice'
-import { getProducts } from '../components/products/apiSlice'
 import type { Customer } from './customers'
 import type { Order } from './orders'
 import type { Product } from './products'
@@ -20,19 +15,29 @@ export type GetObjectsArg = {
   }
 }
 
-export type RawObjectsWithTotals = {
+// export type ObjectsWithTotals = EntityState<AnyObject> & {
+//   totalCount: number
+//   totalPages: number
+// }
+
+// export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
+//   typeof getOrders
+
+// export type SelectObjectsData =
+//   (state: RootState) => ObjectsWithTotals | undefined
+
+export type ObjectsWithTotals = {
   totalCount: number
   totalPages: number
   results: AnyObject[]
 }
 
-export type ObjectsWithTotals = EntityState<AnyObject> & {
-  totalCount: number
-  totalPages: number
+export type ObjectsContextType = ObjectsWithTotals | AnyObjectType
+
+export type Params ={
+  params: Record<string, string>
 }
 
-export type GetObjectsEndpoint = typeof getCustomers | typeof getProducts |
-  typeof getOrders
-
-export type SelectObjectsData =
-  (state: RootState) => ObjectsWithTotals | undefined
+export type SearchParams ={
+  searchParams: Record<string, string>
+}
