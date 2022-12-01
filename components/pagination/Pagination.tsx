@@ -1,26 +1,23 @@
-import type { TotalPages } from '@/interfaces/pagination'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { FC } from 'react'
-import { Pagination, PaginationItem } from 'reactstrap'
-import { usePagination } from './hooks'
+import 'server-only'
 
-const PaginationComp: FC<TotalPages> = (props) => {
-  const pages = usePagination(props)
-  const pathname = usePathname()
+import Pagination from '@/client/Pagination'
+import PaginationItem from '@/client/PaginationItem'
+import type { SearchParams } from '@/interfaces/api'
+import { getPagination } from './helpers'
+import PaginationLink from './PaginationLink'
+
+export default async function PaginationComp({
+  totalPages,
+  searchParams
+}: { totalPages: number } & SearchParams) {
+  const pages = getPagination({ totalPages, searchParams })
   if (pages.length === 0) return null
   return <Pagination>
-    {pages.map(({ label, search, active }, key) =>
+    {pages.map(({ label, search, query, active }, key) =>
       <PaginationItem key={key} {...{ active }} >
-        <Link href={{ pathname, search }}
-          replace
-          shallow={true}
-          className='page-link'
-        >
+        <PaginationLink {...{ query }} >
           {label}
-        </Link>
+        </PaginationLink>
       </PaginationItem>)}
   </Pagination>
 }
-
-export default PaginationComp

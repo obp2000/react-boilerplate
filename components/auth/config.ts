@@ -1,11 +1,8 @@
 import type { LoginFormConfig, RegisterFormConfig } from '@/interfaces/auth'
-// import { useLoginMutation, useRegisterMutation } from './authApi'
-// import { validateLogin, validateRegister } from './validators'
 
 export const loginFormConfig: LoginFormConfig = {
   indexUrl: '/login/',
   name: 'Login',
-  // useAuthMutation: useLoginMutation,
   formFields: [
     { name: 'username', required: true, autoComplete: 'username' },
     { name: 'password', type: 'password', autoComplete: 'current-password' },
@@ -18,7 +15,6 @@ export const loginFormConfig: LoginFormConfig = {
 export const registerFormConfig: RegisterFormConfig = {
   indexUrl: '/register/',
   name: 'Register',
-  // useAuthMutation: useRegisterMutation,
   formFields: [
     { name: 'username', autoComplete: 'username' },
     { name: 'email', type: 'email', autoComplete: 'email' },

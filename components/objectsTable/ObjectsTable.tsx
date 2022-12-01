@@ -1,67 +1,81 @@
-import { useContext } from 'react'
-import { Table } from 'reactstrap'
-// import Loader from 'react-loader'
+import 'server-only'
+
+import Table from '@/client/Table'
 import DeleteObjectButton from '@/deleteObjectButton/DeleteObjectButton'
-import type { ObjectsWithTotals } from '@/interfaces/api'
+import type { AnyObject, SearchParams } from '@/interfaces/api'
 import type {
+  Customer,
   TableConfig as CustomersTableConfig
 } from '@/interfaces/customers'
-import type { TableOptions } from '@/interfaces/options'
-import type { TableConfig as OrdersTableConfig } from '@/interfaces/orders'
-import type { TableConfig as ProductsTableConfig } from '@/interfaces/products'
+import type {
+  Order,
+  TableConfig as OrdersTableConfig
+} from '@/interfaces/orders'
+import type {
+  Product,
+  TableConfig as ProductsTableConfig
+} from '@/interfaces/products'
 import LinkToNewOrEditObject from '@/linkToNewOrEditObject/LinkToNewOrEditObject'
-import Pagination from '@/pagination/Pagination'
-import { MainContext, ObjectsContext } from '@/services/context'
+import { getAuth, getObjects } from '@/services/api/server'
+import Tr from './tr'
+import { IndexUrl } from '@/interfaces/index'
+import { getOptions } from '@/services/api/options'
 import Header from './Header'
+import Pagination from '@/pagination/Pagination'
 
-export default function ObjectsTable(props: CustomersTableConfig): JSX.Element
-export default function ObjectsTable(props: ProductsTableConfig): JSX.Element
-export default function ObjectsTable(props: OrdersTableConfig): JSX.Element
-export default function ObjectsTable({
+export default async function ObjectsTable(
+  props: CustomersTableConfig & IndexUrl &
+  { searchParams: SearchParams }
+): Promise<JSX.Element>
+export default async function ObjectsTable(
+  props: ProductsTableConfig & IndexUrl &
+  { searchParams: SearchParams }
+): Promise<JSX.Element>
+export default async function ObjectsTable(
+  props: OrdersTableConfig & IndexUrl &
+  { searchParams: SearchParams }
+): Promise<JSX.Element>
+export default async function ObjectsTable({
   TableLabels,
-  TableRow
-}: any): JSX.Element {
-  const { options, isAuthenticated } = useContext(MainContext)
+  TableRow,
+  // results,
+  indexUrl,
+  searchParams,
+  // commonConsts,
+  // options
+}: any): Promise<JSX.Element> {
+  const { isAuthenticated } = getAuth()
+  // console.log('objects table table')
+  const { commonConsts, options } = await getOptions(indexUrl)
   const { totalCount, totalPages, results } =
-    useContext(ObjectsContext) as ObjectsWithTotals
+    await getObjects(indexUrl, searchParams)
   return <>
-    <Header {...{ totalCount }} />
+    <Header {...{ totalCount, options }} />
     <Table size='sm' bordered striped hover className='table-secondary'>
       <thead className="thead-light">
         <tr>
-          <TableLabels />
+          <TableLabels {...{ options }} />
           {isAuthenticated && <th scope="col" colSpan={2}>
-            <LinkToNewOrEditObject {...{ id: undefined }} />
-          </th>
-          }
+            <LinkToNewOrEditObject {...{ indexUrl, commonConsts }} />
+          </th>}
         </tr>
       </thead>
       <tbody>
-        {results?.map((object, key) => <tr
-          key={key}
-          aria-label={(options as TableOptions)?.name_singular}>
-          <TableRow {...object} />
+        {results.map((object: AnyObject, key: number) => <Tr key={key}
+          {...{ options }}>
+          <TableRow {...{ object, options }} />
           {isAuthenticated && <>
             <td>
-              <LinkToNewOrEditObject {...object} />
+              <LinkToNewOrEditObject {...{ object, indexUrl, commonConsts }} />
             </td>
             <td>
-              <DeleteObjectButton {...object} />
+              <DeleteObjectButton {...{ object, indexUrl, commonConsts }} />
             </td>
           </>}
-        </tr>
+        </Tr>
         )}
       </tbody>
     </Table>
-    <Pagination {...{ totalPages }} />
+    <Pagination {...{ totalPages, searchParams }} />
   </>
 }
-
-
-// export default ObjectsTable
-
-          // {          {isAuthenticated && allObjects?.slice(0, 1).map((_: any,
-          //   key: number) => <th scope="col" colSpan={2} key={key}>
-          //     <LinkToNewOrEditObject />
-          //   </th>
-          // )}}

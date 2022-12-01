@@ -10,8 +10,10 @@ export type LayoutType = IndexUrl & {
 export type AsyncLayoutType =
   ({ children }: {children: ReactNode}) => Promise<JSX.Element>
 
-export type MainContainerProps = {
-  mainContext: MainContextType
-  objectsContext?: ObjectsContextType
+export type Children = {
   children: ReactNode
+}
+
+export type MainContainerProps = Children & {
+  mainContext: MainContextType
 }

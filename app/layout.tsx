@@ -1,30 +1,28 @@
 import '@/styles/globals.scss'
+import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.min.css'
 import 'react-widgets/scss/styles.scss'
 
-import { indexUrl } from '@/customers/serverConfig'
-import type { AsyncLayoutType } from '@/interfaces/layout'
-import { mainContext } from '@/services/api/server'
-import HeaderContainer from './headerContainer'
+import ToastContainer from '@/notifications/toastContainer'
+import { ReactNode } from 'react'
+import NavBar from '@/navBar/NavBar'
+import { preloadOptions } from '@/services/api/server'
+import { indexUrl } from './customers/serverConfig'
 
-const name = "Best&C"
-
-const RootLayout: AsyncLayoutType = async ({ children }) => {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // preloadOptions(indexUrl)
   return <html>
-    <head>
-      <title>{name}</title>
-    </head>
     <body>
-      <div className="bg-light border mt-2 bg-light border mt-2 container-sm">
-        <header>
-          <HeaderContainer {...(await mainContext(indexUrl))} />
+      <div className="bg-light border mt-2 container-sm">
+{/*        <header>
+          <NavBar />
         </header>
         <main>
           {children}
-        </main>
+        </main>*/}
+        {children}
       </div>
+      <ToastContainer />
     </body>
   </html>
 }
-
-export default RootLayout

@@ -14,15 +14,20 @@ import type { Dispatch, SetStateAction } from 'react'
 
 const onSearch = (
   url: string | undefined,
-  setData: Dispatch<SetStateAction<never[]>>
+  setData: Dispatch<SetStateAction<never[]>>,
+  setBusy: Dispatch<SetStateAction<boolean>>
 ) => (term: string) => {
   if (typeof term === 'string' && term.length === 2) {
+    setBusy(true)
     const searchParams = new URLSearchParams()
     searchParams.set('page_size', '1000000')
     searchParams.set('term', term)
     return fetch(`${baseUrl}${url}?${searchParams}`)
       .then(res => res.json()
-        .then(({ results }) => setData(results)))
+        .then(({ results }) => {
+          setData(results)
+          setBusy(false)
+        }))
   }
 }
 
@@ -30,10 +35,11 @@ export const useSearch = (url: string) => {
   // const { data, error } = useSWR(url, fetcher)
   // console.log('data ', data)
   const [data, setData] = useState([])
+  const [busy, setBusy] = useState(false)
   return {
-    onSearch: onSearch(url, setData),
+    onSearch: onSearch(url, setData, setBusy),
     data,
-    busy: false,
+    busy,
   }
 }
 

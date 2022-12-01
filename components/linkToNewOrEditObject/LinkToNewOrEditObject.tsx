@@ -1,30 +1,22 @@
-import { AnyObject } from '@/interfaces/api'
+import 'server-only'
+
+import { AnyObjectType } from '@/interfaces/api'
 import Link from 'next/link'
-import { FC } from 'react'
-import { useLinkToNewOrEditObject } from './hooks'
+import { IndexUrl } from '@/interfaces/index'
+import { CommonConstsType } from '@/interfaces/commonConsts'
 
-const LinkToNewOrEditObject: FC<AnyObject | {id: undefined}> = (object) => <Link
-  className='btn btn-outline-primary btn-sm'
-  {...useLinkToNewOrEditObject(object)}
-/>
-
-export default LinkToNewOrEditObject
-
-
-  // const { commonConsts } = useContext(MainContext)
-  // const label = object?.id ? commonConsts?.edit : commonConsts?.new
-  // // const { pathname } = useRouter()
-  // const pathname = usePathname()
-  // const basePathname = pathname === '/'
-  //   ? commonConsts?.main_menu[1].path
-  //   : `${pathname}/`
-  // const href = {
-  //   pathname: `${basePathname}[id]`,
-  //   query: { id: object?.id ?? 'new' }
-  // }
-  // return <Link
-  //   href={href}
-  //   aria-labelledby={label}
-  //   className='btn btn-outline-primary btn-sm'>
-  //   {label}
-  // </Link>
+export default async function LinkToNewOrEditObject({
+  object,
+  indexUrl,
+  commonConsts
+}: AnyObjectType & IndexUrl & CommonConstsType) {
+  const label = object?.id ? commonConsts?.edit : commonConsts?.new
+  return <Link
+    className='btn btn-outline-primary btn-sm'
+    href={`${indexUrl}${object?.id || 'new'}`}
+    aria-labelledby={label}
+    // prefetch={false}
+  >
+    {label}
+  </Link>
+}

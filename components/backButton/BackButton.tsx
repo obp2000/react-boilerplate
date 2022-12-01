@@ -1,10 +1,9 @@
-// import { useRouter } from 'next/router'
-import { useRouter } from 'next/navigation'
-import { FC, useContext } from 'react'
-import { Button } from 'reactstrap'
 import { MainContext } from '@/services/context'
+import { useRouter } from 'next/navigation'
+import { useContext } from 'react'
+import { Button } from 'reactstrap'
 
-const BackButton: FC = () => {
+export default function BackButton() {
   const router = useRouter()
   const { commonConsts } = useContext(MainContext)
   return <Button
@@ -16,5 +15,3 @@ const BackButton: FC = () => {
     {commonConsts?.back}
   </Button>
 }
-
-export default BackButton

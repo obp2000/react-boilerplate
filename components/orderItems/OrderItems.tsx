@@ -1,12 +1,12 @@
-import { FC } from 'react'
+import type { OrderItem as OrderItemType } from '@/interfaces/orderItems'
 import type { FieldArrayRenderProps } from 'react-final-form-arrays'
 import OrderItem from './OrderItem'
-import type { OrderItem as OrderItemType } from '@/interfaces/orderItems'
 
-const OrderItems: FC<FieldArrayRenderProps<OrderItemType, HTMLElement>> =
-  ({ fields }) => <>
+export default function OrderItems({
+  fields
+}: FieldArrayRenderProps<OrderItemType, HTMLElement>) {
+  return <>
     {fields.map((orderItemName, index) =>
       <OrderItem key={index} {...{ orderItemName, index }} />)}
   </>
-
-export default OrderItems
+}

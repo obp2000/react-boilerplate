@@ -1,17 +1,19 @@
-import { mainContext, getObjects } from '@/services/api/server'
-import MainContainer from '@/app/mainContainer'
-import ClientPage from './clientPage'
-import { indexUrl } from '@/products/serverConfig'
+import { indexUrl } from './serverConfig'
+import TableLabels from './TableLabels'
+import TableRow from './TableRow'
 import type { SearchParams } from '@/interfaces/api'
+import Header from '@/objectsTable/Header'
+import ObjectsTable from '@/objectsTable/ObjectsTable'
+import Pagination from '@/pagination/Pagination'
 
-const Page = async ({ searchParams }: SearchParams) => {
-	// console.log('searchParams ', searchParams)
-	return <MainContainer
-		mainContext={await mainContext(indexUrl)}
-		objectsContext={await getObjects(indexUrl, searchParams)} >
-		{/*<div>ssssss111</div>*/}
-		<ClientPage />
-	</MainContainer>
+export default async function Page({ searchParams }: SearchParams) {
+	return <>
+		<Header {...{ indexUrl, searchParams }} />
+		<ObjectsTable {...{ TableLabels, TableRow, indexUrl, searchParams }} />
+		<Pagination {...{ indexUrl, searchParams }} />
+	</>
 }
 
-export default Page
+// export default async function Page({ searchParams }: SearchParams) {
+// 	return 'customers'
+// }

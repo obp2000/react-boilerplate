@@ -1,13 +1,14 @@
-import MainContainer from '@/app/mainContainer'
-import type { AsyncLayoutType } from '@/interfaces/layout'
-import { mainContext } from '@/services/api/server'
-import { indexUrl } from '@/users/serverConfig'
+import NavBar from '@/navBar/NavBar'
+import { ReactNode } from 'react'
+import { indexUrl } from './serverConfig'
 
-const Layout: AsyncLayoutType = async ({ children }) => {
-  // console.log('rest ', rest)
-  return <MainContainer mainContext={await mainContext(indexUrl)}>
-    {children}
-  </MainContainer>
+export default function Layout({ children }: { children: ReactNode }) {
+  return <>
+    <header>
+      <NavBar {...{ indexUrl, auth: true }} />
+    </header>
+    <main>
+      {children}
+    </main>
+  </>
 }
-
-export default Layout

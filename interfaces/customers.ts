@@ -54,7 +54,6 @@ export type TableConfig = {
 }
 
 export type FormConfig = {
-  useFormInitialValues: typeof useFormInitialValues
   objectFormRender: typeof objectFormRender
   validatedFields: ValidatedFields
   modFormValues: typeof modFormValues

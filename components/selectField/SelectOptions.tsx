@@ -1,8 +1,7 @@
-import { FC } from 'react'
 import type { SelectFieldAttrs, SelectOptions } from '@/interfaces/selectField'
 import { useMapFieldProps } from '@/options/hooks'
 
-const SelectOptionsComp: FC<SelectFieldAttrs> = (props) => {
+export default function SelectOptionsComp(props: SelectFieldAttrs) {
   const { selectOptions } = useMapFieldProps(props)
   return <>
     {selectOptions?.map(({ value, label }: SelectOptions, key: number) =>
@@ -10,5 +9,3 @@ const SelectOptionsComp: FC<SelectFieldAttrs> = (props) => {
     )}
   </>
 }
-
-export default SelectOptionsComp

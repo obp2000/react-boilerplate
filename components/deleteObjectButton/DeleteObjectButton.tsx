@@ -1,14 +1,18 @@
-import { FC } from 'react'
-import { Button } from 'reactstrap'
-import { useDeleteObject } from './hooks'
-import { AnyObject } from '@/interfaces/api'
+import 'server-only'
 
-const DeleteObjectButton: FC<AnyObject> = (props) => {
-  return <Button
-    size='sm'
-    outline
-    {...useDeleteObject(props)}
-  />
+import type { AnyObjectType } from '@/interfaces/api'
+import { IndexUrl } from '@/interfaces/index'
+import { getAuth } from '@/services/api/server'
+import DeleteObjectButtonClient from './DeleteObjectButtonClient'
+import { CommonConstsType } from '@/interfaces/commonConsts'
+
+export default async function DeleteObjectButton({
+  object,
+  indexUrl,
+  commonConsts
+}: Required<AnyObjectType> & IndexUrl & CommonConstsType) {
+  const { accessToken } = getAuth()
+  return <DeleteObjectButtonClient {...{
+    object, indexUrl, commonConsts, accessToken
+  }} />
 }
-
-export default DeleteObjectButton

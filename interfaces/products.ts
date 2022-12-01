@@ -123,7 +123,6 @@ export type TableConfig = {
 }
 
 export type FormConfig = {
-  useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
   objectFormRender: typeof objectFormRender
   validatedFields: ValidatedFields

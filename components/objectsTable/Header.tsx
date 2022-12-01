@@ -1,11 +1,14 @@
-import { FC, useContext } from 'react'
-import { Badge, Col, Row } from 'reactstrap'
-import type { HeaderProps } from '@/interfaces/objectsTable'
-import type { TableOptionsType } from '@/interfaces/options'
-import { MainContext } from '@/services/context'
+import 'server-only'
 
-const Header: FC<HeaderProps> = ({ totalCount }) => {
-  const { options } = useContext(MainContext) as TableOptionsType
+import Badge from '@/client/Badge'
+import Col from '@/client/Col'
+import Row from '@/client/Row'
+import { AnyObjectOptionsType } from '@/interfaces/options'
+
+export default async function Header({
+  totalCount,
+  options
+}: { totalCount: number } & AnyObjectOptionsType) {
   return <Row>
     <Col sm={2}>
       <h3 aria-label={options?.name_plural}>
@@ -19,5 +22,3 @@ const Header: FC<HeaderProps> = ({ totalCount }) => {
     </Col>
   </Row>
 }
-
-export default Header

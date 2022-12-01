@@ -125,7 +125,7 @@ export type TableConfig = {
 }
 
 export type FormConfig = {
-  useFormInitialValues: typeof useFormInitialValues
+  // useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
   mutators: { [index: string]: Mutator }
   objectFormRender: typeof objectFormRender

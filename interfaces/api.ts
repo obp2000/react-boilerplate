@@ -1,4 +1,5 @@
 import type { Customer } from './customers'
+// import { Children } from './layout'
 import type { Order } from './orders'
 import type { Product } from './products'
 
@@ -34,10 +35,10 @@ export type ObjectsWithTotals = {
 
 export type ObjectsContextType = ObjectsWithTotals | AnyObjectType
 
-export type Params ={
+export type Params = {
   params: Record<string, string>
 }
 
-export type SearchParams ={
-  searchParams: Record<string, string>
+export type SearchParams = {
+  searchParams?: Record<string, string>
 }

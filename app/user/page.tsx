@@ -1,7 +1,5 @@
-'use client'
+import User from './User'
 
-import User from '@/users/User'
-
-const Page = () => <User />
-
-export default Page
+export default function Page() {
+  return <User />
+}

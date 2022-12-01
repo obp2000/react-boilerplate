@@ -1,9 +1,9 @@
-import { FC, useContext } from 'react'
+import { useContext } from 'react'
 import type { OrderItemOptionsType } from '@/interfaces/orderItems'
 import { MainContext } from '@/services/context'
 import AddOrderItemButton from './AddOrderItemButton'
 
-const TableLabels: FC = () => {
+export default function TableLabels() {
   const { options } = useContext(MainContext) as OrderItemOptionsType
   return <tr>
     <th scope="col">№</th>
@@ -15,5 +15,3 @@ const TableLabels: FC = () => {
     <th scope='col'><AddOrderItemButton /></th>
   </tr>
 }
-
-export default TableLabels

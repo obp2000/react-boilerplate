@@ -16,6 +16,7 @@ import type { CommonConsts, CommonConstsType } from './commonConsts'
 import type { OrderItemOptions } from './orderItems'
 import type { IndexUrl } from '.'
 import type { UserType } from './users'
+import type { Children } from './layout'
 // import type { SelectOptions } from './selectField'
 
 export type AnyChoices = ProductTypeChoice | ThreadsChoice | ContentsChoice |
@@ -57,7 +58,7 @@ export type AnyObjectOptionsType = {
 
 export type RawOptionsAndCommonConsts = {
   common_consts?: CommonConsts
-  actions?: { [index: string]: AnyOptions }
+  actions?: { [index: string]: AnyObjectOptions }
 }
 
 export type OptionsOueryResult = AnyOptionsType & CommonConstsType & {
@@ -65,8 +66,10 @@ export type OptionsOueryResult = AnyOptionsType & CommonConstsType & {
   isFetchingOptions: boolean
 }
 
-export type MainContextType =
-  AnyOptionsType & CommonConstsType & IndexUrl & AuthState & UserType
+export type AuthContextType = AuthState & UserType & Children
+
+export type MainContextType = AnyOptionsType & CommonConstsType & IndexUrl &
+  Children
 
 // export type MainContext1 = (indexUrl: string) => Promise<MainContextType>
 

@@ -1,17 +1,17 @@
-import { FC, useContext } from 'react'
-import type { FormRenderProps } from 'react-final-form'
-import { Button } from 'reactstrap'
 import type { SubmitButtonProps } from '@/interfaces/objectForm'
 import { MainContext } from '@/services/context'
+import { useContext } from 'react'
+import type { FormRenderProps } from 'react-final-form'
+import { Button } from 'reactstrap'
 import { useDisabled } from './hooks'
 
-const SubmitButton: FC<FormRenderProps & SubmitButtonProps> = ({
-  text,
+export default function SubmitButton({
   className,
+  children,
   ...rest
-}) => {
+}: FormRenderProps & SubmitButtonProps) {
   const { commonConsts } = useContext(MainContext)
-  const label = text || commonConsts?.save
+  const label = children ? String(children) : commonConsts?.save
   return <Button
     type='submit'
     color='primary'
@@ -24,5 +24,3 @@ const SubmitButton: FC<FormRenderProps & SubmitButtonProps> = ({
     {label}
   </Button>
 }
-
-export default SubmitButton

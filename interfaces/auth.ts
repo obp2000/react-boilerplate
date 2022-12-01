@@ -83,9 +83,12 @@ export type AuthFormProps = FormRenderProps & {
   options?: LoginOptions | RegisterOptions
   formFields?: FormFields[]
   submitButtonLabel?: string
+  isLogin: boolean
 }
 
+export type SetState = Dispatch<SetStateAction<boolean>>
+
 export type AuthModalContextType = {
-  isLoginState: [boolean, Dispatch<SetStateAction<boolean>>]
-  modalState: [boolean, Dispatch<SetStateAction<boolean>>]
+  isLoginState: [boolean, SetState]
+  modalState: [boolean, SetState]
 }

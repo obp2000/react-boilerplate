@@ -1,8 +1,7 @@
-import { FC } from 'react'
 import type { FieldMetaState } from 'react-final-form'
 import { FormFeedback } from 'reactstrap'
 
-const WidgetErrors: FC<FieldMetaState<any>> = ({ touched, error }) => {
+export default function WidgetErrors({ touched, error }: FieldMetaState<any>) {
   if (touched && !!error) {
     return <FormFeedback>
       {error}
@@ -11,5 +10,3 @@ const WidgetErrors: FC<FieldMetaState<any>> = ({ touched, error }) => {
     return null
   }
 }
-
-export default WidgetErrors

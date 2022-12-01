@@ -1,11 +1,11 @@
-import { FC, useContext } from 'react'
-import { useFieldArray } from 'react-final-form-arrays'
-import { Button } from 'reactstrap'
 import confirmAction from '@/confirmation/confirmAction'
 import { MainContext } from '@/services/context'
+import { useContext } from 'react'
+import { useFieldArray } from 'react-final-form-arrays'
+import { Button } from 'reactstrap'
 import { initOrderItem } from './config'
 
-const DeleteOrderItemButton: FC<{ index: number }> = ({ index }) => {
+export default function DeleteOrderItemButton({ index }: { index: number }) {
   const { commonConsts } = useContext(MainContext)
   const { fields } = useFieldArray('order_items')
   const onConfirm = (): void => {
@@ -24,5 +24,3 @@ const DeleteOrderItemButton: FC<{ index: number }> = ({ index }) => {
     {commonConsts?.delete}
   </Button>
 }
-
-export default DeleteOrderItemButton

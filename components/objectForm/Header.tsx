@@ -4,11 +4,11 @@ import type { CommonConstsType } from '@/interfaces/commonConsts'
 import type { AnyObjectOptionsType } from '@/interfaces/options'
 import { MainContext } from '@/services/context'
 import SubmitButton from '@/submitButton/SubmitButton'
-import { FC, useContext } from 'react'
+import { useContext } from 'react'
 import type { FormRenderProps } from 'react-final-form'
 import { Col, Row } from 'reactstrap'
 
-const Header: FC<FormRenderProps> = (props) => {
+export default function Header(props: FormRenderProps) {
   const { id, created_at } = props.initialValues
   const { commonConsts, options } =
     useContext(MainContext) as CommonConstsType & AnyObjectOptionsType
@@ -30,5 +30,3 @@ const Header: FC<FormRenderProps> = (props) => {
     </Col>
   </Row>
 }
-
-export default Header

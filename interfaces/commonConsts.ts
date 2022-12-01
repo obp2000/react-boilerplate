@@ -1,6 +1,7 @@
 export type MainMenuItem = {
 	path: string
 	label: string
+	indexUrl: string
 }
 
 export type ErrorMessages = {
@@ -42,4 +43,8 @@ export type CommonConsts = {
 
 export type CommonConstsType = {
 	commonConsts?: CommonConsts
+}
+
+export type ErrorMessagesType = {
+	errorMessages: ErrorMessages
 }

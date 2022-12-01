@@ -5,7 +5,7 @@ import { toastSuccess, toastError } from '@/notifications/toast'
 import type { Customer } from '@/interfaces/customers'
 import type { Product } from '@/interfaces/products'
 import type { Order } from '@/interfaces/orders'
-import type { NonFieldErrors } from '@/interfaces/errors'
+// import type { NonFieldErrors } from '@/interfaces/errors'
 import useSWR from 'swr'
 import { transformOptionsResponse } from './helpers'
 import { compressToEncodedURIComponent } from "lz-string"
@@ -17,37 +17,56 @@ import type {
 	RegisterFormValues,
 	SignOut
 } from '@/interfaces/auth'
+import { objectToFormData } from 'object-to-formdata'
+// import type { SetState } from '@/interfaces/auth'
+// import { useRouter } from 'next/navigation'
+
+const errorMessage = async (res: Response): Promise<string> => {
+	const json = await res.json()
+	return (json?.non_field_errors && json.non_field_errors[0]) ||
+		json?.detail || res.statusText
+}
 
 export const mutateObject = async (
-	object: Customer | Product | Order | undefined,
+	id: string | undefined,
 	values: Customer | Product | Order,
 	indexUrl: string,
 	accessToken: string,
 	message: string | undefined,
-	refresh: () => void
+	refresh: () => void,
+	push: (arg0: string) => void,
+	contentType: string = 'application/json'
 ) => {
 	let options: RequestInit = {
-		method: object?.id ? 'PUT' : 'POST',
-		body: JSON.stringify(values),
+		method: id ? 'PUT' : 'POST',
+		body: contentType === 'application/json'
+		? JSON.stringify(values)
+		: objectToFormData(values),
 	}
 	const headers = new Headers()
 	if (accessToken) {
 		headers.append('Authorization', `Token ${accessToken}`)
 	}
-	headers.append('Content-Type', 'application/json')
+	if (contentType === 'application/json') {
+		headers.append('Content-Type', contentType)
+	}
 	options.headers = headers
-	const mutatePath = object?.id ? `${object?.id}/` : 'new'
-	const res = await fetch(`${baseUrl}${indexUrl}${mutatePath}`,	options)
+	const mutatePath = id ? `${id}/` : 'new'
+	const res = await fetch(`${baseUrl}${indexUrl}${mutatePath}`, options)
 	if (res.ok) {
 		toastSuccess(message)
+		push(indexUrl)
 		refresh()
 	} else {
-		const { non_field_errors }: NonFieldErrors = await res.json()
-		if (non_field_errors) {
-			toastError(non_field_errors[0])
-		} else {
-			toastError(res.statusText)
-		}
+		toastError(await errorMessage(res))
+		// const json = await res.json()
+		// if (json?.non_field_errors) {
+		// 	toastError(json.non_field_errors[0])
+		// } else if (json?.detail) {
+		// 	toastError(json.detail)
+		// } else {
+		// 	toastError(res.statusText)
+		// }
 	}
 }
 
@@ -71,15 +90,8 @@ export const deleteObject = async (
 		toastSuccess(message)
 		refresh()
 	} else {
-		const { detail } = await res.json()
-		if (detail) {
-			toastError(detail)
-		} else {
-			toastError(res.statusText)
-		}
+		toastError(await errorMessage(res))
 	}
-	// const data = res.json()
-	// return data
 }
 
 const optionsFetcher = (url: string) => {
@@ -89,7 +101,7 @@ const optionsFetcher = (url: string) => {
 	return fetch(`${baseUrl}${url}`, reqOptions).then(res => res.json())
 }
 
-export const useOptions = (url: string) => {
+export const useOptions = (url: string | null) => {
 	const { data, error } = useSWR(url, optionsFetcher)
 	return {
 		...transformOptionsResponse(data),
@@ -110,6 +122,7 @@ export const setAuth = (auth: any) =>
 export const authAction = async (
 	values: LoginFormValues | RegisterFormValues,
 	url: string,
+	// setModal: SetState,
 	refresh: () => void
 ) => {
 	const headers = new Headers()
@@ -127,25 +140,28 @@ export const authAction = async (
 			isAuthenticated: true,
 		})
 		toastSuccess(message)
+		// setModal(false)
 		refresh()
 	} else {
-		const { non_field_errors }: NonFieldErrors = await res.json()
-		if (non_field_errors) {
-			toastError(non_field_errors[0])
-		} else {
-			toastError(res.statusText)
-		}
+		toastError(await errorMessage(res))
+		// const json = await res.json()
+		// if (json?.non_field_errors) {
+		// 	toastError(json?.non_field_errors[0])
+		// } else {
+		// 	toastError(res.statusText)
+		// }
 	}
 }
 
 export const signOutAction = async (
-	url: string,
-	refresh: () => void
+	// url: string,
+	refresh: () => void,
+	// push: (arg0: string) => void
 ) => {
 	let reqOptions: RequestInit = {
 		method: 'POST',
 	}
-	const res = await fetch(`${baseUrl}${url}`, reqOptions)
+	const res = await fetch(`${baseUrl}/logout/`, reqOptions)
 	if (res.ok) {
 		const { detail }: SignOut = await res.json()
 		setAuth({
@@ -155,6 +171,6 @@ export const signOutAction = async (
 		toastSuccess(detail)
 		refresh()
 	} else {
-		toastError(res.statusText)
+		toastError(await errorMessage(res))
 	}
 }

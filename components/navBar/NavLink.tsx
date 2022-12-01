@@ -1,12 +1,18 @@
-import Link from 'next/link'
-import { FC } from 'react'
+// 'use client'
+
 import type { MainMenuItem } from '@/interfaces/commonConsts'
-import { useMainMenuItemClassName } from './hooks'
+import Link from 'next/link'
+// import { useMainMenuItemClassName } from './hooks'
+import { activeNavLink } from './helpers'
 
-const NavLink: FC<MainMenuItem> = ({ path, label, }) => <Link
-  href={path}
-  className={useMainMenuItemClassName(path)}>
-  {label}
-</Link>
-
-export default NavLink
+export default function NavLink({ path, label, indexUrl }: MainMenuItem) {
+  return <Link
+    href={path}
+    // prefetch={false}
+    // shallow={true}
+    // className={useMainMenuItemClassName(path)}
+    className={`nav-link${activeNavLink(path, indexUrl) ? ' active' : ''}`}
+    >
+    {label}
+  </Link>
+}

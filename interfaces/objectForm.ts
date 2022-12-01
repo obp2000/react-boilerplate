@@ -2,10 +2,15 @@ import type { CustomerFormValues } from './customers'
 import type { ProductFormValues } from './products'
 import type { OrderFormValues } from './orders'
 import type { AnyObjectType } from './api'
-import {
+import type {
+    AuthState,
   LoginFormValues,
   RegisterFormValues
 } from './auth'
+import type { IndexUrl } from '.'
+import type { AnyOptionsType } from './options'
+import type { CommonConstsType } from './commonConsts'
+import type { Validate } from '@/validators/validators'
 
 export type AnyObjectFormValues = CustomerFormValues | ProductFormValues |
   OrderFormValues
@@ -31,46 +36,4 @@ export type AnyFormValues = CustomerFormValues | ProductFormValues |
 
 export type ValidatedFields = Record<string, string[]>
 
-// export type FormConfig = IndexUrl & {
-//   useGetObjectQuery: typeof useGetCustomerQuery | typeof useGetProductQuery |
-//     typeof useGetOrderQuery
-//   formInitialValues: typeof customerFormInitialValues |
-//     typeof productFormInitialValues | typeof orderFormInitialValues
-//   formDecorators?: Decorator[]
-//   mutators?: { [index: string]: Mutator }
-//   validate: typeof customerValidate | typeof productValidate |
-//     typeof orderValidate
-//   useUpdateObjectMutation: typeof useUpdateCustomerMutation |
-//     typeof useUpdateProductMutation | typeof useUpdateOrderMutation
-//   useCreateObjectMutation: typeof useCreateCustomerMutation |
-//     typeof useCreateProductMutation | typeof useCreateOrderMutation
-//   objectFormRender: typeof customerFormRender | typeof productFormRender |
-//     typeof orderFormRender
-//   calculatedFields: string[]
-// }
-
-// export type FormConfigC = IndexUrl & {
-//   useGetObjectQuery: typeof useGetCustomerQuery
-//   formInitialValues: CustomerWithOptions
-//   validate: typeof validate
-//   useUpdateObjectMutation: typeof useUpdateCustomerMutation
-//   useCreateObjectMutation: typeof useCreateCustomerMutation
-//   objectFormRender: typeof objectFormRender
-// }
-
-// export type FormConfigP = IndexUrl & {
-//   useGetObjectQuery: typeof useGetProductQuery
-//   formInitialValues: ProductWithOptions
-//   formDecorators: Decorator[]
-//   validate: typeof customerValidate | typeof productValidate |
-//     typeof orderValidate
-//   useUpdateObjectMutation: typeof useUpdateProductMutation
-//   useCreateObjectMutation: typeof useCreateProductMutation
-//   objectFormRender: typeof objectFormRender
-//   calculatedFields: string[]
-// }
-
-
-
-
-
+export type FormProps =AnyObjectType & {initialValues: AnyObjectType}
