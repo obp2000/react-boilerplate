@@ -1,36 +1,13 @@
-// import {useEffect, useLayoutEffect} from 'react'
 import type { FieldAttrs } from '@/interfaces/input'
 import type {
-    AnyOptions,
-    FieldProps,
-    OptionsOueryResult
+  AnyOptions,
+  FieldProps,
+  InputProps,
+  InputType
 } from '@/interfaces/options'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 import { mapChoices } from '@/selectField/hooks'
-// import { useRouter } from 'next/dist/client/router'
 import { useContext } from 'react'
-import type { InputProps } from 'reactstrap'
-import type { InputType } from 'reactstrap/types/lib/Input'
-// import { useGetOptionsQuery } from './apiSlice'
-
-// export const useOptionsOuery = (url: string) => {
-//   // const { isFallback } = useRouter()
-//   return useGetOptionsQuery(url, {
-//     // skip: isFallback,
-//     selectFromResult: ({
-//       data,
-//       isLoading,
-//       isFetching,
-//     }): OptionsOueryResult => ({
-//       commonConsts: data?.commonConsts,
-//       options: data?.options,
-//       // isLoadingOptions: isLoading || isFallback,
-//       // isFetchingOptions: isFetching || isFallback,
-//       isLoadingOptions: isLoading,
-//       isFetchingOptions: isFetching,
-//     }),
-//   })
-// }
 
 const mapFieldType = (type: string = ''): string | undefined => {
   switch (type) {
@@ -76,6 +53,7 @@ export const useMapFieldProps = ({
   const result: InputProps = {
     type: mapFieldType(type) as InputType,
     id: name,
+    // controlId: name,
     required,
     readOnly,
     placeholder: label,
@@ -123,3 +101,24 @@ export const useMapFieldProps = ({
 //         currentOptions,
 //     })
 // })
+
+// import { useGetOptionsQuery } from './apiSlice'
+
+// export const useOptionsOuery = (url: string) => {
+//   // const { isFallback } = useRouter()
+//   return useGetOptionsQuery(url, {
+//     // skip: isFallback,
+//     selectFromResult: ({
+//       data,
+//       isLoading,
+//       isFetching,
+//     }): OptionsOueryResult => ({
+//       commonConsts: data?.commonConsts,
+//       options: data?.options,
+//       // isLoadingOptions: isLoading || isFallback,
+//       // isFetchingOptions: isFetching || isFallback,
+//       isLoadingOptions: isLoading,
+//       isFetchingOptions: isFetching,
+//     }),
+//   })
+// }

@@ -3,7 +3,7 @@ import { Field } from 'react-final-form'
 import type { OrderOptionsType } from '@/interfaces/orders'
 import FloatingFormGroup from '@/formInput/FloatingFormGroup'
 import Input from '@/formInput/Input'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 import { ConditionGte } from '@/shared/FormConditions'
 
 const Gift: FC = () => <tr>

@@ -1,5 +1,5 @@
 'use client'
 
-import { Table } from 'reactstrap'
+import Table from 'react-bootstrap/Table'
 
 export default Table

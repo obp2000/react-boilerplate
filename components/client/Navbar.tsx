@@ -1,5 +1,5 @@
 'use client'
 
-import { Navbar } from 'reactstrap'
+import Navbar from 'react-bootstrap/Navbar'
 
 export default Navbar

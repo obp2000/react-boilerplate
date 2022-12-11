@@ -1,15 +1,14 @@
 var object = require('lodash/fp/object')
-import type {
-  AnyFieldAttrs, LabelAttrs, LabelSizes
-} from '@/interfaces/inputLabel'
+import type { LabelAttrs, LabelSizes } from '@/interfaces/inputLabel'
 import { useMapFieldProps } from '@/options/hooks'
+import { FieldRenderProps } from 'react-final-form'
 
-const inputLabelProps = ({ sm, size }: AnyFieldAttrs): LabelSizes => ({
+const inputLabelProps = ({ sm, size }: FieldRenderProps<any>): LabelSizes => ({
   sm,
   size: String(size),
 })
 
-export const useFieldProps = (props: AnyFieldAttrs): LabelAttrs => ({
+export const useFieldProps = (props: FieldRenderProps<any>): LabelAttrs => ({
   ...useMapFieldProps({ isLabel: true, ...props }),
   ...inputLabelProps(props),
   ...object.pick(props, ['required', 'label', 'htmlFor']),

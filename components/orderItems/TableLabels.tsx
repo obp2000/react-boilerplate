@@ -1,6 +1,6 @@
-import { useContext } from 'react'
 import type { OrderItemOptionsType } from '@/interfaces/orderItems'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
+import { useContext } from 'react'
 import AddOrderItemButton from './AddOrderItemButton'
 
 export default function TableLabels() {

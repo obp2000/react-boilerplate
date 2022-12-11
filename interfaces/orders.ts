@@ -1,14 +1,14 @@
 import type { Decorator, Mutator } from 'final-form'
 import type { FieldLabel } from './inputLabel'
 import type { FieldProps } from './options'
-import objectFormRender from '@/orders/OrderFormRender'
-import TableLabels from '@/orders/TableLabels'
-import TableRow from '@/orders/TableRow'
+// import objectFormRender from '@/orders/OrderFormRender'
+import TableLabels from '@/app/orders/TableLabels'
+import TableRow from '@/app/orders/TableRow'
 import { Customer, CustomerOptions } from './customers'
 import { OrderItem, OrderItemOptions } from './orderItems'
-import { useFormInitialValues } from '@/orders/hooks'
+// import { useFormInitialValues } from '@/orders/hooks'
 import { ValidatedFields } from '.'
-import { modFormValues } from '@/orders/config'
+import { modFormValues } from '@/app/orders/[id]/config'
 
 export type Order = {
   id: number
@@ -128,9 +128,13 @@ export type FormConfig = {
   // useFormInitialValues: typeof useFormInitialValues
   formDecorators: Decorator[]
   mutators: { [index: string]: Mutator }
-  objectFormRender: typeof objectFormRender
+  // objectFormRender: typeof objectFormRender
   validatedFields: ValidatedFields
   modFormValues: typeof modFormValues
 }
 
 export type OrderFormValues = Order | {}
+
+export type OrderSubmitValues =
+  Pick<Order, 'customer_id' | 'post_cost' | 'packet' | 'delivery_type' |
+    'address' | 'gift' | 'order_items'>

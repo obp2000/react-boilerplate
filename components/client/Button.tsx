@@ -1,5 +1,5 @@
 'use client'
 
-import { Button } from 'reactstrap'
+import Button from 'react-bootstrap/Button'
 
 export default Button

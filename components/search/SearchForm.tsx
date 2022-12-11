@@ -3,18 +3,14 @@
 import Input from '@/formInput/Input'
 import { CommonConstsType } from '@/interfaces/commonConsts'
 import SubmitButton from '@/submitButton/SubmitButton'
-import { useSearchParams } from 'next/navigation'
 import { Field, Form } from 'react-final-form'
-import { Form as FormStrap } from 'reactstrap'
-import { useOnSubmit } from './hooks'
+import FormBootstrap from '@/client/FormBootstrap'
+import { useForm } from './hooks'
 
 export default function SearchForm({ commonConsts }: CommonConstsType) {
-  return <Form name='search'
-    initialValues={{ term: useSearchParams().get('term') }}
-    onSubmit={useOnSubmit()}>
-    {(props) => <FormStrap onSubmit={props.handleSubmit}
-      inline='true'
-      className='d-flex mt-1'>
+  return <Form {...useForm()}>
+    {(props) => <FormBootstrap onSubmit={props.handleSubmit}
+      className='d-flex mt-1 inline'>
       <Field
         name='term'
         type="search"
@@ -25,6 +21,6 @@ export default function SearchForm({ commonConsts }: CommonConstsType) {
       <SubmitButton className='btn-outline-light' {...props}>
         {commonConsts?.search}
       </SubmitButton>
-    </FormStrap>}
+    </FormBootstrap>}
   </Form>
 }

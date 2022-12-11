@@ -2,7 +2,6 @@
 
 import type { Customer } from '@/interfaces/customers'
 import CustomerName from './CustomerName'
-import { indexUrl } from './[id]/config'
 
 const dropdownListTextField = ({
   nick,
@@ -20,6 +19,6 @@ const dropdownListTextField = ({
 export const useDropdown = () => ({
   textField: dropdownListTextField,
   dataKey: 'id',
-  searchPath: indexUrl,
+  searchPath: '/customers/',
   renderValueComponent: CustomerName,
 })

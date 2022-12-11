@@ -1,19 +1,25 @@
 'use client'
 
+import Col from '@/client/Col'
+import Row from '@/client/Row'
 import Input from '@/formInput/Input'
-import Header from './Header'
+import SubmitButton from '@/submitButton/SubmitButton'
 import { ReactNode } from 'react'
+import FormBootstrap from '@/client/FormBootstrap'
 import { Field, FormRenderProps } from 'react-final-form'
-import { Form } from 'reactstrap'
 
 export default function Layout({
 	children,
 	...props
 }: { children: ReactNode } & FormRenderProps) {
-	return <Form onSubmit={props.handleSubmit}
+	return <FormBootstrap onSubmit={props.handleSubmit}
 		className="shadow p-3 mb-5 bg-body rounded">
-		<Header {...props} />
 		<Field name="id" hidden component={Input} />
 		{children}
-	</Form>
+		<Row>
+			<Col sm={2}>
+				<SubmitButton {...props} />
+			</Col>
+		</Row>
+	</FormBootstrap>
 }

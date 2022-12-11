@@ -69,9 +69,12 @@ export type RegisterFormConfig = IndexUrl & {
   validatedFields: ValidatedFields
 }
 
-export interface AuthState {
-  isAuthenticated: boolean
+export type AccessToken = {
   accessToken: string | null
+}
+
+export interface AuthState extends AccessToken {
+  isAuthenticated: boolean
 }
 
 export interface ModalState {

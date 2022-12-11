@@ -1,8 +1,6 @@
-import { modFormValues } from '@/customers/config'
-import objectFormRender from '@/customers/CustomerFormRender'
-import { useFormInitialValues } from '@/customers/hooks'
-import TableLabels from '@/customers/TableLabels'
-import TableRow from '@/customers/TableRow'
+import { modFormValues } from '@/app/customers/[id]/config'
+import TableLabels from '@/app/customers/TableLabels'
+import TableRow from '@/app/customers/TableRow'
 import { ValidatedFields } from '.'
 import type { City, CityOptions } from './cities'
 import type { FieldProps } from './options'
@@ -54,9 +52,12 @@ export type TableConfig = {
 }
 
 export type FormConfig = {
-  objectFormRender: typeof objectFormRender
+  // objectFormRender: typeof objectFormRender
   validatedFields: ValidatedFields
   modFormValues: typeof modFormValues
 }
 
 export type CustomerFormValues = Customer | {}
+
+export type CustomerSubmitValues =
+  Pick<Customer, 'nick' | 'name' | 'city_id' | 'address'>

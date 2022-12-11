@@ -1,9 +1,10 @@
-import type { FormEventHandler } from 'react'
-import type {
-  FieldInputProps, FieldMetaState, FieldRenderProps
-} from 'react-final-form'
 import type { FieldAttrs, FilesHandlerEvent } from '@/interfaces/input'
 import { useMapFieldProps } from '@/options/hooks'
+import type { FormEventHandler } from 'react'
+import type { FormControlProps } from 'react-bootstrap'
+import type {
+	FieldInputProps, FieldMetaState
+} from 'react-final-form'
 
 const invalid = ({ touched, error }: FieldMetaState<any>): boolean =>
   Boolean(touched && !!error)
@@ -20,8 +21,10 @@ const isValidatedField = (type: string | undefined): boolean =>
   [undefined, 'text', 'number', 'password', 'email',].includes(type)
 
 const validationProps = (meta: FieldMetaState<any>) => ({
-  invalid: invalid(meta),
-  valid: valid(meta),
+  // invalid: invalid(meta),
+  // valid: valid(meta),
+  isInvalid: invalid(meta),
+  isValid: valid(meta),
 })
 
 const filesHandler = (input: FieldInputProps<any>) =>
@@ -41,12 +44,13 @@ export const useFieldProps = ({
   input,
   meta,
   ...props
-}: FieldAttrs): Partial<FieldRenderProps<any>> => {
+}: FieldAttrs): FormControlProps => {
   let {
     type: typeFromFieldProps,
     helpText,
     ...result
-  } = useMapFieldProps({ input, ...props })
+  } = useMapFieldProps({ input, ...props }) as FormControlProps &
+    { helpText?: string }
   const type = input?.type ?? typeFromFieldProps
   result = { type: typeFromFieldProps, ...result, ...input }
   if (type === 'file') {

@@ -1,26 +1,26 @@
 import '@/styles/globals.scss'
-import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.min.css'
-import 'react-widgets/scss/styles.scss'
+// import 'react-widgets/scss/styles.scss'
 
-import ToastContainer from '@/notifications/toastContainer'
-import { ReactNode } from 'react'
 import NavBar from '@/navBar/NavBar'
-import { preloadOptions } from '@/services/api/server'
-import { indexUrl } from './customers/serverConfig'
+import NavBarPlaceholder from '@/navBar/placeholders/NavBar'
+import ToastContainer from '@/notifications/toastContainer'
+import { ReactNode, Suspense } from 'react'
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  // preloadOptions(indexUrl)
+export default function RootLayout({
+  children
+}: { children: ReactNode }) {
   return <html>
     <body>
       <div className="bg-light border mt-2 container-sm">
-{/*        <header>
-          <NavBar />
+        <header>
+          <Suspense fallback={<NavBarPlaceholder />}>
+            <NavBar />
+          </Suspense>
         </header>
         <main>
           {children}
-        </main>*/}
-        {children}
+        </main>
       </div>
       <ToastContainer />
     </body>

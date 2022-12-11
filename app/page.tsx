@@ -1,18 +1,17 @@
-import { indexUrl } from '@/app/customers/serverConfig'
 import TableLabels from '@/app/customers/TableLabels'
 import TableRow from '@/app/customers/TableRow'
 import type { SearchParams } from '@/interfaces/api'
-import NavBar from '@/navBar/NavBar'
 import ObjectsTable from '@/objectsTable/ObjectsTable'
+import path from 'path'
 
 export default function Page({ searchParams }: SearchParams) {
-  console.log('main page ')
-  return <>
-    <header>
-      <NavBar {...{ indexUrl }} />
-    </header>
-    <main>
-      <ObjectsTable {...{ TableLabels, TableRow, indexUrl, searchParams }} />
-    </main>
-  </>
+  // console.log('main page ')
+  const basename = path.basename(__dirname)
+  const indexUrl = `/${basename === 'app' ? 'customers' : basename }/`
+  return <ObjectsTable {...{
+    TableLabels,
+    TableRow,
+    indexUrl,
+    searchParams
+  }} />
 }

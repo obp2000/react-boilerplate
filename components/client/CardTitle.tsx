@@ -1,5 +1,5 @@
 'use client'
 
-import { CardTitle } from 'reactstrap'
+import Card from 'react-bootstrap/Card'
 
-export default CardTitle
+export default Card.Title

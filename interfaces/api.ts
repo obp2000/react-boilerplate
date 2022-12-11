@@ -42,3 +42,7 @@ export type Params = {
 export type SearchParams = {
   searchParams?: Record<string, string>
 }
+
+export type IdParam = {
+  id: string
+}

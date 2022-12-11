@@ -1,5 +1,5 @@
-import Skeleton from '@/client/Skeleton'
+import ObjectsTablePlaceholder from '@/objectsTable/placeholders/ObjectsTable'
 
 export default function Loading() {
-	return <Skeleton />
+	return <ObjectsTablePlaceholder />
 }

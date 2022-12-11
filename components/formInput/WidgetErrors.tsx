@@ -1,11 +1,11 @@
 import type { FieldMetaState } from 'react-final-form'
-import { FormFeedback } from 'reactstrap'
+import Form from '@/client/FormBootstrap'
 
 export default function WidgetErrors({ touched, error }: FieldMetaState<any>) {
   if (touched && !!error) {
-    return <FormFeedback>
+    return <Form.Control.Feedback type='invalid'>
       {error}
-    </FormFeedback>
+    </Form.Control.Feedback>
   } else {
     return null
   }

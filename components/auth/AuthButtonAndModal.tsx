@@ -1,42 +1,31 @@
-// import 'server-only'
-
-// import AuthButtonAndModalClient from './AuthButtonAndModalClient'
-// import { CommonConstsType } from '@/interfaces/commonConsts'
-
-// export default async function AuthButtonAndModal({
-//   commonConsts
-// }: CommonConstsType) {
-//   return <AuthButtonAndModalClient {...{ commonConsts }} />
-// }
-
-
 'use client'
 
+import Button from '@/client/Button'
+import Modal from '@/client/Modal'
 import { CommonConstsType } from '@/interfaces/commonConsts'
-import { useOptions } from '@/services/api/client'
+import { useOptions } from '@/options/client'
+import { MainContext } from '@/options/context'
 import { useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import AuthForm from './AuthForm'
 import { loginFormConfig, registerFormConfig } from './config'
-import ToggleLoginButton from './ToggleLoginButton'
-import ToggleModalButton from './ToggleModalButton'
+import { useToggleLoginButton, useToggleModalButton } from './hooks'
 
 export default function AuthButtonAndModal({ commonConsts }: CommonConstsType) {
   const [isLogin, setIsLogin] = useState(true)
   const [modal, setModal] = useState(false)
-  const toggleModal = () => setModal(!modal)
   const { indexUrl } = isLogin ? loginFormConfig : registerFormConfig
   const { options } = useOptions(modal ? indexUrl : null)
-  return <>
-    <ToggleModalButton onClick={toggleModal} {...{ commonConsts }} />
-    <Modal isOpen={modal} >
-      <ModalHeader toggle={toggleModal}>
+  return <MainContext.Provider value={{ commonConsts, options }}>
+    <Button onClick={() => setModal(!modal)} {...useToggleModalButton()} />
+    <Modal show={modal} onHide={() => setModal(false)} centered>
+      <Modal.Header closeButton>
         {isLogin ? commonConsts?.login : commonConsts?.register}
-      </ModalHeader>
-      <ModalBody>
-        <AuthForm {...{ isLogin, commonConsts, options }} />
-        <ToggleLoginButton {...{ isLogin, setIsLogin, commonConsts }} />
-      </ModalBody>
+      </Modal.Header>
+      <Modal.Body>
+        <AuthForm {...{ isLogin }} />
+        <Button onClick={() => setIsLogin(!isLogin)}
+          {...useToggleLoginButton({ isLogin })} />
+      </Modal.Body>
     </Modal>
-  </>
+  </MainContext.Provider>
 }

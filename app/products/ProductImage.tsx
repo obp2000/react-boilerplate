@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useContext } from 'react'
 import { FormRenderProps } from 'react-final-form'
 import type { ProductOptionsType } from '@/interfaces/products'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 
 export default function ProductImage({ values }: FormRenderProps) {
   const { options } = useContext(MainContext) as ProductOptionsType

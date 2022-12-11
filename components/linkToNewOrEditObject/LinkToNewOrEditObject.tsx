@@ -2,20 +2,20 @@ import 'server-only'
 
 import { AnyObjectType } from '@/interfaces/api'
 import Link from 'next/link'
-import { IndexUrl } from '@/interfaces/index'
 import { CommonConstsType } from '@/interfaces/commonConsts'
+import path from 'path'
 
-export default async function LinkToNewOrEditObject({
+export default function LinkToNewOrEditObject({
   object,
-  indexUrl,
   commonConsts
-}: AnyObjectType & IndexUrl & CommonConstsType) {
+}: AnyObjectType & CommonConstsType) {
   const label = object?.id ? commonConsts?.edit : commonConsts?.new
   return <Link
     className='btn btn-outline-primary btn-sm'
-    href={`${indexUrl}${object?.id || 'new'}`}
+    href={`/${path.basename(__dirname)}/${object?.id || 'new'}`}
     aria-labelledby={label}
     // prefetch={false}
+    // shallow={true}
   >
     {label}
   </Link>

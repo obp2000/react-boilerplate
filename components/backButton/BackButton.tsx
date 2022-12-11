@@ -1,14 +1,13 @@
-import { MainContext } from '@/services/context'
-import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
-import { Button } from 'reactstrap'
+'use client'
 
-export default function BackButton() {
+import Button from "@/client/Button"
+import type { CommonConstsType } from '@/interfaces/commonConsts'
+import { useRouter } from 'next/navigation'
+
+export default function BackButton({ commonConsts }: CommonConstsType) {
   const router = useRouter()
-  const { commonConsts } = useContext(MainContext)
   return <Button
-    color='primary'
-    outline
+    variant='outline-primary'
     size='sm'
     onClick={() => router.back()}
   >

@@ -1,5 +1,5 @@
 'use client'
 
-import { Card } from 'reactstrap'
+import Card from 'react-bootstrap/Card'
 
 export default Card

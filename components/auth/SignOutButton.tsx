@@ -1,12 +1,10 @@
-import 'server-only'
+'use client'
 
+import Button from '@/client/Button'
 import { CommonConstsType } from '@/interfaces/commonConsts'
-import { UserType } from '@/interfaces/users'
-import SignOutButtonClient from './SignOutButtonClient'
+import { UserType } from "@/interfaces/users"
+import { useSignOutButton } from './hooks'
 
-export default async function SignOutButton({
-  commonConsts,
-  user
-}: CommonConstsType & UserType) {
-  return <SignOutButtonClient {...{ commonConsts, user }} />
+export default function SignOutButton(props: CommonConstsType & UserType) {
+  return <Button {...useSignOutButton(props)} />
 }

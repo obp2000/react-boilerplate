@@ -1,5 +1,5 @@
 'use client'
 
-import { Row } from 'reactstrap'
+import Row from 'react-bootstrap/Row'
 
 export default Row

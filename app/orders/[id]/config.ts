@@ -1,6 +1,6 @@
 import arrayMutators from 'final-form-arrays'
 import { calculator, postCostCount } from './calculator'
-import type { Order } from '@/interfaces/orders'
+import type { Order, OrderSubmitValues } from '@/interfaces/orders'
 import type { OrderItem } from '@/interfaces/orderItems'
 
 const modOrderItem = ({
@@ -36,7 +36,7 @@ export const modFormValues = ({
   total_sum,
   total_weight,
   ...values
-}: Order): Partial<Order> => {
+}: Order): OrderSubmitValues => {
   if (customer) {
     values.customer_id = customer.id
   }

@@ -1,5 +1,5 @@
 'use client'
 
-import { CardBody } from 'reactstrap'
+import Card from 'react-bootstrap/Card'
 
-export default CardBody
+export default Card.Body

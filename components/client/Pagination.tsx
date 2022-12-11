@@ -1,6 +1,6 @@
 'use client'
 
-import { Pagination } from 'reactstrap'
+import Pagination from 'react-bootstrap/Pagination'
 
 export default Pagination
 

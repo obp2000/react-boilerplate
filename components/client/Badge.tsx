@@ -1,5 +1,5 @@
 'use client'
 
-import { Badge } from 'reactstrap'
+import Badge from 'react-bootstrap/Badge'
 
 export default Badge

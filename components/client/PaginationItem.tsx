@@ -1,5 +1,5 @@
 'use client'
 
-import { PaginationItem } from 'reactstrap'
+import Pagination from 'react-bootstrap/Pagination'
 
-export default PaginationItem
+export default Pagination.Item

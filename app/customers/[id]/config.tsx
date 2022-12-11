@@ -1,8 +1,6 @@
 'use client'
 
-import type { Customer } from '@/interfaces/customers'
-
-export const indexUrl = '/customers/'
+import type { Customer, CustomerSubmitValues } from '@/interfaces/customers'
 
 export const modFormValues = ({
   id,
@@ -10,7 +8,7 @@ export const modFormValues = ({
   created_at,
   updated_at,
   ...values
-}: Customer): Partial<Customer> => {
+}: Customer): CustomerSubmitValues => {
   if (city) {
     values.city_id = city.id
   }

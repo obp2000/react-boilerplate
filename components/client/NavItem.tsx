@@ -1,5 +1,5 @@
 'use client'
 
-import { NavItem } from 'reactstrap'
+import Nav from 'react-bootstrap/Nav'
 
-export default NavItem
+export default Nav.Item

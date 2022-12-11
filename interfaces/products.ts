@@ -1,12 +1,12 @@
 import type { Decorator } from 'final-form'
-import { useFormInitialValues } from '@/products/hooks'
-import objectFormRender from '@/products/ProductFormRender'
-import TableLabels from '@/products/TableLabels'
-import TableRow from '@/products/TableRow'
+// import { useFormInitialValues } from '@/products/hooks'
+// import objectFormRender from '@/app/products/ProductFormRender'
+import TableLabels from '@/app/products/TableLabels'
+import TableRow from '@/app/products/TableRow'
 import type { FieldLabel } from './inputLabel'
 import type { FieldProps } from './options'
 import { ValidatedFields } from '.'
-import { modFormValues } from '@/products/config'
+import { modFormValues } from '@/app/products/[id]/config'
 
 export type ProductConsts = {
   PriceCoeffs: number[]
@@ -124,7 +124,7 @@ export type TableConfig = {
 
 export type FormConfig = {
   formDecorators: Decorator[]
-  objectFormRender: typeof objectFormRender
+  // objectFormRender: typeof objectFormRender
   validatedFields: ValidatedFields
   modFormValues: typeof modFormValues
 }
@@ -134,3 +134,9 @@ export type FormInitialValues = Omit<Product, 'image'> & {
 }
 
 export type ProductFormValues = FormInitialValues | {}
+
+export type ProductSubmitValues =
+  Pick<Product, 'name' | 'product_type_id' | 'threads' | 'contents' | 'fleece' |
+  'price' | 'weight' | 'width' | 'density' | 'dollar_price' | 'dollar_rate' |
+  'width_shop' | 'density_shop' | 'weight_for_count' | 'length_for_count' |
+  'price_pre' | 'image' | 'toFormData'>

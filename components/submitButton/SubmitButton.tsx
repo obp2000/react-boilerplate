@@ -1,8 +1,8 @@
 import type { SubmitButtonProps } from '@/interfaces/objectForm'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 import { useContext } from 'react'
 import type { FormRenderProps } from 'react-final-form'
-import { Button } from 'reactstrap'
+import Button from '@/client/Button'
 import { useDisabled } from './hooks'
 
 export default function SubmitButton({
@@ -14,8 +14,7 @@ export default function SubmitButton({
   const label = children ? String(children) : commonConsts?.save
   return <Button
     type='submit'
-    color='primary'
-    outline
+    variant='outline-primary'
     size='sm'
     className={className}
     aria-labelledby={label}

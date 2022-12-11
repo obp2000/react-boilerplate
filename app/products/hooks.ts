@@ -1,5 +1,4 @@
 import type { Product } from '@/interfaces/products'
-import { indexUrl } from './[id]/config'
 import ProductName from './ProductName'
 
 const dropdownListTextField = ({
@@ -16,6 +15,6 @@ const dropdownListTextField = ({
 export const useDropdown = () => ({
   textField: dropdownListTextField,
   dataKey: 'id',
-  searchPath: indexUrl,
+  searchPath: '/products/',
   renderValueComponent: ProductName,
 })

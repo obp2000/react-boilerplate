@@ -4,11 +4,9 @@ import type {
   DropdownListAttrs,
   GetRenderValue
 } from '@/interfaces/dropdownList'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 import { useMapFieldProps } from '@/options/hooks'
 import { getRenderValue } from './helpers'
-// import { fetcher } from '@/search/client'
-// import useSWR from 'swr'
 import { baseUrl } from '@/services/config'
 import type { Dispatch, SetStateAction } from 'react'
 

@@ -1,5 +1,5 @@
 'use client'
 
-import { Nav } from 'reactstrap'
+import Nav from 'react-bootstrap/Nav'
 
 export default Nav

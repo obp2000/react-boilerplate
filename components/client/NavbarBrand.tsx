@@ -1,5 +1,5 @@
 'use client'
 
-import { NavbarBrand } from 'reactstrap'
+import Navbar from 'react-bootstrap/Navbar'
 
-export default NavbarBrand
+export default Navbar.Brand

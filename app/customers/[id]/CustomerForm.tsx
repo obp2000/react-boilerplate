@@ -1,19 +1,47 @@
-import 'server-only'
+'use client'
 
-import { indexUrl } from '@/app/customers/serverConfig'
-import { getAuth, getObject } from '@/services/api/server'
-import { notFound } from 'next/navigation'
-import CustomerFormClient from './CustomerFormClient'
-import { getInitialValues } from './helpers'
-import { getOptions } from '@/services/api/options'
+import { useDropdown as useCityDropdownAttrs } from '@/cities/hooks'
+import Col from '@/client/Col'
+import Row from '@/client/Row'
+import DropdownListFormGroup from '@/dropdownList/DropdownListFormGroup'
+import FloatingFormGroup from '@/formInput/FloatingFormGroup'
+import { IdParam } from '@/interfaces/api'
+import { AccessToken } from '@/interfaces/auth'
+import { CommonConstsType } from '@/interfaces/commonConsts'
+import type { Customer } from '@/interfaces/customers'
+import { AnyObjectOptionsType } from '@/interfaces/options'
+import Layout from '@/objectForm/Layout'
+import { MainContext } from '@/options/context'
+import { Field, Form } from 'react-final-form'
+import { useForm } from './hooks'
 
-export default async function Form({ id }: {id: string}) {
-  const object = await getObject(indexUrl, id)
-  if (!object) { notFound() }
-  const { accessToken } = getAuth()
-  const optionsData = await getOptions(indexUrl)
-  const initialValues = getInitialValues({ object })
-  // console.log('customer form server')
-  return <CustomerFormClient {...{ id, initialValues, ...optionsData, accessToken }} />
-  // return 'customer form'
+type Props = IdParam & { initialValues: Customer | {} } &
+  CommonConstsType & AnyObjectOptionsType & Required<AccessToken>
+
+export default function FormComp({ initialValues, ...props }: Props) {
+  const { commonConsts, options } = props
+  return <Form {...{ initialValues }} {...useForm(props)} >
+    {(props) => <MainContext.Provider value={{ commonConsts, options }}>
+      <Layout {...props}>
+        <Row>
+          <Col sm={3}>
+            <Field name="nick" component={FloatingFormGroup} />
+          </Col>
+          <Col sm={6}>
+            <Field name="name" component={FloatingFormGroup} />
+          </Col>
+          <Col sm={6}>
+            <Field
+              name="city"
+              component={DropdownListFormGroup}
+              {...useCityDropdownAttrs()}
+            />
+          </Col>
+          <Col sm={8}>
+            <Field name="address" component={FloatingFormGroup} />
+          </Col>
+        </Row>
+      </Layout>
+    </MainContext.Provider>}
+  </Form>
 }

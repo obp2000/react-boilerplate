@@ -1,9 +1,7 @@
 'use client'
 
-import type { Product } from '@/interfaces/products'
+import type { Product, ProductSubmitValues } from '@/interfaces/products'
 import { calculator } from './calculator'
-
-export const indexUrl = '/products/'
 
 export const modFormValues = ({
   id,
@@ -19,7 +17,7 @@ export const modFormValues = ({
   prices,
   imageOrig,
   ...values
-}: Product): Partial<Product> => {
+}: Product): ProductSubmitValues => {
   if (product_type) {
     values.product_type_id = product_type
   }

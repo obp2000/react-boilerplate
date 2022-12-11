@@ -1,5 +1,6 @@
 import { Field } from 'react-final-form'
-import { Col, Row } from 'reactstrap'
+import Row from '@/client/Row'
+import Col from '@/client/Col'
 import FloatingFormGroup from '@/formInput/FloatingFormGroup'
 import Input from '@/formInput/Input'
 import SelectFloatingFormGroup from '@/selectField/SelectFloatingFormGroup'

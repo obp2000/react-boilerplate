@@ -1,5 +1,5 @@
 'use client'
 
-import { Col } from 'reactstrap'
+import Col from 'react-bootstrap/Col'
 
 export default Col

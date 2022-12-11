@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import type { OrderOptionsType } from '@/interfaces/orders'
-import { MainContext } from '@/services/context'
+import { MainContext } from '@/options/context'
 import { ConditionGte } from '@/shared/FormConditions'
 
 export default function OrderItemsTotalText() {

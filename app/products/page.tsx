@@ -1,19 +1,21 @@
-import { indexUrl } from './serverConfig'
+import type { SearchParams } from '@/interfaces/api'
+import ObjectsTable from '@/objectsTable/ObjectsTable'
 import TableLabels from './TableLabels'
 import TableRow from './TableRow'
-import type { SearchParams } from '@/interfaces/api'
-import Header from '@/objectsTable/Header'
-import ObjectsTable from '@/objectsTable/ObjectsTable'
-import Pagination from '@/pagination/Pagination'
+import path from 'path'
 
-export default async function Page({ searchParams }: SearchParams) {
-	return <>
-		<Header {...{ indexUrl, searchParams }} />
-		<ObjectsTable {...{ TableLabels, TableRow, indexUrl, searchParams }} />
-		<Pagination {...{ indexUrl, searchParams }} />
-	</>
+export default function Page({ searchParams }: SearchParams) {
+	const basename = path.basename(__dirname)
+	const indexUrl = `/${basename === 'app' ? 'customers' : basename }/`
+	// console.log('products page indexUrl ', indexUrl)
+	return <ObjectsTable {...{
+		TableLabels,
+		TableRow,
+		indexUrl,
+		searchParams
+	}} />
 }
 
 // export default async function Page({ searchParams }: SearchParams) {
-// 	return 'customers'
+// 	return 'products'
 // }
