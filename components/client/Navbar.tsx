@@ -1,5 +1,5 @@
 'use client'
 
-import Navbar from 'react-bootstrap/Navbar'
+import { Navbar } from 'flowbite-react'
 
 export default Navbar

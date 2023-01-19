@@ -1,5 +1,5 @@
 'use client'
 
-import Badge from 'react-bootstrap/Badge'
+import { Badge } from 'flowbite-react'
 
 export default Badge

@@ -1,6 +1,6 @@
 'use client'
 
-import Pagination from 'react-bootstrap/Pagination'
+import { Pagination } from 'flowbite-react'
 
 export default Pagination
 

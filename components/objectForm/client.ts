@@ -1,33 +1,30 @@
 'use client'
 
-import type { CustomerSubmitValues } from '@/interfaces/customers'
-import type { OrderSubmitValues } from '@/interfaces/orders'
-import type { ProductSubmitValues } from '@/interfaces/products'
-import { toastError, toastSuccess } from '@/notifications/toast'
+import type { Values as CustomerValues } from '@/app/[lng]/customers/[id]/calculator'
+import type { Values as OrderValues } from '@/app/[lng]/orders/[id]/calculator'
+import type { Values as ProductValues } from '@/app/[lng]/products/[id]/calculator'
+import { getAuth } from '@/auth/client'
+import { errorMessage } from '@/error/client'
 import { baseUrl } from '@/services/config'
+import { TFunction } from 'i18next'
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 import { objectToFormData } from 'object-to-formdata'
-import { errorMessage } from '@/services/api/client'
-import { AccessToken } from '@/interfaces/auth'
-import { CommonConstsType } from '@/interfaces/commonConsts'
-import { IdParam } from '@/interfaces/api'
 
-type Props = IdParam & Required<AccessToken> & CommonConstsType & {
-	modValues: CustomerSubmitValues | ProductSubmitValues | OrderSubmitValues
+type Props = { id: string } & Pick<AppRouterInstance, 'refresh' | 'push'> & {
+	modValues: CustomerValues | ProductValues | OrderValues
 	indexUrl: string
-	refresh: () => void
-	push: (arg0: string) => void
 	contentType?: string
+	t: TFunction
 }
 
 export const mutateObject = async ({
 	id,
 	modValues,
 	indexUrl,
-	accessToken,
-	commonConsts,
 	refresh,
 	push,
-	contentType = 'application/json'
+	contentType = 'application/json',
+	t,
 }: Props) => {
 	const isJSONContent = contentType === 'application/json'
 	const isNewObject = id === 'new'
@@ -36,8 +33,10 @@ export const mutateObject = async ({
 		body: isJSONContent
 			? JSON.stringify(modValues)
 			: objectToFormData(modValues),
+		// body: JSON.stringify(modValues),
 	}
 	const headers = new Headers()
+	const { accessToken } = getAuth()
 	if (accessToken) {
 		headers.append('Authorization', `Token ${accessToken}`)
 	}
@@ -45,13 +44,15 @@ export const mutateObject = async ({
 		headers.append('Content-Type', contentType)
 	}
 	options.headers = headers
-	const mutatePath = isNewObject ? '' : `${id}/`
+	const mutatePath = isNewObject ? '' : `${id}`
 	const res = await fetch(`${baseUrl}${indexUrl}${mutatePath}`, options)
 	if (res.ok) {
-		toastSuccess(commonConsts?.successfully)
+		const { toastSuccess } = await import('@/notifications/toastSuccess')
+		toastSuccess(String(t('successfully')))
 		push(indexUrl)
 		refresh()
 	} else {
-		toastError(await errorMessage(res))
+		const { toastError } = await import('@/notifications/toastError')
+		toastError(await errorMessage(res, t))
 	}
 }

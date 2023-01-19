@@ -1,25 +1,26 @@
 'use client'
 
-import Col from '@/client/Col'
-import Row from '@/client/Row'
-import Input from '@/formInput/Input'
-import SubmitButton from '@/submitButton/SubmitButton'
-import { ReactNode } from 'react'
-import FormBootstrap from '@/client/FormBootstrap'
-import { Field, FormRenderProps } from 'react-final-form'
+import Button from '@/client/Button'
+import { useDisabled } from '@/submitButton/hooks'
+import type { PropsWithChildren } from 'react'
+import { FormRenderProps } from 'react-final-form'
 
 export default function Layout({
 	children,
+	save,
 	...props
-}: { children: ReactNode } & FormRenderProps) {
-	return <FormBootstrap onSubmit={props.handleSubmit}
-		className="shadow p-3 mb-5 bg-body rounded">
-		<Field name="id" hidden component={Input} />
+}: PropsWithChildren & FormRenderProps & { save: string }) {
+	return <div className="bg-white shadow-md rounded p-2 text-sm">
+		<form onSubmit={props.handleSubmit}>
+		{/*<Field name="id" hidden={true} component={Input} />*/}
 		{children}
-		<Row>
-			<Col sm={2}>
-				<SubmitButton {...props} />
-			</Col>
-		</Row>
-	</FormBootstrap>
+		<Button
+			type='submit'
+			size='sm'
+			aria-labelledby={save}
+			disabled={useDisabled(props)} >
+			{save}
+		</Button>
+	</form>
+	</div>
 }

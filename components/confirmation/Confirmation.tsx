@@ -1,5 +1,6 @@
 import Button from '@/client/Button'
 import Modal from '@/client/Modal'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { confirmable, createConfirmation } from 'react-confirm'
 
 type Props = {
@@ -22,42 +23,48 @@ const Confirmation = ({
   show,
   proceed,
   confirmation,
-  title,
+  // title,
   okText = 'OK',
   cancelText = 'Cancel',
-  okButtonStyle = 'primary',
-  cancelButtonStyle = 'secondary',
+  // okButtonStyle = 'primary',
+  // cancelButtonStyle = 'secondary',
 }: Props) => {
-  const header = title ? (
-    <Modal.Header>
-      <Modal.Title>{title}</Modal.Title>
-    </Modal.Header>
-  ) : undefined;
+  // const header = title ? (
+  //   <Modal.Header>
+  //     {title}
+  //   </Modal.Header>
+  // ) : undefined;
   return (
     <Modal
       size="sm"
       show={show}
-      onHide={() => proceed(false)}
-      backdrop="static"
-      centered
+      popup={true}
+      onClose={() => proceed(false)}
     >
-      {header}
-      <Modal.Body>{confirmation}</Modal.Body>
-      <Modal.Footer>
-        <Button
-          variant={cancelButtonStyle}
-          onClick={() => proceed(false)}
-        >
-          {cancelText}
-        </Button>
-        <Button
-          variant={okButtonStyle}
-          onClick={() => proceed(true)}
-        >
-          {okText}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      <Modal.Header />
+      <Modal.Body>
+        <div className="text-center">
+          <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+            {confirmation}
+          </h3>
+          <div className="flex justify-center gap-4">
+            <Button
+              color="gray"
+              onClick={() => proceed(false)}
+            >
+              {cancelText}
+            </Button>
+            <Button
+              color="failure"
+              onClick={() => proceed(true)}
+            >
+              {okText}
+            </Button>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal >
   );
 };
 

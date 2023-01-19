@@ -1,69 +1,65 @@
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/maps";
-@import "bootstrap/scss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-$utilities: map-merge(
-  $utilities,
-  (
-    "min-viewport-width": map-merge(
-      map-get($utilities, "min-viewport-width"),
-      (
-        values: map-merge(
-          map-get(map-get($utilities, "min-viewport-width"), "values"),
-          (20: 20vw, 30: 30vw, 35: 35vw, 40: 40vw),
-        ),
-      ),
-    ),
-  )
-);
 
-$utilities: map-merge(
-  $utilities,
-  (
-    "max-width": map-merge(
-      map-get($utilities, "max-width"),
-      (
-        values: map-merge(
-          map-get(map-get($utilities, "max-width"), "values"),
-          (5: 5%, 10: 10%),
-        ),
-      ),
-    ),
-  )
-);
+// @import "bootstrap/scss/functions";
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/maps";
+// @import "bootstrap/scss/utilities";
 
-$utilities: map-merge(
-  $utilities,
-  (
-    "max-viewport-width": (
-      property: max-width,
-      class: max-vw,
-      values: (5: 5vw, 7: 7vw, 10: 10vw),
-    )
-  )
-);
+// $utilities: map-merge(
+//   $utilities,
+//   (
+//     "min-viewport-width": map-merge(
+//       map-get($utilities, "min-viewport-width"),
+//       (
+//         values: map-merge(
+//           map-get(map-get($utilities, "min-viewport-width"), "values"),
+//           (20: 20vw, 30: 30vw, 35: 35vw, 40: 40vw),
+//         ),
+//       ),
+//     ),
+//   )
+// );
 
-@import "~bootstrap/scss/bootstrap";
+// $utilities: map-merge(
+//   $utilities,
+//   (
+//     "max-width": map-merge(
+//       map-get($utilities, "max-width"),
+//       (
+//         values: map-merge(
+//           map-get(map-get($utilities, "max-width"), "values"),
+//           (5: 5%, 10: 10%),
+//         ),
+//       ),
+//     ),
+//   )
+// );
 
-/*h1 {
-    color: #27aedb;
-    text-align: center;
-}*/
+// $utilities: map-merge(
+//   $utilities,
+//   (
+//     "max-viewport-width": (
+//       property: max-width,
+//       class: max-vw,
+//       values: (5: 5vw, 7: 7vw, 10: 10vw),
+//     )
+//   )
+// );
 
-/*nav.navbar {
-    background-color: #563d82;
-}*/
+// @import "~bootstrap/scss/bootstrap";
 
-input {
-  .rw-detect-autofill {
-    display: none;
-  }
-  .rw-input {
-      max-width: 70px;
-  }
-}
+// input {
+//   .rw-detect-autofill {
+//     display: none;
+//   }
+//   .rw-input {
+//       max-width: 70px;
+//   }
+// }
 
-span.rw-dropdown-list-value {
-    white-space: pre-wrap !important;
-}
+// span.rw-dropdown-list-value {
+//     white-space: pre-wrap !important;
+// }

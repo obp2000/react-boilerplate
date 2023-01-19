@@ -1,61 +1,51 @@
-import { useContext, useState } from 'react'
-import type { DropdownProps } from 'react-widgets/cjs/DropdownList'
-import type {
-  DropdownListAttrs,
-  GetRenderValue
-} from '@/interfaces/dropdownList'
-import { MainContext } from '@/options/context'
+// import { useTranslation } from '@/app/i18n/client'
 import { useMapFieldProps } from '@/options/hooks'
-import { getRenderValue } from './helpers'
 import { baseUrl } from '@/services/config'
 import type { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
+import { FieldRenderProps } from 'react-final-form'
+import type { DropdownProps } from 'react-widgets/cjs/DropdownList'
+import { getRenderValue } from './helpers'
 
 const onSearch = (
-  url: string | undefined,
+  searchPath: string | undefined,
   setData: Dispatch<SetStateAction<never[]>>,
   setBusy: Dispatch<SetStateAction<boolean>>
 ) => (term: string) => {
   if (typeof term === 'string' && term.length === 2) {
     setBusy(true)
     const searchParams = new URLSearchParams()
-    searchParams.set('page_size', '1000000')
     searchParams.set('term', term)
-    return fetch(`${baseUrl}${url}?${searchParams}`)
+    return fetch(`${baseUrl}${searchPath}?${searchParams}`)
       .then(res => res.json()
-        .then(({ results }) => {
+        .then((results) => {
+          // console.log('results ', results)
           setData(results)
           setBusy(false)
         }))
   }
 }
 
-export const useSearch = (url: string) => {
+export const useSearch = ({ searchPath }: { searchPath: string }) => {
   // const { data, error } = useSWR(url, fetcher)
   // console.log('data ', data)
   const [data, setData] = useState([])
   const [busy, setBusy] = useState(false)
   return {
-    onSearch: onSearch(url, setData, setBusy),
+    onSearch: onSearch(searchPath, setData, setBusy),
     data,
     busy,
   }
 }
 
-const useWidgetMessages = () => {
-  const { commonConsts } = useContext(MainContext)
-  return {
-    emptyFilter: commonConsts?.not_found,
-    emptyList: () => commonConsts?.not_found,
-  }
-}
-
-const useDropdownListTypeProps = (props: GetRenderValue) => {
+const useDropdownListTypeProps = (
+  props: Omit<FieldRenderProps<any>, 'input' | 'meta'> & DropdownProps<any>) => {
   const renderValue = getRenderValue(props)
   return {
     filter: 'contains',
     renderValue,
     renderListItem: renderValue,
-    messages: useWidgetMessages(),
+    // messages: useWidgetMessages({ labels: props?.labels, lng: props?.lng }),
   }
 }
 
@@ -63,21 +53,20 @@ export const useFieldProps = ({
   input,
   meta,
   searchPath,
-  renderValueComponent,
   autoComplete,
+  renderValueComponent,
   ...props
-}: DropdownListAttrs): DropdownProps<any> => {
+}: FieldRenderProps<any> & DropdownProps<any>): DropdownProps<any> => {
   let {
     type: typeFromFieldProps,
-    nestedOptions,
     helpText,
     ...result
   } = useMapFieldProps({ input, ...props })
   result = { type: typeFromFieldProps, ...result, ...input }
   result = {
     ...result,
-    ...useDropdownListTypeProps({ renderValueComponent, nestedOptions }),
-    ...useSearch(searchPath),
+    ...useDropdownListTypeProps({ renderValueComponent, ...props }),
+    ...useSearch({ searchPath }),
   }
   return {
     ...result,
@@ -85,3 +74,13 @@ export const useFieldProps = ({
     ...props,
   }
 }
+
+
+// const useWidgetMessages = ({ labels, lng }: { labels: Record<string, string>, lng: string }) => {
+//   const { t } = useTranslation(lng)
+//   const notFound = t('not_found')
+//   return {
+//     emptyFilter: notFound,
+//     emptyList: () => notFound,
+//   }
+// }

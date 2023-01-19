@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-// import { toastError } from '@/notifications/toast'
 
 export default function Error({
   error,

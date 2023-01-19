@@ -1,0 +1,7 @@
+{
+  "id": "Id",
+  "customer": "Покупатели",
+  "order_items_cost": "Сумма заказа",
+  "created_at": "Создан",
+  "updated_at": "Обновлен"
+}

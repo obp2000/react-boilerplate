@@ -38,7 +38,6 @@ function render(
   const Wrapper = ({children}) =>
     <Provider {...{store}}>
       <Router>
-        {/* <ToastContainer />*/}
         {children}
       </Router>
     </Provider>

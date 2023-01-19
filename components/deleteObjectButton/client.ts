@@ -1,38 +1,41 @@
 'use client'
 
-import { AnyObjectType } from '@/interfaces/api'
-import { AccessToken } from '@/interfaces/auth'
-import { CommonConstsType } from '@/interfaces/commonConsts'
-import { IndexUrl } from '@/interfaces/index'
-import { toastError, toastSuccess } from '@/notifications/toast'
-import { errorMessage } from '@/services/api/client'
+import { getAuth } from '@/auth/client'
+import { errorMessage } from '@/error/client'
 import { baseUrl } from '@/services/config'
+import { TFunction } from 'i18next'
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 
-type Props = Required<AnyObjectType> & IndexUrl & CommonConstsType &
-	Required<AccessToken> & {
-		refresh: () => void
-	}
+type Props = Pick<AppRouterInstance, 'refresh'> & {
+	id: number
+	indexUrl: string
+	message: string
+	t: TFunction
+}
 
 export const deleteObject = async ({
-	object,
+	id,
 	indexUrl,
-	accessToken,
-	commonConsts,
-	refresh
+	message,
+	refresh,
+	t
 }: Props) => {
 	let options: RequestInit = {
 		method: 'DELETE',
 	}
+	const { accessToken } = getAuth()
 	if (accessToken) {
 		const headers = new Headers()
 		headers.append('Authorization', `Token ${accessToken}`)
 		options.headers = headers
 	}
-	const res = await fetch(`${baseUrl}${indexUrl}${object.id}`, options)
+	const res = await fetch(`${baseUrl}${indexUrl}${id}`, options)
 	if (res.ok) {
-		toastSuccess(commonConsts?.successfully)
+		const { toastSuccess } = await import('@/notifications/toastSuccess')
+		toastSuccess(message)
 		refresh()
 	} else {
-		toastError(await errorMessage(res))
+		const { toastError } = await import('@/notifications/toastError')
+		toastError(await errorMessage(res, t))
 	}
 }

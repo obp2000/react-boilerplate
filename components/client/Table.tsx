@@ -1,5 +1,5 @@
 'use client'
 
-import Table from 'react-bootstrap/Table'
+import { Table } from 'flowbite-react'
 
 export default Table

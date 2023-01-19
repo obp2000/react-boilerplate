@@ -1,0 +1,6 @@
+{
+    "caption": "git: status",
+    "command": "tint_run_custom",
+    "args": {
+        "cmd": "git status" }
+}

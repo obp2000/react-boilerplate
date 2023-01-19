@@ -1,5 +1,5 @@
 'use client'
 
-import Modal from 'react-bootstrap/Modal'
+import { Modal } from 'flowbite-react'
 
 export default Modal

@@ -1,22 +1,24 @@
 import 'server-only'
 
-import { AnyObjectType } from '@/interfaces/api'
+import Tooltip from '@/client/Tooltip'
+import type { CustomersSelect, OrdersSelect, ProductsSelect } from '@/interfaces/api'
 import Link from 'next/link'
-import { CommonConstsType } from '@/interfaces/commonConsts'
-import path from 'path'
+import { AiOutlineEdit } from 'react-icons/ai'
 
 export default function LinkToNewOrEditObject({
+  indexUrl,
   object,
-  commonConsts
-}: AnyObjectType & CommonConstsType) {
-  const label = object?.id ? commonConsts?.edit : commonConsts?.new
+  label,
+  lng
+}: ({ object?: CustomersSelect | ProductsSelect | OrdersSelect }) &
+  {indexUrl: string, label: string, lng: string }) {
   return <Link
-    className='btn btn-outline-primary btn-sm'
-    href={`/${path.basename(__dirname)}/${object?.id || 'new'}`}
     aria-labelledby={label}
-    // prefetch={false}
-    // shallow={true}
+    href={`/${lng}${indexUrl}${object?.id || 'new'}`}
+  // prefetch={false}
   >
-    {label}
+    <Tooltip content={label}>
+      <AiOutlineEdit />
+    </Tooltip>
   </Link>
 }

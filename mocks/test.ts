@@ -1,11 +1,14 @@
-import { expect, test as base } from "@playwright/test"
-import { createServer, MockServiceWorker } from "playwright-msw"
-import handlers from "./handlers"
+import { test as base, expect } from '@playwright/test'
+import { createWorker, MockServiceWorker } from 'playwright-msw'
 
-const test = base.extend<{ worker: MockServiceWorker }>({
+import handlers from './handlers'
+
+const test = base.extend<{
+  worker: MockServiceWorker
+}>({
   worker: [
     async ({ page }, use) => {
-      const server = await createServer(page, ...handlers)
+      const server = await createWorker(page, handlers)
       // Test has not started to execute...
       await use(server)
       // Test has finished executing...
@@ -18,7 +21,7 @@ const test = base.extend<{ worker: MockServiceWorker }>({
        * `page` fixture as it is not possible to access it when scoped to the
        * "worker".
        */
-      scope: "test",
+      scope: 'test',
       /**
        * By default, fixtures are lazy; they will not be initalised unless they're
        * used by the test. Setting `true` here means that the fixture will be auto-

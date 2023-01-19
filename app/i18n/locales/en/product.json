@@ -1,0 +1,9 @@
+{
+  "id": "Id",
+  "name": "Name",
+  "price": "Price",
+  "width": "Width",
+  "density": "Density",
+  "created_at": "Created",
+  "updated_at": "Updated"
+}

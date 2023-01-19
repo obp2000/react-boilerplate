@@ -1,35 +1,45 @@
 'use client'
 
-import Button from '@/client/Button'
-import type { AnyObjectType } from '@/interfaces/api'
-import { AccessToken } from '@/interfaces/auth'
-import { CommonConstsType } from '@/interfaces/commonConsts'
-import { IndexUrl } from '@/interfaces/index'
-import { useButton } from './hooks'
+import { useTranslation } from '@/app/i18n/client'
+import Tooltip from '@/client/Tooltip'
+// import { confirm } from '@/confirmation/Confirmation'
+import type { CustomersSelect, OrdersSelect, ProductsSelect } from '@/interfaces/api'
+import { useRouter } from 'next/navigation'
+import { AiOutlineDelete } from 'react-icons/ai'
+import { deleteObject } from './client'
 
-type Props = Required<AnyObjectType> & IndexUrl & CommonConstsType &
-  Required<AccessToken>
+type Props = { indexUrl: string } &
+  Required<({ object: CustomersSelect | ProductsSelect | OrdersSelect })> &
+{ label: string, message: string, okText: string, cancelText: string, lng: string }
 
-export default function DeleteObjectButton(props: Props) {
-  return <Button {...useButton(props)} />
+export default function DeleteObjectButton({
+  indexUrl,
+  object,
+  label,
+  message,
+  okText,
+  cancelText,
+  lng
+}: Props) {
+  const { refresh } = useRouter()
+  const onClick = async () => {
+    const confirm = (await import('@/confirmation/Confirmation')).confirm
+    const result = await confirm(`${label}?`, { okText, cancelText })
+    const { t } = useTranslation(lng)
+    if (result) {
+      deleteObject({
+        id: object.id,
+        indexUrl,
+        message,
+        refresh,
+        t
+      })
+    }
+  }
+  return <Tooltip content={label}>
+    <AiOutlineDelete
+      aria-labelledby={label}
+      onClick={onClick}
+      cursor='pointer' />
+  </Tooltip>
 }
-
-
-// import 'server-only'
-
-// import type { AnyObjectType } from '@/interfaces/api'
-// import { IndexUrl } from '@/interfaces/index'
-// import { getAuth } from '@/services/api/server'
-// import DeleteObjectButtonClient from './DeleteObjectButtonClient'
-// import { CommonConstsType } from '@/interfaces/commonConsts'
-
-// export default function DeleteObjectButton({
-//   object,
-//   indexUrl,
-//   commonConsts
-// }: Required<AnyObjectType> & IndexUrl & CommonConstsType) {
-//   const { accessToken } = getAuth()
-//   return <DeleteObjectButtonClient {...{
-//     object, indexUrl, commonConsts, accessToken
-//   }} />
-// }

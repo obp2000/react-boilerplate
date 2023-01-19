@@ -35,6 +35,9 @@
       "@/styles/*": [
         "styles/*"
       ],
+      "@/pages/*": [
+        "pages/*"
+      ],
       "@/*": [
         "components/*"
       ]

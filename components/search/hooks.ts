@@ -1,20 +1,22 @@
-import type { SearchTerm } from '@/interfaces/search'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export function useForm() {
+	// const segment = useSelectedLayoutSegment()
+	// const indexUrl = segment === '(main)' ? '/customers/' : `/${segment}/`
+  	// let pathname = `/${lng}${indexUrl}`
 	const { push } = useRouter()
-	let searchPath = usePathname()
-	const searchParams = new URLSearchParams()
-	const onSubmit = ({ term }: SearchTerm) => {
+  	const pathname = usePathname()
+	const searchParams = new URLSearchParams(useSearchParams())
+	const onSubmit = ({ term }: { term?: string | string[] }) => {
 		if (term) {
+			searchParams.delete('page')
 			searchParams.set('term', String(term))
-			searchPath += `?${searchParams}`
+			return push(`${pathname}?${searchParams}`)
 		}
-		return push(String(searchPath))
 	}
 	return {
 		name: 'search',
-    	initialValues: { term: useSearchParams().get('term') },
+    	initialValues: { term: searchParams.get('term') },
     	onSubmit
     }
 }

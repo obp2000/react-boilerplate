@@ -3,32 +3,28 @@ import 'server-only'
 import type { ObjectsWithTotals } from '@/interfaces/api'
 import { requestInit } from '@/services/api/server'
 import { baseUrl } from '@/services/config'
-import { cache } from 'react'
-// import path from 'path'
-import { IndexUrl } from '@/interfaces/index'
+import { ParsedUrlQuery } from 'querystring'
+// import { cache } from 'react'
 
 export const preloadObjects = (
-	indexUrl: IndexUrl,
+	indexUrl: string,
 	searchParams: Record<string, string>
 ) => {
 	void getObjects({ indexUrl, searchParams })
 }
 
-type Props = IndexUrl & {
-	searchParams?: Record<string, string>
-}
+type Props = { indexUrl: string, searchParams: ParsedUrlQuery }
 
-export const getObjects = cache(async ({
+export const getObjects = async ({
 	indexUrl,
 	searchParams = {}
 }: Props): Promise<ObjectsWithTotals> => {
-	// const basename = path.basename(__dirname)
-	// const indexUrl = `/${basename === 'app' ? 'customers' : basename}/`
-	let params = new URLSearchParams(searchParams).toString()
+	let params = new URLSearchParams(searchParams as Record<string, string>).toString()
 	if (params) {
 		params = `?${params}`
 	}
 	const options = requestInit()
+	// options.cache = 'no-store'
 	const res =
 		await fetch(`${baseUrl}${indexUrl}${params}`, options)
 	if (!res.ok) {
@@ -36,4 +32,4 @@ export const getObjects = cache(async ({
 	}
 	const data = res.json()
 	return data
-})
+}

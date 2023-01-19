@@ -1,24 +1,34 @@
 import 'server-only'
 
-import Pagination from '@/client/Pagination'
-import type { SearchParams } from '@/interfaces/api'
-import clsx from 'clsx'
-import { getPagination } from './helpers'
-import PaginationLink from './PaginationLink'
+import { fallbackLng } from '@/app/i18n/settings'
+import Link from 'next/link'
+import { ParsedUrlQuery } from 'querystring'
+import { getPagination } from './hooks'
 
 export default function PaginationComp({
-  totalPages,
-  searchParams
-}: { totalPages: number } & SearchParams) {
-  const pages = getPagination({ totalPages, searchParams })
-  if (pages.length === 0) return null
-  return <Pagination>
-    {pages.map(({ label, search, query, active }, key) => <li key={key}
-      className={clsx('page-items', { active })} >
-      <PaginationLink {...{ query }} >
-        {label}
-      </PaginationLink>
-    </li>)
-    }
-  </Pagination >
+  indexUrl,
+  params: {
+    lng = fallbackLng,
+  },
+  ...props
+}: {
+  indexUrl: string
+  totalPages: number
+  params: ParsedUrlQuery
+  searchParams: ParsedUrlQuery
+}) {
+  if (props.totalPages < 2) { return null }
+  const pathname = `/${lng}${indexUrl}`
+  const pages = getPagination(props)
+  return <nav aria-label="Pagination">
+    <ul className="inline-flex -space-x-px">
+      {pages.map(({ label, query, className }, key) => <li key={key}>
+        <Link href={{ pathname, query }}
+          // prefetch={false}
+          className={className}>
+          {label}
+        </Link>
+      </li>)}
+    </ul >
+  </nav>
 }

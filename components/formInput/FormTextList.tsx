@@ -1,13 +1,14 @@
-import type { DropdownListAttrs } from '@/interfaces/dropdownList'
-import type { SelectFieldAttrs } from '@/interfaces/selectField'
 import { useMapFieldProps } from '@/options/hooks'
 import parse from 'html-react-parser'
-import Form from '@/client/FormBootstrap'
 import type { FieldRenderProps } from 'react-final-form'
+import React from 'react'
+import { DropdownProps } from 'react-widgets/cjs/DropdownList'
 
-export default function FormTextList(props: FieldRenderProps<any> |
-  SelectFieldAttrs | DropdownListAttrs) {
-  let { helpText } = useMapFieldProps(props)
+export default function FormTextList(props: Omit<FieldRenderProps<any>, 'input' | 'meta'> |
+  DropdownProps<any>) {
+  let { helpText } = useMapFieldProps(props) as { helpText: string }
   if (!helpText) { return null }
-  return <Form.Text muted>{parse(helpText)}</Form.Text>
+  return <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+    {parse(helpText)}
+  </div>
 }

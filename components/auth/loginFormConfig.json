@@ -1,0 +1,11 @@
+{
+  "indexUrl": "/login",
+  "name": "Login",
+  "formFields": [
+    { "name": "username", "required": true, "autoComplete": "username" },
+    { "name": "password", "type": "password", "autoComplete": "current-password" }
+  ],
+  "validatedFields": {
+    "notBlank": ["username", "password"]
+  }
+}

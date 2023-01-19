@@ -1,0 +1,71 @@
+{
+    "id": {
+        "type": "integer",
+        "required": false,
+        "read_only": true,
+        "label": "ID"
+    },
+    "nick": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Ник",
+        "max_length": 255
+    },
+    "name": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Имя",
+        "max_length": 255
+    },
+    "city": {
+        "type": "nested object",
+        "required": true,
+        "read_only": false,
+        "label": "Город",
+        "children": {
+            "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": true,
+                "label": "ID"
+            },
+            "pindex": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Индекс",
+                "max_length": 6
+            },
+            "city": {
+                "type": "string",
+                "required": true,
+                "read_only": false,
+                "label": "Город",
+                "max_length": 80
+            }
+        }
+    },
+    "address": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Адрес",
+        "max_length": 255
+    },
+    "created_at": {
+        "type": "datetime",
+        "required": false,
+        "read_only": true,
+        "label": "Создан"
+    },
+    "updated_at": {
+        "type": "datetime",
+        "required": false,
+        "read_only": true,
+        "label": "Обновлен"
+    },
+    "name_singular": "Покупатель",
+    "name_plural": "Покупатели"
+}

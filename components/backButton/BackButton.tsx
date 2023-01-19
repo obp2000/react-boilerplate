@@ -1,16 +1,12 @@
 'use client'
 
-import Button from "@/client/Button"
-import type { CommonConstsType } from '@/interfaces/commonConsts'
+import Tooltip from "@/client/Tooltip"
 import { useRouter } from 'next/navigation'
+import { IoMdArrowRoundBack } from 'react-icons/io'
 
-export default function BackButton({ commonConsts }: CommonConstsType) {
-  const router = useRouter()
-  return <Button
-    variant='outline-primary'
-    size='sm'
-    onClick={() => router.back()}
-  >
-    {commonConsts?.back}
-  </Button>
+export default function BackButton({ label }: { label: string }) {
+  const { back } = useRouter()
+  return <Tooltip content={label}>
+    <IoMdArrowRoundBack size={20} onClick={() => back()} cursor='pointer' />
+  </Tooltip>
 }

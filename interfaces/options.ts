@@ -1,134 +1,28 @@
-import type { CustomerOptions } from './customers'
-import type {
-  ProductOptions,
-  ProductTypeChoice,
-  ThreadsChoice,
-  ContentsChoice,
-} from './products'
-import type {
-  OrderOptions,
-  PacketChoice,
-  DeliveryTypeChoice,
-} from './orders'
-import type { UserOptions } from './users'
-import type { LoginOptions, RegisterOptions, AuthState } from './auth'
-import type { CommonConsts, CommonConstsType } from './commonConsts'
-import type { OrderItemOptions } from './orderItems'
-import type { IndexUrl } from '.'
-import type { UserType } from './users'
-import type { Children } from './layout'
-// import type { SelectOptions } from './selectField'
+import customerOptions from '@/app/[lng]/customers/[id]/options.json'
+import orderOptions from '@/app/[lng]/orders/[id]/options.json'
+import orderItemOptions from '@/app/[lng]/orders/[id]/orderItems/options.json'
+import productOptions from '@/app/[lng]/products/[id]/options.json'
+import userOptions from '@/app/[lng]/user/options.json'
+import loginOptions from '@/auth/login.json'
+import registerOptions from '@/auth/register.json'
+// import { PropsWithChildren } from 'react'
 
-export type AnyChoices = ProductTypeChoice | ThreadsChoice | ContentsChoice |
-  PacketChoice | DeliveryTypeChoice
+// export type AnyChoices = Pick<typeof productOptions['product_type_id'], 'choices'> |
+//   Pick<typeof productOptions['threads'], 'choices'> |
+//   Pick<typeof productOptions['contents'], 'choices'> |
+//   Pick<typeof orderOptions['packet'], 'choices'> |
+//   Pick<typeof orderOptions['delivery_type'], 'choices'>
 
-export type AnyChoicesType = {
-  choices?: AnyChoices[]
-}
+export type TableOptions = Omit<typeof customerOptions, 'name_singular' | 'name_plural'> |
+  Omit<typeof productOptions, 'name_singular' | 'name_plural'> |
+  Omit<typeof orderOptions, 'name_singular' | 'name_plural' | 'customer' | 'order_items'>
 
-export type FieldProps = AnyChoicesType & {
-  type?: string
-  required?: boolean
-  read_only?: boolean
-  label?: string
-  min_value?: number
-  max_value?: number
-  help_text?: string
-}
-
-export type AnyObjectOptions = CustomerOptions | ProductOptions |
-  OrderOptions
-
-export type TableOptions = CustomerOptions | ProductOptions | OrderOptions
-
-export type TableOptionsType = {
-  options?: TableOptions
-}
-
-export type AnyOptions = TableOptions | UserOptions | LoginOptions |
-  RegisterOptions | OrderItemOptions
+export type AnyOptions = TableOptions | Omit<typeof userOptions, 'name_singular'> |
+  typeof loginOptions | typeof registerOptions | typeof orderItemOptions
+  // Omit<typeof orderOptions, 'customer' | 'order_items'>
+// OrderItemOptionsPartial
 
 export type AnyOptionsType = {
   options?: AnyOptions
 }
 
-export type AnyObjectOptionsType = {
-  options?: AnyObjectOptions
-}
-
-export type RawOptionsAndCommonConsts = {
-  common_consts?: CommonConsts
-  actions?: { [index: string]: AnyObjectOptions }
-}
-
-export type OptionsOueryResult = AnyOptionsType & CommonConstsType & {
-  isLoadingOptions: boolean
-  isFetchingOptions: boolean
-}
-
-export type AuthContextType = AuthState & UserType & Children
-
-export type MainContextType = AnyOptionsType & CommonConstsType & IndexUrl &
-  Children
-
-export type InputType =
-  | 'text'
-  | 'email'
-  | 'select'
-  | 'file'
-  | 'radio'
-  | 'checkbox'
-  | 'switch'
-  | 'textarea'
-  | 'button'
-  | 'reset'
-  | 'submit'
-  | 'date'
-  | 'datetime-local'
-  | 'hidden'
-  | 'image'
-  | 'month'
-  | 'number'
-  | 'range'
-  | 'search'
-  | 'tel'
-  | 'url'
-  | 'week'
-  | 'password'
-  | 'datetime'
-  | 'time'
-  | 'color';
-
-export interface CSSModule {
-  [className: string]: string;
-}
-
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  [key: string]: any;
-  type?: InputType;
-  bsSize?: 'lg' | 'sm';
-  valid?: boolean;
-  invalid?: boolean;
-  tag?: React.ElementType;
-  innerRef?: React.Ref<HTMLInputElement | HTMLTextAreaElement>;
-  plaintext?: boolean;
-  addon?: boolean;
-  cssModule?: CSSModule;
-}
-
-// export type MainContext1 = (indexUrl: string) => Promise<MainContextType>
-
-
-// export type FieldPropsFromOptions = {
-//   type?: string
-//   id?: number
-//   required?: boolean
-//   readOnly?: boolean
-//   placeholder?: string
-//   'aria-label'?: string
-//   min?: number
-//   max?: number
-//   helpText?: string
-//   selectOptions?: SelectOptions[]
-// }

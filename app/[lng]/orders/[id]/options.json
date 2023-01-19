@@ -1,0 +1,236 @@
+{
+    "id": {
+        "type": "integer",
+        "required": false,
+        "read_only": true,
+        "label": "ID"
+    },
+    "customer": {
+        "type": "nested object",
+        "required": true,
+        "read_only": false,
+        "label": "Покупатель",
+        "children": {
+            "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": true,
+                "label": "ID"
+            },
+            "nick": {
+                "type": "string",
+                "required": true,
+                "read_only": false,
+                "label": "Ник",
+                "max_length": 255
+            },
+            "name": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Имя",
+                "max_length": 255
+            },
+            "city": {
+                "type": "nested object",
+                "required": true,
+                "read_only": false,
+                "label": "Город",
+                "children": {
+                    "id": {
+                        "type": "integer",
+                        "required": false,
+                        "read_only": true,
+                        "label": "ID"
+                    },
+                    "pindex": {
+                        "type": "string",
+                        "required": false,
+                        "read_only": false,
+                        "label": "Индекс",
+                        "max_length": 6
+                    },
+                    "city": {
+                        "type": "string",
+                        "required": true,
+                        "read_only": false,
+                        "label": "Город",
+                        "max_length": 80
+                    }
+                }
+            },
+            "address": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Адрес",
+                "max_length": 255
+            },
+            "created_at": {
+                "type": "datetime",
+                "required": false,
+                "read_only": true,
+                "label": "Создан"
+            },
+            "updated_at": {
+                "type": "datetime",
+                "required": false,
+                "read_only": true,
+                "label": "Обновлен"
+            }
+        }
+    },
+    "post_cost": {
+        "type": "integer",
+        "required": false,
+        "read_only": false,
+        "label": "Почтовые",
+        "min_value": 0,
+        "max_value": 2147483647
+    },
+    "packet": {
+        "type": "choice",
+        "required": false,
+        "read_only": false,
+        "label": "Пакет",
+        "choices": [
+            {
+                "value": null,
+                "display_name": "----"
+            },
+            {
+                "value": 25,
+                "display_name": "25"
+            },
+            {
+                "value": 27,
+                "display_name": "27"
+            },
+            {
+                "value": 50,
+                "display_name": "50"
+            },
+            {
+                "value": 55,
+                "display_name": "55"
+            },
+            {
+                "value": 72,
+                "display_name": "72"
+            },
+            {
+                "value": 85,
+                "display_name": "85"
+            }
+        ]
+    },
+    "delivery_type": {
+        "type": "choice",
+        "required": false,
+        "read_only": false,
+        "label": "Способ доставки",
+        "choices": [
+            {
+                "value": null,
+                "display_name": "----"
+            },
+            {
+                "value": 0,
+                "display_name": "Почта России"
+            },
+            {
+                "value": 1,
+                "display_name": "Деловые линии"
+            },
+            {
+                "value": 2,
+                "display_name": "ПЭК"
+            },
+            {
+                "value": 3,
+                "display_name": "GTD (Кит)"
+            },
+            {
+                "value": 4,
+                "display_name": "Энергия"
+            },
+            {
+                "value": 5,
+                "display_name": "ЖелДор Экспедиция"
+            },
+            {
+                "value": 6,
+                "display_name": "Ратек"
+            },
+            {
+                "value": 7,
+                "display_name": "Байкал Сервис"
+            },
+            {
+                "value": 8,
+                "display_name": "СДЭК Посылочка"
+            }
+        ]
+    },
+    "address": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Адрес",
+        "max_length": 255
+    },
+    "gift": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Подарок",
+        "max_length": 255
+    },
+    "order_items_amount": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Order items amount"
+    },
+    "order_items_cost": {
+        "label": "Сумма"
+    },
+    "order_items_weight": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Order items weight"
+    },
+    "created_at": {
+        "type": "datetime",
+        "required": false,
+        "read_only": true,
+        "label": "Создан"
+    },
+    "updated_at": {
+        "type": "datetime",
+        "required": false,
+        "read_only": true,
+        "label": "Обновлен"
+    },
+    "name_singular": "Заказ",
+    "name_plural": "Заказы",
+    "post_cost_with_packet": {
+        "label": "Сумма"
+    },
+    "post_discount": {
+        "label": "Скидка"
+    },
+    "total_postals": {
+        "label": ""
+    },
+    "total_sum": {
+        "label": ""
+    },
+    "need_gift": {
+        "label": "Нужен подарок"
+    },
+    "samples": {
+        "label": "Образцы"
+    }
+}

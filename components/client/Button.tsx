@@ -1,5 +1,5 @@
 'use client'
 
-import Button from 'react-bootstrap/Button'
+import { Button } from 'flowbite-react'
 
 export default Button

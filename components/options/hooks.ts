@@ -1,13 +1,7 @@
-import type { FieldAttrs } from '@/interfaces/input'
-import type {
-  AnyOptions,
-  FieldProps,
-  InputProps,
-  InputType
-} from '@/interfaces/options'
-import { MainContext } from '@/options/context'
+import type { AnyOptions } from '@/interfaces/options'
 import { mapChoices } from '@/selectField/hooks'
-import { useContext } from 'react'
+import { FieldRenderProps } from 'react-final-form'
+import { useOptions } from './context'
 
 const mapFieldType = (type: string = ''): string | undefined => {
   switch (type) {
@@ -29,8 +23,8 @@ export const useMapFieldProps = ({
   isLabel,
   dataKey,
   textField,
-}: Partial<FieldAttrs>): InputProps => {
-  const { options = emptyObject } = useContext(MainContext)
+}: Partial<FieldRenderProps<any>>): Omit<FieldRenderProps<any>, 'input' | 'meta'> => {
+  const { options = emptyObject } = useOptions()
   const {
     type,
     required,
@@ -42,7 +36,7 @@ export const useMapFieldProps = ({
     choices,
     help_text: helpText,
   } = options[name.split('.').pop() as keyof AnyOptions] ??
-    emptyObject as FieldProps
+    emptyObject as Omit<FieldRenderProps<any>, 'input' | 'meta'>
   if (isLabel) {
     return {
       required,
@@ -50,10 +44,9 @@ export const useMapFieldProps = ({
       htmlFor: name,
     }
   }
-  const result: InputProps = {
-    type: mapFieldType(type) as InputType,
+  const result: Omit<FieldRenderProps<any>, 'input' | 'meta'> = {
+    type: mapFieldType(type),
     id: name,
-    // controlId: name,
     required,
     readOnly,
     placeholder: label,
@@ -65,9 +58,9 @@ export const useMapFieldProps = ({
   if (choices) {
     result.selectOptions = mapChoices({ dataKey, textField, choices })
   }
-  if (children) {
-    result.nestedOptions = children
-  }
+  // if (children) {
+  //   result.nestedOptions = children
+  // }
   return result
 }
 

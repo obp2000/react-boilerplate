@@ -2,10 +2,16 @@
 const path = require('path')
 
 const nextConfig = {
-  // reactStrictMode: true,
-  // swcMinify: true,
+  swcMinify: true,
   images: {
-    domains: ['127.0.0.1'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/du9yvygkg/image/upload/**',
+      },
+    ],
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
@@ -13,7 +19,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  // reactStrictMode: false
+  reactStrictMode: false
 }
 
 module.exports = nextConfig

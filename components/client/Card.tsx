@@ -1,5 +1,5 @@
 'use client'
 
-import Card from 'react-bootstrap/Card'
+import { Card } from 'flowbite-react'
 
 export default Card

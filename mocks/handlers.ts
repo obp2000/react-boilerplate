@@ -1,7 +1,9 @@
+import { CustomersSelect } from '@/interfaces/api'
+import { Customer } from '@prisma/client'
 import { rest } from 'msw'
-import 'whatwg-fetch'
-import { baseUrl } from '@/services/config'
-import type { Customer } from '@/interfaces/customers'
+// import 'whatwg-fetch'
+// import { baseUrl } from '@/services/config'
+// import type { Customer } from '@/interfaces/customers'
 
 export const optionsData = {
   "name": "Customer List",
@@ -361,14 +363,14 @@ const newCustomer = ({
   name,
   city_id,
   address,
-}: Partial<Customer>): Partial<Customer> => ({
+}: Customer): CustomersSelect => ({
   id: 100,
   nick,
   name,
   city: cities.results.find(({ id }) => id === city_id),
   address,
-  created_at: '16.05.2022 21:42:22',
-  updated_at: '16.05.2022 21:42:22',
+  created_at: new Date('16.05.2022 21:42:22'),
+  updated_at: new Date('16.05.2022 21:42:22'),
 })
 
 const user = {
@@ -379,14 +381,16 @@ const user = {
   last_name: '',
 }
 
-const handlers = [
+const baseUrl = '/api'
+
+export default [
   rest.options(`${baseUrl}/customers/`, (_req, res, ctx) => {
-    console.log('get options...........................')
+    // console.log('get options...........................')
     return res(ctx.json(optionsData))
   }),
   rest.get(`${baseUrl}/customers/:id/`, (req, res, ctx) => {
     // console.log('request get customer ', req.params.id)
-    console.log('get customer...........................')
+    // console.log('get customer...........................')
     const object = objects.results.find(({ id }) =>
       id === parseInt(req.params.id as string))
     // console.log('customer ', customer)
@@ -396,9 +400,10 @@ const handlers = [
     // console.log('get customers...........................')
     return res(ctx.json(objects))
   }),
-  rest.post(`${baseUrl}/customers/`, (req, res, ctx) => {
+  rest.post(`${baseUrl}/customers/`, async (req, res, ctx) => {
+    console.log('handler post')
     // console.log('body ', req.body)
-    const values = req.json() as Partial<Customer>
+    const values = await req.json()
     const result = newCustomer(values)
     // console.log('result ', result)
     return res(ctx.json(result))
@@ -407,9 +412,9 @@ const handlers = [
     // console.log('params ', req.params.id)
     return res(ctx.json({}))
   }),
-  rest.put(`${baseUrl}/customers/:id/`, (req, res, ctx) => {
+  rest.put(`${baseUrl}/customers/:id/`, async (req, res, ctx) => {
     // console.log('body ', req.body)
-    const values = req.json() as Partial<Customer>
+    const values = await req.json()
     const city = cities.results.find(({ id }) =>
       id === values?.city_id)
     const result = {
@@ -435,5 +440,3 @@ const handlers = [
     return res(ctx.json(user))
   }),
 ]
-
-export default handlers

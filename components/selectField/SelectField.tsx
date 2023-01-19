@@ -1,14 +1,12 @@
-import FormTextList from '@/formInput/FormTextList'
-import type { SelectFieldAttrs } from '@/interfaces/selectField'
-import { Field } from 'react-final-form'
+import { Field, FieldRenderProps } from 'react-final-form'
 import { useFieldProps } from './hooks'
 import SelectOptions from './SelectOptions'
 
-export default function SelectField(props: SelectFieldAttrs) {
-  return <>
-    <Field {...useFieldProps(props)} className='form-select' component='select'>
+export default function SelectField(
+  props: Omit<FieldRenderProps<any>, 'input' | 'meta'> & { className: string }) {
+  return <Field
+      {...useFieldProps(props)}
+      component='select'>
       <SelectOptions {...props} />
     </Field>
-    <FormTextList {...props} />
-  </>
 }
