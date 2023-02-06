@@ -9,7 +9,7 @@ export const requestInit = () => {
 	const { accessToken } = getAuth()
 	if (accessToken) {
 		const headers = new Headers()
-		headers.append('Authorization', `Token ${accessToken}`)
+		headers.append('authorization', `Token ${accessToken}`)
 		reqInit.headers = headers
 	}
 	return reqInit

@@ -1,7 +1,7 @@
 'use client'
 
 import Button from '@/client/Button'
-import { useDisabled } from '@/submitButton/hooks'
+import { isDisabled } from '@/submitButton/hooks'
 import type { PropsWithChildren } from 'react'
 import { FormRenderProps } from 'react-final-form'
 
@@ -18,7 +18,7 @@ export default function Layout({
 			type='submit'
 			size='sm'
 			aria-labelledby={save}
-			disabled={useDisabled(props)} >
+			disabled={isDisabled(props)} >
 			{save}
 		</Button>
 	</form>

@@ -1,23 +1,37 @@
 'use client'
 
-import { useTranslation } from '@/app/i18n/client'
 import Button from '@/client/Button'
 import Tooltip from '@/client/Tooltip'
 import { User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { signOutAction } from './client'
 
 export default function SignOutButton({
+  lng,
   user,
-  lng
-}: { user: User, lng: string }) {
-  const { t } = useTranslation(lng, 'auth')
+  labels
+}: {
+  lng: string
+  user: User
+  labels: Record<string, string>
+}) {
   const { refresh, replace } = useRouter()
-  return <Tooltip content={t('logout')}>
+  const [isPending, startTransition] = useTransition()
+  const busy = isPending
+  return <Tooltip content={labels?.logout}>
     <Button
       aria-label='auth'
-      onClick={() => signOutAction({ refresh, replace, message: t('successful logout') })}>
+      onClick={() => signOutAction({
+        refresh,
+        replace,
+        message: labels?.successfulLogout,
+        startTransition,
+        lng,
+      })}
+      disabled={busy}
+    >
       {user.username}&nbsp;&nbsp;<IoLogOutOutline size={20} />
     </Button>
   </Tooltip>

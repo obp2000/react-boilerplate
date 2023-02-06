@@ -1,40 +1,27 @@
-import { CustomersSelect } from "@/interfaces/api"
-import prisma from '@/services/prisma'
 import type { Prisma } from "@prisma/client"
-import { createPaginator } from "prisma-pagination"
-import { ParsedUrlQuery } from "querystring"
+import CustomerName from './CustomerName'
 import select from './select.json'
 
-export function where({ term }: ParsedUrlQuery) {
-	if (!term) { return {} }
-	const containsTerm = { contains: String(term) }
-	return {
-		OR: [
-			{ nick: containsTerm },
-			{ name: containsTerm },
-			{ address: containsTerm },
-			{ city: { city: containsTerm } }
-		]
-	}
-}
+export type Customer = Prisma.CustomerGetPayload<{ select: typeof select }>
 
-export async function getObjects({
-	perPage = 8,
-	searchParams
-}: { perPage?: number } & { searchParams: ParsedUrlQuery }) {
-	const paginate = createPaginator({ perPage })
-	return paginate<CustomersSelect, Prisma.CustomerFindManyArgs>(
-		prisma.customer,
-		{
-			where: where(searchParams),
-			select,
-			orderBy: [
-				{
-					updated_at: 'desc',
-				},
-			],
-		},
-		{
-			page: String(searchParams.page || '1')
-		})
+const dropdownListTextField = ({
+  nick,
+  name,
+  city,
+  address,
+}: Customer) => [
+    String(nick),
+    String(name),
+    String(city?.pindex),
+    String(city?.city),
+    String(address)
+  ]
+
+export function useDropdown() {
+  return {
+    textField: dropdownListTextField,
+    dataKey: 'id',
+    searchPath: '/customers/',
+    renderValueComponent: CustomerName,
+  }
 }

@@ -1,14 +1,24 @@
 import Label from '@/client/Label'
+import { DropdownFieldValue } from '@/interfaces/dropdownList'
+import { InputFieldRenderProps } from '@/interfaces/formInput'
+import { SelectFieldRenderProps } from '@/interfaces/selectField'
 import { FieldRenderProps } from 'react-final-form'
-import { DropdownProps } from 'react-widgets/cjs/DropdownList'
-import { useFieldProps } from './hooks'
 
-export default function LabelComp(props: { name: string }): JSX.Element
-// export default function LabelComp(props: FieldRenderProps<any>): JSX.Element
-export default function LabelComp(props: FieldRenderProps<any> & DropdownProps<any>): JSX.Element
-export default function LabelComp(props: any): JSX.Element {
-  const { label, required, ...rest } = useFieldProps(props)
-  return <Label {...rest}>
-    {label}{required && <strong>*</strong>}s
+export type AnyFieldRenderProps = Partial<InputFieldRenderProps |
+  SelectFieldRenderProps | FieldRenderProps<DropdownFieldValue>>
+
+export default function LabelComp({
+  input,
+  name,
+  htmlFor = name || input?.name,
+  label,
+  required,
+  color,
+  // value = input?.value,
+  disabled,
+  className,
+}: AnyFieldRenderProps) {
+  return <Label {...{ htmlFor, color, disabled, className }} >
+    {label}{required && <strong>*</strong>}
   </Label>
 }

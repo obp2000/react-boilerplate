@@ -1,4 +1,3 @@
-import { CustomersSelect } from '@/interfaces/api'
 import { Customer } from '@prisma/client'
 import { rest } from 'msw'
 // import 'whatwg-fetch'
@@ -128,7 +127,7 @@ export const optionsData = {
       "path": "/logout/",
       "label": "Выйти"
     },
-    "brand_text": "Best & C",
+    "brandText": "Best & C",
     "error_messages": {
       "invalid_choice": "Значения %(value)r нет среди допустимых вариантов.",
       "null": "Это поле не может иметь значение NULL.",
@@ -363,7 +362,7 @@ const newCustomer = ({
   name,
   city_id,
   address,
-}: Customer): CustomersSelect => ({
+}: Customer) => ({
   id: 100,
   nick,
   name,

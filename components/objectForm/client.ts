@@ -6,28 +6,37 @@ import type { Values as ProductValues } from '@/app/[lng]/products/[id]/calculat
 import { getAuth } from '@/auth/client'
 import { errorMessage } from '@/error/client'
 import { baseUrl } from '@/services/config'
-import { TFunction } from 'i18next'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 import { objectToFormData } from 'object-to-formdata'
+import { ParsedUrlQuery } from 'querystring'
+import type { TransitionStartFunction } from 'react'
+import { toastSuccess } from '@/notifications/toastSuccess'
+import { toastError } from '@/notifications/toastError'
 
-type Props = { id: string } & Pick<AppRouterInstance, 'refresh' | 'push'> & {
+type Props = Pick<AppRouterInstance, 'refresh' | 'push'> & {
+	isNewObject: boolean
+	lng: string
+	id: ParsedUrlQuery['id']
 	modValues: CustomerValues | ProductValues | OrderValues
 	indexUrl: string
 	contentType?: string
-	t: TFunction
+	message: string,
+	startTransition: TransitionStartFunction,
 }
 
-export const mutateObject = async ({
+export async function mutateObject({
+	isNewObject,
+	lng,
 	id,
 	modValues,
 	indexUrl,
 	refresh,
 	push,
 	contentType = 'application/json',
-	t,
-}: Props) => {
+	message,
+	startTransition,
+}: Props) {
 	const isJSONContent = contentType === 'application/json'
-	const isNewObject = id === 'new'
 	let options: RequestInit = {
 		method: isNewObject ? 'POST' : 'PUT',
 		body: isJSONContent
@@ -38,21 +47,23 @@ export const mutateObject = async ({
 	const headers = new Headers()
 	const { accessToken } = getAuth()
 	if (accessToken) {
-		headers.append('Authorization', `Token ${accessToken}`)
+		headers.append('authorization', `Token ${accessToken}`)
 	}
 	if (isJSONContent) {
 		headers.append('Content-Type', contentType)
 	}
 	options.headers = headers
-	const mutatePath = isNewObject ? '' : `${id}`
+	const mutatePath = isNewObject ? '' : id
 	const res = await fetch(`${baseUrl}${indexUrl}${mutatePath}`, options)
 	if (res.ok) {
-		const { toastSuccess } = await import('@/notifications/toastSuccess')
-		toastSuccess(String(t('successfully')))
-		push(indexUrl)
-		refresh()
+		// const { toastSuccess } = await import('@/notifications/toastSuccess')
+	    startTransition(() => {
+			push(`/${lng}${indexUrl}`)
+			refresh()
+			toastSuccess(message)
+	    })
 	} else {
-		const { toastError } = await import('@/notifications/toastError')
-		toastError(await errorMessage(res, t))
+		// const { toastError } = await import('@/notifications/toastError')
+		toastError(await errorMessage(res))
 	}
 }

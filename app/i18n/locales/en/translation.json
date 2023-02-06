@@ -8,19 +8,222 @@
   "yes": "Yes",
   "no": "No",
   "search": "Search",
-  "brand_text": "Best&C",
+  "brandText": "Best&C",
   "from": "From",
   "back": "Back",
   "not_found": "Not found",
   "count": "Count",
   "main": "Main",
-  "customers": "Customers",
-  "products": "Products",
-  "orders": "Orders",
-  "user": "User",
-  "customer": "Customer",
-  "product": "Product",
-  "order": "Order",
-  "languageSwitcher": "Switch from <1>{{lng}}</1> to: ",
-  "Username or password not valid": "Username or password not valid"
+  "profile": "Profile",
+  "customers": {
+    "singular": "Customer",
+    "plural": "Customers"
+  },
+  "products": {
+    "singular": "Product",
+    "plural": "Products"
+  },
+  "orders": {
+    "singular": "Order",
+    "plural": "Orders"
+  },
+  "users": {
+    "singular": "User",
+    "plural": "Users"
+  },
+  "localeSwitcher": "Locale switcher",
+  "errorMessages":{
+    "null": "This field cannot be NULL.",
+    "blank": "This field cannot be blank.",
+    "password_mismatch": "The entered passwords do not match.",
+    "invalid_email": "Please enter a valid email address.",
+    "short_password": "The entered password is too short. It must contain at least 8 characters.",
+    "not_integer": "Enter the correct number."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "successfulLogin": "Successful login",
+    "successfulRegister": "Successful register",
+    "successfulLogout": "Successful logout",
+    "usernameOrPasswordNotValid": "Username or password not valid",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "password1": "Password",
+    "password2": "Password confirmation",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "usernameHelpText": "Required field. Max 150 characters. Only letters, digits and characters @/./+/-/_.",
+    "password1HelpText": "<ul><li>Password must not be too similar to your other personal information.</li><li>Your password must be at least 8 characters.</li><li>Password cannot be numbers only.</li></ul>",
+    "password2HelpText": "Please enter your password again to confirm."
+  },
+  "customer": {
+    "id": "Id",
+    "nick": "Nick",
+    "name": "Name",
+    "address": "Address",
+    "created_at": "Created",
+    "updated_at": "Updated",
+    "city": {
+      "id": "Id",
+      "pindex": "Zip",
+      "city": "City",
+      "opsname": "Post name",
+      "address": "Address"
+    }
+  },
+  "product": {
+    "id": "Id",
+    "product_type_id": "Product type",
+    "threads": "Threads",
+    "contents": "Contents",
+    "fleece": "Fleece",
+    "name": "Name",
+    "price": "Price",
+    "width": "Width",
+    "density": "Density",
+    "dollar_price": "Price, $/kg",
+    "dollar_rate": "Dollar rate",
+    "prices": "Prices of meter",
+    "weight_for_count": "Weight of sample, gr",
+    "length_for_count": "Length of sample, m",
+    "density_for_count": "Density for count",
+    "weight": "Weight",
+    "meters_in_roll": "Meters in roll",
+    "price_pre": "Preliminary price, rub./m",
+    "image": "Photo",
+    "width_shop": "Shop width",
+    "density_shop": "Shop density",
+    "created_at": "Created",
+    "updated_at": "Updated",
+    "threadsChoices": [
+      {
+        "value": 0,
+        "display_name": "two threads"
+      },
+      {
+        "value": 1,
+        "display_name": "three threads"
+      }
+    ],
+    "contentsChoices": [
+      {
+        "value": 0,
+        "display_name": "with lycra"
+      },
+      {
+        "value": 1,
+        "display_name": "100% cotton"
+      }
+    ]
+  },
+  "order": {
+    "id": "Id",
+    "customer": "Customer",
+    "order_items_cost": "Order items total",
+    "post_cost": "Post cost",
+    "packet": "Post packet",
+    "delivery_type": "Delivery type",
+    "address": "Address",
+    "gift": "Gift",
+    "order_items_amount":  "",
+    "order_items_cost": "Sum",
+    "order_items_weight": "",
+    "post_cost_with_packet": "Sum",
+    "post_discount": "Discount",
+    "total_postals": "",
+    "total_sum": "",
+    "need_gift": "Need gift",
+    "samples": "Samples",
+    "created_at": "Created",
+    "updated_at": "Updated",
+    "packetChoices": [
+      {
+        "value": null,
+        "display_name": "----"
+      },
+      {
+        "value": 25,
+        "display_name": "25"
+      },
+      {
+        "value": 27,
+        "display_name": "27"
+      },
+      {
+        "value": 50,
+        "display_name": "50"
+      },
+      {
+        "value": 55,
+        "display_name": "55"
+      },
+      {
+        "value": 72,
+        "display_name": "72"
+      },
+      {
+        "value": 85,
+        "display_name": "85"
+      }
+    ],
+    "deliveryTypeChoices": [
+      {
+        "value": null,
+        "display_name": "----"
+      },
+      {
+        "value": 0,
+        "display_name": "Russian Post"
+      },
+      {
+        "value": 1,
+        "display_name": "Business Lines"
+      },
+      {
+        "value": 2,
+        "display_name": "PEK"
+      },
+      {
+        "value": 3,
+        "display_name": "GTD (Whale)"
+      },
+      {
+        "value": 4,
+        "display_name": "Energy"
+      },
+      {
+        "value": 5,
+        "display_name": "Railway Expedition"
+      },
+      {
+        "value": 6,
+        "display_name": "Ratek"
+      },
+      {
+        "value": 7,
+        "display_name": "Baikal Service"
+      },
+      {
+        "value": 8,
+        "display_name": "SDEK Parcel"
+      }
+    ],
+    "orderItem": {
+      "product": "Product",
+      "amount": "Amount",
+      "price": "Price",
+      "cost": "Cost",
+      "weight": "Weight"
+    }
+  },
+  "user": {
+    "pk": "ID",
+    "username": "Username",
+    "email": "Email",
+    "first_name": "First name",
+    "last_name": "Last name"
+  }
 }

@@ -1,38 +1,15 @@
 import { register } from '@/services/auth'
-import type { HttpError } from 'http-errors'
-import { validate as validateEmail } from 'isemail'
-import { NextApiRequest, NextApiResponse } from 'next'
-import {
-	assert, object, refine, size,
-	string
-} from 'superstruct'
 import { hashSync } from 'bcryptjs'
+import type { HttpError } from 'http-errors'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { validateRegister } from './validators'
 
-export const Register = object({
-	username: size(string(), 1, 255),
-	email: refine(string(), 'email', (input) => validateEmail(input)),
-	password1: size(string(), 8, 255),
-	password2: string(),
-	first_name: string(),
-	last_name: string(),
-})
-
-const ValidateRegister = refine(Register, 'PasswordsEqual',
-	({ password1, password2 }) => password1 === password2)
-
-export default async function handle({
-	method,
-	body,
-}: NextApiRequest, res: NextApiResponse) {
-	if (method === 'POST') {
-		const {
-			first_name = '',
-			last_name = '',
-			password,
-			...rest
-		} = body
-		let input = { ...rest, first_name, last_name }
-		assert(input, ValidateRegister)
+export default async function handle(
+	req: NextApiRequest,
+	res: NextApiResponse
+) {
+	if (req.method === 'POST') {
+		const { password1, password2, ...input } = validateRegister(req)
 		const data = {
 			...input,
 			last_login: new Date(),
@@ -40,9 +17,7 @@ export default async function handle({
 			is_superuser: false,
 			is_staff: false,
 			is_active: true,
-			password: hashSync(input.password1, 8),
-			password1: undefined,
-			password2: undefined,
+			password: hashSync(password1, 8),
 		}
 		try {
 			const accessTokenAndUser = await register(data)
@@ -55,11 +30,20 @@ export default async function handle({
 		}
 	} else {
 		throw new Error(
-			`The HTTP ${method} method is not supported at this route.`
+			`The HTTP ${req.method} method is not supported at this route.`
 		)
 	}
 }
 
+
+		// const {
+		// 	first_name = '',
+		// 	last_name = '',
+		// 	password,
+		// 	...rest
+		// } = req.body
+		// let input = { ...rest, first_name, last_name }
+		// assert(input, ValidateRegister)
 
 
 // const DateRange = refine(

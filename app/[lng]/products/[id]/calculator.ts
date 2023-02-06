@@ -1,52 +1,56 @@
-import { ProductCalcValues, ProductSelect } from '@/interfaces/api'
+'use client'
+
 import { Prisma } from '@prisma/client'
-// import type { Decorator } from 'final-form'
 import type { Calculation } from 'final-form-calculate'
-// import createDecorator from 'final-form-calculate'
+import createDecorator from 'final-form-calculate'
 import priceCoeffs from './priceCoeffs.json'
 
-export type Values = ((Prisma.ProductCreateArgs['data'] |
-  Prisma.ProductUpdateArgs['data']) & ProductCalcValues) | undefined
+export type Values = (Prisma.ProductCreateArgs['data'] |
+  Prisma.ProductUpdateArgs['data']) & {
+    density_for_count?: string
+    meters_in_roll?: string
+    prices?: string
+  }
 
-const canCountDensityForCount = (values: Values): boolean =>
+const canCountDensityForCount = (values?: Values): boolean =>
   !!values?.length_for_count && !!values?.width
 
-const countDensityForCount = (values: Values): number => {
+const countDensityForCount = (values?: Values): number => {
   return Number(values?.weight_for_count) /
     Number(values?.length_for_count) /
     Number(values?.width) * 100
 }
 
-export const densityForCount = (_: null, values: Values): string =>
+export const densityForCount = (_: null, values?: Values): string =>
   (canCountDensityForCount(values)
     ? countDensityForCount(values)
     : 0).toFixed(0)
 
-const canCountMetersInRoll = (values: Values): boolean =>
+const canCountMetersInRoll = (values?: Values): boolean =>
   !!values?.weight && !!values?.density && !!values?.width
 
-const countMetersInRoll = (values: Values): number =>
+const countMetersInRoll = (values?: Values): number =>
   Number(values?.weight) * 100000 / Number(values?.density) /
   Number(values?.width)
 
-export const metersInRoll = (_: null, values: Values): string =>
+export const metersInRoll = (_: null, values?: Values): string =>
   (canCountMetersInRoll(values) ? countMetersInRoll(values) : 0).toFixed(2)
 
-const canCountPrices = (values: Values): boolean =>
+const canCountPrices = (values?: Values): boolean =>
   !!values?.dollar_price && !!values?.dollar_rate &&
   !!values?.density && !!values?.width
 
-const countPriceRubM = (values: Values): number =>
+const countPriceRubM = (values?: Values): number =>
   Number(values?.dollar_price) * Number(values?.dollar_rate) *
   Number(values?.density) * Number(values?.width) / 100000
 
-const priceRubM = (values: Values, coeff: number = 1): string =>
+const priceRubM = (values?: Values, coeff: number = 1): string =>
   (countPriceRubM(values) * coeff).toFixed(0)
 
-const coeffWithPrice = (values: Values, coeff: number = 1): string =>
+const coeffWithPrice = (values?: Values, coeff: number = 1): string =>
   `${coeff}: ${priceRubM(values, coeff)}`
 
-export const prices = (_: null, values: Values): string =>
+export const prices = (_: null, values?: Values): string =>
   canCountPrices(values)
     // ? values?.consts?.PriceCoeffs.reduce((
     ? priceCoeffs.reduce((
@@ -58,7 +62,7 @@ export const prices = (_: null, values: Values): string =>
     : ''
 
 const updatePrices = {
-  prices: (_: null, values: Values) => prices(null, values)
+  prices: (_: null, values?: Values) => prices(null, values)
 }
 
 const updateDensityForCount = {
@@ -121,19 +125,6 @@ export const calculations: Calculation[] = [
   onChangeDollarRate
 ]
 
-// export const calculator = createDecorator(...calculations)
+export const calculator = createDecorator(...calculations)
 
-// export const decorators = [calculator]
-
-export const getInitialValues = ({
-  object
-}: { object?: ProductSelect | null }): Values => {
-  let { created_at, ...objectValues } = object ?? {}
-  return {
-    ...objectValues as Values,
-    // productType: typeof productType === 'object' ? productType?.id : undefined,
-    density_for_count: densityForCount(null, objectValues as Values),
-    meters_in_roll: metersInRoll(null, objectValues as Values),
-    prices: prices(null, objectValues as Values),
-  }
-}
+export const decorators = [calculator]

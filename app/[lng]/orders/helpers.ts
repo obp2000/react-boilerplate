@@ -1,16 +1,12 @@
-import { ParsedUrlQuery } from 'querystring'
-
-export function where({ term }: ParsedUrlQuery) {
-  if (!term) { return {} }
-  const containsTerm = { contains: String(term) }
-  return {
-    customer: {
-      OR: [
-        { nick: containsTerm },
-        { name: containsTerm },
-        { address: containsTerm },
-        { city: { city: containsTerm } }
-      ]
-    }
-  }
+export type Order = {
+  id: string
+  order_address: string
+  created_at: string
+  updated_at: string
+  order_items_cost: string
+  nick: string
+  name: string
+  customer_address: string
+  pindex: string
+  city: string
 }

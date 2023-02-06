@@ -2,14 +2,19 @@
 
 import Input from '@/formInput/Input'
 import { Field, Form } from 'react-final-form'
-import { useForm } from './hooks'
+import { useOnSubmit } from './hooks'
 import { AiOutlineSearch } from 'react-icons/ai'
 import SearchButton from '@/buttons/SearchButton'
+import { useSearchParams } from 'next/navigation'
 
 export default function SearchForm({
   searchLabel,
 }: { searchLabel: string }) {
-  return <Form {...useForm()}>
+  return <Form {...{
+    name: 'search',
+    initialValues: { term: useSearchParams().get('term') },
+    onSubmit: useOnSubmit(),
+  }} >
     {(props) => <form onSubmit={props.handleSubmit} className='mr-3'>
       <label htmlFor="term" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
         {searchLabel}

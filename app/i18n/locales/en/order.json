@@ -1,7 +1,0 @@
-{
-  "id": "Id",
-  "customer": "Customer",
-  "order_items_cost": "Order items total",
-  "created_at": "Created",
-  "updated_at": "Updated"
-}

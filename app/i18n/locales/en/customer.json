@@ -1,9 +1,0 @@
-{
-  "id": "Id",
-  "nick": "Nick",
-  "name": "Name",
-  "city": "City",
-  "address": "Address",
-  "created_at": "Created",
-  "updated_at": "Updated"
-}

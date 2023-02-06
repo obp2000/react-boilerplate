@@ -20,10 +20,10 @@ export async function login({
 		}
 	})
 	if (!user) {
-		throw NotFound('Username or password not valid')
+		throw NotFound('usernameOrPasswordNotValid')
 	}
 	const checkPassword = compareSync(password, user.password)
-	if (!checkPassword) throw Unauthorized('Username or password not valid')
+	if (!checkPassword) throw Unauthorized('usernameOrPasswordNotValid')
 	const accessToken = await signAccessToken(user)
 	return { accessToken, user }
 }

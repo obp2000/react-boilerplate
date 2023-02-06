@@ -3,22 +3,22 @@
 import { getAuth } from '@/auth/client'
 import { errorMessage } from '@/error/client'
 import { baseUrl } from '@/services/config'
-import { TFunction } from 'i18next'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
+import { TransitionStartFunction } from 'react'
 
 type Props = Pick<AppRouterInstance, 'refresh'> & {
 	id: number
-	indexUrl: string
+	table: string
 	message: string
-	t: TFunction
+	startTransition: TransitionStartFunction,
 }
 
 export const deleteObject = async ({
 	id,
-	indexUrl,
+	table,
 	message,
 	refresh,
-	t
+	startTransition,
 }: Props) => {
 	let options: RequestInit = {
 		method: 'DELETE',
@@ -26,16 +26,16 @@ export const deleteObject = async ({
 	const { accessToken } = getAuth()
 	if (accessToken) {
 		const headers = new Headers()
-		headers.append('Authorization', `Token ${accessToken}`)
+		headers.append('authorization', `Token ${accessToken}`)
 		options.headers = headers
 	}
-	const res = await fetch(`${baseUrl}${indexUrl}${id}`, options)
+	const res = await fetch(`${baseUrl}/${table}/${id}`, options)
 	if (res.ok) {
 		const { toastSuccess } = await import('@/notifications/toastSuccess')
 		toastSuccess(message)
-		refresh()
+	    startTransition(refresh)
 	} else {
 		const { toastError } = await import('@/notifications/toastError')
-		toastError(await errorMessage(res, t))
+		toastError(await errorMessage(res))
 	}
 }

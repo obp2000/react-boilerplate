@@ -23,7 +23,7 @@ export const apiSlice = createApi({
     baseUrl,
     prepareHeaders: (headers, {getState}) => {
       const {accessToken} = selectAuth(getState())
-      if (accessToken) headers.set('Authorization', `Token ${accessToken}`)
+      if (accessToken) headers.set('authorization', `Token ${accessToken}`)
       return headers
     },
   }),

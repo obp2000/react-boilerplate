@@ -1,18 +1,18 @@
 [
 	{
-		"path": "/",
+		"path": "",
 		"label": "main"
 	},
 	{
-		"path": "/customers/",
+		"path": "customers",
 		"label": "customers"
 	},
 	{
-		"path": "/products/",
+		"path": "products",
 		"label": "products"
 	},
 	{
-		"path": "/orders/",
+		"path": "orders",
 		"label": "orders"
 	}
 ]

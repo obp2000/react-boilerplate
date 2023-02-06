@@ -8,30 +8,59 @@ import { BiPlus, BiMinus } from 'react-icons/bi'
 import { TbEqual } from 'react-icons/tb'
 import { BsFillCalculatorFill } from 'react-icons/bs'
 import Tooltip from '@/client/Tooltip'
+import { Translation } from '@/app/i18n/dictionaries'
 
-export default function Postals({ count }: { count: string }) {
+export default function Postals({
+  count,
+  labels,
+  busy
+}: {
+  count: string,
+  labels: Translation['order']
+  busy: boolean
+}) {
   const { mutators } = useForm()
-  const { values: { customer, total_weight} } = useFormState()
+  const { values: { customer, total_weight } } = useFormState()
   return <tr className="border-b border-gray-200 hover:bg-gray-100">
     <td />
     <td className='text-sm'>
       <div className='grid gap-1 mb-6 md:grid-cols-7 pt-4' >
-        <Field name="post_cost" step={1} component={FloatingFormGroup} />
+        <Field name="post_cost"
+          label={labels.post_cost}
+          type="number"
+          step={1}
+          component={FloatingFormGroup}
+          disabled={busy}
+        />
         <div className='pt-3 pl-2'>
           <BiPlus size={22} />
         </div>
         <SelectFloatingFormGroup name="packet"
-          dataKey='value' textField='display_name'
+          label={labels.packet}
+          dataKey='value'
+          textField='display_name'
+          choices={labels.packetChoices}
+          disabled={busy}
         />
         <div className='pt-3 pl-2'>
           <TbEqual size={22} />
         </div>
-        <Field name="post_cost_with_packet" disabled
-          component={FloatingFormGroup} className='w-30' />
+        <Field name="post_cost_with_packet"
+          label={labels.post_cost_with_packet}
+          type="number"
+          disabled
+          component={FloatingFormGroup}
+          className='w-30'
+        />
         <div className='pt-3 pl-2'>
           <BiMinus size={22} />
         </div>
-        <Field name="post_discount" disabled component={FloatingFormGroup} />
+        <Field name="post_discount"
+          label={labels.post_discount}
+          type="number"
+          disabled
+          component={FloatingFormGroup}
+        />
       </div>
     </td>
     <td />
@@ -40,15 +69,26 @@ export default function Postals({ count }: { count: string }) {
         <BsFillCalculatorFill
           size={20}
           aria-labelledby={count}
-          onClick={() => mutators.postCostCount()}
+          onClick={() => busy ? null : mutators.postCostCount()}
           cursor='pointer' />
       </Tooltip>}
     </td>
     <td>
-      <Field name="total_postals" disabled component={Input} className='text-right w-20' />
+      <Field name="total_postals"
+        label={labels.total_postals}
+        type="number"
+        disabled
+        component={Input}
+        className='text-right w-20'
+      />
     </td>
     <td>
-      <Field name="packet_weight" disabled component={Input} className='text-right w-20' />
+      <Field name="packet_weight"
+        type="number"
+        disabled
+        component={Input}
+        className='text-right w-20'
+      />
     </td>
     <td />
   </tr>

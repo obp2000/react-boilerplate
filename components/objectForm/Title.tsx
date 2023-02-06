@@ -1,12 +1,17 @@
 import 'server-only'
 
+import type { Customer } from '@/app/[lng]/customers/[id]/helpers'
+import type { Order } from '@/app/[lng]/orders/[id]/helpers'
+import type { Product } from '@/app/[lng]/products/[id]/helpers'
 import Date from '@/Date'
-import { AnyObjectType } from '@/interfaces/api'
 
 export default function Title({
   object,
   title
-}: AnyObjectType & { title: string }) {
+}: {
+  object?: Customer | Product | Order
+  title: string
+}) {
   return <h3 aria-label={title}>
     {title}
     {object?.created_at && <Date dateString={String(object.created_at)} />}

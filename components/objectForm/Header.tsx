@@ -1,27 +1,29 @@
 import 'server-only'
 
+import type { Translation } from '@/app/i18n/dictionaries'
+import type { Customer } from '@/app/[lng]/customers/[id]/helpers'
+import type { Order } from '@/app/[lng]/orders/[id]/helpers'
+import type { Product } from '@/app/[lng]/products/[id]/helpers'
 import BackButton from '@/backButton/BackButton'
 import Date from '@/Date'
-import {
-  CustomerSelect, IdParam,
-  OrderSelect, ProductSelect
-} from '@/interfaces/api'
-import { TFunction } from 'i18next'
+import { ParsedUrlQuery } from 'querystring'
 
 export default function Header({
-  id,
   object,
-  t,
-  name
-}: IdParam & { object?: CustomerSelect | ProductSelect | OrderSelect | null } &
-  { t: TFunction } & { name: string }
+  dict,
+  isNewObject,
+  params,
+  name,
+}: { isNewObject: boolean } & { params: ParsedUrlQuery } &
+  { object?: Customer | Product | Order | null } &
+  { dict: Translation } & { name: string }
 ) {
-  const title = id === 'new'
-    ? `${t('new')} ${t(name).toLowerCase()} `
-    : `${t(name)} № ${id} ${t('from').toLowerCase()} `
-  // console.log('title in header', title)
+  // const { label } = getProps(props)
+  const title = isNewObject
+    ? `${dict.new} ${name.toLowerCase()} `
+    : `${name} № ${params.id} ${dict.from?.toLowerCase()} `
   return <div className='columns-3'>
-    <BackButton label={t('back')} />
+    <BackButton label={dict.back} />
     <h3 aria-label={title}>
       {title}
       {object?.created_at && <Date dateString={String(object.created_at)} />}

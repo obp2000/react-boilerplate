@@ -65,8 +65,8 @@ const Confirmation = ({
         </div>
       </Modal.Body>
     </Modal >
-  );
-};
+  )
+}
 
 const confirmLow = createConfirmation(confirmable(Confirmation))
 

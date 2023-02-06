@@ -1,8 +1,0 @@
-{
-  "null": "This field cannot be NULL.",
-  "blank": "This field cannot be blank.",
-  "password_mismatch": "The entered passwords do not match.",
-  "invalid_email": "Please enter a valid email address.",
-  "short_password": "The entered password is too short. It must contain at least 8 characters.",
-  "not_integer": "Enter the correct number."
-}

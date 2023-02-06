@@ -1,16 +1,17 @@
-import { useFieldProps as useLabelProps } from '@/inputLabel/hooks'
-import Label from '@/client/Label'
-import type { FieldRenderProps } from 'react-final-form'
+import Label from '@/inputLabel/Label'
+import { InputFieldRenderProps } from '@/interfaces/formInput'
+import FormTextList from './FormTextList'
 import Input from './Input'
 
-export default function RowFormGroup(props: FieldRenderProps<any>) {
-  const { label, required } = useLabelProps(props)
+export default function RowFormGroup({
+  helpText,
+  ...props
+}: InputFieldRenderProps) {
   return <div>
     <div className="mb-2 mr-3 inline">
-      <Label {...useLabelProps(props)}>
-        {`${label}${required ? '*' : ''}`}
-      </Label>
+      <Label {...props} />
     </div>
     <Input {...props} />
+    <FormTextList {...{ helpText }} />
   </div>
 }

@@ -8,19 +8,222 @@
   "yes": "Да",
   "no": "Нет",
   "search": "Поиск",
-  "brand_text": "Best&C",
+  "brandText": "Best&C",
   "from": "От",
   "back": "Назад",
   "not_found": "Не найден",
   "count": "Рассчитать",
   "main": "Главная",
-  "customers": "Покупатели",
-  "products": "Продукты",
-  "orders": "Заказы",
-  "user": "Пользователь",
-  "customer": "Покупатель",
-  "product": "Продукт",
-  "order": "Заказ",
-  "languageSwitcher": "Перейти с <1>{{lng}}</1> на: ",
-  "Username or password not valid": "Неверное имя пользователя или пароль"
+  "profile": "Профиль",
+  "customers": {
+    "singular": "Покупатель",
+    "plural": "Покупатели"
+  },
+  "products": {
+    "singular": "Продукт",
+    "plural": "Продукты"
+  },
+  "orders": {
+    "singular": "Заказ",
+    "plural": "Заказы"
+  },
+  "users": {
+    "singular": "Пользователь",
+    "plural": "Пользователи"
+  },
+  "localeSwitcher": "Перейти на",
+  "errorMessages":{
+    "null": "Это поле не может иметь значение NULL.",
+    "blank": "Это поле не может быть пустым.",
+    "password_mismatch": "Введенные пароли не совпадают.",
+    "invalid_email": "Введите правильный адрес электронной почты.",
+    "short_password": "Введённый пароль слишком короткий. Он должен содержать как минимум 8 символов.",
+    "not_integer": "Введите правильное число."
+  },
+  "auth": {
+    "login": "Войти",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "successfulLogin": "Успешно вошли",
+    "successfulRegister": "Успешно зарегистрировались",
+    "successfulLogout": "Успешно вышли",
+    "usernameOrPasswordNotValid": "Неверное имя пользователя или пароль",
+    "username": "Имя пользователя",
+    "email": "Email",
+    "password": "Пароль",
+    "password1": "Пароль",
+    "password2": "Подтверждение пароля",
+    "first_name": "Имя",
+    "last_name": "Фамилия",
+    "usernameHelpText": "Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.",
+    "password1HelpText": "<ul><li>Пароль не должен быть слишком похож на другую вашу личную информацию.</li><li>Ваш пароль должен содержать как минимум 8 символов.</li><li>Пароль не может состоять только из цифр.</li></ul>",
+    "password2HelpText": "Для подтверждения введите, пожалуйста, пароль ещё раз."
+  },
+  "customer": {
+    "id": "Id",
+    "nick": "Ник",
+    "name": "ФИО",
+    "address": "Адрес",
+    "created_at": "Создан",
+    "updated_at": "Обновлен",
+    "city": {
+      "id": "Id",
+      "pindex": "Индекс",
+      "city": "Город",
+      "opsname": "ОПС",
+      "address": "Адрес"
+    }
+  },
+  "product": {
+    "id": "Id",
+    "product_type_id": "Тип ткани",
+    "threads": "Нитей",
+    "contents": "Состав",
+    "fleece": "С начёсом",
+    "name": "Название",
+    "price": "Цена",
+    "width": "Ширина",
+    "density": "Плотность",
+    "dollar_price": "Цена, $/кг",
+    "dollar_rate": "Курс $",
+    "prices": "Цена метра",
+    "weight_for_count": "Вес отреза, гр",
+    "length_for_count": "Длина отреза, м",
+    "density_for_count": "Плотность для расчета",
+    "weight": "Вес",
+    "meters_in_roll": "Метров в рулоне",
+    "price_pre": "Цена до выкупа, руб./м",
+    "image": "Фото",
+    "width_shop": "Ширина для витрины",
+    "density_shop": "Плотность для витрины",
+    "created_at": "Создан",
+    "updated_at": "Обновлен",
+    "threadsChoices": [
+      {
+        "value": 0,
+        "display_name": "двухнитка"
+      },
+      {
+        "value": 1,
+        "display_name": "трёхнитка"
+      }
+    ],
+    "contentsChoices": [
+      {
+        "value": 0,
+        "display_name": "с лайкрой"
+      },
+      {
+        "value": 1,
+        "display_name": "100% хлопок"
+      }
+    ]
+  },
+  "order": {
+    "id": "Id",
+    "customer": "Покупатель",
+    "order_items_cost": "Сумма заказа",
+    "post_cost": "Почтовые",
+    "packet": "Пакет",
+    "delivery_type": "Способ доставки",
+    "address": "Адрес",
+    "gift": "Подарок",
+    "order_items_amount":  "",
+    "order_items_cost": "Сумма",
+    "order_items_weight": "",
+    "post_cost_with_packet": "Сумма",
+    "post_discount": "Скидка",
+    "total_postals": "",
+    "total_sum": "",
+    "need_gift": "Нужен подарок",
+    "samples": "Образцы",
+    "created_at": "Создан",
+    "updated_at": "Обновлен",
+    "packetChoices": [
+      {
+        "value": null,
+        "display_name": "----"
+      },
+      {
+        "value": 25,
+        "display_name": "25"
+      },
+      {
+        "value": 27,
+        "display_name": "27"
+      },
+      {
+        "value": 50,
+        "display_name": "50"
+      },
+      {
+        "value": 55,
+        "display_name": "55"
+      },
+      {
+        "value": 72,
+        "display_name": "72"
+      },
+      {
+        "value": 85,
+        "display_name": "85"
+      }
+    ],
+    "deliveryTypeChoices": [
+      {
+        "value": null,
+        "display_name": "----"
+      },
+      {
+        "value": 0,
+        "display_name": "Почта России"
+      },
+      {
+        "value": 1,
+        "display_name": "Деловые линии"
+      },
+      {
+        "value": 2,
+        "display_name": "ПЭК"
+      },
+      {
+        "value": 3,
+        "display_name": "GTD (Кит)"
+      },
+      {
+        "value": 4,
+        "display_name": "Энергия"
+      },
+      {
+        "value": 5,
+        "display_name": "ЖелДор Экспедиция"
+      },
+      {
+        "value": 6,
+        "display_name": "Ратек"
+      },
+      {
+        "value": 7,
+        "display_name": "Байкал Сервис"
+      },
+      {
+        "value": 8,
+        "display_name": "СДЭК Посылочка"
+      }
+    ],
+    "orderItem": {
+      "product": "Ткань",
+      "amount": "Колич",
+      "price": "Цена",
+      "cost": "Стоим",
+      "weight": "Вес"
+    }
+  },
+  "user": {
+    "pk": "ID",
+    "username": "Имя пользователя",
+    "email": "Email адрес",
+    "first_name": "Имя",
+    "last_name": "Фамилия"
+  }
 }

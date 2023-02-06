@@ -1,5 +1,6 @@
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import select from '@/app/[lng]/customers/cities/select.json'
 
 export function where({ term }: NextApiRequest["query"]) {
   if (!term) { return {} }
@@ -20,11 +21,7 @@ export default async function handle({
   if (method === 'GET') {
     const objects = await prisma.city.findMany({
       where: where(query),
-      select: {
-        id: true,
-        pindex: true,
-        city: true,
-      }
+      select
     })
     res.json(objects)
   } else {

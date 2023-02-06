@@ -1,16 +1,18 @@
-import { useTranslation } from '@/app/i18n/client'
-import { CustomersSelect } from '@/interfaces/api'
+import { Translation } from '@/app/i18n/dictionaries'
+import type { Customer } from './helpers'
 import CityName from './cities/CityName'
 import ShortName from './ShortName'
 
 export default function CustomerName({
   object,
-  lng
-}: { object?: CustomersSelect } & { lng: string }) {
-  const { t } = useTranslation(lng, 'customer')
+  labels
+}: {
+  object?: Customer
+  labels: Translation['customer']
+}) {
   return <>
-    <ShortName {...{ object, lng }} />{' '}
-    <CityName object={object?.city} {...{ lng}} />{' '}
-    {object?.address && `${t('address')}: ${object.address}`}
+    <ShortName {...{ object, labels }} />{' '}
+    <CityName object={object?.city} labels={labels.city} />{' '}
+    {object?.address && `${labels.address}: ${object.address}`}
   </>
 }

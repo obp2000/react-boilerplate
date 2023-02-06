@@ -1,4 +1,0 @@
-{
-  "notBlank": ["name"],
-  "minNumber": ["price"]
-}

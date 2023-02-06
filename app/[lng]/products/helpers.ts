@@ -1,38 +1,22 @@
-import { ProductsSelect } from "@/interfaces/api"
 import type { Prisma } from "@prisma/client"
-import { createPaginator } from "prisma-pagination"
-import prisma from '@/services/prisma'
+import ProductName from './ProductName'
 import select from './select.json'
-import { ParsedUrlQuery } from "querystring"
 
-export function where({ term }: ParsedUrlQuery) {
-	if (!term) { return {} }
-	const containsTerm = { contains: String(term) }
-	return {
-		OR: [
-			{ name: containsTerm },
-			{ productType: { name: containsTerm } },
-		]
-	}
+export type Product = Prisma.ProductGetPayload<{ select: typeof select }>
+
+const dropdownListTextField = ({ productType, name }: Product) => {
+  let res = [name]
+  if (productType) {
+    res.push(productType.name)
+  }
+  return res
 }
 
-export async function getObjects({
-	perPage = 8,
-	searchParams
-}: { perPage?: number } & { searchParams: ParsedUrlQuery }) {
-	const paginate = createPaginator({ perPage })
-	return paginate<ProductsSelect, Prisma.ProductFindManyArgs>(
-		prisma.product,
-		{
-			where: where(searchParams),
-			select,
-			orderBy: [
-				{
-					updated_at: 'desc',
-				},
-			],
-		},
-		{
-			page: String(searchParams.page || '1')
-		})
+export function useDropdown() {
+  return {
+    textField: dropdownListTextField,
+    dataKey: 'id',
+    searchPath: '/products/',
+    renderValueComponent: ProductName,
+  }
 }

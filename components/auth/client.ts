@@ -1,36 +1,42 @@
 'use client'
 
 import { errorMessage } from '@/error/client'
+import { toastError } from '@/notifications/toastError'
+import { toastSuccess } from '@/notifications/toastSuccess'
 import { baseUrl } from '@/services/config'
-import { Prisma } from '@prisma/client'
-import { TFunction } from 'i18next'
+import { User } from '@prisma/client'
 import {
-    compressToEncodedURIComponent,
-    decompressFromEncodedURIComponent
+	compressToEncodedURIComponent,
+	decompressFromEncodedURIComponent
 } from "lz-string"
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
-import { parseCookies, setCookie } from "nookies"
+import { parseCookies, setCookie, destroyCookie } from "nookies"
+import type { TransitionStartFunction } from 'react'
+import type { LoginValues } from './LoginForm'
+import type { RegisterValues } from './RegisterForm'
 
 export const _encodeCompressed = (data: any) =>
 	compressToEncodedURIComponent(JSON.stringify(data))
 
-export const setAuth = (auth: any) =>
-	setCookie(undefined, 'auth', auth, {
+export const setAuth = (auth: { accessToken: string | null, isAuthenticated: boolean }) =>
+	setCookie(undefined, 'auth', auth as unknown as string, {
 		encode: _encodeCompressed,
 		httpOnly: false,
 	})
 
-export const setUser = (user: any) =>
-	setCookie(undefined, 'user', user, {
+export const setUser = (user: User) =>
+	setCookie(undefined, 'user', user as unknown as string, {
 		encode: _encodeCompressed,
 		httpOnly: false,
 	})
 
 type AuthProps = Pick<AppRouterInstance, 'refresh' | 'replace'> & {
-	values: Partial<Prisma.UserCreateInput> & { password1?: string, password2?: string }
+	values: RegisterValues | LoginValues
 	url: string
-	message: string,
-	t: TFunction,
+	message: string
+	labels: Record<string, string>
+	startTransition: TransitionStartFunction
+	lng: string
 }
 
 export const authAction = async ({
@@ -39,7 +45,9 @@ export const authAction = async ({
 	refresh,
 	replace,
 	message,
-	t
+	labels,
+	startTransition,
+	lng,
 }: AuthProps) => {
 	const headers = new Headers()
 	headers.append('Content-Type', 'application/json')
@@ -55,32 +63,39 @@ export const authAction = async ({
 			accessToken,
 			isAuthenticated: true,
 		})
-		setUser(user)
-		const { toastSuccess } = await import('@/notifications/toastSuccess')
+		setUser(user as User)
+		startTransition(() => {
+			replace(`/${lng}/user`)
+			refresh()
+		})
 		toastSuccess(message)
-		replace('/user/')
-		refresh()
 	} else {
-		const { toastError } = await import('@/notifications/toastError')
-		console.log('res ', res)
-		toastError(await errorMessage(res, t))
+		// console.log('res ', res)
+		const errorMessageText = await errorMessage(res)
+		toastError(labels[errorMessageText])
 	}
 }
 
 export const signOutAction = async ({
 	refresh,
 	replace,
-	message
-}: Pick<AppRouterInstance, 'refresh' | 'replace'> & { message: string }) => {
-	setAuth({
-		accessToken: null,
-		isAuthenticated: false,
+	message,
+	startTransition,
+	lng,
+}: Pick<AppRouterInstance, 'refresh' | 'replace'> &
+	{
+	message: string
+	startTransition: TransitionStartFunction
+	lng: string
+	}
+) => {
+	destroyCookie(undefined, 'auth')
+	destroyCookie(undefined, 'user')
+	startTransition(() => {
+		replace(`/${lng}`)
+		refresh()
 	})
-	setUser(undefined)
-	const { toastSuccess } = await import('@/notifications/toastSuccess')
 	toastSuccess(message)
-	replace('/')
-	refresh()
 }
 
 export const getAuth = () => {
@@ -107,47 +122,3 @@ export const getUser = () => {
 	}
 	return res
 }
-
-
-// export async function fetchUser(accessToken: string) {
-// 	const headers = new Headers()
-// 	headers.append('Content-Type', 'application/json')
-// 	headers.append('Authorization', `Token ${accessToken}`)
-// 	let reqOptions: RequestInit = {
-// 		headers,
-// 	}
-// 	const res = await fetch(`${baseUrl}/user/`, reqOptions)
-// 	if (res.ok) {
-// 		const user: User = await res.json()
-// 		setUser(user)
-// 	} else {
-// 		const { toastError } = await import('@/notifications/toastError')
-// 		toastError(await errorMessage(res))
-// 	}
-// }
-
-// export const signOutAction = async ({
-// 	refresh,
-// 	replace,
-// 	message
-// }: Pick<AppRouterInstance, 'refresh' | 'replace'> & { message: string }) => {
-// 	let reqOptions: RequestInit = {
-// 		method: 'POST',
-// 	}
-// 	const res = await fetch(`${baseUrl}/logout/`, reqOptions)
-// 	if (res.ok) {
-// 		const { detail }: SignOut = await res.json()
-// 		setAuth({
-// 			accessToken: null,
-// 			isAuthenticated: false,
-// 		})
-// 		setUser(undefined)
-// 		const { toastSuccess } = await import('@/notifications/toastSuccess')
-// 		toastSuccess(message)
-// 		replace('/')
-// 		refresh()
-// 	} else {
-// 		const { toastError } = await import('@/notifications/toastError')
-// 		toastError(await errorMessage(res))
-// 	}
-// }

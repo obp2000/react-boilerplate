@@ -1,25 +1,16 @@
 import { login } from '@/services/auth'
 import type { HttpError } from 'http-errors'
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-	assert,
-	object, size,
-	string
-} from 'superstruct'
+import { validateLogin } from './validators'
 
-export const Login = object({
-  username: size(string(), 1, 255),
-  password: size(string(), 1, 255),
-})
-
-export default async function handle({
-	method,
-	body,
-}: NextApiRequest, res: NextApiResponse) {
-	if (method === 'POST') {
-		assert(body, Login)
+export default async function handle(
+	req: NextApiRequest,
+	res: NextApiResponse
+) {
+	if (req.method === 'POST') {
+		const data = validateLogin(req)
 		try {
-			const accessTokenAndUser = await login(body)
+			const accessTokenAndUser = await login(data)
 			res.status(200).json(accessTokenAndUser)
 		}
 		catch (e) {
@@ -28,7 +19,7 @@ export default async function handle({
 		}
 	} else {
 		throw new Error(
-			`The HTTP ${method} method is not supported at this route.`
+			`The HTTP ${req.method} method is not supported at this route.`
 		)
 	}
 }

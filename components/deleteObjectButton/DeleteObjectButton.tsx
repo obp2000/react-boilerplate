@@ -1,45 +1,50 @@
 'use client'
 
-import { useTranslation } from '@/app/i18n/client'
 import Tooltip from '@/client/Tooltip'
-// import { confirm } from '@/confirmation/Confirmation'
-import type { CustomersSelect, OrdersSelect, ProductsSelect } from '@/interfaces/api'
+import type { Customer } from '@/app/[lng]/customers/helpers'
 import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { deleteObject } from './client'
+import type { Product } from '@/app/[lng]/products/helpers'
+import type { Order } from '@/app/[lng]/orders/helpers'
 
-type Props = { indexUrl: string } &
-  Required<({ object: CustomersSelect | ProductsSelect | OrdersSelect })> &
-{ label: string, message: string, okText: string, cancelText: string, lng: string }
+type Props = Required<({ object: Customer | Product | Order })> & {
+  table: string
+  label: string
+  message: string
+  okText: string
+  cancelText: string
+}
 
 export default function DeleteObjectButton({
-  indexUrl,
+  table,
   object,
   label,
   message,
   okText,
   cancelText,
-  lng
 }: Props) {
   const { refresh } = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const busy = isPending
   const onClick = async () => {
     const confirm = (await import('@/confirmation/Confirmation')).confirm
     const result = await confirm(`${label}?`, { okText, cancelText })
-    const { t } = useTranslation(lng)
     if (result) {
       deleteObject({
-        id: object.id,
-        indexUrl,
+        id: object.id as number,
+        table,
         message,
         refresh,
-        t
+        startTransition,
       })
     }
   }
   return <Tooltip content={label}>
     <AiOutlineDelete
       aria-labelledby={label}
-      onClick={onClick}
+      onClick={busy ? () => undefined : onClick}
       cursor='pointer' />
   </Tooltip>
 }

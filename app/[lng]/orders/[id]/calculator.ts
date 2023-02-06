@@ -1,78 +1,88 @@
-import {
-  OrderCalcValues,
-  OrderItemSelect,
-  OrderSelect,
-  ProductSelect
-} from '@/interfaces/api'
+'use client'
+
+import type { Order } from '@/app/[lng]/orders/[id]/helpers'
 import { Prisma } from '@prisma/client'
 import type { Mutator } from 'final-form'
 import { getIn } from 'final-form'
 import type { Calculation } from 'final-form-calculate'
+import createDecorator from 'final-form-calculate'
 import consts from './consts.json'
-import { formInitialOrderItems } from './orderItems/config'
 
-export type Values = (Omit<(Prisma.OrderCreateArgs['data'] |
-  Prisma.OrderUpdateArgs['data']), 'orderItems' | 'customer'> &
-  { orderItems?: OrderItemSelect[] } &
-  OrderCalcValues) | undefined
+export type Values = (Prisma.OrderCreateArgs['data'] |
+  Prisma.OrderUpdateArgs['data']) & {
+  samples_weight?: number
+  packet_weight?: number
+  gift_weight?: number
+  order_items_amount?: string
+  order_items_cost?: string
+  order_items_weight?: number
+  post_cost_with_packet?: string
+  post_discount?: string
+  total_postals?: string
+  total_sum?: string
+  total_weight?: number
+}
 
-const countCost = ({ amount, price }: Partial<OrderItemSelect>) =>
+const countCost = ({ amount, price }: Order['orderItems'][number]) =>
   amount && price ? Number(amount) * Number(price) : 0
 
-export const cost = (values: Partial<OrderItemSelect>) =>
+export const cost = (values: Order['orderItems'][number]) =>
   countCost(values).toFixed(2)
 
-const countWeight = ({ amount, product }: Partial<OrderItemSelect>) =>
+const countWeight = ({
+  amount,
+  product
+}: Order['orderItems'][number]) =>
   amount && product
     ? Number(amount) * Number(product?.density) * Number(product?.width) / 100
     : 0
 
-export const weight = (values: Partial<OrderItemSelect>) =>
+export const weight = (values: Order['orderItems'][number]) =>
   countWeight(values).toFixed(0)
 
 export const sumBy = (
-  values: Values,
-  field: string
-): number => (values?.orderItems || [])
+  field: string,
+  values?: Values,
+): number => (values?.orderItems as Order['orderItems'] || [])
   .reduce((sum, oderItem) => {
-    let fieldValue = oderItem[field as keyof OrderItemSelect]
+    let fieldValue = oderItem[field as keyof Order['orderItems'][number]]
     sum += Number(fieldValue)
     return sum
   }, 0)
 
-export const orderItemsAmount = (_: null, values: Values) =>
-  sumBy(values, 'amount').toFixed(2)
+export const orderItemsAmount = (_: null, values?: Values) =>
+  sumBy('amount', values).toFixed(2)
 
-export const orderItemsCost = (_: null, values: Values) =>
-  sumBy(values, 'cost').toFixed(2)
+export const orderItemsCost = (_: null, values?: Values) =>
+  sumBy('cost', values).toFixed(2)
 
-export const orderItemsWeight = (_: null, values: Values) =>
-  sumBy(values, 'weight')
+export const orderItemsWeight = (_: null, values?: Values) =>
+  sumBy('weight', values)
 
-export const postCostWithPacket = (_: null, values: Values) =>
+export const postCostWithPacket = (_: null, values?: Values) =>
   (Number(values?.post_cost) + Number(values?.packet)).toFixed(2)
 
-const needPostDiscount = (values: Values) =>
+const needPostDiscount = (values?: Values) =>
   Number(values?.order_items_cost) >=
   Number(consts.SUM_FOR_POST_DISCOUNT)
 
-export const postDiscount = (_: null, values: Values) =>
+export const postDiscount = (_: null, values?: Values) =>
   (needPostDiscount(values) ?
     Number(postCostWithPacket(null, values)) *
     Number(consts.POST_DISCOUNT_PERCENT) / 100 : 0).toFixed(2)
 
-export const totalPostals = (_: null, values: Values) =>
+export const totalPostals = (_: null, values?: Values) =>
   (Number(postCostWithPacket(null, values)) -
     Number(postDiscount(null, values))).toFixed(2)
 
-export const totalSum = (_: null, values: Values) =>
+export const totalSum = (_: null, values?: Values) =>
   (Number(values?.order_items_cost) +
     Number(totalPostals(null, values))).toFixed(2)
 
-export const needGift = (values: Values): boolean =>
+export const needGift = (values?: Values): boolean =>
   Number(values?.order_items_cost) >= Number(consts.SUM_FOR_GIFT)
 
-export const totalWeight = (_: null, values: Values) =>
+export const totalWeight = (_: null, values?: Values) =>
   Number(values?.order_items_weight) +
   Number(consts.SAMPLES_WEIGHT) +
   Number(consts.PACKET_WEIGHT) +
@@ -82,7 +92,7 @@ const makeOrderItem =
   (name: string,
     field: string,
     values?: Object,
-  ): Partial<OrderItemSelect> => ({
+  ) => ({
     amount: getIn(values || {}, name.replace(`.${field}`, '.amount')),
     price: getIn(values || {}, name.replace(`.${field}`, '.price')),
     product: getIn(values || {}, name.replace(`.${field}`, '.product')),
@@ -96,29 +106,29 @@ const updatePostCostWithPacket = {
 }
 
 const updatePostDiscount = {
-  post_discount: (_: null, values: Values) =>
+  post_discount: (_: null, values?: Values) =>
     postDiscount(null, values)
 }
 
 const updateTotalPostals = {
-  total_postals: (_: null, values: Values) =>
+  total_postals: (_: null, values?: Values) =>
     totalPostals(null, values)
 }
 
 const updateTotalSum = {
-  total_sum: (_: null, values: Values) =>
+  total_sum: (_: null, values?: Values) =>
     totalSum(null, values)
 }
 
 const updateTotalWeight = {
-  total_weight: (_: null, values: Values) =>
+  total_weight: (_: null, values?: Values) =>
     totalWeight(null, values)
 }
 
 const onChangeOrderItemAmount = {
   field: orderItemsRegExp('amount'),
-  updates: (_: null, name: string, values: Values) => {
-    const orderItem = makeOrderItem(name, 'amount', values)
+  updates: (_: null, name: string, values?: Values) => {
+    const orderItem = makeOrderItem(name, 'amount', values) as Order['orderItems'][number]
     return {
       [name.replace('.amount', '.cost')]: cost(orderItem),
       [name.replace('.amount', '.weight')]: weight(orderItem),
@@ -128,8 +138,8 @@ const onChangeOrderItemAmount = {
 
 const onChangeOrderItemPrice = {
   field: orderItemsRegExp('price'),
-  updates: (_: null, name: string, values: Values) => {
-    const orderItem = makeOrderItem(name, 'price', values)
+  updates: (_: null, name: string, values?: Values) => {
+    const orderItem = makeOrderItem(name, 'price', values) as Order['orderItems'][number]
     return {
       [name.replace('.price', '.cost')]: cost(orderItem),
     }
@@ -138,11 +148,11 @@ const onChangeOrderItemPrice = {
 
 const onChangeOrderItemProduct = {
   field: orderItemsRegExp('product'),
-  updates: (value: ProductSelect, name: string, values: Values) => {
+  updates: (value: Order['orderItems'][number]['product'], name: string, values?: Values) => {
     if (value) {
-      const orderItem = makeOrderItem(name, 'product', values)
+      const orderItem = makeOrderItem(name, 'product', values) as Order['orderItems'][number]
       return {
-        [name.replace('.product', '.price')]: value.price,
+        // [name.replace('.product', '.price')]: value.price,
         [name.replace('.product', '.weight')]: weight(orderItem),
       }
     } else {
@@ -220,7 +230,9 @@ export const calculations: Calculation[] = [
   onChangePacket,
 ]
 
-// export const calculator = createDecorator(...calculations)
+export const calculator = createDecorator(...calculations)
+
+export const decorators = [calculator]
 
 export const postCostCount: Mutator<Values> = (_, state,
   {
@@ -248,37 +260,17 @@ export const postCostCount: Mutator<Values> = (_, state,
     .catch((e) => console.error(e))
 }
 
-export const getInitialValues = ({
-  object
-}: { object?: OrderSelect | null }) => {
-  let { created_at, orderItems, ...objectValues } = object ?? {}
-  // objectMod.orderItems = formInitialOrderItems(object?.orderItems)
-  // const orderItems = {
-  //   orderItems: formInitialOrderItems(object?.orderItems),
-  // }
-  objectValues = {
-    ...objectValues,
-    orderItems: formInitialOrderItems(orderItems),
-  }
-  objectValues = {
-    ...objectValues,
-    // consts: options?.Consts,
-    samples_weight: consts.SAMPLES_WEIGHT,
-    packet_weight: consts.PACKET_WEIGHT,
-    gift_weight: consts.GIFT_WEIGHT,
-    order_items_amount: orderItemsAmount(null, objectValues),
-    order_items_cost: orderItemsCost(null, objectValues),
-    order_items_weight: orderItemsWeight(null, objectValues),
-  }
-  objectValues = {
-    ...objectValues,
-    post_cost_with_packet: postCostWithPacket(null, objectValues),
-    post_discount: postDiscount(null, objectValues),
-    total_postals: totalPostals(null, objectValues),
-  }
-  return {
-    ...objectValues,
-    total_sum: totalSum(null, objectValues),
-    total_weight: totalWeight(null, objectValues),
-  }
-}
+
+// export type Order = Prisma.OrderGetPayload<{ select: typeof select }>
+
+// type Test1 = Order['product']
+
+// export type ProductValues = Prisma.ProductCreateArgs['data'] |
+//   Prisma.ProductUpdateArgs['data']
+
+// export type OrderItemValues = (Prisma.OrderItemCreateWithoutProductInput |
+//   Prisma.OrderItemUpdateWithoutProductInput) & { product?: ProductValues }
+
+// export type Values22 = Omit<Prisma.OrderCreateArgs['data'] |
+//   Prisma.OrderUpdateArgs['data'], 'orderItems'> &
+// { orderItems?: OrderItemValues[] } & OrderCalcValues

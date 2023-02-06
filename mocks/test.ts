@@ -3,9 +3,7 @@ import { createWorker, MockServiceWorker } from 'playwright-msw'
 
 import handlers from './handlers'
 
-const test = base.extend<{
-  worker: MockServiceWorker
-}>({
+const test = base.extend<{ worker: MockServiceWorker }>({
   worker: [
     async ({ page }, use) => {
       const server = await createWorker(page, handlers)
