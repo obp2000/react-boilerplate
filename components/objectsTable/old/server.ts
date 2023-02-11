@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { requestInit } from '@/services/api/server'
-import { baseUrl } from '@/services/config'
 import { ParsedUrlQuery } from 'querystring'
 // import { cache } from 'react'
 
@@ -25,7 +24,7 @@ export const getObjects = async ({
 	const options = requestInit()
 	// options.cache = 'no-store'
 	const res =
-		await fetch(`${baseUrl}${indexUrl}${params}`, options)
+		await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${indexUrl}${params}`, options)
 	if (!res.ok) {
 		throw new Error('Failed to fetch objects')
 	}

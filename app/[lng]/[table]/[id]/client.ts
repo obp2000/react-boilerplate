@@ -5,7 +5,6 @@ import type { Values as OrderValues } from '@/app/[lng]/orders/[id]/calculator'
 import type { Values as ProductValues } from '@/app/[lng]/products/[id]/calculator'
 import { getAuth } from '@/auth/client'
 import { errorMessage } from '@/error/client'
-import { baseUrl } from '@/services/config'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 import { objectToFormData } from 'object-to-formdata'
 import { ParsedUrlQuery } from 'querystring'
@@ -54,7 +53,7 @@ export async function mutateObject({
 	}
 	options.headers = headers
 	const mutatePath = isNewObject ? '' : id
-	const res = await fetch(`${baseUrl}${indexUrl}${mutatePath}`, options)
+	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${indexUrl}${mutatePath}`, options)
 	if (res.ok) {
 		// const { toastSuccess } = await import('@/notifications/toastSuccess')
 	    startTransition(() => {

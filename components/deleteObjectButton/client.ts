@@ -2,7 +2,6 @@
 
 import { getAuth } from '@/auth/client'
 import { errorMessage } from '@/error/client'
-import { baseUrl } from '@/services/config'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 import { TransitionStartFunction } from 'react'
 
@@ -29,7 +28,7 @@ export const deleteObject = async ({
 		headers.append('authorization', `Token ${accessToken}`)
 		options.headers = headers
 	}
-	const res = await fetch(`${baseUrl}/${table}/${id}`, options)
+	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${table}/${id}`, options)
 	if (res.ok) {
 		const { toastSuccess } = await import('@/notifications/toastSuccess')
 		toastSuccess(message)

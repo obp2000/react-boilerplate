@@ -9,7 +9,7 @@ import { getUser } from './server'
 
 export default async function Page({ params }: { params: ParsedUrlQuery }) {
   const user = getUser()
-  const lng = String(params.lng) || fallbackLng
+  const lng = String(params.lng || fallbackLng)
   const dict = await getDictionary(lng)
   return <>
     <div className='columns-3'>

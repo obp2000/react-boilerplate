@@ -15,7 +15,7 @@ export default function LinkToNewOrEditObject({
 }: ({ object?: Customer | Product | Order }) &
   {table: string, label: string, lng: string }) {
   return <Link
-    aria-labelledby={label}
+    aria-label={label}
     href={`/${lng}/${table}/${object?.id || 'new'}`}
   // prefetch={false}
   >

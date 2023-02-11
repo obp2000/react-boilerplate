@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { requestInit } from '@/services/api/server'
-import { baseUrl } from '@/services/config'
 import { cache } from 'react'
 // import { transformOptionsResponse } from './helpers'
 

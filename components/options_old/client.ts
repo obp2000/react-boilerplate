@@ -1,6 +1,5 @@
 'use client'
 
-import { baseUrl } from '@/services/config'
 import { cache } from 'react'
 // import { transformOptionsResponse } from './helpers'
 

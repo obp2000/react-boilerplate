@@ -37,3 +37,6 @@ yalc.lock
 .env
 
 .turbo
+/test-results/
+/playwright-report/
+/playwright/.cache/

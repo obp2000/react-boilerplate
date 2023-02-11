@@ -15,7 +15,7 @@ import {
 } from './helpers'
 
 export default async function Page({ params }: { params: ParsedUrlQuery }) {
-	const table = String(params.table) || 'customers'
+	const table = String(params.table || 'customers')
 	const isNewObject = params.id === 'new'
 	let object
 	if (!isNewObject) {
@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
 	const labels = await getLabels(table)
 	const options = await getOptions(table)
 	const Form = await getForm(table)
-	const lng = String(params.lng) || fallbackLng
+	const lng = String(params.lng || fallbackLng)
 	const dict = await getDictionary(lng)
 	const title = isNewObject
 		? `${dict.new} ${dict[table as keyof ModelNames].singular.toLowerCase()} `

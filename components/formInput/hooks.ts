@@ -9,12 +9,15 @@ export function useFieldProps({
     touched,
     error,
   },
+  label,
   setPreviewUrl,
   ...props
 }: InputFieldRenderProps):
   Omit<InputFieldRenderProps, 'input' | 'meta'> {
   return {
     ...input,
+    id: input.name,
+    placeholder: label,
     isInvalid: touched && !!error,
     isValid: touched && !active && dirty && !error,
     ...props,
@@ -46,12 +49,14 @@ function filesHandler({
 
 export function useFileProps({
   input,
+  label,
   setPreviewUrl,
   ...props
 }: InputFieldRenderProps):
   Omit<InputFieldRenderProps, 'input' | 'meta'> {
   return {
     ...input,
+    id: input.name,
     type: 'file',
     value: undefined,
     onChange: filesHandler({ input, setPreviewUrl }),

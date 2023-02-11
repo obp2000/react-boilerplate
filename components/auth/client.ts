@@ -3,34 +3,16 @@
 import { errorMessage } from '@/error/client'
 import { toastError } from '@/notifications/toastError'
 import { toastSuccess } from '@/notifications/toastSuccess'
-import { baseUrl } from '@/services/config'
-import { User } from '@prisma/client'
 import {
-	compressToEncodedURIComponent,
 	decompressFromEncodedURIComponent
 } from "lz-string"
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
-import { parseCookies, setCookie, destroyCookie } from "nookies"
+import { destroyCookie, parseCookies } from "nookies"
 import type { TransitionStartFunction } from 'react'
 import type { LoginValues } from './LoginForm'
 import type { RegisterValues } from './RegisterForm'
 
-export const _encodeCompressed = (data: any) =>
-	compressToEncodedURIComponent(JSON.stringify(data))
-
-export const setAuth = (auth: { accessToken: string | null, isAuthenticated: boolean }) =>
-	setCookie(undefined, 'auth', auth as unknown as string, {
-		encode: _encodeCompressed,
-		httpOnly: false,
-	})
-
-export const setUser = (user: User) =>
-	setCookie(undefined, 'user', user as unknown as string, {
-		encode: _encodeCompressed,
-		httpOnly: false,
-	})
-
-type AuthProps = Pick<AppRouterInstance, 'refresh' | 'replace'> & {
+type AuthProps = Pick<AppRouterInstance, 'replace'> & {
 	values: RegisterValues | LoginValues
 	url: string
 	message: string
@@ -42,7 +24,6 @@ type AuthProps = Pick<AppRouterInstance, 'refresh' | 'replace'> & {
 export const authAction = async ({
 	values,
 	url,
-	refresh,
 	replace,
 	message,
 	labels,
@@ -51,38 +32,35 @@ export const authAction = async ({
 }: AuthProps) => {
 	const headers = new Headers()
 	headers.append('Content-Type', 'application/json')
-	let reqOptions: RequestInit = {
+	let reqOptions = {
 		method: 'POST',
 		body: JSON.stringify(values),
 		headers,
 	}
-	const res = await fetch(`${baseUrl}/auth${url}`, reqOptions)
+	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth${url}`, reqOptions)
 	if (res.ok) {
-		const { accessToken, user } = await res.json()
-		setAuth({
-			accessToken,
-			isAuthenticated: true,
-		})
-		setUser(user as User)
+		// const { accessToken, user } = await res.json()
+		// setAuth({
+		// 	accessToken,
+		// 	isAuthenticated: true,
+		// })
+		// setUser(user as User)
 		startTransition(() => {
 			replace(`/${lng}/user`)
-			refresh()
 		})
 		toastSuccess(message)
 	} else {
-		// console.log('res ', res)
 		const errorMessageText = await errorMessage(res)
 		toastError(labels[errorMessageText])
 	}
 }
 
 export const signOutAction = async ({
-	refresh,
 	replace,
 	message,
 	startTransition,
 	lng,
-}: Pick<AppRouterInstance, 'refresh' | 'replace'> &
+}: Pick<AppRouterInstance, 'replace'> &
 	{
 	message: string
 	startTransition: TransitionStartFunction
@@ -93,7 +71,6 @@ export const signOutAction = async ({
 	destroyCookie(undefined, 'user')
 	startTransition(() => {
 		replace(`/${lng}`)
-		refresh()
 	})
 	toastSuccess(message)
 }
@@ -122,3 +99,19 @@ export const getUser = () => {
 	}
 	return res
 }
+
+
+// export const _encodeCompressed = (data: any) =>
+// 	compressToEncodedURIComponent(JSON.stringify(data))
+
+// export const setAuth = (auth: { accessToken: string | null, isAuthenticated: boolean }) =>
+// 	setCookie(undefined, 'auth', auth as unknown as string, {
+// 		encode: _encodeCompressed,
+// 		httpOnly: false,
+// 	})
+
+// export const setUser = (user: User) =>
+// 	setCookie(undefined, 'user', user as unknown as string, {
+// 		encode: _encodeCompressed,
+// 		httpOnly: false,
+// 	})

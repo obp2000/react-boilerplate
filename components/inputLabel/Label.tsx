@@ -18,7 +18,6 @@ export default function LabelComp({
   disabled,
   className,
 }: AnyFieldRenderProps) {
-  return <Label {...{ htmlFor, color, disabled, className }} >
-    {label}{required && <strong>*</strong>}
-  </Label>
+  const value = `${label}${required ? '*' : ''}`
+  return <Label {...{ htmlFor, color, disabled, className, value }} />
 }

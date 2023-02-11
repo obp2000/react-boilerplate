@@ -60,7 +60,7 @@ export function validatePasswordConfirmation({
   password_mismatch
 }: Translation['errorMessages']) {
   return ({ password1, password2 }: RegisterValues) =>
-    password1 !== password2 ? {} : { password2: password_mismatch }
+    password1 === password2 ? {} : { password2: password_mismatch }
 }
 
 export function composeValidators(

@@ -36,7 +36,6 @@ export default function LoginForm({
 		authAction({
 			values,
 			url: '/login',
-			refresh,
 			replace,
 			message: successfulLogin,
 			labels,

@@ -8,7 +8,7 @@ import Button from '@/client/Button'
 import Form from '@/client/Form'
 import DropdownListFormGroup from '@/dropdownList/DropdownListFormGroup'
 import FloatingFormGroup from '@/formInput/FloatingFormGroup'
-import { mutateObject } from '@/objectForm/client'
+import { mutateObject } from '@/app/[lng]/[table]/[id]/client'
 import { isDisabled } from '@/submitButton/hooks'
 import { useRouter } from 'next/navigation'
 import { ParsedUrlQuery } from 'querystring'
@@ -96,7 +96,7 @@ export default function FormComp({
           <Button
             type='submit'
             size='sm'
-            aria-labelledby={save}
+            aria-label={save}
             disabled={isDisabled(props) || busy} >
             {save}
           </Button>

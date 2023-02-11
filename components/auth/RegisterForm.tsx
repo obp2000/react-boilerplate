@@ -48,7 +48,6 @@ export default function RegisterForm({
 		authAction({
 			values,
 			url: '/register',
-			refresh,
 			replace,
 			message: successfulRegister,
 			labels,

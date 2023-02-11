@@ -13,8 +13,8 @@ export default async function Page({
 	params,
 	searchParams
 }: { params: ParsedUrlQuery, searchParams: ParsedUrlQuery }) {
-	const lng = String(params.lng) || fallbackLng
-	const table = String(params.table) || 'customers'
+	const lng = String(params.lng || fallbackLng)
+	const table = String(params.table || 'customers')
 	const dict = await getDictionary(lng)
 	const getObjects = await getGetObjects(table)
 	const { data, meta } = await getObjects({ perPage: 8, searchParams })

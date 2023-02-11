@@ -1,5 +1,4 @@
 import type { DropdownFieldRenderProps, TDataItem } from '@/interfaces/dropdownList'
-import { baseUrl } from '@/services/config'
 import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
 
@@ -13,7 +12,7 @@ function onSearch(
       setBusy(true)
       const searchParams = new URLSearchParams()
       searchParams.set('term', term)
-      return fetch(`${baseUrl}${searchPath}?${searchParams}`)
+      return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${searchPath}?${searchParams}`)
         .then(res => res.json()
           .then((results) => {
             // console.log('results ', results)
@@ -29,6 +28,7 @@ export function useFieldProps({
   meta,
   searchPath,
   renderValueComponent: RenderValueComponent,
+  label,
   labels,
   ...props
 }: DropdownFieldRenderProps): Omit<DropdownFieldRenderProps, 'input' | 'meta'> {
@@ -38,6 +38,9 @@ export function useFieldProps({
   const [busy, setBusy] = useState(false)
   let result = {
     ...input,
+    id: input.name,
+    placeholder: label,
+    'aria-label': label,
     filter: 'contains',
     renderValue,
     renderListItem: renderValue,

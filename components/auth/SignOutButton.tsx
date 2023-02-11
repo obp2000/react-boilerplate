@@ -24,7 +24,6 @@ export default function SignOutButton({
     <Button
       aria-label='auth'
       onClick={() => signOutAction({
-        refresh,
         replace,
         message: labels?.successfulLogout,
         startTransition,

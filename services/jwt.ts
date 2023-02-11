@@ -16,17 +16,6 @@ export function signAccessToken(payload: User): Promise<string | undefined> {
     })
 }
 
-// export function signAccessToken(payload: User): string | undefined {
-//     let token
-//     try {
-//         token = encode(payload, String(accessTokenSecret))
-//     } catch (e) {
-//         InternalServerError()
-//     }
-//     return token
-// }
-
-
 export function verifyAccessToken(token: string) {
     return new Promise((resolve, reject) => {
         verify(token, String(accessTokenSecret), (err, payload) => {
@@ -40,6 +29,17 @@ export function verifyAccessToken(token: string) {
         })
     })
 }
+
+
+// export function signAccessToken(payload: User): string | undefined {
+//     let token
+//     try {
+//         token = encode(payload, String(accessTokenSecret))
+//     } catch (e) {
+//         InternalServerError()
+//     }
+//     return token
+// }
 
 // export function verifyAccessToken(token: string) {
 //     let payload

@@ -1,6 +1,7 @@
 import { register } from '@/services/auth'
 import { hashSync } from 'bcryptjs'
 import type { HttpError } from 'http-errors'
+import { compressToEncodedURIComponent } from 'lz-string'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { validateRegister } from './validators'
 
@@ -20,8 +21,13 @@ export default async function handle(
 			password: hashSync(password1, 8),
 		}
 		try {
-			const accessTokenAndUser = await register(data)
-			res.status(200).json(accessTokenAndUser)
+			const { accessToken, user } = await register(data)
+			const auth = compressToEncodedURIComponent(
+				JSON.stringify({ isAuthenticated: true, accessToken }))
+			const userComp = compressToEncodedURIComponent(JSON.stringify(user))
+			res.setHeader("set-cookie",
+				[`auth=${auth}; path=/;`, `user=${userComp}; path=/;`])
+			res.status(200).json(undefined)
 		}
 		catch (e) {
 			const { statusCode, message: detail } = e as HttpError

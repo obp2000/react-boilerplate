@@ -18,7 +18,7 @@ export default async function RootLayout({
   children,
   params
 }: PropsWithChildren<{ params: ParsedUrlQuery }>) {
-  const lng = String(params.lng) || fallbackLng
+  const lng = String(params.lng || fallbackLng)
   const dict = await getDictionary(lng)
   return <html lang={lng} >
     <body className="overflow-y-scroll overflow-x-auto">

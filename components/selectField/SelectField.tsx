@@ -8,10 +8,11 @@ export default function SelectField({
   dataKey,
   textField,
   choices,
+  label,
   ...props
 }: SelectFieldRenderProps) {
   const selectOptions = mapChoices({ dataKey, textField, choices })
-  return <Field {...{ name, ...props }} component='select'>
+  return <Field {...{ name, id: name, ...props }} component='select'>
     {selectOptions?.map(
       ({
         value,

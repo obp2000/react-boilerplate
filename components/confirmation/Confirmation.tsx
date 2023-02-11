@@ -29,14 +29,10 @@ const Confirmation = ({
   // okButtonStyle = 'primary',
   // cancelButtonStyle = 'secondary',
 }: Props) => {
-  // const header = title ? (
-  //   <Modal.Header>
-  //     {title}
-  //   </Modal.Header>
-  // ) : undefined;
   return (
     <Modal
       size="sm"
+      arial-label='confirmation'
       show={show}
       popup={true}
       onClose={() => proceed(false)}
