@@ -1,6 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
+import Button from '@mui/material/Button'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
 
@@ -12,13 +13,16 @@ export default function NavLink({
   const segment = useSelectedLayoutSegment()
   const currentPath = segment === '(main)' ? '' : segment
   const isActive = path === currentPath
-  return <Link
-    href={`/${lng}/${path}`}
-    className={clsx('mt-2 mr-1 rounded-lg px-2 py-1 text-sm font-medium', {
-      'bg-gray-700 text-gray-100 hover:bg-gray-500 hover:text-white': !isActive,
-      'bg-blue-600 text-white': isActive,
+  return  <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+    <Link
+      href={`/${lng}/${path}`}
+      prefetch={false}
+    className={clsx({
+      'hover:text-gray-300': !isActive,
+      'text-yellow-300': isActive,
     })}
-  >
-    {children}
-  </Link>
+    >
+      {children}
+    </Link>
+  </Button>
 }

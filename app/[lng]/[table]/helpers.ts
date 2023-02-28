@@ -1,16 +1,16 @@
 import 'server-only'
 
 import { Translation } from '@/app/i18n/dictionaries'
-import type { Customer } from '@/app/[lng]/customers/helpers'
-import type { Order } from '@/app/[lng]/orders/helpers'
-import type { Product } from '@/app/[lng]/products/helpers'
+import type { Customer } from '@/app/customers/helpers'
+import type { Order } from '@/app/orders/helpers'
+import type { Product } from '@/app/products/helpers'
 import type { PaginatedResult } from 'prisma-pagination'
 import type { ParsedUrlQuery } from 'querystring'
 
 const tableLables = {
-	customers: () => import('@/app/[lng]/customers/TableLabels').then((module) => module.default),
-	products: () => import('@/app/[lng]/products/TableLabels').then((module) => module.default),
-	orders: () => import('@/app/[lng]/orders/TableLabels').then((module) => module.default),
+	customers: () => import('@/app/customers/TableLabels').then((module) => module.default),
+	products: () => import('@/app/products/TableLabels').then((module) => module.default),
+	orders: () => import('@/app/orders/TableLabels').then((module) => module.default),
 }
 
 export async function getTableLabels(table: string) {
@@ -22,9 +22,9 @@ type ProductRowType = ({ object, dict }: { object: Product, dict: Translation })
 type OrderRowType = ({ object, dict }: { object: Order, dict: Translation }) => JSX.Element
 
 const tableRow = {
-	customers: () => import('@/app/[lng]/customers/TableRow').then((module) => module.default),
-	products: () => import('@/app/[lng]/products/TableRow').then((module) => module.default),
-	orders: () => import('@/app/[lng]/orders/TableRow').then((module) => module.default),
+	customers: () => import('@/app/customers/TableRow').then((module) => module.default),
+	products: () => import('@/app/products/TableRow').then((module) => module.default),
+	orders: () => import('@/app/orders/TableRow').then((module) => module.default),
 }
 
 export async function getTableRow(table: string): Promise<CustomerRowType>
@@ -42,9 +42,9 @@ type getOrders = ({ perPage, searchParams }: { perPage?: number, searchParams: P
 	Promise<PaginatedResult<Order>>
 
 const getObjects = {
-	customers: () => import('@/app/[lng]/customers/serverHelpers').then(({ getObjects }) => getObjects),
-	products: () => import('@/app/[lng]/products/serverHelpers').then(({ getObjects }) => getObjects),
-	orders: () => import('@/app/[lng]/orders/serverHelpers').then(({ getObjects }) => getObjects),
+	customers: () => import('@/app/customers/serverHelpers').then(({ getObjects }) => getObjects),
+	products: () => import('@/app/products/serverHelpers').then(({ getObjects }) => getObjects),
+	orders: () => import('@/app/orders/serverHelpers').then(({ getObjects }) => getObjects),
 }
 
 export async function getGetObjects(table: string): Promise<getCustomers>

@@ -1,35 +1,10 @@
-import {
-  assert, boolean, integer, number, object,
-  optional,
-  size,
-  string
-} from 'superstruct'
-// import type { Values } from '@/app/[lng]/products/[id]/calculator'
 import { uploadImage } from '@/services/cloudinary'
 import { getData } from '@/services/formidable'
 import type { File } from "formidable"
 import type { NextApiRequest } from 'next'
-
-export const Product = object({
-  // id: optional(integer()),
-  name: size(string(), 1, 255),
-  threads: optional(integer()),
-  contents: optional(integer()),
-  price: integer(),
-  weight: optional(number()),
-  width: optional(integer()),
-  density: optional(integer()),
-  dollar_price: optional(number()),
-  dollar_rate: optional(number()),
-  width_shop: optional(integer()),
-  density_shop: optional(integer()),
-  weight_for_count: optional(integer()),
-  length_for_count: optional(number()),
-  price_pre: optional(integer()),
-  image: optional(string()),
-  product_type_id: optional(integer()),
-  fleece: optional(boolean()),
-})
+import { assert, coerce, integer, string } from 'superstruct'
+import { Product } from '@/app/products/product'
+// import defaultProduct from '@/app/products/product.json'
 
 export async function validate(req: NextApiRequest) {
   const { fields, files } = await getData(req)
@@ -61,28 +36,48 @@ export async function validate(req: NextApiRequest) {
     image = `${version}/${public_id}.${format}`
   }
   const data = {
+    product_type_id: product_type_id === '' ? undefined : parseInt(String(product_type_id)),
+    threads: threads === '' ? undefined : parseInt(String(threads)),
+    contents: contents === '' ? undefined : parseInt(String(contents)),
+    fleece: fleece === 'true',
     name,
-    threads: threads ? parseInt(String(threads)) : undefined,
-    contents: contents ? parseInt(String(contents)) : undefined,
     price: parseInt(String(price)),
-    weight: weight ? Number(weight) : undefined,
-    width: width ? Number(width) : undefined,
+    weight: weight ? parseFloat(String(weight)) : undefined,
+    width: width ? parseInt(String(width)) : undefined,
     density: density ? parseInt(String(density)) : undefined,
-    dollar_price: dollar_price ? Number(dollar_price) : undefined,
-    dollar_rate: dollar_rate ? Number(dollar_rate) : undefined,
+    dollar_price: dollar_price ? parseFloat(String(dollar_price)) : undefined,
+    dollar_rate: dollar_rate ? parseFloat(String(dollar_rate)) : undefined,
     width_shop: width_shop ? parseInt(String(width_shop)) : undefined,
     density_shop: density_shop ? parseInt(String(density_shop)) : undefined,
     weight_for_count: weight_for_count ? parseInt(String(weight_for_count)) : undefined,
-    length_for_count: length_for_count ? Number(length_for_count) : undefined,
+    length_for_count: length_for_count ? parseFloat(String(length_for_count)) : undefined,
     price_pre: price_pre ? parseInt(String(price_pre)) : undefined,
     image,
-    product_type_id: product_type_id ? parseInt(String(product_type_id)) : undefined,
-    fleece: !!fleece,
   }
   assert(data, Product)
   return data
 }
 
+
+  // const data = {
+  //   name,
+  //   threads: threads ? parseInt(String(threads)) : undefined,
+  //   contents: contents ? parseInt(String(contents)) : undefined,
+  //   price: parseInt(String(price)),
+  //   weight: weight ? Number(weight) : undefined,
+  //   width: width ? Number(width) : undefined,
+  //   density: density ? parseInt(String(density)) : undefined,
+  //   dollar_price: dollar_price ? Number(dollar_price) : undefined,
+  //   dollar_rate: dollar_rate ? Number(dollar_rate) : undefined,
+  //   width_shop: width_shop ? parseInt(String(width_shop)) : undefined,
+  //   density_shop: density_shop ? parseInt(String(density_shop)) : undefined,
+  //   weight_for_count: weight_for_count ? parseInt(String(weight_for_count)) : undefined,
+  //   length_for_count: length_for_count ? Number(length_for_count) : undefined,
+  //   price_pre: price_pre ? parseInt(String(price_pre)) : undefined,
+  //   image,
+  //   product_type_id: product_type_id ? parseInt(String(product_type_id)) : undefined,
+  //   fleece: !!fleece,
+  // }
 
   // threads              Int?
   // contents             Int?

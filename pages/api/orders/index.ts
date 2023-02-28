@@ -1,4 +1,4 @@
-import type { Order } from '@/app/[lng]/orders/[id]/helpers'
+import type { Order } from '@/app/orders/calculator'
 import prisma from '@/services/prisma'
 import { Prisma } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'

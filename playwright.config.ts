@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './tests',
   /* Maximum time one test can run for. */
-  // timeout: 60 * 1000,
+  timeout: 60 * 1000,
   // expect: {
   //   /**
   //    * Maximum time expect() should wait for the condition to be met.
@@ -24,15 +24,23 @@ export default defineConfig({
   // globalSetup: require.resolve('./global-setup'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   // globalSetup: require.resolve('./global-setup'),
+  webServer: {
+    command: 'pnpm dev',
+    // url: 'http://localhost:3000/ru/',
+    port: 3000,
+    timeout: 120 * 1000,
+    reuseExistingServer: !process.env.CI,
+  },
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     // actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3000/ru/',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     // trace: 'on-first-retry',
     // Tell all tests to load signed-in state from 'storageState.json'.
-    storageState: 'storageState.json'
+    storageState: 'storageState.json',
+    locale: 'ru',
   },
 
   /* Configure projects for major browsers */

@@ -1,4 +1,4 @@
-import type { Values as CustomerValues } from '@/app/[lng]/customers/[id]/calculator'
+import type { Values as CustomerValues } from '@/app/customers/calculator'
 import { rest } from 'msw'
 import cities from './cities.json'
 import user from './user.json'

@@ -1,26 +1,7 @@
-import { validate as validateEmail } from 'isemail'
 import type { NextApiRequest } from 'next'
-import {
-	assert, object, refine, size,
-	string
-} from 'superstruct'
-
-const Register = object({
-	username: size(string(), 1, 255),
-	email: refine(string(), 'email', (input) => validateEmail(input)),
-	password1: size(string(), 8, 255),
-	password2: string(),
-	first_name: string(),
-	last_name: string(),
-})
-
-const ValidatePasswordsEqual = refine(Register, 'PasswordsEqual',
-	({ password1, password2 }) => password1 === password2)
-
-const Login = object({
-	username: size(string(), 1, 255),
-	password: size(string(), 1, 255),
-})
+import { assert } from 'superstruct'
+import { Register } from '@/app/auth/register'
+import { Login } from '@/app/auth/login'
 
 export function validateRegister({
 	body: {
@@ -30,7 +11,7 @@ export function validateRegister({
 		...rest
 	} }: NextApiRequest) {
 	const data = { ...rest, first_name, last_name }
-	assert(data, ValidatePasswordsEqual)
+	assert(data, Register)
 	return data
 }
 

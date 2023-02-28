@@ -1,4 +1,4 @@
-import ObjectsTablePlaceholder from '@/objectsTable/placeholders/ObjectsTable'
+import ObjectsTablePlaceholder from '@/app/placeholders/ObjectsTable'
 
 export default function Loading() {
 	return <ObjectsTablePlaceholder />

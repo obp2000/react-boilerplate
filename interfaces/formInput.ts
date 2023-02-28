@@ -1,9 +1,9 @@
-import type { Values as CustomerValues } from '@/app/[lng]/customers/[id]/calculator'
-import type { Values as ProductValues } from '@/app/[lng]/products/[id]/calculator'
-import type { Values as OrderValues } from '@/app/[lng]/orders/[id]/calculator'
-import { FieldRenderProps } from 'react-final-form'
-import { LoginValues } from '@/auth/LoginForm'
-import { RegisterValues } from '@/auth/RegisterForm'
+import type { Values as CustomerValues } from '@/app/customers/calculator'
+import type { Values as ProductValues } from '@/app/products/calculator'
+import type { Values as OrderValues } from '@/app/orders/calculator'
+// import { FieldRenderProps } from 'react-final-form'
+import { LoginValues } from '@/app/auth/LoginForm'
+import { RegisterValues } from '@/app/auth/RegisterForm'
 import { OrderItem } from '@prisma/client'
 
 export type inputFieldValue = CustomerValues['nick'] | CustomerValues['name'] | CustomerValues['address'] |
@@ -23,5 +23,5 @@ export type inputFieldValue = CustomerValues['nick'] | CustomerValues['name'] | 
 
 export type switchFieldValue = Pick<ProductValues, 'fleece'>
 
-export type InputFieldRenderProps =
-	FieldRenderProps<inputFieldValue | switchFieldValue>
+// export type InputFieldRenderProps =	FieldRenderProps<inputFieldValue | switchFieldValue>
+export type InputFieldRenderProps =	inputFieldValue | switchFieldValue

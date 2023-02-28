@@ -1,22 +1,19 @@
 import { Translation } from '@/app/i18n/dictionaries'
-import type { Values as CustomerValues } from '@/app/[lng]/customers/[id]/calculator'
-import type { CustomerFormProps } from '@/app/[lng]/customers/[id]/CustomerForm'
-import type { Customer } from '@/app/[lng]/customers/[id]/helpers'
-import type { Values as OrderValues } from '@/app/[lng]/orders/[id]/calculator'
-import type { Order } from '@/app/[lng]/orders/[id]/helpers'
-import type { OrderFormProps } from '@/app/[lng]/orders/[id]/OrderForm'
-import type { Values as ProductValues } from '@/app/[lng]/products/[id]/calculator'
-import type { Product } from '@/app/[lng]/products/[id]/helpers'
-import type { ProductFormProps } from '@/app/[lng]/products/[id]/ProductForm'
+import type { Customer, Values as CustomerValues } from '@/app/customers/calculator'
+import type { CustomerFormProps } from '@/app/customers/CustomerForm'
+import type { Order, Values as OrderValues } from '@/app/orders/calculator'
+import type { OrderFormProps } from '@/app/orders/OrderForm'
+import type { Product, Values as ProductValues } from '@/app/products/calculator'
+import type { ProductFormProps } from '@/app/products/ProductForm'
 
 type getCustomer = (id: number) => Promise<Customer>
 type getProduct = (id: number) => Promise<Product>
 type getOrder = (id: number) => Promise<Order>
 
 const getObject = {
-	customers: () => import('@/app/[lng]/customers/[id]/serverHelpers').then(({ getObject }) => getObject),
-	products: () => import('@/app/[lng]/products/[id]/serverHelpers').then(({ getObject }) => getObject),
-	orders: () => import('@/app/[lng]/orders/[id]/serverHelpers').then(({ getObject }) => getObject),
+	customers: () => import('@/app/customers/serverHelpers').then(({ getObject }) => getObject),
+	products: () => import('@/app/products/serverHelpers').then(({ getObject }) => getObject),
+	orders: () => import('@/app/orders/serverHelpers').then(({ getObject }) => getObject),
 }
 
 export async function getGetObject(table: string): Promise<getCustomer>
@@ -31,9 +28,9 @@ type getProductInitialValues = ({ object }: { object?: Product }) => ProductValu
 type getOrderInitialValues = ({ object }: { object?: Order }) => OrderValues
 
 const getInitialValues = {
-	customers: () => import('@/app/[lng]/customers/[id]/serverHelpers').then(({ getInitialValues }) => getInitialValues),
-	products: () => import('@/app/[lng]/products/[id]/serverHelpers').then(({ getInitialValues }) => getInitialValues),
-	orders: () => import('@/app/[lng]/orders/[id]/serverHelpers').then(({ getInitialValues }) => getInitialValues),
+	customers: () => import('@/app/customers/serverHelpers').then(({ getInitialValues }) => getInitialValues),
+	products: () => import('@/app/products/serverHelpers').then(({ getInitialValues }) => getInitialValues),
+	orders: () => import('@/app/orders/serverHelpers').then(({ getInitialValues }) => getInitialValues),
 }
 
 export async function getGetInitialValues(table: string): Promise<getCustomerInitialValues>
@@ -62,9 +59,9 @@ type orderLabels = (dict: Translation) => {
 }
 
 const labels = {
-	customers: () => import('@/app/[lng]/customers/[id]/serverHelpers').then(({ labels }) => labels),
-	products: () => import('@/app/[lng]/products/[id]/serverHelpers').then(({ labels }) => labels),
-	orders: () => import('@/app/[lng]/orders/[id]/serverHelpers').then(({ labels }) => labels),
+	customers: () => import('@/app/customers/serverHelpers').then(({ labels }) => labels),
+	products: () => import('@/app/products/serverHelpers').then(({ labels }) => labels),
+	orders: () => import('@/app/orders/serverHelpers').then(({ labels }) => labels),
 }
 
 export async function getLabels(table: string): Promise<customerLabels>
@@ -75,19 +72,19 @@ export async function getLabels(table: string) {
 }
 
 const options = {
-	customers: () => import('@/app/[lng]/customers/[id]/serverHelpers').then(({ options }) => options),
-	products: () => import('@/app/[lng]/products/[id]/serverHelpers').then(({ options }) => options),
-	orders: () => import('@/app/[lng]/orders/[id]/serverHelpers').then(({ options }) => options),
+	customers: () => import('@/app/customers/serverHelpers').then(({ getOptions }) => getOptions),
+	products: () => import('@/app/products/serverHelpers').then(({ getOptions }) => getOptions),
+	orders: () => import('@/app/orders/serverHelpers').then(({ getOptions }) => getOptions),
 }
 
-export async function getOptions(table: string) {
+export async function getGetOptions(table: string) {
 	return options[table as keyof typeof options]()
 }
 
 const form = {
-	customers: () => import('@/app/[lng]/customers/[id]/CustomerForm').then((module) => module.default),
-	products: () => import('@/app/[lng]/products/[id]/ProductForm').then((module) => module.default),
-	orders: () => import('@/app/[lng]/orders/[id]/OrderForm').then((module) => module.default),
+	customers: () => import('@/app/customers/CustomerForm').then((module) => module.default),
+	products: () => import('@/app/products/ProductForm').then((module) => module.default),
+	orders: () => import('@/app/orders/OrderForm').then((module) => module.default),
 }
 
 export async function getForm(table: string): Promise<(props: CustomerFormProps) => JSX.Element>

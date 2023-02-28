@@ -1,0 +1,19 @@
+{
+	"product_type_id": "",
+	"threads": "",
+	"contents": "",
+  	"fleece": false,
+  	"name": "",
+  	"price": 0,
+  	"dollar_price": 0,
+	"dollar_rate": 0,
+	"weight": 0,
+	"width": 0,
+	"density": 0,
+	"width_shop": 0,
+	"density_shop": 0,
+	"weight_for_count": 0,
+	"length_for_count": 0,
+	"price_pre": 0,
+	"image": ""
+}

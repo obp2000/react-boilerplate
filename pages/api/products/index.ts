@@ -1,5 +1,5 @@
-import { where } from '@/app/[lng]/products/serverHelpers'
-import select from '@/app/[lng]/products/select.json'
+import { where } from '@/app/products/serverHelpers'
+import select from '@/app/products/select.json'
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { validate } from './validators'
@@ -18,7 +18,7 @@ export default async function handle(
     case 'GET':
       const objects = await prisma.product.findMany({
         where: where(req.query),
-        select,
+        select: select.objects,
       })
       res.json(objects)
       break

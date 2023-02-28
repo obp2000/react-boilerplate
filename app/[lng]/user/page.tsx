@@ -1,7 +1,7 @@
 import type { Translation } from '@/app/i18n/dictionaries'
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import Card from '@/client/Card'
+import Card from '@/app/client/Card'
 import type { User } from '@prisma/client'
 import { ParsedUrlQuery } from 'querystring'
 import userFieldNames from './config.json'

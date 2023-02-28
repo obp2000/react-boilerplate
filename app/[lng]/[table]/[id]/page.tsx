@@ -1,8 +1,8 @@
 import type { ModelNames } from '@/app/i18n/dictionaries'
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import BackButton from '@/backButton/BackButton'
-import Date from '@/Date'
+import BackButton from './BackButton'
+import Date from '@/app/Date'
 import { makeSerializable } from '@/services/util'
 import { notFound } from 'next/navigation'
 import { ParsedUrlQuery } from 'querystring'
@@ -11,7 +11,7 @@ import {
 	getGetInitialValues,
 	getGetObject,
 	getLabels,
-	getOptions
+	getGetOptions,
 } from './helpers'
 
 export default async function Page({ params }: { params: ParsedUrlQuery }) {
@@ -30,7 +30,9 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
 	}
 	const getInitialValues = await getGetInitialValues(table)
 	const labels = await getLabels(table)
-	const options = await getOptions(table)
+	const getOptions = await getGetOptions(table)
+	const options = await getOptions()
+	// console.log('options ', options)
 	const Form = await getForm(table)
 	const lng = String(params.lng || fallbackLng)
 	const dict = await getDictionary(lng)
@@ -53,6 +55,7 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
 			save: dict.save,
 			message: dict.successfully,
 			errorMessages: dict.errorMessages,
+			units: dict.units,
 			...labels(dict),
 			...options,
 		}} />

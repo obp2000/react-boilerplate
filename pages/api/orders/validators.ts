@@ -1,31 +1,6 @@
-import type { Order as OrderType } from '@/app/[lng]/orders/[id]/helpers'
-import { Customer } from "@/pages/api/customers/validators"
-import { OrderItem } from '@prisma/client'
+import type { Order as OrderType } from '@/app/orders/calculator'
 import type { NextApiRequest } from "next"
-import {
-    array, assert, integer,
-    number, object,
-    optional, string
-} from 'superstruct'
-
-const OrderItem = object({
-  id: optional(integer()),
-  product: optional(object({id : integer()})),
-  amount: optional(number()),
-  price: optional(integer())
-})
-
-const OrderItems = array(OrderItem)
-
-export const Order = object({
-  post_cost: optional(number()),
-  packet: optional(integer()),
-  delivery_type: optional(integer()),
-  address: string(),
-  gift: optional(string()),
-  customer: Customer,
-  orderItems: optional(OrderItems),
-})
+import { Order } from '@/app/orders/order'
 
 export function validate({
   body: {
@@ -45,13 +20,13 @@ export function validate({
   }: OrderType['orderItems'][number]) => ({
     id,
     product: product ? { id: product.id } : undefined,
-    amount: amount ? Number(amount) : undefined,
-    price: price ? Number(price) : undefined,
+    amount: amount ? parseFloat(amount) : undefined,
+    price: price ? parseInt(price) : undefined,
   }))
   const data = {
-    post_cost: post_cost ? Number(post_cost) : undefined,
-    packet: packet ? parseInt(packet) : undefined,
-    delivery_type: delivery_type ? parseInt(delivery_type) : undefined,
+    post_cost: post_cost ? parseFloat(post_cost) : undefined,
+    packet: packet === '' ? undefined : parseInt(packet),
+    delivery_type: delivery_type === '' ? undefined : parseInt(delivery_type),
     address,
     gift,
     customer,

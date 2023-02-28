@@ -1,13 +1,16 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import { getAuth } from '@/auth/server'
-import DeleteObjectButton from '@/deleteObjectButton/DeleteObjectButton'
-import LinkToNewOrEditObject from '@/linkToNewOrEditObject/LinkToNewOrEditObject'
-import Pagination from '@/pagination/Pagination'
+import { getAuth } from '@/app/auth/server'
+import DeleteObjectButton from './DeleteObjectButton'
+import Pagination from './pagination/Pagination'
 import { makeSerializable } from '@/services/util'
 import type { ParsedUrlQuery } from 'querystring'
 import { getGetObjects, getTableLabels, getTableRow } from './helpers'
 import type { ModelNames } from '@/app/i18n/dictionaries'
+import EditIcon from '@/app/client/EditIcon'
+import AddIcon from '@/app/client/AddIcon'
+import Tooltip from '@/app/client/Tooltip'
+import Link from 'next/link'
 
 export default async function Page({
 	params,
@@ -36,11 +39,15 @@ export default async function Page({
 					<tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
 						<TableLabels {...{ dict }} />
 						{auth?.isAuthenticated && <th className="py-3 px-6 text-left w-1/12">
-							<LinkToNewOrEditObject {...{
-								table,
-								label: dict.new,
-								lng
-							}} />
+							<Link
+							    aria-label={dict.new}
+							    href={`/${lng}/${table}/new`}
+							  // prefetch={false}
+							>
+							    <Tooltip title={dict.new}>
+							      <AddIcon />
+							    </Tooltip>
+							</Link>
 						</th>}
 					</tr>
 				</thead>
@@ -52,12 +59,15 @@ export default async function Page({
 						{auth?.isAuthenticated && <td className="py-3 px-6 text-left">
 							<div className="flex items-center justify-center">
 								<div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-									<LinkToNewOrEditObject {...{
-										table,
-										object,
-										label: dict.edit,
-										lng
-									}} />
+									<Link
+									    aria-label={dict.edit}
+									    href={`/${lng}/${table}/${object.id}`}
+									  // prefetch={false}
+									>
+									    <Tooltip title={dict.edit}>
+									      <EditIcon />
+									    </Tooltip>
+									</Link>
 								</div>
 								<div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
 									<DeleteObjectButton {...{
@@ -67,6 +77,7 @@ export default async function Page({
 										message: dict.successfully,
 										okText: dict.yes,
 										cancelText: dict.no,
+										accessToken: auth.accessToken
 									}} />
 								</div>
 							</div>

@@ -35,10 +35,22 @@
   "errorMessages":{
     "null": "This field cannot be NULL.",
     "blank": "This field cannot be blank.",
+    "Expected a nonempty string but received an empty one": "This field cannot be blank",
+    "Expected a value of type `string`, but received: `\"\"`": "This field cannot be blank",
+    "Expected an object, but received: \"\"": "This field cannot be blank",
+    "Expected a string, but received: undefined": "This field cannot be blank",
+    "Expected a string with a length between `1` and `255` but received one with a length of `0`": "This field cannot be blank",
+    "Expected a number greater than or equal to 1 but received `0`": "This field cannot be blank",
     "password_mismatch": "The entered passwords do not match.",
     "invalid_email": "Please enter a valid email address.",
     "short_password": "The entered password is too short. It must contain at least 8 characters.",
     "not_integer": "Enter the correct number."
+  },
+  "units": {
+    "meter_short": "m",
+    "centimeter_short": "cm",
+    "gram_short": "gr",
+    "kilogram_short": "kg"
   },
   "auth": {
     "login": "Login",
@@ -84,15 +96,15 @@
     "price": "Price",
     "width": "Width",
     "density": "Density",
-    "dollar_price": "Price, $/kg",
+    "dollar_price": "Price",
     "dollar_rate": "Dollar rate",
     "prices": "Prices of meter",
-    "weight_for_count": "Weight of sample, gr",
-    "length_for_count": "Length of sample, m",
+    "weight_for_count": "Weight of sample",
+    "length_for_count": "Length of sample",
     "density_for_count": "Density for count",
     "weight": "Weight",
     "meters_in_roll": "Meters in roll",
-    "price_pre": "Preliminary price, rub./m",
+    "price_pre": "Preliminary price",
     "image": "Photo",
     "width_shop": "Shop width",
     "density_shop": "Shop density",
@@ -141,10 +153,6 @@
     "updated_at": "Updated",
     "packetChoices": [
       {
-        "value": null,
-        "display_name": "----"
-      },
-      {
         "value": 25,
         "display_name": "25"
       },
@@ -170,10 +178,6 @@
       }
     ],
     "deliveryTypeChoices": [
-      {
-        "value": null,
-        "display_name": "----"
-      },
       {
         "value": 0,
         "display_name": "Russian Post"

@@ -4,7 +4,7 @@ import cities from '@/mocks/cities.json'
 import dict from '@/app/i18n/locales/ru/translation.json'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/ru/customers')
+  await page.goto('customers')
 })
 
 test.describe("Customers CRUD functionality", () => {
@@ -178,7 +178,7 @@ test.describe("Customers CRUD functionality", () => {
   })
 
   test("deletes object", async ({ page }) => {
-    await page.getByRole('img', { name: dict.delete }).nth(3).click()
+    await page.getByRole('img', { name: dict.delete }).nth(3).click({ timeout: 3000 })
 
     let confirmation = page.getByTestId('modal')
     await expect(confirmation).toBeVisible()

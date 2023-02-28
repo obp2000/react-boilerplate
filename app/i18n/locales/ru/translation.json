@@ -35,10 +35,22 @@
   "errorMessages":{
     "null": "Это поле не может иметь значение NULL.",
     "blank": "Это поле не может быть пустым.",
+    "Expected a nonempty string but received an empty one": "Это поле не может быть пустым",
+    "Expected a value of type `string`, but received: `\"\"`": "Это поле не может быть пустым",
+    "Expected an object, but received: \"\"": "Это поле не может быть пустым",
+    "Expected a string, but received: undefined": "Это поле не может быть пустым",
+    "Expected a string with a length between `1` and `255` but received one with a length of `0`": "Это поле не может быть пустым",
+    "Expected a number greater than or equal to 1 but received `0`": "Это поле не может быть пустым",
     "password_mismatch": "Введенные пароли не совпадают.",
     "invalid_email": "Введите правильный адрес электронной почты.",
     "short_password": "Введённый пароль слишком короткий. Он должен содержать как минимум 8 символов.",
     "not_integer": "Введите правильное число."
+  },
+  "units": {
+    "meter_short": "м",
+    "centimeter_short": "см",
+    "gram_short": "гр",
+    "kilogram_short": "кг"
   },
   "auth": {
     "login": "Войти",
@@ -84,15 +96,15 @@
     "price": "Цена",
     "width": "Ширина",
     "density": "Плотность",
-    "dollar_price": "Цена, $/кг",
-    "dollar_rate": "Курс $",
+    "dollar_price": "Цена",
+    "dollar_rate": "Курс",
     "prices": "Цена метра",
-    "weight_for_count": "Вес отреза, гр",
-    "length_for_count": "Длина отреза, м",
+    "weight_for_count": "Вес отреза",
+    "length_for_count": "Длина отреза",
     "density_for_count": "Плотность для расчета",
     "weight": "Вес",
     "meters_in_roll": "Метров в рулоне",
-    "price_pre": "Цена до выкупа, руб./м",
+    "price_pre": "Цена до выкупа",
     "image": "Фото",
     "width_shop": "Ширина для витрины",
     "density_shop": "Плотность для витрины",
@@ -141,10 +153,6 @@
     "updated_at": "Обновлен",
     "packetChoices": [
       {
-        "value": null,
-        "display_name": "----"
-      },
-      {
         "value": 25,
         "display_name": "25"
       },
@@ -170,10 +178,6 @@
       }
     ],
     "deliveryTypeChoices": [
-      {
-        "value": null,
-        "display_name": "----"
-      },
       {
         "value": 0,
         "display_name": "Почта России"

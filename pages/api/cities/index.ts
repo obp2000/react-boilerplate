@@ -1,6 +1,6 @@
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import select from '@/app/[lng]/customers/cities/select.json'
+import select from '@/app/customers/cities/select.json'
 
 export function where({ term }: NextApiRequest["query"]) {
   if (!term) { return {} }
