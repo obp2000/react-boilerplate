@@ -1,6 +1,4 @@
-// import { FieldArrayRenderProps } from 'react-final-form-arrays'
-import { Values } from '../calculator'
-import initOrderItem from './orderItem.json'
+import type { UseFieldArrayRemove } from 'react-hook-form'
 
 export function deleteOrderItem({
   index,
@@ -8,9 +6,13 @@ export function deleteOrderItem({
   label,
   okText,
   cancelText,
-  busy,
-}: { index: number, label: string, okText: string, cancelText: string, busy: boolean }) {
-  if (busy) { return }
+}: {
+  index: number
+  remove: UseFieldArrayRemove
+  label: string
+  okText: string
+  cancelText: string
+}) {
   return async () => {
     const confirm = (await import('@/app/confirmation/Confirmation')).confirm
     const result = await confirm(`${label}?`, { okText, cancelText })
@@ -20,5 +22,3 @@ export function deleteOrderItem({
     }
   }
 }
-
-// Omit<FieldArrayRenderProps<Values['orderItems'], HTMLElement>, 'meta'>

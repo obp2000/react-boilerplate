@@ -5,6 +5,8 @@ import { Unauthorized } from 'http-errors'
 import Negotiator from 'negotiator'
 import { NextRequest, NextResponse } from 'next/server'
 
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+
 export const config = {
   matcher: [
     '/((?!_next|favicon.ico|blank.png).*)',
@@ -29,7 +31,8 @@ export async function middleware(request: NextRequest) {
     if (!token) {
       return NextResponse.next(Unauthorized())
     }
-    await verifyAccessToken(token)
+    // console.log('ver')
+    await verifyAccessToken(token, String(accessTokenSecret))
       .then((user) => {
         // req.user = user
         // NextResponse.next()

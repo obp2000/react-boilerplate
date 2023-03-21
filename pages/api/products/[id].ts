@@ -1,6 +1,6 @@
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { validate } from './validators'
+import { getObjectData } from './index'
 
 export const config = {
   api: {
@@ -13,32 +13,23 @@ export default async function handle(
   res: NextApiResponse) {
   switch (req.method) {
     case 'PUT':
-      const { product_type_id, ...data } = await validate(req)
       const object = await prisma.product.update({
         where: { id: Number(req.query.id) },
-        data: {
-          ...data,
-          productType: product_type_id
-            ? { connect: { id: product_type_id } }
-            : { disconnect: true },
-          updated_at: new Date(),
-        },
+        data: await getObjectData(req),
       })
-      res.json(object)
-      // console.log('updatedObject ', updatedObject)
-      break
+      return res.json(object)
     case 'DELETE':
       const deletedObject = await prisma.product.delete({
         where: { id: Number(req.query.id) },
       })
-      res.json(deletedObject)
-      break
+      return res.json(deletedObject)
     default:
       throw new Error(
         `The HTTP ${req.method} method is not supported at this route.`
       )
   }
 }
+
 
 
       // const { fields, files } = await getData(req)

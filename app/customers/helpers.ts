@@ -1,42 +1,33 @@
-import type { Prisma } from "@prisma/client"
-import select from './select.json'
 import { getGetOptionLabel as getGetCityOptionLabel } from '@/app/customers/cities/helpers'
 import type { Translation } from '@/app/i18n/dictionaries'
+import type { Customer } from '@/interfaces/customers'
 
-export type Customer = Prisma.CustomerGetPayload<{ select: typeof select.objects }>
+export function getShortName(labels: Translation['customer']) {
+    return (customer: Partial<Customer>) => {
+      if (!customer) { return '' }
+      const label = []
+      label.push(customer.nick)
+      if (customer.name) {
+        label.push(`${labels.name}: ${customer.name}`)
+      }
+      return label.join(' ')
+  }
+}
 
 export function getGetOptionLabel(labels: Translation['customer']) {
     return (customer: Customer) => {
       if (!customer) { return '' }
-      const nick = customer.nick
-      const name = customer.name ? ` ${labels.name}: ${customer.name}` : ''
-      const city = customer.city ? ` ${getGetCityOptionLabel(labels.city)(customer.city)}` : ''
-      const address = customer.address ? ` ${labels.address}: ${customer.address}` : ''
-      return `${nick}${name}${city}${address}`
+      const label = []
+      label.push(customer.nick)
+      if (customer.name) {
+        label.push(`${labels.name}: ${customer.name}`)
+      }
+      if(customer.city) {
+        label.push(getGetCityOptionLabel(labels.city)(customer.city))
+      }
+      if (customer.address) {
+        label.push(`${labels.address}: ${customer.address}`)
+      }
+      return label.join(' ')
   }
 }
-
-
-// function dropdownListTextField({
-//   nick,
-//   name,
-//   city,
-//   address,
-// }: Prisma.CustomerGetPayload<{ select: typeof select.objects }>) {
-//   return [
-//     String(nick),
-//     String(name),
-//     String(city?.pindex),
-//     String(city?.city),
-//     String(address)
-//   ]
-// }
-
-// export function useDropdown() {
-//   return {
-//     textField: dropdownListTextField,
-//     dataKey: 'id',
-//     searchPath: '/customers/',
-//     renderValueComponent: CustomerName,
-//   }
-// }

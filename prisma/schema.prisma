@@ -7,129 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account_emailaddress {
-  id                        Int                         @id @default(autoincrement())
-  email                     String                      @unique @db.VarChar(254)
-  verified                  Boolean
-  primary                   Boolean
-  user_id                   Int
-  auth_user                 User                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_emailaddress_user_id_2c513194_fk_auth_user_id")
-  account_emailconfirmation account_emailconfirmation[]
-
-  @@index([email], map: "account_emailaddress_email_03be32b2_like")
-  @@index([user_id], map: "account_emailaddress_user_id_2c513194")
-}
-
-model account_emailconfirmation {
-  id                   Int                  @id @default(autoincrement())
-  created              DateTime             @db.Timestamptz(6)
-  sent                 DateTime?            @db.Timestamptz(6)
-  key                  String               @unique @db.VarChar(64)
-  email_address_id     Int
-  account_emailaddress account_emailaddress @relation(fields: [email_address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_emailconfirm_email_address_id_5b7f8c58_fk_account_e")
-
-  @@index([email_address_id], map: "account_emailconfirmation_email_address_id_5b7f8c58")
-  @@index([key], map: "account_emailconfirmation_key_f43612bd_like")
-}
-
-model auth_group {
-  id                     Int                      @id @default(autoincrement())
-  name                   String                   @unique @db.VarChar(150)
-  auth_group_permissions auth_group_permissions[]
-  auth_user_groups       auth_user_groups[]
-
-  @@index([name], map: "auth_group_name_a6ea08ec_like")
-}
-
-model auth_group_permissions {
-  id              Int             @id @default(autoincrement())
-  group_id        Int
-  permission_id   Int
-  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_group_permissio_permission_id_84c5c92e_fk_auth_perm")
-  auth_group      auth_group      @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_group_permissions_group_id_b120cbf9_fk_auth_group_id")
-
-  @@unique([group_id, permission_id], map: "auth_group_permissions_group_id_permission_id_0cd325b0_uniq")
-  @@index([group_id], map: "auth_group_permissions_group_id_b120cbf9")
-  @@index([permission_id], map: "auth_group_permissions_permission_id_84c5c92e")
-}
-
-model auth_permission {
-  id                         Int                          @id @default(autoincrement())
-  name                       String                       @db.VarChar(255)
-  content_type_id            Int
-  codename                   String                       @db.VarChar(100)
-  auth_group_permissions     auth_group_permissions[]
-  django_content_type        django_content_type          @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_permission_content_type_id_2f476e4b_fk_django_co")
-  auth_user_user_permissions auth_user_user_permissions[]
-
-  @@unique([content_type_id, codename], map: "auth_permission_content_type_id_codename_01ab375a_uniq")
-  @@index([content_type_id], map: "auth_permission_content_type_id_2f476e4b")
-}
-
 model User {
-  id                          Int                           @id @default(autoincrement())
-  password                    String                        @db.VarChar(128)
-  last_login                  DateTime?                     @db.Timestamptz(6)
-  is_superuser                Boolean
-  username                    String                        @unique @db.VarChar(150)
-  first_name                  String                        @db.VarChar(150)
-  last_name                   String                        @db.VarChar(150)
-  email                       String                        @db.VarChar(254)
-  is_staff                    Boolean
-  is_active                   Boolean
-  date_joined                 DateTime                      @db.Timestamptz(6)
-  account_emailaddress        account_emailaddress[]
-  auth_user_groups            auth_user_groups[]
-  auth_user_user_permissions  auth_user_user_permissions[]
-  authtoken_token             authtoken_token?
-  django_admin_log            django_admin_log[]
-  knox_authtoken              knox_authtoken[]
-  socialaccount_socialaccount socialaccount_socialaccount[]
+  id                          Int        @id @default(autoincrement())
+  password                    String     @db.VarChar(128)
+  lastLogin                   DateTime?  @db.Timestamptz(6) @map("last_login")
+  isSuperuser                 Boolean    @map("is_superuser")
+  username                    String     @unique @db.VarChar(150)
+  firstName                   String     @default("") @db.VarChar(150) @map("first_name")
+  lastName                    String     @default("") @db.VarChar(150) @map("last_name")
+  email                       String     @db.VarChar(254)
+  isStaff                     Boolean    @map("is_staff")
+  isActive                    Boolean    @map("is_active")
+  dateJoined                  DateTime   @db.Timestamptz(6) @map("date_joined")
 
   @@index([username], map: "auth_user_username_6821ab7c_like")
 
   @@map("auth_user")
-}
-
-model auth_user_groups {
-  id         Int        @id @default(autoincrement())
-  user_id    Int
-  group_id   Int
-  auth_group auth_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_groups_group_id_97559544_fk_auth_group_id")
-  auth_user  User  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_groups_user_id_6a12ed8b_fk_auth_user_id")
-
-  @@unique([user_id, group_id], map: "auth_user_groups_user_id_group_id_94350c0c_uniq")
-  @@index([group_id], map: "auth_user_groups_group_id_97559544")
-  @@index([user_id], map: "auth_user_groups_user_id_6a12ed8b")
-}
-
-model auth_user_user_permissions {
-  id              Int             @id @default(autoincrement())
-  user_id         Int
-  permission_id   Int
-  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm")
-  auth_user       User       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id")
-
-  @@unique([user_id, permission_id], map: "auth_user_user_permissions_user_id_permission_id_14a6b632_uniq")
-  @@index([permission_id], map: "auth_user_user_permissions_permission_id_1fbb5f2c")
-  @@index([user_id], map: "auth_user_user_permissions_user_id_a95ead1b")
-}
-
-model authtoken_token {
-  key       String    @id @db.VarChar(40)
-  created   DateTime  @db.Timestamptz(6)
-  user_id   Int       @unique
-  auth_user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "authtoken_token_user_id_35299eff_fk_auth_user_id")
-
-  @@index([key], map: "authtoken_token_key_10f0b77e_like")
-}
-
-model city_city {
-  pindex String @id @db.VarChar(6)
-  city   String @unique @db.VarChar(80)
-
-  @@index([city], map: "city_city_city_3a729809_like")
-  @@index([pindex], map: "city_city_pindex_e0664d6f_like")
 }
 
 model City {
@@ -148,131 +41,50 @@ model City {
 model Customer {
   id            Int            @id @default(autoincrement())
   nick          String         @db.VarChar(255)
-  name          String         @db.VarChar(255)
-  address       String         @db.VarChar(255)
-  created_at    DateTime       @db.Timestamptz(6)
-  updated_at    DateTime       @db.Timestamptz(6)
-  city_id       Int?
-  city          City?    @relation(fields: [city_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "customer_customer_city_id_f38aa8fc_fk_customer_city_id")
+  name          String         @default("") @db.VarChar(255)
+  address       String         @default("") @db.VarChar(255)
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt    DateTime       @updatedAt @db.Timestamptz(6) @map("updated_at")
+  cityId       Int?           @map("city_id")
+  city          City?         @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "customer_customer_city_id_f38aa8fc_fk_customer_city_id")
   orders        Order[]
 
-  @@index([city_id], map: "customer_customer_city_id_f38aa8fc")
+  @@index([cityId], map: "customer_customer_city_id_f38aa8fc")
 
   @@map("customer_customer")
-}
-
-model django_admin_log {
-  id                  Int                  @id @default(autoincrement())
-  action_time         DateTime             @db.Timestamptz(6)
-  object_id           String?
-  object_repr         String               @db.VarChar(200)
-  action_flag         Int                  @db.SmallInt
-  change_message      String
-  content_type_id     Int?
-  user_id             Int
-  django_content_type django_content_type? @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "django_admin_log_content_type_id_c4bce8eb_fk_django_co")
-  auth_user           User            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "django_admin_log_user_id_c564eba6_fk_auth_user_id")
-
-  @@index([content_type_id], map: "django_admin_log_content_type_id_c4bce8eb")
-  @@index([user_id], map: "django_admin_log_user_id_c564eba6")
-}
-
-model django_content_type {
-  id               Int                @id @default(autoincrement())
-  app_label        String             @db.VarChar(100)
-  model            String             @db.VarChar(100)
-  auth_permission  auth_permission[]
-  django_admin_log django_admin_log[]
-
-  @@unique([app_label, model], map: "django_content_type_app_label_model_76bd3d3b_uniq")
-}
-
-model django_migrations {
-  id      Int      @id(map: "django_migrations_pkey2") @default(autoincrement())
-  app     String   @db.VarChar(255)
-  name    String   @db.VarChar(255)
-  applied DateTime @db.Timestamptz(6)
-}
-
-model django_migrations1 {
-  id      Int      @id(map: "django_migrations_pkey") @default(autoincrement())
-  app     String   @db.VarChar(255)
-  name    String   @db.VarChar(255)
-  applied DateTime @db.Timestamptz(6)
-}
-
-model django_migrations2 {
-  id      Int      @id(map: "django_migrations_pkey1") @default(autoincrement())
-  app     String   @db.VarChar(255)
-  name    String   @db.VarChar(255)
-  applied DateTime @db.Timestamptz(6)
-}
-
-model django_session {
-  session_key  String   @id @db.VarChar(40)
-  session_data String
-  expire_date  DateTime @db.Timestamptz(6)
-
-  @@index([expire_date], map: "django_session_expire_date_a5c62663")
-  @@index([session_key], map: "django_session_session_key_c0390e0f_like")
-}
-
-model django_site {
-  id                            Int                             @id @default(autoincrement())
-  domain                        String                          @unique(map: "django_site_domain_a2e37b91_uniq") @db.VarChar(100)
-  name                          String                          @db.VarChar(50)
-  socialaccount_socialapp_sites socialaccount_socialapp_sites[]
-
-  @@index([domain], map: "django_site_domain_a2e37b91_like")
-}
-
-model knox_authtoken {
-  digest    String    @id @db.VarChar(128)
-  salt      String    @unique @db.VarChar(16)
-  created   DateTime  @db.Timestamptz(6)
-  user_id   Int
-  expiry    DateTime? @db.Timestamptz(6)
-  token_key String    @db.VarChar(8)
-  auth_user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "knox_authtoken_user_id_e5a5d899_fk_auth_user_id")
-
-  @@index([digest], map: "knox_authtoken_digest_188c7e77_like")
-  @@index([salt], map: "knox_authtoken_salt_3d9f48ac_like")
-  @@index([token_key], map: "knox_authtoken_token_key_8f4f7d47")
-  @@index([token_key], map: "knox_authtoken_token_key_8f4f7d47_like")
-  @@index([user_id], map: "knox_authtoken_user_id_e5a5d899")
 }
 
 model OrderItem {
   id              Int              @id @default(autoincrement())
   amount          Decimal          @db.Decimal(5, 2)
   price           Int
-  created_at      DateTime         @db.Timestamptz(6)
-  updated_at      DateTime         @db.Timestamptz(6)
-  order_id        Int?
-  product_id      Int?
-  order     Order?     @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_item_orderitem_order_id_51e755c8_fk_order_order_id")
-  product         Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_item_orderitem_product_id_0a6a03af_fk_product_product_id")
+  createdAt       DateTime         @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt       DateTime         @updatedAt @db.Timestamptz(6) @map("updated_at")
+  orderId         Int?             @map("order_id")
+  productId       Int?             @map("product_id")
+  order           Order?           @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_item_orderitem_order_id_51e755c8_fk_order_order_id")
+  product         Product?         @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_item_orderitem_product_id_0a6a03af_fk_product_product_id")
 
-  @@index([order_id], map: "order_item_orderitem_order_id_51e755c8")
-  @@index([product_id], map: "order_item_orderitem_product_id_0a6a03af")
+  @@index([orderId], map: "order_item_orderitem_order_id_51e755c8")
+  @@index([productId], map: "order_item_orderitem_product_id_0a6a03af")
 
   @@map("order_item_orderitem")
 }
 
 model Order {
   id                   Int                    @id @default(autoincrement())
-  created_at           DateTime               @db.Timestamptz(6)
-  updated_at           DateTime               @db.Timestamptz(6)
-  post_cost            Int
+  createdAt            DateTime               @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt            DateTime               @updatedAt @db.Timestamptz(6) @map("updated_at")
+  postCost             Int                    @default(0) @map("post_cost")
   packet               Int?
-  delivery_type        Int?
-  address              String                 @db.VarChar(255)
-  gift                 String                 @db.VarChar(255)
-  customer_id          Int?
+  deliveryType         Int?                   @map("delivery_type")
+  address              String                 @default("") @db.VarChar(255)
+  gift                 String                 @default("") @db.VarChar(255)
+  customerId           Int?                   @map("customer_id")
   orderItems           OrderItem[]
-  customer    Customer?     @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_order_customer_id_5bbbd957_fk_customer_customer_id")
+  customer             Customer?     @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_order_customer_id_5bbbd957_fk_customer_customer_id")
 
-  @@index([customer_id], map: "order_order_customer_id_5bbbd957")
+  @@index([customerId], map: "order_order_customer_id_5bbbd957")
 
   @@map("order_order")
 }
@@ -286,22 +98,22 @@ model Product {
   weight               Decimal?               @db.Decimal(4, 2)
   width                Int?
   density              Int?
-  dollar_price         Decimal?               @db.Decimal(4, 2)
-  dollar_rate          Decimal?               @db.Decimal(5, 2)
-  width_shop           Int?
-  density_shop         Int?
-  weight_for_count     Int?
-  length_for_count     Decimal?               @db.Decimal(5, 2)
-  price_pre            Int?
+  dollarPrice          Decimal?               @db.Decimal(4, 2) @map("dollar_price")
+  dollarRate           Decimal?               @db.Decimal(5, 2) @map("dollar_rate")
+  widthShop            Int?                   @map("width_shop")
+  densityShop          Int?                   @map("density_shop")
+  weightForCount       Int?                   @map("weight_for_count")
+  lengthForCount       Decimal?               @db.Decimal(5, 2) @map("length_for_count")
+  pricePre             Int?                   @map("price_pre")
   image                String                 @db.VarChar(100)
-  created_at           DateTime               @db.Timestamptz(6)
-  updated_at           DateTime               @db.Timestamptz(6)
-  product_type_id      Int?
+  createdAt            DateTime               @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt            DateTime               @updatedAt @db.Timestamptz(6) @map("updated_at")
+  productTypeId        Int?                   @map("product_type_id")
   fleece               Boolean?
   orderItems           OrderItem[]
-  productType          ProductType?   @relation(fields: [product_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_product_product_type_id_4bfbbfda_fk_product_p")
+  productType          ProductType?   @relation(fields: [productTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_product_product_type_id_4bfbbfda_fk_product_p")
 
-  @@index([product_type_id], map: "product_product_product_type_id_4bfbbfda")
+  @@index([productTypeId], map: "product_product_product_type_id_4bfbbfda")
 
   @@map("product_product")
 }
@@ -309,62 +121,9 @@ model Product {
 model ProductType {
   id              Int               @id @default(autoincrement())
   name            String            @db.VarChar(255)
-  created_at      DateTime          @db.Timestamptz(6)
-  updated_at      DateTime          @db.Timestamptz(6)
+  createdAt       DateTime          @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt       DateTime          @updatedAt @db.Timestamptz(6) @map("updated_at")
   products        Product[]
 
   @@map("product_producttype")
-}
-
-model socialaccount_socialaccount {
-  id                        Int                         @id @default(autoincrement())
-  provider                  String                      @db.VarChar(30)
-  uid                       String                      @db.VarChar(191)
-  last_login                DateTime                    @db.Timestamptz(6)
-  date_joined               DateTime                    @db.Timestamptz(6)
-  extra_data                String
-  user_id                   Int
-  auth_user                 User                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id")
-  socialaccount_socialtoken socialaccount_socialtoken[]
-
-  @@unique([provider, uid], map: "socialaccount_socialaccount_provider_uid_fc810c6e_uniq")
-  @@index([user_id], map: "socialaccount_socialaccount_user_id_8146e70c")
-}
-
-model socialaccount_socialapp {
-  id                            Int                             @id @default(autoincrement())
-  provider                      String                          @db.VarChar(30)
-  name                          String                          @db.VarChar(40)
-  client_id                     String                          @db.VarChar(191)
-  secret                        String                          @db.VarChar(191)
-  key                           String                          @db.VarChar(191)
-  socialaccount_socialapp_sites socialaccount_socialapp_sites[]
-  socialaccount_socialtoken     socialaccount_socialtoken[]
-}
-
-model socialaccount_socialapp_sites {
-  id                      Int                     @id @default(autoincrement())
-  socialapp_id            Int
-  site_id                 Int
-  django_site             django_site             @relation(fields: [site_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "socialaccount_social_site_id_2579dee5_fk_django_si")
-  socialaccount_socialapp socialaccount_socialapp @relation(fields: [socialapp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc")
-
-  @@unique([socialapp_id, site_id], map: "socialaccount_socialapp__socialapp_id_site_id_71a9a768_uniq")
-  @@index([site_id], map: "socialaccount_socialapp_sites_site_id_2579dee5")
-  @@index([socialapp_id], map: "socialaccount_socialapp_sites_socialapp_id_97fb6e7d")
-}
-
-model socialaccount_socialtoken {
-  id                          Int                         @id @default(autoincrement())
-  token                       String
-  token_secret                String
-  expires_at                  DateTime?                   @db.Timestamptz(6)
-  account_id                  Int
-  app_id                      Int
-  socialaccount_socialaccount socialaccount_socialaccount @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "socialaccount_social_account_id_951f210e_fk_socialacc")
-  socialaccount_socialapp     socialaccount_socialapp     @relation(fields: [app_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "socialaccount_social_app_id_636a42d7_fk_socialacc")
-
-  @@unique([app_id, account_id], map: "socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq")
-  @@index([account_id], map: "socialaccount_socialtoken_account_id_951f210e")
-  @@index([app_id], map: "socialaccount_socialtoken_app_id_636a42d7")
 }

@@ -25,7 +25,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   // globalSetup: require.resolve('./global-setup'),
   webServer: {
-    command: 'pnpm dev',
+    command: 'npm run dev',
     // url: 'http://localhost:3000/ru/',
     port: 3000,
     timeout: 120 * 1000,

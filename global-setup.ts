@@ -1,3 +1,20 @@
+import { chromium, FullConfig } from '@playwright/test'
+
+async function globalSetup(config: FullConfig) {
+  const browser = await chromium.launch()
+  const page = await browser.newPage()
+  await page.goto('http://localhost:3000/ru/customers')
+  // await page.getByLabel('Username or email address').fill('username');
+  // await page.getByLabel('Password').fill('password');
+  // await page.getByRole('button', { name: 'Sign in' }).click();
+  // Save signed-in state to 'storageState.json'.
+  await page.context().storageState({ path: 'storageState1.json' })
+  await browser.close()
+}
+
+export default globalSetup
+
+
 // import { request } from '@playwright/test'
 
 // async function globalSetup() {
@@ -26,19 +43,3 @@
 //   await requestContext.storageState({ path: 'storageState.json' });
 //   await requestContext.dispose();
 // }
-
-import { chromium, FullConfig } from '@playwright/test';
-
-async function globalSetup(config: FullConfig) {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-  await page.goto('http://localhost:3000/ru/customers');
-  // await page.getByLabel('Username or email address').fill('username');
-  // await page.getByLabel('Password').fill('password');
-  // await page.getByRole('button', { name: 'Sign in' }).click();
-  // Save signed-in state to 'storageState.json'.
-  await page.context().storageState({ path: 'storageState1.json' });
-  await browser.close();
-}
-
-export default globalSetup;

@@ -1,5 +1,6 @@
 const cloudinary = require("cloudinary").v2
 import type { UploadApiErrorResponse, UploadApiResponse } from "cloudinary"
+import type { File } from "formidable"
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -18,4 +19,11 @@ export function uploadImage(imageUploaded: string) {
       }
     )
   })
+}
+
+export async function upload(image: File | File[]) {
+  const { version, public_id, format } =
+    await uploadImage((image as File).filepath as string) as
+    { version: number, public_id: string, format: string }
+  return `${version}/${public_id}.${format}`
 }

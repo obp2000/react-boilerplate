@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-const path = require('path')
 
 const nextConfig = {
   swcMinify: true,
@@ -19,7 +18,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  reactStrictMode: false,
+  reactStrictMode: true,
 }
 
 module.exports = nextConfig

@@ -1,17 +1,18 @@
 'use client'
 
 import type { Translation } from '@/app/i18n/dictionaries'
-import Button from '@/app/client/Button'
+import Button from '@/app/useClient/Button'
 import Dialog from '@mui/material/Dialog'
 import { useState } from 'react'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Avatar from '@mui/material/Avatar'
+import Typography from '@/app/useClient/Typography'
+import Stack from '@/app/useClient/Stack'
 
 export default function AuthButtonAndModal({
   lng,
@@ -31,13 +32,21 @@ export default function AuthButtonAndModal({
     </Button>
     <Dialog open={modal} onClose={() => setModal(false)} >
       <DialogTitle>
-        <Avatar><LockOutlinedIcon /></Avatar>
-        {isLogin ? labels?.login : labels?.register}
+        <Stack direction="row" spacing={2}>
+          <Avatar><LockOutlinedIcon /></Avatar>
+          <Typography
+            component="h3"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flex: 1 }}
+          >
+            {isLogin ? labels?.login : labels?.register}
+          </Typography>
+        </Stack>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <AuthComp {...{ lng, setModal, labels, errorMessages }} />
-        </DialogContentText>
+        <AuthComp {...{ lng, setModal, labels, errorMessages }} />
         <DialogActions>
           <p className="text-sm font-light text-gray-500 dark:text-gray-400 pt-2">
             <a href="#"

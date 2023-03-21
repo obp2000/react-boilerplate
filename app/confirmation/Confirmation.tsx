@@ -1,13 +1,12 @@
 'use client'
 
-import Button from '@/app/client/Button'
-import { confirmable, createConfirmation } from 'react-confirm'
+import Button from '@/app/useClient/Button'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import { confirmable, createConfirmation } from 'react-confirm'
 
 type Props = {
   /** header title */
@@ -41,16 +40,16 @@ const Confirmation = ({
 >
     <DialogTitle>
       <WarningAmberIcon className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-      <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+      <div className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
         {confirmation}
-      </h3>
+      </div>
     </DialogTitle>
     <DialogContent>
       <DialogActions>
-        <Button onClick={() => proceed(false)}>
+        <Button variant="outlined" onClick={() => proceed(false)}>
           {cancelText}
         </Button>
-        <Button onClick={() => proceed(true)}>
+        <Button variant="outlined" onClick={() => proceed(true)}>
           {okText}
         </Button>
       </DialogActions>
@@ -64,7 +63,7 @@ export const confirm = (message: string, options = {}) => {
 }
 
 
-// import Button from '@/app/client/Button'
+// import Button from '@/app/useClient/Button'
 // import type {
 //   Confirmation,
 //   ProceedButtonProps

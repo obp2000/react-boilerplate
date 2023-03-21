@@ -1,19 +1,9 @@
 import { validate as validateEmail } from 'isemail'
-import {
-	assert,
-	object,
-	refine,
-	size,
-	string,
-	nonempty,
-	optional,
-	nullable,
-} from 'superstruct'
+import { object, refine, string, nonempty, optional } from 'superstruct'
 
 const RegisterBase = object({
 	username: nonempty(string()),
 	email: refine(string(), 'email', (input) => validateEmail(input)),
-	// password1: size(string(), 8, 255),
 	password1: refine(string(), 'MinSize', (password1) => {
 		if (password1 && password1.length >= 8) {
 			return true
@@ -21,8 +11,8 @@ const RegisterBase = object({
 		return 'short_password'
 	}),
 	password2: string(),
-	first_name: optional(nullable(string())),
-	last_name: optional(nullable(string())),
+	firstName: optional(string()),
+	lastName: optional(string()),
 })
 
 export const Register = refine(RegisterBase, 'PasswordsEqual',
@@ -33,3 +23,8 @@ export const Register = refine(RegisterBase, 'PasswordsEqual',
 		return 'password_mismatch'
 
 })
+
+// export function validate({ body }: NextApiRequest) {
+// 	const data = create(body, Register)
+// 	return data
+// }

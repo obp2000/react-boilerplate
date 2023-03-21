@@ -1,11 +1,18 @@
-import { integer, number, object, optional, nullable, union, refine } from 'superstruct'
+import { integer, object, optional, coerce, any, union, string, number, literal } from 'superstruct'
+import { OptionalInteger, OptionalFloat, OptionalDate, OptionalDigitPattern } from "@/app/form/fields"
 
-const refinedNumber = refine(union([number(), string()]), 'refinedNumber',
-  (input) => Number(input) >= 0)
+// const optionalObject = coerce(optional(object()), object(), ({ id }) => ({ id }))
 
 export const OrderItem = object({
-  id: optional(integer()),
-  product: optional(object({id : integer()})),
-  amount: optional(nullable(refinedNumber)),
-  price: optional(nullable(refinedNumber)),
+    id: optional(integer()),
+    // product: optionalObject,
+    productId: optional(integer()),
+    amount: coerce(union([number(), OptionalDigitPattern, literal('')]),
+        union([string(), literal('')]),
+        (value) => value === '' ? 0 : parseFloat(value)),
+    price: coerce(union([integer(), OptionalDigitPattern]),
+        string(),
+        (value) => value === '' ? 0 : parseInt(value)),
+    cost: optional(any()),
+    weight: optional(any()),
 })

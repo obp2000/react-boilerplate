@@ -1,19 +1,17 @@
 import type { Translation } from '@/app/i18n/dictionaries'
-import Button from '@/app/client/Button'
+import Button from '@/app/useClient/Button'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import TextField from '@mui/material/TextField'
-import type { Prisma } from '@prisma/client'
 import clsx from 'clsx'
-import { useRouter } from 'next/navigation'
-import type { Dispatch, SetStateAction } from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useTransition } from 'react'
 import { Controller, useForm } from "react-hook-form"
-import { authAction } from './client'
 import { Login } from './login'
 import defaultValues from './login.json'
-
-export type LoginValues = Pick<Prisma.UserCreateArgs['data'],
-	'username' | 'password'>
+import { useAuthAction } from './hooks'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import type { LoginValues } from '@/interfaces/users'
 
 export default function LoginForm({
 	lng,
@@ -32,26 +30,26 @@ export default function LoginForm({
 	labels: Translation['auth']
 	errorMessages: Translation['errorMessages']
 }) {
-	const { refresh, replace } = useRouter()
 	const [isPending, startTransition] = useTransition()
-	const onSubmit = (values: LoginValues) =>
-		authAction({
-			values,
-			url: '/login',
-			replace,
-			message: successfulLogin,
-			labels,
-			startTransition,
-			lng,
-			setModal,
-		})
+	const [success, setSuccess] = useState(false)
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const onSubmit = useAuthAction({
+		url: '/login',
+		labels: labels as Translation['auth'],
+		startTransition,
+		lng,
+		setModal,
+		setSuccess,
+		setErrorMessage,
+	})
 	const {
 		control,
 		handleSubmit,
 		formState: {
 			errors,
 			isValidating,
-			isSubmitting
+			isSubmitting,
+			// isSubmitSuccessful,
 		}
 	} = useForm<LoginValues>({
 		defaultValues,
@@ -100,6 +98,12 @@ export default function LoginForm({
 		>
 			{login}
 		</Button>
+		<Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
+			<Alert severity={success ? "success" : "error"} elevation={6}
+				variant="filled" sx={{ width: '100%' }}>
+				{success ? successfulLogin : errorMessage}
+			</Alert>
+		</Snackbar>
 	</form>
 }
 

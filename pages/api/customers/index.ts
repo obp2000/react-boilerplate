@@ -1,8 +1,9 @@
-import { where } from '@/app/customers/serverHelpers'
-import select from '@/app/customers/select.json'
-import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { validate } from './validators'
+import { Customer } from '@/app/customers/customer'
+import { assert } from 'superstruct'
+import { where } from '@/app/customers/db'
+import prisma from '@/services/prisma'
+import tables from '@/app/objectPage/tables.json'
 
 // GET/POST /api/customers
 export default async function handle(
@@ -13,22 +14,13 @@ export default async function handle(
     case 'GET':
       const objects = await prisma.customer.findMany({
         where: where(req.query),
-        select: select.objects,
+        select: tables.customers.select.objects,
       })
-      res.json(objects)
-      break
+      return res.json(objects)
     case 'POST':
-      const { city, ...data } = validate(req)
-      const object = await prisma.customer.create({
-        data: {
-          ...data,
-          city: city ? { connect: { id: city.id } } : undefined,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      })
-      res.json(object)
-      break
+      assert(req.body, Customer)
+      const object = await prisma.customer.create({ data: req.body })
+      return res.json(object)
     default:
       throw new Error(
         `The HTTP ${req.method} method is not supported at this route.`

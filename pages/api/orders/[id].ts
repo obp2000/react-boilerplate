@@ -1,9 +1,8 @@
-import type { Order } from '@/app/orders/calculator'
-import prisma from '@/services/prisma'
-import { Prisma } from '@prisma/client'
-import { Decimal } from '@prisma/client/runtime'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { validate } from './validators'
+import { Order } from '@/app/orders/order'
+import { create as coerce } from 'superstruct'
+import prisma from '@/services/prisma'
+import type { NewOrderItem, OrderItemUpdate } from '@/interfaces/orders'
 
 export default async function handle(
   req: NextApiRequest,
@@ -11,19 +10,19 @@ export default async function handle(
 ) {
   switch (req.method) {
     case 'PUT':
-      const { customer, orderItems = [], ...data } = validate(req)
+      const { postCost, orderItems = [], ...data } = coerce(req.body, Order)
       const object = await prisma.order.findUnique({
         where: { id: Number(req.query.id) },
         include: { orderItems: true }
       })
       const { newOrderItems, updateOrderItems, deletedOrderItemIds } =
-        (orderItems as Order['orderItems']).reduce(
+        orderItems.reduce(
           (result: {
-            newOrderItems: Prisma.OrderItemCreateInput[],
-            updateOrderItems: Prisma.OrderItemUpdateArgs[]
+            newOrderItems: NewOrderItem[],
+            updateOrderItems: OrderItemUpdate[],
             deletedOrderItemIds: number[]
           },
-            { id, product, amount, price }) => {
+            { id, ...data }) => {
             if (id) {
               const index = result.deletedOrderItemIds.indexOf(id)
               if (index > -1) {
@@ -31,26 +30,11 @@ export default async function handle(
               }
               result.updateOrderItems.push({
                 where: { id },
-                data: {
-                  product: product
-                    ? { connect: { id: product.id as number } }
-                    : { disconnect: true },
-                  price,
-                  amount,
-                  updated_at: new Date(),
-                }
+                data
               })
             }
             else {
-              result.newOrderItems.push({
-                product: product
-                  ? { connect: { id: product.id as number } }
-                  : undefined,
-                price: price as number,
-                amount: amount as Decimal,
-                created_at: new Date(),
-                updated_at: new Date(),
-              })
+              result.newOrderItems.push(data)
             }
             return result
           }, {
@@ -58,46 +42,39 @@ export default async function handle(
           updateOrderItems: [],
           deletedOrderItemIds: object?.orderItems.map(({ id }) => id) || []
         })
-      // console.log('newOrderItems ', newOrderItems)
-      const { id: customerId } = customer as Prisma.CustomerWhereUniqueInput
-      const updateOrder = {
-        where: { id: Number(req.query.id) },
-        data: {
-          ...data,
-          customer: customerId
-            ? { connect: { id: customerId } } :
-            { disconnect: true },
-          updated_at: new Date(),
-          orderItems: {
-            create: newOrderItems,
-            deleteMany: {
-              id: {
-                in: deletedOrderItemIds
-              }
-            },
-          }
-        }
-      } as Prisma.OrderUpdateArgs
-      // const { id: customerId } = customer as Prisma.CustomerWhereUniqueInput
       const [updatedObject] = await prisma.$transaction(
-        [prisma.order.update(updateOrder),
-        ...updateOrderItems.map((orderItem) => prisma.orderItem.update(orderItem))
+        [prisma.order.update({
+          where: { id: Number(req.query.id) },
+          data: {
+            ...data,
+            postCost: postCost as number,
+            orderItems: {
+              create: newOrderItems,
+              deleteMany: {
+                id: {
+                  in: deletedOrderItemIds
+                }
+              },
+            }
+          }
+        }),
+        ...updateOrderItems.map((orderItem) =>
+          prisma.orderItem.update(orderItem))
         ]
       )
-      res.json(updatedObject)
-      break
+      return res.json(updatedObject)
     case 'DELETE':
       const deletedObject = await prisma.order.delete({
         where: { id: Number(req.query.id) },
       })
-      res.json(deletedObject)
-      break
+      return res.json(deletedObject)
     default:
       throw new Error(
         `The HTTP ${req.method} method is not supported at this route.`
       )
   }
 }
+
 
 
       // const existingOrderItems = orderItems.filter(({ id }) => !!id)

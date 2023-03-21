@@ -1,13 +1,18 @@
 import { errorMessage } from '@/app/error/client'
-import { toastError } from '@/app/notifications/toastError'
-import { toastSuccess } from '@/app/notifications/toastSuccess'
 import { useRouter } from 'next/navigation'
-import type { TransitionStartFunction } from 'react'
+import type { Dispatch, SetStateAction, TransitionStartFunction } from 'react'
+import type { LoginValues, RegisterValues } from '@/interfaces/users'
 
-export function useSignOut({ lng, labels, startTransition }: {
+export function useSignOut({
+  lng,
+  startTransition,
+  setSuccess,
+  setErrorMessage
+}: {
   lng: string
-  labels: Record<string, string>
   startTransition: TransitionStartFunction
+  setSuccess: Dispatch<SetStateAction<boolean>>
+  setErrorMessage: Dispatch<SetStateAction<string | null>>
 }) {
   const { refresh, replace } = useRouter()
   return async () => {
@@ -16,14 +21,52 @@ export function useSignOut({ lng, labels, startTransition }: {
       // headers: new Headers({ 'Content-Type': 'application/json' }),
     })
     if (res.ok) {
+      setSuccess(true)
       startTransition(() => {
         replace(`/${lng}`)
         refresh()
       })
-      toastSuccess(labels?.successfulLogout)
     } else {
       const errorMessageText = await errorMessage(res)
-      toastError(errorMessageText)
+      setErrorMessage(errorMessageText)
+    }
+  }
+}
+
+export function useAuthAction({
+  url,
+  labels,
+  startTransition,
+  lng,
+  setModal,
+  setSuccess,
+  setErrorMessage,
+}: {
+  url: string
+  labels: Record<string, string>
+  startTransition: TransitionStartFunction
+  lng: string
+  setModal: Dispatch<SetStateAction<boolean>>
+  setSuccess: Dispatch<SetStateAction<boolean>>
+  setErrorMessage: Dispatch<SetStateAction<string | null>>
+}) {
+  const { replace, refresh } = useRouter()
+  return async (values: LoginValues | RegisterValues) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth${url}`, {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    })
+    if (res.ok) {
+      setSuccess(true)
+      startTransition(() => {
+        replace(`/${lng}/user`)
+        refresh()
+        setModal(false)
+      })
+    } else {
+      const errorMessageText = await errorMessage(res)
+      setErrorMessage(labels[errorMessageText])
     }
   }
 }

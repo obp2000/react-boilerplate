@@ -1,13 +1,25 @@
-import { where } from '@/app/products/serverHelpers'
-import select from '@/app/products/select.json'
+import tables from '@/app/objectPage/tables.json'
+import { where } from '@/app/products/db'
+import { Product } from '@/app/products/product'
+import { upload } from '@/services/cloudinary'
+import { getData } from '@/services/formidable'
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { validate } from './validators'
+import { create } from 'superstruct'
 
 export const config = {
   api: {
     bodyParser: false,
   },
+}
+
+export async function getObjectData(req: NextApiRequest) {
+  const { fields, files: { image } } = await getData(req)
+  let data = create(fields, Product)
+  if (image) {
+    data.image = await upload(image)
+  }
+  return data
 }
 
 export default async function handle(
@@ -18,21 +30,13 @@ export default async function handle(
     case 'GET':
       const objects = await prisma.product.findMany({
         where: where(req.query),
-        select: select.objects,
+        select: tables.products.select.objects,
       })
       res.json(objects)
       break
     case 'POST':
-      const { product_type_id, ...data } = await validate(req)
       const newObject = await prisma.product.create({
-        data: {
-          ...data,
-          productType: product_type_id
-            ? { connect: { id: product_type_id } }
-            : undefined,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
+        data: await getObjectData(req)
       })
       res.json(newObject)
       break

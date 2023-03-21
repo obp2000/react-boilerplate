@@ -3,21 +3,22 @@ import { hashSync } from 'bcryptjs'
 import type { HttpError } from 'http-errors'
 import { compressToEncodedURIComponent } from 'lz-string'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { validateRegister } from './validators'
+import { Register } from '@/app/auth/register'
+import { create } from 'superstruct'
 
 export default async function handle(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
 	if (req.method === 'POST') {
-		const { password1, password2, ...input } = validateRegister(req)
+		const { password1, password2, ...input } = create(req.body, Register)
 		const data = {
 			...input,
-			last_login: new Date(),
-			date_joined: new Date(),
-			is_superuser: false,
-			is_staff: false,
-			is_active: true,
+			lastLogin: new Date(),
+			dateJoined: new Date(),
+			isSuperuser: false,
+			isStaff: false,
+			isActive: true,
 			password: hashSync(password1, 8),
 		}
 		try {

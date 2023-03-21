@@ -1,8 +1,7 @@
-import type { Order } from '@/app/orders/calculator'
-import prisma from '@/services/prisma'
-import { Prisma } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { validate } from './validators'
+import { Order } from '@/app/orders/order'
+import { create as coerce } from 'superstruct'
+import prisma from '@/services/prisma'
 
 export default async function handle(
   req: NextApiRequest,
@@ -10,31 +9,15 @@ export default async function handle(
 ) {
   switch (req.method) {
     case 'POST':
-      const { customer, orderItems = [], ...data } = validate(req)
-      const newOrderItems = (orderItems as Order['orderItems']).map(
-        ({ product, amount, price }) => ({
-          product: product ? { connect: { id: product.id } } : undefined,
-          price,
-          amount,
-          created_at: new Date(),
-          updated_at: new Date(),
-        }))
-
-      const { id: customerId } = customer as Prisma.CustomerWhereUniqueInput
-      const createOrder = {
+      const {postCost, orderItems, ...data } = coerce(req.body, Order)
+      const object = await prisma.order.create({
         data: {
           ...data,
-          customer: customerId ? { connect: { id: customerId } } : undefined,
-          created_at: new Date(),
-          updated_at: new Date(),
-          orderItems: {
-            create: newOrderItems,
-          }
+          postCost: postCost as number,
+          orderItems: { create: orderItems }
         }
-      } as Prisma.OrderCreateArgs
-      const createdObject = prisma.order.create(createOrder)
-      res.json(createdObject)
-      break
+      })
+      return res.json(object)
     default:
       throw new Error(
         `The HTTP ${req.method} method is not supported at this route.`

@@ -1,19 +1,25 @@
-import Button from '@/app/client/Button'
-import RemoveIcon from '@mui/icons-material/Remove'
-import AddIcon from '@mui/icons-material/Add'
-import DragHandleIcon from '@mui/icons-material/DragHandle'
 import CalculateIcon from '@mui/icons-material/Calculate'
-import Tooltip from '@/app/client/Tooltip'
+import Tooltip from '@/app/useClient/Tooltip'
 import type { Translation } from '@/app/i18n/dictionaries'
-import { Controller } from "react-hook-form"
+import { type Control, Controller, type UseFormSetValue } from "react-hook-form"
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import consts from './consts.json'
-import { orderItemsCost, orderItemsWeight, postCostCount } from './calculator'
+import {
+  orderItemsWeight,
+  postCostCount,
+  postCostWithPacket,
+  postDiscount,
+  totalPostals,
+} from './calculator'
+import type { Values, OrderObject as Order } from '@/interfaces/orders'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import IconButton from '@mui/material/IconButton'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
 
 export default function Postals({
   count,
@@ -31,31 +37,51 @@ export default function Postals({
   labels: Translation['order']
   units: Translation['units']
   busy: boolean
+  control: Control<Values>
+  customer: Values['customer']
+  orderItemsValues: Values['orderItems']
+  postCost: Values['postCost']
+  packet: Values['packet']
+  setValue: UseFormSetValue<Values>
 }) {
   // const { mutators } = useForm()
   // const { values: { customer, total_weight } } = useFormState()
-  return <tr className="border-b border-gray-200 hover:bg-gray-100">
-    <td />
-    <td className='text-sm'>
-      <div className='grid gap-1 mb-6 md:grid-cols-7 pt-4' >
-        <Controller name="post_cost"
+  return <TableRow>
+    <TableCell align='right'>
+      {customer?.city?.pindex && <Tooltip title={count} >
+        <IconButton aria-labelledby={count} disabled={busy}
+          onClick={() => postCostCount({
+            pindex: String(customer.city?.pindex),
+            weight: orderItemsWeight(orderItemsValues),
+            setValue
+          })}>
+          <CalculateIcon />
+        </IconButton>
+      </Tooltip>}
+    </TableCell>
+    <TableCell className='text-sm'>
+      <div className='grid gap-1 mb-6 md:grid-cols-4 pt-4' >
+        <Controller name="postCost"
           control={control}
           render={({ field }) => <TextField {...field}
-            id="post_cost"
-            label={labels.post_cost}
+            id="postCost"
+            label={labels.postCost}
             type="number"
-            step={1}
             variant="outlined"
             size="small"
             disabled={busy}
             InputProps={{
               endAdornment: <InputAdornment position="end">₽</InputAdornment>,
             }}
+            inputProps={{
+              inputMode: 'decimal',
+              step: '0.1',
+            }}
           />}
         />
-        <div className='pt-3 pl-2'>
+        {/*        <div className='pt-3 pl-2'>
           <AddIcon size={22} />
-        </div>
+        </div>*/}
         <Controller name="packet"
           control={control}
           render={({ field }) => <FormControl size='small' fullWidth>
@@ -68,90 +94,42 @@ export default function Postals({
               disabled={busy}
             >
               <MenuItem value=""><em>------</em></MenuItem>
-              {labels.packetChoices.map(({ value, display_name }, key) => <MenuItem key={key} value={value}>
-                {display_name}
-              </MenuItem>)}
+              {labels.packetChoices.map(
+                ({ value, display_name }, key) => <MenuItem key={key} value={value}>
+                  {display_name}
+                </MenuItem>)}
             </Select>
           </FormControl>}
         />
-        <div className='pt-3 pl-2'>
-          <DragHandleIcon size={22} />
-        </div>
         <TextField
-          id="post_cost_with_packet"
-          label={labels.post_cost_with_packet}
-          type="number"
-          variant="outlined"
+          label={labels.postCostWithPacket}
           size="small"
+          value={postCostWithPacket({postCost, packet})}
           disabled
-          value={postCost + packet}
           InputProps={{
             endAdornment: <InputAdornment position="end">₽</InputAdornment>,
           }}
         />
-        <div className='pt-3 pl-2'>
-          <RemoveIcon size={22} />
-        </div>
         <TextField
-          id="post_discount"
-          label={labels.post_discount}
-          type="number"
-          variant="outlined"
+          label={labels.postDiscount}
           size="small"
+          value={postDiscount({ orderItemsValues, postCost, packet }).toFixed(2)}
           disabled
-          value={orderItemsCost(orderItemsValues) >= consts.SUM_FOR_POST_DISCOUNT
-                  ? ((postCost + packet) * consts.POST_DISCOUNT_PERCENT / 100).toFixed(2)
-                  : 0}
           InputProps={{
             endAdornment: <InputAdornment position="end">₽</InputAdornment>,
           }}
         />
       </div>
-    </td>
-    <td />
-    <td>
-      {customer?.city?.pindex && <Tooltip title={count} >
-        <CalculateIcon
-          size={20}
-          aria-labelledby={count}
-          onClick={() => busy
-            ? null
-            : postCostCount({ pindex: customer.city.pindex, weight: orderItemsWeight(orderItemsValues), setValue})}
-          cursor='pointer' />
-      </Tooltip>}
-    </td>
-    <td>
-      <TextField
-        id="total_postals"
-        label={labels.total_postals}
-        type="number"
-        variant="outlined"
-        size="small"
-        disabled
-        value={orderItemsCost(orderItemsValues) >= consts.SUM_FOR_POST_DISCOUNT
-                  ? (postCost + packet - (postCost + packet) * consts.POST_DISCOUNT_PERCENT / 100).toFixed(2)
-                  : postCost + packet}
-        InputProps={{
-          endAdornment: <InputAdornment position="end">₽</InputAdornment>,
-        }}
-      />
-    </td>
-    <td>
-      <TextField
-        id="packet_weight"
-        label={labels.packet_weight}
-        type="number"
-        variant="outlined"
-        size="small"
-        disabled
-        value={consts.PACKET_WEIGHT}
-        InputProps={{
-          endAdornment: <InputAdornment position="end">{units.gram_short}</InputAdornment>,
-        }}
-      />
-    </td>
-    <td />
-  </tr>
+    </TableCell>
+    <TableCell colSpan={2} />
+    <TableCell align='right'>
+      {totalPostals({ orderItemsValues, postCost, packet }).toFixed(2)}₽
+    </TableCell>
+    <TableCell align='right'>
+      {consts.PACKET_WEIGHT}
+    </TableCell>
+    <TableCell />
+  </TableRow>
 }
 
 

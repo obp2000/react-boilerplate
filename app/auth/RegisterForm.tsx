@@ -1,23 +1,19 @@
+import Button from '@/app/useClient/Button'
 import type { Translation } from '@/app/i18n/dictionaries'
-import Button from '@/app/client/Button'
-import { Prisma } from '@prisma/client'
-import clsx from 'clsx'
-import { useRouter } from 'next/navigation'
-import { type Dispatch, type SetStateAction, useTransition } from 'react'
-import { authAction } from './client'
-import {
-  useForm,
-  Controller, FieldError
-} from "react-hook-form"
 import { superstructResolver } from '@hookform/resolvers/superstruct'
-import { Register } from './register'
 import TextField from '@mui/material/TextField'
-import defaultValues from './register.json'
+import clsx from 'clsx'
 import parse from 'html-react-parser'
-
-export type RegisterValues = Pick<Prisma.UserCreateArgs['data'],
-  'username' | 'email' | 'first_name' | 'last_name'> &
-{ password1: string, password2: string }
+import { useState, useTransition, type Dispatch, type SetStateAction } from 'react'
+import {
+  Controller, FieldError, useForm
+} from "react-hook-form"
+import { useAuthAction } from './hooks'
+import { Register } from './register'
+import defaultValues from './register.json'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import type { RegisterValues } from '@/interfaces/users'
 
 export default function RegisterForm({
   lng,
@@ -26,8 +22,8 @@ export default function RegisterForm({
     username,
     usernameHelpText,
     email,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     password1,
     password1HelpText,
     password2,
@@ -43,19 +39,18 @@ export default function RegisterForm({
   labels: Translation['auth']
   errorMessages: Translation['errorMessages']
 }) {
-  const { refresh, replace } = useRouter()
   const [isPending, startTransition] = useTransition()
-  const onSubmit = (values: RegisterValues) =>
-    authAction({
-      values,
-      url: '/register',
-      replace,
-      message: successfulRegister,
-      labels,
-      startTransition,
-      lng,
-      setModal
-    })
+  const [success, setSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const onSubmit = useAuthAction({
+    url: '/register',
+    labels: labels as Translation['auth'],
+    startTransition,
+    lng,
+    setModal,
+    setSuccess,
+    setErrorMessage,
+  })
   const {
     control,
     handleSubmit,
@@ -107,23 +102,23 @@ export default function RegisterForm({
           : undefined}
       />}
     />
-    <Controller name="first_name"
+    <Controller name="firstName"
       control={control}
       render={({ field }) => <TextField {...field}
-        id="first_name"
-        label={first_name}
-        autoComplete="first_name"
+        id="firstName"
+        label={firstName}
+        autoComplete="firstName"
         variant="outlined"
         size="small"
         disabled={busy}
       />}
     />
-    <Controller name="last_name"
+    <Controller name="lastName"
       control={control}
       render={({ field }) => <TextField {...field}
-        id="last_name"
-        label={last_name}
-        autoComplete="last_name"
+        id="lastName"
+        label={lastName}
+        autoComplete="lastName"
         variant="outlined"
         size="small"
         disabled={busy}
@@ -171,68 +166,11 @@ export default function RegisterForm({
     >
       {labels.register}
     </Button>
+    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
+      <Alert severity={success ? "success" : "error"} elevation={6}
+        variant="filled" sx={{ width: '100%' }}>
+        {success ? successfulRegister : errorMessage}
+      </Alert>
+    </Snackbar>
   </form>
 }
-
-
-// {/*				<Field name="username"
-// 					label={username}
-// 					required
-// 					validate={required(errorMessages)}
-// 					autoComplete="username"
-// 					helpText={usernameHelpText}
-// 					component={FloatingFormGroup}
-// 					disabled={busy}
-// 				/>*/}
-// {/*				<FloatingFormGroup name="username"
-// 		            label={username}
-// 		            required
-// 		            autoComplete="username"
-// 		            helpText={usernameHelpText}
-// 		            disabled={busy}
-// 		          />*/}
-
-// {/*				<Field name="email"
-// 					label={email}
-// 					type="email"
-// 					required
-// 					validate={composeValidators(required(errorMessages),
-// 						isEmail(errorMessages))}
-// 					autoComplete="email"
-// 					component={FloatingFormGroup}
-// 					disabled={busy}
-// 				/>*/}
-// {/*				<FloatingFormGroup name="email"
-// 		            label={email}
-// 		            type='email'
-// 		            required
-// 		            autoComplete="email"
-// 		            disabled={busy}
-// 		        />*/}
-
-// {/*				<FloatingFormGroup name="first_name"
-// 					label={first_name}
-// 					autoComplete="first_name"
-// 					disabled={busy}
-// 				/>*/}
-// {/*				<FloatingFormGroup name="last_name"
-// 					label={last_name}
-// 					autoComplete="last_name"
-// 				    disabled={busy}
-// 				/>*/}
-// {/*				<FloatingFormGroup name="password1"
-// 					label={password1}
-// 					type="password"
-// 					required
-// 					autoComplete="new-password"
-// 					helpText={password1HelpText}
-// 					disabled={busy}
-// 				/>*/}
-// {/*				<FloatingFormGroup name="password2"
-// 					label={password2}
-// 					type="password"
-// 					required
-// 					autoComplete="new-password"
-// 					helpText={password2HelpText}
-// 					disabled={busy}
-// 				/>*/}

@@ -1,46 +1,30 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "es6"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/app/*": [
-        "app/*"
-      ],
-      "@/interfaces/*": [
-        "interfaces/*"
-      ],
-      "@/mocks/*": [
-        "mocks/*"
-      ],
-      "@/services/*": [
-        "services/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/pages/*": [
-        "pages/*"
-      ],
-      "@/components/*": [
-        "components/*"
-      ]
+      "@/app/*": ["app/*"],
+      "@/interfaces/*": ["interfaces/*"],
+      "@/mocks/*": ["mocks/*"],
+      "@/services/*": ["services/*"],
+      "@/styles/*": ["styles/*"],
+      "@/pages/*": ["pages/*"]
     },
     "plugins": [
       {
@@ -48,13 +32,11 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

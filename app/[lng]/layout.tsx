@@ -1,17 +1,26 @@
 import '@/styles/globals.scss'
-import 'react-toastify/dist/ReactToastify.min.css'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
 
 import { fallbackLng } from '@/app/i18n/settings'
-import NavBar from '@/app/NavBar'
-import ToastContainer from '@/app/notifications/toastContainer'
+import NavBar from '@/app/navBar/NavBar'
 import type { ParsedUrlQuery } from 'querystring'
 import type { PropsWithChildren } from 'react'
-import LocaleSwitcher from './LocaleSwitcher'
-import { getDictionary } from '../i18n/dictionaries'
+import LocaleSwitcher from '@/app/i18n/LocaleSwitcher'
+import { getDictionary } from '@/app/i18n/dictionaries'
+import Container from '@/app/useClient/Container'
 
 // export async function generateStaticParams() {
 //   return languages.map((lng) => ({ lng }))
 // }
+
+const name = "Best&C"
+
+export const metadata = {
+  title: name,
+}
 
 export default async function RootLayout({
   children,
@@ -20,21 +29,18 @@ export default async function RootLayout({
   const lng = String(params.lng || fallbackLng)
   const dict = await getDictionary(lng)
   return <html lang={lng} >
-    <body className="overflow-y-scroll overflow-x-auto">
-      <div className="min-w-screen min-h-screen bg-gray-100 flex items-center justify-center font-sans overflow-hidden">
-        <div className="w-full lg:w-5/6">
-          <header>
-            <NavBar {...{ lng, dict }} />
-          </header>
-          <main>
-            {children}
-          </main>
-          <footer className='mt-3'>
-            <LocaleSwitcher label={dict.localeSwitcher} />
-          </footer>
-          <ToastContainer />
-        </div>
-      </div>
+    <body>
+      <Container maxWidth="lg">
+        <header>
+          <NavBar {...{ lng, dict }} />
+        </header>
+        <main>
+          {children}
+        </main>
+        <footer className='mt-3'>
+          <LocaleSwitcher lng={lng} label={dict.localeSwitcher} />
+        </footer>
+      </Container>
     </body>
   </html >
 }
