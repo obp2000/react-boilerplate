@@ -2,6 +2,8 @@ import prisma from '@/services/prisma'
 import { createPaginator } from "prisma-pagination"
 import { ParsedUrlQuery } from "querystring"
 import tables from '@/app/objectPage/tables.json'
+import { Product } from '@/interfaces/products'
+import { Prisma } from ".prisma/client"
 
 export function where({ term }: ParsedUrlQuery) {
 	if (!term) { return {} }
@@ -22,7 +24,7 @@ export async function getObjects({
 	searchParams: ParsedUrlQuery
 }) {
 	const paginate = createPaginator({ perPage })
-	return paginate(
+	return paginate<Product, Prisma.ProductFindManyArgs>(
 		prisma.product,
 		{
 			where: where(searchParams),

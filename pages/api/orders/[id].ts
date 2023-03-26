@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Order } from '@/app/orders/order'
+import { OrderApi } from '@/app/orders/order'
 import { create as coerce } from 'superstruct'
 import prisma from '@/services/prisma'
 import type { NewOrderItem, OrderItemUpdate } from '@/interfaces/orders'
@@ -10,7 +10,7 @@ export default async function handle(
 ) {
   switch (req.method) {
     case 'PUT':
-      const { postCost, orderItems = [], ...data } = coerce(req.body, Order)
+      const { postCost, orderItems = [], ...data } = coerce(req.body, OrderApi)
       const object = await prisma.order.findUnique({
         where: { id: Number(req.query.id) },
         include: { orderItems: true }

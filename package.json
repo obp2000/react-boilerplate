@@ -27,7 +27,6 @@
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
     "formidable": "^2.1.1",
-    "html-react-parser": "^3.0.4",
     "isemail": "^3.2.0",
     "jose": "^4.13.1",
     "lz-string": "^1.4.4",
@@ -60,8 +59,6 @@
     "playwright-msw": "^2.1.0",
     "prisma": "4.11.0",
     "sass": "^1.55.0",
-    "tailwindcss": "^3.2.4",
-    "ts-node": "10.9.1",
     "typescript": "4.9.5"
   },
   "prisma": {

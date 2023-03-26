@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@/app/useClient/Typography'
 import Stack from '@/app/useClient/Stack'
+import Chip from '@/app/useClient/Chip'
 
 export default function AuthButtonAndModal({
   lng,
@@ -48,13 +49,8 @@ export default function AuthButtonAndModal({
       <DialogContent>
         <AuthComp {...{ lng, setModal, labels, errorMessages }} />
         <DialogActions>
-          <p className="text-sm font-light text-gray-500 dark:text-gray-400 pt-2">
-            <a href="#"
-              className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? labels?.register : labels?.login}
-            </a>
-          </p>
+          <Chip label={isLogin ? labels?.register : labels?.login}
+            onClick={() => setIsLogin(!isLogin)} />
         </DialogActions>
       </DialogContent>
     </Dialog>

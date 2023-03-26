@@ -1,5 +1,4 @@
-// import { City } from '@/app/customers/cities/city'
-// import { DefaultedDate, OptionalDate } from '@/app/form/fields'
+import { City } from '@/app/customers/cities/city'
 import {
   integer,
   object,
@@ -13,8 +12,24 @@ export const Customer = object({
   id: optional(integer()),
   nick: size(string(), 1, 255),
   name: optional(string()),
-  // city: City,
-  // city1: any(),
+  city: City,
+  address: optional(string()),
+})
+
+export const CustomerApi = object({
+  id: optional(integer()),
+  nick: size(string(), 1, 255),
+  name: optional(string()),
   cityId: integer(),
   address: optional(string()),
+})
+
+export const CustomerSelect = object({
+  id: integer(),
+  nick: optional(string()),
+  name: optional(string()),
+  city: optional(object()),
+  address: optional(string()),
+  createdAt: optional(string()),
+  updatedAt: optional(string()),
 })

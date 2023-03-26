@@ -20,7 +20,6 @@
 			"object": {
 				"nick": true,
 				"name": true,
-				"cityId": true,
 				"city": {
 					"select": {
 						"id": true,
@@ -110,7 +109,6 @@
 			  	"address": true,
 			  	"gift": true,
 				"createdAt": true,
-				"customerId": true,
 				"customer": {
 					"select": {
 						"id": true,
@@ -133,7 +131,6 @@
 						"id": true,
 						"amount": true,
 						"price": true,
-						"productId": true,
 						"product": {
 							"select": {
 								"id": true,
@@ -154,13 +151,7 @@
 									}
 								}
 							}
-						},
-						"createdAt": true,
-						"updatedAt": true
-					},
-					"initObject": {
-						"amount": 0,
-						"price": 0
+						}
 					}
 				}
 			}
@@ -172,6 +163,11 @@
 			"deliveryType": "",
 			"address": "",
 			"gift": ""
+		},
+		"initOrderItem": {
+			"product": null,
+			"amount": 0,
+			"price": 0
 		}
 	}
 }

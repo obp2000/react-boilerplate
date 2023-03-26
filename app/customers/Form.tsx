@@ -2,6 +2,7 @@
 
 import { useOnSubmit } from '@/app/form/hooks'
 import type { Translation } from '@/app/i18n/dictionaries'
+import type { CustomerObject as Customer, Values } from '@/interfaces/customers'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
@@ -16,7 +17,6 @@ import {
 } from "react-hook-form"
 import CityField from './CityField'
 import { Customer as ValidatonSchema } from './customer'
-import type { Values, CustomerObject as Customer } from '@/interfaces/customers'
 
 export type CustomerFormProps = {
   params: ParsedUrlQuery
@@ -31,10 +31,7 @@ export type CustomerFormProps = {
 
 export default function FormComp({
   params,
-  initialValues: {
-    city,
-    ...defaultValues
-  },
+  initialValues,
   accessToken,
   save,
   notFound,
@@ -57,22 +54,22 @@ export default function FormComp({
   const {
     control,
     handleSubmit,
-    setValue,
     formState: {
       errors,
       isLoading,
-      isValidating,
       isSubmitting
     }
-  } = useForm<Values>({
-    defaultValues,
+  } = useForm<Customer>({
+    defaultValues: initialValues,
     resolver: superstructResolver(ValidatonSchema)
   })
   const busy = isSubmitting || isPending
   console.log('errors ', errors)
-  return <form onSubmit={handleSubmit(onSubmit)}
-    className={clsx('p-2', { 'opacity-70': busy })}>
-    <Grid container spacing={2}>
+  const toValues = ({ city, createdAt, ...values }: Customer) => {
+    return onSubmit({ cityId: city?.id, ...values })
+  }
+  return <form onSubmit={handleSubmit(toValues)}>
+    <Grid container spacing={2} sx={{ p: 2, opacity: busy ? 0.7 : 'inherit' }}>
       <Grid xs={4}>
         <Controller name="nick"
           control={control}
@@ -103,13 +100,13 @@ export default function FormComp({
       </Grid>
       <Grid xs={5}>
         <CityField {...{
-          city,
           labels: labels.city,
           busy,
           errors,
           errorMessages,
-          setValue,
-          notFound
+          notFound,
+          control,
+          initialValues,
         }} />
       </Grid>
       <Grid xs={7}>

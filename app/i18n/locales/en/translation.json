@@ -46,6 +46,7 @@
     "Expected an integer, but received: \"\"": "This field cannot be blank",
     "Expected a string matching `/\\d+/` but received \"\"": "This field cannot be blank",
     "Expected an integer, but received: undefined": "This field cannot be blank",
+    "Expected a value of type `IntegerPattern`, but received: `\"\"`": "This field cannot be blank",
     "password_mismatch": "The entered passwords do not match.",
     "invalid_email": "Please enter a valid email address.",
     "short_password": "The entered password is too short. It must contain at least 8 characters.",
@@ -73,7 +74,7 @@
     "firstName": "First name",
     "lastName": "Last name",
     "usernameHelpText": "Required field. Max 150 characters. Only letters, digits and characters @/./+/-/_.",
-    "password1HelpText": "<ul><li>Password must not be too similar to your other personal information.</li><li>Your password must be at least 8 characters.</li><li>Password cannot be numbers only.</li></ul>",
+    "password1HelpText": "Password must not be too similar to your other personal information. Your password must be at least 8 characters. Password cannot be numbers only.",
     "password2HelpText": "Please enter your password again to confirm."
   },
   "customer": {

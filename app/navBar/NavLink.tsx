@@ -1,29 +1,41 @@
 'use client'
 
-import clsx from 'clsx'
-import Button from '@mui/material/Button'
+// import Button from '@mui/material/Button'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
+import type { ReactNode } from 'react'
+import Typography from '@/app/useClient/Typography'
 
 export default function NavLink({
   path,
   lng,
   children
-}: { path: string, lng: string, children: string }) {
+}: {
+  path: string
+  lng: string
+  children: ReactNode
+}) {
   const segment = useSelectedLayoutSegment()
   // console.log({ segment })
   const currentPath = segment === null ? '' : segment
   const isActive = path === currentPath
-  return  <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+  return <Typography variant="h6" component="div" sx={{
+    flexGrow: 1,
+    '&:hover': {
+      opacity: [0.9, 0.8, 0.7],
+    }
+  }}>
     <Link
       href={`/${lng}/${path}`}
-      prefetch={false}
-    className={clsx({
-      'hover:text-gray-300': !isActive,
-      'text-yellow-300': isActive,
-    })}
+      style={{ textDecoration: 'none' }}
+    // prefetch={false}
     >
-      {children}
+      <Typography variant='button' sx={{
+        color: isActive ? 'yellow' : 'white',
+      }}>
+        {children}
+      </Typography>
     </Link>
-  </Button>
+    {/*{children}*/}
+  </Typography>
 }

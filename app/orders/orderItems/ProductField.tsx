@@ -1,22 +1,30 @@
-import { onSearch } from '@/app/form/helpers'
+import {
+	getRenderInput,
+	getRenderOption, isOptionEqualToValue, onSearch
+} from '@/app/form/helpers'
 import type { Translation } from '@/app/i18n/dictionaries'
+import type { OrderObject as Order } from '@/interfaces/orders'
 import Autocomplete from '@mui/material/Autocomplete'
-import CircularProgress from '@mui/material/CircularProgress'
-import TextField from '@mui/material/TextField'
 import { useState } from 'react'
-import type { FieldErrors, UseFormSetValue } from "react-hook-form"
-import type { Values, OrderItem } from '@/interfaces/orders'
+import {
+	Controller,
+	type FieldError,
+	type FieldErrors,
+	type UseFormSetValue,
+	type Control
+} from "react-hook-form"
 
 type ProductFieldProps = {
 	index: number
-	product: OrderItem['product']
+	product: Order['orderItems'][number]['product']
 	label: string
-	getProductOptionLabel: (product: OrderItem['product']) => string
+	getProductOptionLabel: (product: Order['orderItems'][number]['product']) => string
 	busy: boolean
-	errors: FieldErrors<Values>
+	errors: FieldErrors<Order>
 	errorMessages: Translation['errorMessages']
-	setValue: UseFormSetValue<Values>
+	setValue: UseFormSetValue<Order>
 	notFound: string
+	control: Control<Order>
 }
 
 export default function ProductField({
@@ -29,53 +37,94 @@ export default function ProductField({
 	errorMessages,
 	setValue,
 	notFound,
+	control,
 }: ProductFieldProps) {
-	const [products, setProducts] = useState(product ? [product] : [])
+	const [currentValue, setCurrentValue] = useState(product)
+	const [options, setOptions] = useState(product ? [product] : [])
 	const [loading, setLoading] = useState(false)
-	const productError = (errors?.orderItems?.[index as keyof FieldErrors['root']] as
-		FieldErrors['root'] | undefined)?.product
-	return <Autocomplete
-		id={`orderItems.${index}.product`}
-		onChange={(_, product) => {
-			if (product) {
-				setValue(`orderItems.${index}.price`, product.price)
-			}
-			setValue(`orderItems.${index}.productId`, product?.id || null)
-		}}
-		defaultValue={product}
-		autoComplete
-		includeInputInList
-		filterSelectedOptions
-		size='small'
-		isOptionEqualToValue={(option, value) => {
-			return value === undefined || option?.id === value?.id
-		}}
-		getOptionLabel={getProductOptionLabel}
-		renderOption={(props, product) => <li {...props} key={product?.id || -1}>
-			{getProductOptionLabel(product)}
-		</li>}
-		options={products}
-		// filterOptions={(x) => x}
-		onInputChange={onSearch('/products/', setProducts, setLoading)}
-		noOptionsText={notFound}
-		renderInput={(params) => <TextField {...params}
-			label={label}
-			disabled={busy}
-			error={!!productError}
-			helperText={productError
-				? errorMessages[productError.message as keyof Translation['errorMessages']]
-				: undefined}
-			InputProps={{
-				...params.InputProps,
-				endAdornment: <>
-					{loading ? <CircularProgress color="inherit" size={15} /> : null}
-					{params.InputProps.endAdornment}
-				</>,
+	const error = (errors?.orderItems?.[index as
+		keyof FieldErrors['root']])?.product as FieldError
+	return <Controller name={`orderItems.${index}.product`}
+		control={control}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+			id={`orderItems.${index}.product`}
+			onChange={(_, newValue) => {
+				if (newValue) {
+					setValue(`orderItems.${index}.price`, newValue.price)
+				}
+				setCurrentValue(newValue)
+				onChange(newValue)
 			}}
-			inputProps={{
-				...params.inputProps,
-				autoComplete: 'new-password',
-			}}
+			autoComplete
+			includeInputInList
+			filterSelectedOptions
+			size='small'
+			isOptionEqualToValue={isOptionEqualToValue}
+			getOptionLabel={getProductOptionLabel}
+			renderOption={getRenderOption(getProductOptionLabel)}
+			options={options}
+			// filterOptions={(x) => x}
+			onInputChange={onSearch('/products/', setOptions, setLoading, currentValue)}
+			noOptionsText={notFound}
+			renderInput={getRenderInput({ label: '', error, busy, loading, errorMessages, field, ref })}
 		/>}
 	/>
 }
+
+        // <Controller name="customer"
+        //   control={control}
+        //   render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+        //     onChange={(_, data) => onChange(data)}
+        //     id='customer'
+        //     size='small'
+        //     getOptionLabel={getCustomerOptionLabel}
+        //     renderOption={(props, customer) => <li {...props} key={customer?.id || -1}>
+        //       {getCustomerOptionLabel(customer)}
+        //     </li>}
+        //     isOptionEqualToValue={(option, value) => option.id === value.id}
+        //     options={customers}
+        //     // filterOptions={(x) => x}
+        //     onInputChange={onSearch('/customers/', setCustomers, setLoading)}
+        //     noOptionsText={notFound}
+        //     renderInput={(params) => <TextField {...params} {...field}
+        //       inputRef={ref}
+        //       label={`${labels.customer} *`}
+        //       disabled={busy}
+        //       error={errors?.customer ? true : undefined}
+        //       helperText={errors?.customer
+        //         ? errorMessages[errors.customer.message as keyof Translation['errorMessages']]
+        //         : undefined}
+        //       InputProps={{
+        //         ...params.InputProps,
+        //         endAdornment: <>
+        //           {loading ? <CircularProgress color="inherit" size={15} /> : null}
+        //           {params.InputProps.endAdornment}
+        //         </>,
+        //       }}
+        //     />}
+        //   />}
+
+
+	// renderInput={(params) => <TextField {...params}
+	// 	label={label}
+	// 	disabled={busy}
+	// 	error={!!error}
+	// 	helperText={!!error
+	// 		? errorMessages[error.message as keyof Translation['errorMessages']]
+	// 		: undefined}
+	// 	InputProps={{
+	// 		...params.InputProps,
+	// 		endAdornment: <>
+	// 			{loading ? <CircularProgress color="inherit" size={15} /> : null}
+	// 			{params.InputProps.endAdornment}
+	// 		</>,
+	// 	}}
+	// 	inputProps={{
+	// 		...params.inputProps,
+	// 		autoComplete: 'new-password',
+	// 	}}
+	// />}
+
+		// renderOption={(props, product) => <li {...props} key={product?.id || -1}>
+		// 	{getProductOptionLabel(product)}
+		// </li>}

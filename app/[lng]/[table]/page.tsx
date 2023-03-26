@@ -1,5 +1,5 @@
 import type { ParsedUrlQuery } from 'querystring'
-import Controller from '@/app/products/Controller'
+import Controller from '@/app/objectsTable/Controller'
 
 export default async function Page(props: {
 	params: ParsedUrlQuery

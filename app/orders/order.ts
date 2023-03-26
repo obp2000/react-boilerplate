@@ -1,26 +1,37 @@
 import {
   array,
   object,
-  optional,
-  coerce,
-  union,
-  number,
-  pattern,
-  string,
+  optional, string,
   integer,
+  nullable,
 } from 'superstruct'
-import { OrderItem } from './orderItems/orderItem'
-import { OptionalOption } from '@/app/form/fields'
+import { OrderItem, OrderItemApi } from './orderItems/orderItem'
+import {
+  Option,
+  ToInteger,
+  NumberOrPattern,
+  ToFloat,
+} from '@/app/form/fields'
+import { CustomerSelect } from '@/app/customers/customer'
 
 export const Order = object({
-  postCost: coerce(optional(union([number(), pattern(string(), /\d*/)])), string(),
-    (value) => value === '' ? 0 : parseFloat(value)),
-  packet: OptionalOption,
-  deliveryType: OptionalOption,
+  postCost: optional(nullable(NumberOrPattern)),
+  packet: optional(nullable(Option)),
+  deliveryType: optional(nullable(Option)),
+  address: optional(string()),
+  gift: optional(string()),
+  customer: CustomerSelect,
+  orderItems: optional(array(OrderItem)),
+})
+
+export const OrderApi = object({
+  postCost: optional(ToFloat),
+  packet: optional(ToInteger),
+  deliveryType: optional(ToInteger),
   address: optional(string()),
   gift: optional(string()),
   customerId: integer(),
-  orderItems: optional(array(OrderItem)),
+  orderItems: optional(array(OrderItemApi)),
 })
 
 

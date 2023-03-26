@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext", "es6"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es6"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,12 +24,24 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/app/*": ["app/*"],
-      "@/interfaces/*": ["interfaces/*"],
-      "@/mocks/*": ["mocks/*"],
-      "@/services/*": ["services/*"],
-      "@/styles/*": ["styles/*"],
-      "@/pages/*": ["pages/*"]
+      "@/app/*": [
+        "app/*"
+      ],
+      "@/interfaces/*": [
+        "interfaces/*"
+      ],
+      "@/mocks/*": [
+        "mocks/*"
+      ],
+      "@/services/*": [
+        "services/*"
+      ],
+      "@/styles/*": [
+        "styles/*"
+      ],
+      "@/pages/*": [
+        "pages/*"
+      ]
     },
     "plugins": [
       {
@@ -32,8 +49,15 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"

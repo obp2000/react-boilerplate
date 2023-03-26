@@ -1,78 +1,143 @@
 import { getGetOptionLabel } from '@/app/customers/cities/helpers'
-import { onSearch } from '@/app/form/helpers'
+import {
+	getRenderInput,
+	getRenderOption, isOptionEqualToValue, onSearch
+} from '@/app/form/helpers'
 import type { Translation } from '@/app/i18n/dictionaries'
+import type { CustomerObject as Customer } from '@/interfaces/customers'
 import Autocomplete from '@mui/material/Autocomplete'
-import CircularProgress from '@mui/material/CircularProgress'
-import TextField from '@mui/material/TextField'
 import { useState } from 'react'
-import type { FieldErrors, UseFormSetValue } from "react-hook-form"
-import type {
-	CustomerObject as Customer,
-	Values,
-} from '@/interfaces/customers'
+import {
+	Controller,
+	type Control, type FieldError, type FieldErrors
+} from "react-hook-form"
 
 type CityFieldProps = {
-	city: Customer['city']
 	labels: Translation['customer']['city']
 	busy: boolean
-	errors: FieldErrors<Values>
+	errors: FieldErrors<Customer>
 	errorMessages: Translation['errorMessages']
-	setValue: UseFormSetValue<Values>
 	notFound: string
+	control: Control<Customer>
+	initialValues: Customer
 }
 
 export default function CityField({
-	city,
 	labels,
 	busy,
 	errors,
 	errorMessages,
-	setValue,
-	notFound
+	notFound,
+	control,
+	initialValues: {
+		city
+	},
 }: CityFieldProps) {
-	const [cities, setCities] = useState(city ? [city] : [])
+	const [currentValue, setCurrentValue] = useState(city)
+	const [options, setOptions] = useState(city ? [city] : [])
 	const [loading, setLoading] = useState(false)
 	const getOptionLabel = getGetOptionLabel(labels)
-	return <Autocomplete
-		id='city'
-		onChange={(_, city) => {
-			return setValue('cityId', city?.id)
-		}}
-		defaultValue={city}
-		autoComplete
-		includeInputInList
-		filterSelectedOptions
-		size='small'
-		isOptionEqualToValue={(option, value) => {
-			// console.log('option , value ', option, value)
-			return value === undefined || option.id === value.id
-		}}
-		getOptionLabel={getOptionLabel}
-		renderOption={(props, city) => <li {...props} key={city?.id || -1}>
-			{getOptionLabel(city)}
-		</li>}
-		options={cities}
-		// filterOptions={(x) => x}
-		onInputChange={onSearch('/cities/', setCities, setLoading)}
-		noOptionsText={notFound}
-		renderInput={(params) => <TextField {...params}
-			label={`${labels.city} *`}
-			disabled={busy}
-			error={errors?.cityId ? true : undefined}
-			helperText={errors?.cityId
-				? errorMessages[errors.cityId.message as keyof Translation['errorMessages']]
-				: undefined}
-			InputProps={{
-				...params.InputProps,
-				endAdornment: <>
-						{loading ? <CircularProgress color="inherit" size={15} /> : null}
-						{params.InputProps.endAdornment}
-					</>,
+	// const idFieldName = 'cityId'
+	const error = errors?.city as FieldError
+	const label = `${labels.city} *`
+	return <Controller
+		name="city"
+		control={control}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+			id="city"
+			onChange={(_, newValue) => {
+				if (newValue) {
+					setCurrentValue(newValue)
+				}
+				return onChange(newValue)
 			}}
-			inputProps={{
-				...params.inputProps,
-				autoComplete: 'new-password',
-			}}
+			defaultValue={city}
+			autoComplete
+			includeInputInList
+			filterSelectedOptions
+			size='small'
+			isOptionEqualToValue={isOptionEqualToValue}
+			getOptionLabel={getOptionLabel}
+			renderOption={getRenderOption(getOptionLabel)}
+			options={options}
+			// filterOptions={(x) => x}
+			onInputChange={onSearch('/cities/', setOptions, setLoading, currentValue)}
+			noOptionsText={notFound}
+			renderInput={getRenderInput({ label, error, busy, loading, errorMessages, field, ref })}
 		/>}
 	/>
 }
+
+	        // {/*        <Controller name="city1"
+        //   control={control}
+        //   render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+        //     onChange={(_, data) => {
+        //       setValue('city_id', data.id)
+        //       return onChange(data)
+        //     }}
+        //     id='city1'
+        //     // defaultValue={city}
+        //     autoComplete
+        //     includeInputInList
+        //     filterSelectedOptions
+        //     size='small'
+        //     isOptionEqualToValue={(option, value) =>
+        //       value.id ? option.id === value.id : true}
+        //     getOptionLabel={getOptionLabel}
+        //     renderOption={(props, city) => <li {...props} key={city?.id || -1}>
+        //       {getOptionLabel(city)}
+        //     </li>}
+        //     options={cities}
+        //     // filterOptions={(x) => x}
+        //     onInputChange={onSearch('/cities/', setCities, setLoading)}
+        //     noOptionsText={notFound}
+        //     renderInput={(params) => <TextField {...params} {...field}
+        //       inputRef={ref}
+        //       label={`${labels.city.city} *`}
+        //       disabled={busy}
+        //       error={errors?.city ? true : undefined}
+        //       helperText={errors?.city
+        //         ? errorMessages[errors.city.message as keyof Translation['errorMessages']]
+        //         : undefined}
+        //       InputProps={{
+        //         ...params.InputProps,
+        //         endAdornment: (
+        //           <>
+        //             {loading ? <CircularProgress color="inherit" size={15} /> : null}
+        //             {params.InputProps.endAdornment}
+        //           </>
+        //         ),
+        //       }}
+        //       inputProps={{
+        //         ...params.inputProps,
+        //         autoComplete: 'new-password',
+        //       }}
+        //     />}
+        //   />}
+        // />*/}
+// }
+
+
+		// renderOption={(props, option) => <li {...props} key={option.id}>
+		// 	{getOptionLabel(option)}
+		// </li>}
+
+		// renderInput={(params) => <TextField {...params}
+		// 	label={`${labels.city} *`}
+		// 	disabled={busy}
+		// 	error={!!error}
+		// 	helperText={!!error
+		// 		? errorMessages[error.message as keyof Translation['errorMessages']]
+		// 		: undefined}
+		// 	InputProps={{
+		// 		...params.InputProps,
+		// 		endAdornment: <>
+		// 			{loading ? <CircularProgress color="inherit" size={15} /> : null}
+		// 			{params.InputProps.endAdornment}
+		// 		</>,
+		// 	}}
+		// 	inputProps={{
+		// 		...params.inputProps,
+		// 		autoComplete: 'new-password',
+		// 	}}
+		// />}

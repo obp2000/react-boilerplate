@@ -12,6 +12,7 @@ import { useAuthAction } from './hooks'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import type { LoginValues } from '@/interfaces/users'
+import Stack from '@/app/useClient/Stack'
 
 export default function LoginForm({
 	lng,
@@ -56,48 +57,49 @@ export default function LoginForm({
 		resolver: superstructResolver(Login)
 	})
 	const busy = isSubmitting || isPending
-	return <form onSubmit={handleSubmit(onSubmit)}
-		className={clsx('flex flex-col gap-3 pt-1', { 'opacity-70': busy })}>
-		<Controller name="username"
-			control={control}
-			render={({ field }) => <TextField {...field}
-				id="username"
-				label={`${username} *`}
-				autoComplete="username"
-				variant="outlined"
-				size="small"
+	return <form onSubmit={handleSubmit(onSubmit)}>
+		<Stack sx={{ mt: 1, gap: 2 }}>
+			<Controller name="username"
+				control={control}
+				render={({ field }) => <TextField {...field}
+					id="username"
+					label={`${username} *`}
+					autoComplete="username"
+					variant="outlined"
+					size="small"
+					disabled={busy}
+					error={errors?.username ? true : undefined}
+					helperText={errors?.username
+						? errorMessages[errors.username.message as keyof Translation['errorMessages']]
+						: undefined}
+				/>}
+			/>
+			<Controller name="password"
+				control={control}
+				render={({ field }) => <TextField {...field}
+					type='password'
+					id="password"
+					label={`${password} *`}
+					autoComplete="current-password"
+					variant="outlined"
+					size="small"
+					disabled={busy}
+					error={errors?.password ? true : undefined}
+					helperText={errors?.password
+						? errorMessages[errors.password.message as keyof Translation['errorMessages']]
+						: undefined}
+				/>}
+			/>
+			<Button
+				type='submit'
+				size='small'
+				variant='outlined'
+				aria-label={login}
 				disabled={busy}
-				error={errors?.username ? true : undefined}
-				helperText={errors?.username
-					? errorMessages[errors.username.message as keyof Translation['errorMessages']]
-					: undefined}
-			/>}
-		/>
-		<Controller name="password"
-			control={control}
-			render={({ field }) => <TextField {...field}
-				type='password'
-				id="password"
-				label={`${password} *`}
-				autoComplete="current-password"
-				variant="outlined"
-				size="small"
-				disabled={busy}
-				error={errors?.password ? true : undefined}
-				helperText={errors?.password
-					? errorMessages[errors.password.message as keyof Translation['errorMessages']]
-					: undefined}
-			/>}
-		/>
-		<Button
-			type='submit'
-			size='small'
-			variant='outlined'
-			aria-label={login}
-			disabled={busy}
-		>
-			{login}
-		</Button>
+			>
+				{login}
+			</Button>
+		</Stack>
 		<Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
 			<Alert severity={success ? "success" : "error"} elevation={6}
 				variant="filled" sx={{ width: '100%' }}>

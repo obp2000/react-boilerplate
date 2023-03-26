@@ -2,43 +2,46 @@ import {
   boolean,
   coerce,
   integer,
-  literal,
-  min,
-  number,
-  optional,
-  string,
-  union,
-  date,
-  defaulted,
-  define,
+  literal, number, string,
+  union, define
 } from 'superstruct'
 
-const SelectOption = define<number>('SelectOption', (value) =>
-  typeof value === 'number' || value === '')
-
-export const DigitPattern = define<number>('DigitPattern', (value) =>
+export const IntegerPattern = define<string>('IntegerPattern', (value) =>
   (typeof value === 'string') && /^\d+$/.test(value))
 
-export const OptionalDigitPattern = define<number>('DigitPattern', (value) =>
-  (typeof value === 'string') && /^\d*$/.test(value))
+export const FloatPattern = define<string>('FloatPattern', (value) =>
+  (typeof value === 'string') && /^\d*\.?\d*$/.test(value))
 
-export const OptionalInteger = coerce(optional(union([integer(), OptionalDigitPattern])), string(),
+export const IntegerOrPattern = union([integer(), IntegerPattern, literal('')])
+
+export const ToInteger = coerce(integer(), union([IntegerPattern, literal('')]),
   (value) => value === '' ? undefined : parseInt(value))
 
-export const OptionalOption = coerce(optional(SelectOption), union([string(), literal('')]),
-  (value) => value === '' ? undefined : parseInt(value))
+export const Option = union([integer(), literal('')])
 
-export const OptionalFloat = coerce(optional(union([number(), OptionalDigitPattern])), string(),
+export const NumberOrPattern = union([number(), FloatPattern, literal('')])
+
+export const ToFloat = coerce(number(), union([FloatPattern, literal('')]),
   (value) => value === '' ? undefined : parseFloat(value))
 
-export const OptionalBoolean = coerce(optional(boolean()), string(),
+export const ToBoolean = coerce(boolean(), string(),
   (value) => value === 'true')
 
-export const PositiveInteger = coerce(union([min(integer(), 1), DigitPattern]),
-  string(), (value) => parseInt(value))
+export const PositiveInteger = union([integer(), IntegerPattern])
 
-export const DefaultedDate = defaulted(union([date(), string()]), '')
+export const ToPositiveInteger = coerce(integer(), IntegerPattern,
+  (value) => parseInt(value))
 
-export const OptionalDate = optional(union([date(), string()]))
 
-export const OptionalString = optional(defaulted(string(), ''))
+// export const OptionalFloat = optional(NumberOrPattern)
+
+// export const OptionalFloatApi = coerce(number(), union([FloatPattern, literal('')]),
+//   (value) => value === '' ? undefined : parseFloat(value))
+
+// export const OptionalBoolean = optional(boolean())
+
+// export const DefaultedDate = defaulted(union([date(), string()]), '')
+
+// export const OptionalDate = optional(union([date(), string()]))
+
+// export const OptionalString = optional(defaulted(string(), ''))

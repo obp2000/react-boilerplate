@@ -1,7 +1,7 @@
 'use client'
 
 import MenuIcon from '@mui/icons-material/Menu'
-import Box from '@mui/material/Box'
+import Box from '@/app/useClient/Box'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import type { PropsWithChildren } from 'react'

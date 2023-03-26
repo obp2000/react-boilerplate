@@ -1,6 +1,6 @@
 import tables from '@/app/objectPage/tables.json'
 import { where } from '@/app/products/db'
-import { Product } from '@/app/products/product'
+import { ProductApi as ValidationSchema } from '@/app/products/product'
 import { upload } from '@/services/cloudinary'
 import { getData } from '@/services/formidable'
 import prisma from '@/services/prisma'
@@ -15,7 +15,7 @@ export const config = {
 
 export async function getObjectData(req: NextApiRequest) {
   const { fields, files: { image } } = await getData(req)
-  let data = create(fields, Product)
+  let data = create(fields, ValidationSchema)
   if (image) {
     data.image = await upload(image)
   }

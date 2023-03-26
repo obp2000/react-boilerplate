@@ -1,84 +1,95 @@
 import { getGetOptionLabel } from '@/app/customers/helpers'
-import { onSearch } from '@/app/form/helpers'
+import {
+	getRenderInput,
+	getRenderOption, isOptionEqualToValue, onSearch
+} from '@/app/form/helpers'
 import type { Translation } from '@/app/i18n/dictionaries'
-import Autocomplete from '@mui/material/Autocomplete'
-import CircularProgress from '@mui/material/CircularProgress'
-import TextField from '@mui/material/TextField'
-import { useState } from 'react'
-import type { FieldErrors, UseFormSetValue } from "react-hook-form"
 import type {
-	OrderObject as Order,
-	Values,
+	OrderObject as Order
 } from '@/interfaces/orders'
+import Autocomplete from '@mui/material/Autocomplete'
+import { useState } from 'react'
+import {
+	Controller,
+	type FieldError,
+	type FieldErrors, type Control
+} from "react-hook-form"
 
-type CityFieldProps = {
-	customer: Order['customer']
+
+type Props = {
 	label: string
 	labels: Translation['customer']
 	busy: boolean
-	errors: FieldErrors<Values>
+	errors: FieldErrors<Order>
 	errorMessages: Translation['errorMessages']
-	setValue: UseFormSetValue<Values>
-	notFound: string
+	notFound: string,
+	control: Control<Order>
+	initialValues: Order
 }
 
 export default function CustomerField({
-	customer,
 	label,
 	labels,
 	busy,
 	errors,
 	errorMessages,
-	setValue,
-	notFound
-}: CityFieldProps) {
-  const [customers, setCustomers] = useState(customer ? [customer] : [])
-  const [loading, setLoading] = useState(false)
-  const getOptionLabel = getGetOptionLabel(labels)
-	return <Autocomplete
-		id='customer'
-		onChange={(_, customer) => {
-			return setValue('customerId', customer?.id)
-		}}
-		defaultValue={customer}
-		autoComplete
-		includeInputInList
-		filterSelectedOptions
-		size='small'
-		isOptionEqualToValue={(option, value) => {
-			// console.log('option , value ', option, value)
-			return value === undefined || option.id === value.id
-		}}
-		getOptionLabel={getOptionLabel}
-		renderOption={(props, customer) => <li {...props} key={customer?.id || -1}>
-			{getOptionLabel(customer)}
-		</li>}
-		options={customers}
-		// filterOptions={(x) => x}
-		onInputChange={onSearch('/customers/', setCustomers, setLoading)}
-		noOptionsText={notFound}
-		renderInput={(params) => <TextField {...params}
-			label={`${label} *`}
-			disabled={busy}
-			error={errors?.customerId ? true : undefined}
-			helperText={errors?.customerId
-				? errorMessages[errors.customerId.message as keyof Translation['errorMessages']]
-				: undefined}
-			InputProps={{
-				...params.InputProps,
-				endAdornment: <>
-						{loading ? <CircularProgress color="inherit" size={15} /> : null}
-						{params.InputProps.endAdornment}
-					</>,
+	notFound,
+	control,
+	initialValues: {
+		customer
+	}
+}: Props) {
+	const [currentValue, setCurrentValue] = useState(customer)
+	const [options, setOptions] = useState(customer ? [customer] : [])
+	const [loading, setLoading] = useState(false)
+	const getOptionLabel = getGetOptionLabel(labels)
+	const error = errors?.customer as FieldError
+	return <Controller
+		name="customer"
+		control={control}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+			id='customer'
+			onChange={(_, newValue) => {
+				if (newValue) {
+					setCurrentValue(newValue)
+				}
+				return onChange(newValue)
 			}}
-			inputProps={{
-				...params.inputProps,
-				autoComplete: 'new-password',
-			}}
+			autoComplete
+			includeInputInList
+			filterSelectedOptions
+			size='small'
+			isOptionEqualToValue={isOptionEqualToValue}
+			getOptionLabel={getOptionLabel}
+			renderOption={getRenderOption(getOptionLabel)}
+			options={options}
+			// filterOptions={(x) => x}
+			onInputChange={onSearch('/customers/', setOptions, setLoading, currentValue)}
+			noOptionsText={notFound}
+			renderInput={getRenderInput({ label, error, busy, loading, errorMessages, field, ref })}
 		/>}
 	/>
 }
 
+		// renderInput={(params) => <TextField {...params}
+		// 	label={`${label} *`}
+		// 	disabled={busy}
+		// 	error={errors?.customerId ? true : undefined}
+		// 	helperText={errors?.customerId
+		// 		? errorMessages[errors.customerId.message as keyof Translation['errorMessages']]
+		// 		: undefined}
+		// 	InputProps={{
+		// 		...params.InputProps,
+		// 		endAdornment: <>
+		// 				{loading ? <CircularProgress color="inherit" size={15} /> : null}
+		// 				{params.InputProps.endAdornment}
+		// 			</>,
+		// 	}}
+		// 	inputProps={{
+		// 		...params.inputProps,
+		// 		autoComplete: 'new-password',
+		// 	}}
+		// />}
 
         // <Controller name="customer"
         //   control={control}

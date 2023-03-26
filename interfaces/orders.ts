@@ -1,12 +1,12 @@
 import { Prisma } from ".prisma/client"
 import tables from '@/app/objectPage/tables.json'
-import type { Customer } from './customers'
+// import type { Customer } from './customers'
 
 export type OrderItem = Prisma.OrderItemGetPayload<{
   select: typeof tables.orders.select.object.orderItems.select
 }>
 
-export type NewOrderItem = Prisma.OrderItemUncheckedCreateWithoutOrderInput
+export type NewOrderItem = Prisma.OrderItemCreateWithoutOrderInput
 
 export type OrderItemUpdate = Prisma.OrderItemUpdateWithWhereUniqueWithoutOrderInput
 
@@ -14,8 +14,7 @@ export type OrderItemUpdate = Prisma.OrderItemUpdateWithWhereUniqueWithoutOrderI
 
 export type Values = (Prisma.OrderUncheckedCreateWithoutOrderItemsInput |
   Prisma.OrderUncheckedUpdateWithoutOrderItemsInput) & {
-    customer: Customer
-    orderItems?: OrderItem[]
+    orderItems?: (NewOrderItem | OrderItemUpdate)[]
   }
 
 export type Order = {

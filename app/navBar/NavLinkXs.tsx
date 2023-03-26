@@ -16,7 +16,7 @@ export default function NavLinkXs({
   return <MenuItem selected={isActive}>
     <Link
       href={`/${lng}/${path}`}
-      prefetch={false}
+      // prefetch={false}
     >
       {children}
     </Link>

@@ -1,7 +1,7 @@
 import prisma from '@/services/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { assert } from 'superstruct'
-import { Customer } from '@/app/customers/customer'
+import { CustomerApi } from '@/app/customers/customer'
 
 export default async function handle(
   req: NextApiRequest,
@@ -9,7 +9,7 @@ export default async function handle(
 ) {
   switch (req.method) {
     case 'PUT':
-      assert(req.body, Customer)
+      assert(req.body, CustomerApi)
       const object = await prisma.customer.update({
         where: { id: Number(req.query.id) },
         data: req.body

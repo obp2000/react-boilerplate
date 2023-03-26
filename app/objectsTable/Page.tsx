@@ -111,15 +111,15 @@ export default function Page({
 							// prefetch={false}
 							>
 								<Tooltip title={dict.new}>
-									<AddIcon />
+									<AddIcon color='primary' />
 								</Tooltip>
 							</Link>
 						</TableCell>}
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{data.map((object: Customer | Product | Order, key: number) => <TableRow key={key}
-						aria-label={modelNameSingular}>
+					{data.map((object: Customer | Product | Order, key: number) => <TableRow
+						key={key} aria-label={modelNameSingular}>
 						<Row {...makeSerializable(object)} />
 						{isAuthenticated && <TableCell>
 							<Link
@@ -128,7 +128,7 @@ export default function Page({
 							// prefetch={false}
 							>
 								<Tooltip title={dict.edit}>
-									<EditIcon />
+									<EditIcon color='primary' />
 								</Tooltip>
 							</Link>
 							<DeleteObjectButton {...{

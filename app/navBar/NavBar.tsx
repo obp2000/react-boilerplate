@@ -92,57 +92,6 @@ export default function NavBar({
 							errorMessages: dict.errorMessages
 						}} />}
 				</Box>
-
-
-				{/*              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}*/}
-
-				{/*            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}*/}
-
-				{/*			<NavbarBrand href="/">
-				<span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-					{dict.brandText}
-				</span>
-			</NavbarBrand>*/}
-				{/*			<div className="flex md:order-2">
-				<SearchForm searchLabel={dict.search} />
-				{user
-					? <SighOutButton {...{
-						lng,
-						user,
-						labels: {
-							logout: dict.auth.logout,
-							successfulLogout: dict.auth.successfulLogout,
-						}
-					}} />
-					: <AuthButtonAndModal {...{
-						lng,
-						labels: dict.auth,
-						errorMessages: dict.errorMessages
-					}} />}
-			</div>
-			<NavbarToggle />
-			<NavbarCollapse>
-				{menu.map(({ path, label }, key) => <li key={key}>
-					<NavLink {...{ path, lng }}>
-						{dict[label as keyof ModelNames].plural as string ||
-							dict[label as keyof Translation] as string
-						}
-					</NavLink>
-				</li>)}
-			</NavbarCollapse>*/}
-
 			</Toolbar>
 		</Container>
 	</AppBar>

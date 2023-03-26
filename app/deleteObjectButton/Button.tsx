@@ -57,7 +57,7 @@ export default function Button({
   return <>
     <Tooltip title={label}>
       <IconButton aria-label={label} disabled={busy} onClick={onClick}>
-        <DeleteIcon role='img' />
+        <DeleteIcon role='img' color='primary' />
       </IconButton>
     </Tooltip>
     <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>

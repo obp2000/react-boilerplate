@@ -31,8 +31,8 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
         {dict.users.singular}
       </Typography>
     </Stack>
-    <div className="max-w-md">
-      <List>
+    <div>
+      <List sx={{ maxWidth: 0.4}}>
         {userFieldNames.map((fieldName, key) => <ListItem key={key}>
           <ListItemText primary={dict.user[fieldName as keyof Translation['user']]} />
           <ListItemText primary={user && user[fieldName as keyof User]} />

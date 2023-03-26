@@ -37,7 +37,7 @@ export default async function RootLayout({
         <main>
           {children}
         </main>
-        <footer className='mt-3'>
+        <footer>
           <LocaleSwitcher lng={lng} label={dict.localeSwitcher} />
         </footer>
       </Container>

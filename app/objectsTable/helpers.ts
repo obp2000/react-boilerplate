@@ -1,9 +1,9 @@
 import 'server-only'
 
-import type { Customer } from '@/app/customers/db'
-import { Translation } from '@/app/i18n/dictionaries'
-import type { Order } from '@/app/orders/db'
-import type { Product } from '@/app/products/db'
+import type { Translation } from '@/app/i18n/dictionaries'
+import type { Customer } from '@/interfaces/customers'
+import type { Order } from '@/interfaces/orders'
+import type { Product } from '@/interfaces/products'
 import type { PaginatedResult } from 'prisma-pagination'
 import type { ParsedUrlQuery } from 'querystring'
 

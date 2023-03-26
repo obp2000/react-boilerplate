@@ -6,7 +6,7 @@ import type { ProductTypeType } from '@/interfaces/productTypes'
 // import Image from 'next/image'
 import type { ParsedUrlQuery } from 'querystring'
 import { useState, useTransition } from 'react'
-import type { Values } from '@/interfaces/products'
+import type { Values, ProductObject as Product } from '@/interfaces/products'
 import { filesHandler } from '@/app/form/helpers'
 import { useOnSubmit } from '@/app/form/hooks'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
@@ -14,26 +14,49 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
-import clsx from 'clsx'
 import {
   Controller, useForm, type SubmitHandler
 } from "react-hook-form"
-import { densityForCount, metersInRoll, prices } from './calculator'
-import { Product } from './product'
+import { Product as ValidatonSchema } from './product'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Unstable_Grid2'
 import CardMedia from '@mui/material/CardMedia'
+import { unitsLabel } from '@/app/form/helpers'
+import priceCoeffs from './priceCoeffs.json'
+
+function densityForCount({ weightForCount, lengthForCount, width }: Partial<Product>) {
+  return weightForCount && lengthForCount && width
+    ? Number(weightForCount) / Number(lengthForCount) / Number(width) * 100
+    : 0
+}
+
+function metersInRoll({ weight, density, width }: Partial<Product>) {
+  return weight && density && width
+    ? Number(weight) * 100000 / Number(density) / Number(width)
+    : 0
+}
+
+export function prices({ density, width, dollarPrice, dollarRate }: Partial<Product>) {
+  return dollarPrice && dollarRate && density && width
+    ? priceCoeffs.reduce((
+      result: string[],
+      coeff: number): string[] => {
+      result.push(`${coeff}: ${(Number(dollarPrice) * Number(dollarRate) *
+        Number(density) * Number(width) / 100000 * coeff).toFixed(0)}`)
+      return result
+    }, []).join(' / ')
+    : ''
+}
 
 export type ProductFormProps = {
   params: ParsedUrlQuery
-  initialValues: Values
+  initialValues: Product
   accessToken: string
   productTypes: ProductTypeType[]
   save: string
@@ -76,9 +99,9 @@ export default function FormComp({
     formState: {
       errors,
       isSubmitting
-    } } = useForm<Values>({
+    } } = useForm<Product>({
       defaultValues: initialValues,
-      resolver: superstructResolver(Product)
+      resolver: superstructResolver(ValidatonSchema)
     })
   const busy = isSubmitting || isPending
   const [
@@ -99,23 +122,12 @@ export default function FormComp({
     'dollarRate'
   ])
   console.log('errors ', errors)
-  return <form onSubmit={handleSubmit(onSubmit)}
-    className={clsx('p-2', { 'opacity-70': busy })}>
-    <Grid container spacing={2}>
+  const toValues = ({ createdAt, ...values }: Product) => {
+    return onSubmit(values)
+  }
+  return <form onSubmit={handleSubmit(toValues)}>
+    <Grid container spacing={2} sx={{ p: 2, opacity: busy ? 0.7 : 'inherit' }}>
       <Grid xs={4}>
-        {/*        <img
-          src={previewUrl
-            ? previewUrl
-            : initialValues.image
-              ? `https://res.cloudinary.com/du9yvygkg/image/upload/v${initialValues.image}`
-              : '/blank.png'}
-          alt={previewUrl ? 'File uploader preview' : labels.image}
-          width={300}
-          height={300}
-          // fill={true}
-          // priority={true}
-          // className='max-w-xs mb-1 h-auto rounded-lg shadow-xl dark:shadow-gray-800'
-        />*/}
         <CardMedia
           component="img"
           height="200"
@@ -149,12 +161,13 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="productTypeId"
             control={control}
-            render={({ field }) => <FormControl size='small' fullWidth>
+            render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
               <InputLabel id="productTypeId-label">
                 {labels.productTypeId}
               </InputLabel>
               <Select
                 {...field}
+                value={value || ''}
                 labelId="product_type_id-label"
                 id="product_type_id"
                 label={labels.productTypeId}
@@ -172,12 +185,13 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="threads"
             control={control}
-            render={({ field }) => <FormControl size='small' fullWidth>
+            render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
               <InputLabel id="threads-label">
                 {labels.threads}
               </InputLabel>
               <Select
                 {...field}
+                value={value || ''}
                 labelId="threads-label"
                 id="threads"
                 label={labels.threads}
@@ -195,12 +209,13 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="contents"
             control={control}
-            render={({ field }) => <FormControl size='small' fullWidth>
+            render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
               <InputLabel id="contents-label">
                 {labels.contents}
               </InputLabel>
               <Select
                 {...field}
+                value={value || ''}
                 labelId="contents-label"
                 id="contents"
                 label={labels.contents}
@@ -219,10 +234,11 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="fleece"
             control={control}
-            render={({ field }) => <FormControlLabel
+            render={({ field: { value, ...field } }) => <FormControlLabel
               label={labels.fleece}
               control={<Switch id='fleece'
                 {...field}
+                value={!!value}
                 defaultChecked={!!initialValues.fleece}
                 size='small'
                 disabled={busy}
@@ -255,11 +271,7 @@ export default function FormComp({
               label={`${labels.price} *`}
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  ₽/{units.meter_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(`₽/${units.meter_short}`)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -273,17 +285,14 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="dollarPrice"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               type='number'
               id="dollar_price"
+              value={value || ''}
               label={labels.dollarPrice}
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  $/{units.kilogram_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(`$/${units.kilogram_short}`)}
               inputProps={{
                 inputMode: 'decimal',
                 step: '0.1',
@@ -294,17 +303,14 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="dollarRate"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               type='number'
               id="dollar_rate"
+              value={value || ''}
               label={labels.dollarRate}
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  ₽/$
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel('₽/$')}
               inputProps={{
                 inputMode: 'decimal',
                 step: '0.1',
@@ -315,17 +321,14 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="width"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               type='number'
               id="width"
+              value={value || ''}
               label={labels.width}
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.centimeter_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(units.centimeter_short)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -335,17 +338,14 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="density"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               type='number'
               id="density"
+              value={value || ''}
               label={labels.density}
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.gram_short}./{units.meter_short}2
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(`${units.gram_short}./${units.meter_short}2`)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -367,17 +367,14 @@ export default function FormComp({
         <Grid xs={2}>
           <Controller name="weightForCount"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="weight_for_count"
+              value={value || ''}
               label={labels.weightForCount}
               type="number"
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.gram_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(units.gram_short)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -387,17 +384,14 @@ export default function FormComp({
         <Grid xs={2}>
           <Controller name="lengthForCount"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="length_for_count"
+              value={value || ''}
               label={labels.lengthForCount}
               type="number"
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.meter_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(units.meter_short)}
               inputProps={{
                 inputMode: 'decimal',
                 step: '0.1'
@@ -413,27 +407,20 @@ export default function FormComp({
             size="small"
             disabled
             value={densityForCount({ weightForCount, lengthForCount, width }).toFixed(0)}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">
-                {units.gram_short}./{units.meter_short}2
-              </InputAdornment>,
-            }}
+            InputProps={unitsLabel(`${units.gram_short}./${units.meter_short}2`)}
           />
         </Grid>
         <Grid xs={2}>
           <Controller name="weight"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="weight"
+              value={value || ''}
               label={labels.weight}
               type="number"
               size="small"
               disabled={busy}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.kilogram_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(units.kilogram_short)}
               inputProps={{
                 inputMode: 'decimal',
                 step: '0.1',
@@ -449,11 +436,7 @@ export default function FormComp({
             size="small"
             disabled
             value={metersInRoll({ weight, density, width }).toFixed(2)}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">
-                {units.meter_short}
-              </InputAdornment>,
-            }}
+            InputProps={unitsLabel(units.meter_short)}
           />
         </Grid>
       </Grid>
@@ -461,18 +444,15 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="pricePre"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="price_pre"
+              value={value || ''}
               label={labels.pricePre}
               type="number"
               size="small"
               disabled={busy}
               InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  ₽/{units.meter_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(`₽/${units.meter_short}`)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -482,18 +462,15 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="widthShop"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="width_shop"
+              value={value || ''}
               label={labels.widthShop}
               type="number"
               size="small"
               disabled={busy}
               InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.centimeter_short}
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(units.centimeter_short)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -503,18 +480,15 @@ export default function FormComp({
         <Grid xs={3}>
           <Controller name="densityShop"
             control={control}
-            render={({ field }) => <TextField {...field}
+            render={({ field: { value, ...field } }) => <TextField {...field}
               id="density_shop"
+              value={value || ''}
               label={labels.densityShop}
               type="number"
               size="small"
               disabled={busy}
               InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">
-                  {units.gram_short}./{units.meter_short}2
-                </InputAdornment>,
-              }}
+              InputProps={unitsLabel(`${units.gram_short}./${units.meter_short}2`)}
               inputProps={{
                 inputMode: 'numeric',
               }}
@@ -542,3 +516,18 @@ export default function FormComp({
     </Snackbar>
   </form >
 }
+
+
+        // {/*        <img
+        //   src={previewUrl
+        //     ? previewUrl
+        //     : initialValues.image
+        //       ? `https://res.cloudinary.com/du9yvygkg/image/upload/v${initialValues.image}`
+        //       : '/blank.png'}
+        //   alt={previewUrl ? 'File uploader preview' : labels.image}
+        //   width={300}
+        //   height={300}
+        //   // fill={true}
+        //   // priority={true}
+        //   // className='max-w-xs mb-1 h-auto rounded-lg shadow-xl dark:shadow-gray-800'
+        // />*/}

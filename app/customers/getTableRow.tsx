@@ -5,7 +5,18 @@ import type { Customer } from '@/interfaces/customers'
 import Date from '@/app/Date'
 import TableCell from '@/app/useClient/TableCell'
 import { getGetOptionLabel as getGetCityName } from './cities/helpers'
-import { getShortName } from './helpers'
+
+export function getShortName(labels: Translation['customer']) {
+    return (customer: Partial<Customer>) => {
+      if (!customer) { return '' }
+      const label = []
+      label.push(customer.nick)
+      if (customer.name) {
+        label.push(`${labels.name}: ${customer.name}`)
+      }
+      return label.join(' ')
+  }
+}
 
 export default function getTableRow(dict: Translation) {
 	const cityName = getGetCityName(dict.customer.city)
@@ -28,3 +39,7 @@ export default function getTableRow(dict: Translation) {
 		</>
 	}
 }
+
+
+
+

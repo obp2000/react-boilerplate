@@ -9,24 +9,18 @@ import Page from './Page'
 export default async function Controller({
 	params,
 	searchParams,
-	table
 }: {
 	params: ParsedUrlQuery
 	searchParams: ParsedUrlQuery
-	table: string
 }) {
 	const lng = String(params.lng || fallbackLng)
+	const table = String(params.table || 'customers')
 	const [ dict, TableLabels, getTableRow, { data, meta } ] = await Promise.all([
 		getDictionary(lng),
 		getTableLabels(table),
 		getGetTableRow(table),
 		(await getGetObjects(table))({ perPage: 8, searchParams }),
 	])
-	// const dict = await getDictionary(lng)
-	// // const getObjects = await getGetObjects(table)
-	// const { data, meta } = await (await getGetObjects(table))({ perPage: 8, searchParams })
-	// const TableLabels = await getTableLabels(table)
-	// const getTableRow = await getGetTableRow(table)
 	const Row = getTableRow(dict)
 	const auth = getAuth()
 	const modelNameSingular = dict[table as keyof ModelNames].singular

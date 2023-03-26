@@ -1,18 +1,21 @@
-import { integer, object, optional, coerce, any, union, string, number, literal } from 'superstruct'
-import { OptionalInteger, OptionalFloat, OptionalDate, OptionalDigitPattern } from "@/app/form/fields"
-
-// const optionalObject = coerce(optional(object()), object(), ({ id }) => ({ id }))
+import { integer, object, optional, any, nullable } from 'superstruct'
+import { NumberOrPattern, ToFloat } from "@/app/form/fields"
+import { ProductSelect } from '@/app/products/product'
 
 export const OrderItem = object({
     id: optional(integer()),
-    // product: optionalObject,
+    product: optional(ProductSelect),
+    amount: optional(nullable(NumberOrPattern)),
+    price: optional(nullable(NumberOrPattern)),
+    cost: optional(any()),
+    weight: optional(any()),
+})
+
+export const OrderItemApi = object({
+    id: optional(integer()),
     productId: optional(integer()),
-    amount: coerce(union([number(), OptionalDigitPattern, literal('')]),
-        union([string(), literal('')]),
-        (value) => value === '' ? 0 : parseFloat(value)),
-    price: coerce(union([integer(), OptionalDigitPattern]),
-        string(),
-        (value) => value === '' ? 0 : parseInt(value)),
+    amount: ToFloat,
+    price: ToFloat,
     cost: optional(any()),
     weight: optional(any()),
 })

@@ -39,10 +39,8 @@ const Confirmation = ({
   onClose={() => proceed(false)}
 >
     <DialogTitle>
-      <WarningAmberIcon className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-      <div className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+      <WarningAmberIcon color='warning' />
         {confirmation}
-      </div>
     </DialogTitle>
     <DialogContent>
       <DialogActions>

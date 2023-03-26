@@ -3,6 +3,8 @@
 import { languages } from '@/app/i18n/settings'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Chip from '@mui/material/Chip'
+import Box from '@/app/useClient/Box'
 
 export default function LocaleSwitcher({
   lng,
@@ -18,12 +20,12 @@ export default function LocaleSwitcher({
     segments[1] = locale
     return segments.join('/')
   }
-  return <div className='text-sm'>
+  return <Box sx={{ mt: 2 }}>
     {label}: {languages.filter((locale) => locale !== lng).map(
       (locale) => <span key={locale}>
         <Link href={redirectedPathName(locale)}>
-          {locale}{' '}
+           <Chip label={locale} />
         </Link>
       </span>)}
-  </div>
+  </Box>
 }

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Customer } from '@/app/customers/customer'
+import { CustomerApi } from '@/app/customers/customer'
 import { assert } from 'superstruct'
 import { where } from '@/app/customers/db'
 import prisma from '@/services/prisma'
@@ -18,7 +18,7 @@ export default async function handle(
       })
       return res.json(objects)
     case 'POST':
-      assert(req.body, Customer)
+      assert(req.body, CustomerApi)
       const object = await prisma.customer.create({ data: req.body })
       return res.json(object)
     default:

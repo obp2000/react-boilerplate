@@ -4,7 +4,7 @@ import type { Translation } from "@/app/i18n/dictionaries"
 import type { Order } from '@/interfaces/orders'
 import Date from '@/app/Date'
 import TableCell from '@/app/useClient/TableCell'
-import { getShortName } from '@/app/customers/helpers'
+import { getShortName } from '@/app/customers/getTableRow'
 
 export default function getTableRow(dict: Translation) {
 	const shortName = getShortName(dict.customer)
