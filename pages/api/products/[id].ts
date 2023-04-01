@@ -10,22 +10,25 @@ export const config = {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse) {
-  switch (req.method) {
+  { json }: NextApiResponse
+) {
+  const { method, query } = req
+  const id = Number(query.id)
+  switch (method) {
     case 'PUT':
       const object = await prisma.product.update({
-        where: { id: Number(req.query.id) },
+        where: { id },
         data: await getObjectData(req),
       })
-      return res.json(object)
+      return json(object)
     case 'DELETE':
       const deletedObject = await prisma.product.delete({
-        where: { id: Number(req.query.id) },
+        where: { id },
       })
-      return res.json(deletedObject)
+      return json(deletedObject)
     default:
       throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
+        `The HTTP ${method} method is not supported at this route.`
       )
   }
 }

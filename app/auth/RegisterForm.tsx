@@ -3,20 +3,14 @@ import Button from '@/app/useClient/Button'
 import Stack from '@/app/useClient/Stack'
 import type { RegisterValues } from '@/interfaces/users'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
-import Alert from '@mui/material/Alert'
-import Snackbar from '@mui/material/Snackbar'
 import TextField from '@mui/material/TextField'
-import { useState, useTransition, type Dispatch, type SetStateAction } from 'react'
 import {
-  Controller, FieldError, useForm
+    Controller, FieldError, useForm
 } from "react-hook-form"
-import { useAuthAction } from './hooks'
 import { Register } from './register'
 import defaultValues from './register.json'
 
 export default function RegisterForm({
-  lng,
-  setModal,
   labels: {
     username,
     usernameHelpText,
@@ -28,35 +22,24 @@ export default function RegisterForm({
     password2,
     password2HelpText,
     login,
-    successfulRegister,
     ...labels
   },
-  errorMessages
+  errorMessages,
+  onSubmit,
+  isPending
 }: {
-  lng: string
-  setModal: Dispatch<SetStateAction<boolean>>
   labels: Translation['auth']
   errorMessages: Translation['errorMessages']
+  onSubmit: (values: RegisterValues) => Promise<void>
+  isPending: boolean
 }) {
-  const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const onSubmit = useAuthAction({
-    url: '/register',
-    labels: labels as Translation['auth'],
-    startTransition,
-    lng,
-    setModal,
-    setSuccess,
-    setErrorMessage,
-  })
   const {
     control,
     handleSubmit,
     formState: {
       errors,
-      isValidating,
       isSubmitting,
+      isDirty,
     }
   } = useForm<RegisterValues>({
     defaultValues,
@@ -161,16 +144,10 @@ export default function RegisterForm({
         size='small'
         variant='outlined'
         aria-labelledby={labels.register}
-        disabled={busy}
+        disabled={busy || !isDirty}
       >
         {labels.register}
       </Button>
     </Stack>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : "error"} elevation={6}
-        variant="filled" sx={{ width: '100%' }}>
-        {success ? successfulRegister : errorMessage}
-      </Alert>
-    </Snackbar>
   </form>
 }

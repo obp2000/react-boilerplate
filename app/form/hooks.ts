@@ -2,56 +2,50 @@ import { useRouter } from 'next/navigation'
 import type { Values as CustomerValues } from '@/interfaces/customers'
 import type { Values as OrderValues } from '@/interfaces/orders'
 import type { Values as ProductValues } from '@/interfaces/products'
-import { errorMessage } from '@/app/error/client'
 import { objectToFormData } from 'object-to-formdata'
-import { ParsedUrlQuery } from 'querystring'
-import type { Dispatch, SetStateAction, TransitionStartFunction } from 'react'
+import type { TransitionStartFunction } from 'react'
+import { toastSuccess, toastError } from '@/app/notifications/toast'
 
 type Props = {
-	params: ParsedUrlQuery
-	table: string
+	mutateUrl: string
+	mutateMethod: string
+	redirectUrl: string
 	accessToken: string
-	contentType?: string
+	toFormData?: boolean
 	startTransition: TransitionStartFunction
-	setSuccess: Dispatch<SetStateAction<boolean>>
-	setErrorMessage: Dispatch<SetStateAction<string | null>>
+	message: string
 }
 
 export function useOnSubmit({
-	params: { lng, id },
-	table,
+	mutateUrl,
+  	mutateMethod,
+	redirectUrl,
 	accessToken,
-	contentType = 'application/json',
+	toFormData,
 	startTransition,
-	setSuccess,
-	setErrorMessage,
+	message
 }: Props) {
 	const { refresh, push } = useRouter()
 	return async (values: CustomerValues | ProductValues | OrderValues) => {
-		const isJSONContent = contentType === 'application/json'
-		const headers = new Headers()
-		if (accessToken) {
-			headers.append('authorization', `Token ${accessToken}`)
+		const headers = new Headers({ authorization: `Token ${accessToken}`})
+		if (!toFormData) {
+			headers.append('Content-Type', 'application/json')
 		}
-		if (isJSONContent) {
-			headers.append('Content-Type', contentType)
-		}
-		const mutatePath = id === 'new' ? '' : `/${id}`
-		const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${table}${mutatePath}`, {
-			method: id === 'new' ? 'POST' : 'PUT',
-			body: isJSONContent ? JSON.stringify(values) : objectToFormData(values),
+		const res = await fetch(mutateUrl, {
+			method: mutateMethod,
+			body: toFormData ? objectToFormData(values) : JSON.stringify(values),
 			headers,
 		})
 		if (res.ok) {
-			// const { toastSuccess } = await import('@/notifications/toastSuccess')
-			setSuccess(true)
 			startTransition(() => {
-				push(`/${lng}/${table}`)
+				push(redirectUrl)
 				refresh()
+				toastSuccess(message)
 			})
 		} else {
-			// const { toastError } = await import('@/notifications/toastError')
-			setErrorMessage(await errorMessage(res))
+		    const { message } = await res.json()
+		    toastError(message)
+			// toastError(await errorMessage(res))
 		}
 	}
 }

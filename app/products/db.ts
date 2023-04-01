@@ -3,7 +3,7 @@ import { createPaginator } from "prisma-pagination"
 import { ParsedUrlQuery } from "querystring"
 import tables from '@/app/objectPage/tables.json'
 import { Product } from '@/interfaces/products'
-import { Prisma } from ".prisma/client"
+import { Prisma } from "@prisma/client"
 
 export function where({ term }: ParsedUrlQuery) {
 	if (!term) { return {} }

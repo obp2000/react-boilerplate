@@ -4,12 +4,12 @@ import { create as coerce } from 'superstruct'
 import prisma from '@/services/prisma'
 
 export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
+  { method, body }: NextApiRequest,
+  { json }: NextApiResponse
 ) {
-  switch (req.method) {
+  switch (method) {
     case 'POST':
-      const {postCost, orderItems, ...data } = coerce(req.body, OrderApi)
+      const {postCost, orderItems, ...data } = coerce(body, OrderApi)
       const object = await prisma.order.create({
         data: {
           ...data,
@@ -17,10 +17,10 @@ export default async function handle(
           orderItems: { create: orderItems }
         }
       })
-      return res.json(object)
+      return json(object)
     default:
       throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
+        `The HTTP ${method} method is not supported at this route.`
       )
   }
 }

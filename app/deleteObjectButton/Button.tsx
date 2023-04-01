@@ -1,15 +1,12 @@
 'use client'
 
-import Tooltip from '@/app/useClient/Tooltip'
-import { useRouter } from 'next/navigation'
-import { useTransition, useState } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { confirm } from '@/app/confirmation/Confirmation'
-// import Button from '@/app/useClient/Button'
-import { errorMessage as getErrorMessage } from '@/app/error/client'
+import Tooltip from '@/app/useClient/Tooltip'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
+import { toastError, toastSuccess } from '@/app/notifications/toast'
 import IconButton from '@mui/material/IconButton'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
 
 type Props = Required<({ id: number })> & {
   deletePath: string
@@ -31,8 +28,6 @@ export default function Button({
 }: Props) {
   const { refresh } = useRouter()
   const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const busy = isPending
   const onClick = async () => {
     const result = await confirm(`${label}?`, { okText, cancelText })
@@ -44,13 +39,13 @@ export default function Button({
         headers,
       })
       if (res.ok) {
-        setSuccess(true)
         startTransition(() => {
           refresh()
-          setSuccess(false)
+          toastSuccess(message)
         })
       } else {
-        setErrorMessage(await getErrorMessage(res))
+        const { message } = await res.json()
+        toastError(message)
       }
     }
   }
@@ -60,11 +55,5 @@ export default function Button({
         <DeleteIcon role='img' color='primary' />
       </IconButton>
     </Tooltip>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : (errorMessage ? "error" : undefined)}
-        elevation={6} variant="filled" sx={{ width: '100%' }}>
-        {success ? message : (errorMessage ? errorMessage : null)}
-      </Alert>
-    </Snackbar>
   </>
 }

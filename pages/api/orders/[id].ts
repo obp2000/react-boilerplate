@@ -5,14 +5,15 @@ import prisma from '@/services/prisma'
 import type { NewOrderItem, OrderItemUpdate } from '@/interfaces/orders'
 
 export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
+  { method, body, query }: NextApiRequest,
+  { json }: NextApiResponse
 ) {
-  switch (req.method) {
+  const id = Number(query.id)
+  switch (method) {
     case 'PUT':
-      const { postCost, orderItems = [], ...data } = coerce(req.body, OrderApi)
+      const { postCost, orderItems = [], ...data } = coerce(body, OrderApi)
       const object = await prisma.order.findUnique({
-        where: { id: Number(req.query.id) },
+        where: { id },
         include: { orderItems: true }
       })
       const { newOrderItems, updateOrderItems, deletedOrderItemIds } =
@@ -44,7 +45,7 @@ export default async function handle(
         })
       const [updatedObject] = await prisma.$transaction(
         [prisma.order.update({
-          where: { id: Number(req.query.id) },
+          where: { id },
           data: {
             ...data,
             postCost: postCost as number,
@@ -62,15 +63,15 @@ export default async function handle(
           prisma.orderItem.update(orderItem))
         ]
       )
-      return res.json(updatedObject)
+      return json(updatedObject)
     case 'DELETE':
       const deletedObject = await prisma.order.delete({
-        where: { id: Number(req.query.id) },
+        where: { id },
       })
-      return res.json(deletedObject)
+      return json(deletedObject)
     default:
       throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
+        `The HTTP ${method} method is not supported at this route.`
       )
   }
 }

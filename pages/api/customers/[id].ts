@@ -4,25 +4,26 @@ import { assert } from 'superstruct'
 import { CustomerApi } from '@/app/customers/customer'
 
 export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
+  { method, body, query }: NextApiRequest,
+  { json }: NextApiResponse
 ) {
-  switch (req.method) {
+  const id = Number(query.id)
+  switch (method) {
     case 'PUT':
-      assert(req.body, CustomerApi)
+      assert(body, CustomerApi)
       const object = await prisma.customer.update({
-        where: { id: Number(req.query.id) },
-        data: req.body
+        where: { id },
+        data: body
       })
-      return res.json(object)
+      return json(object)
     case 'DELETE':
       const deletedObject = await prisma.customer.delete({
-        where: { id: Number(req.query.id) }
+        where: { id }
       })
-      return res.json(deletedObject)
+      return json(deletedObject)
     default:
       throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
+        `The HTTP ${method} method is not supported at this route.`
       )
   }
 }

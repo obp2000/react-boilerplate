@@ -4,14 +4,10 @@ import { useOnSubmit } from '@/app/form/hooks'
 import type { Translation } from '@/app/i18n/dictionaries'
 import type { CustomerObject as Customer, Values } from '@/interfaces/customers'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
-import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import Snackbar from '@mui/material/Snackbar'
 import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Unstable_Grid2'
-import clsx from 'clsx'
-import type { ParsedUrlQuery } from 'querystring'
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import {
   Controller, useForm, type SubmitHandler
 } from "react-hook-form"
@@ -19,7 +15,9 @@ import CityField from './CityField'
 import { Customer as ValidatonSchema } from './customer'
 
 export type CustomerFormProps = {
-  params: ParsedUrlQuery
+  mutateUrl: string
+  mutateMethod: string
+  redirectUrl: string
   initialValues: Customer
   accessToken: string
   save: string
@@ -30,7 +28,9 @@ export type CustomerFormProps = {
 }
 
 export default function FormComp({
-  params,
+  mutateUrl,
+  mutateMethod,
+  redirectUrl,
   initialValues,
   accessToken,
   save,
@@ -40,15 +40,13 @@ export default function FormComp({
   labels
 }: CustomerFormProps) {
   const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const onSubmit: SubmitHandler<Values> = useOnSubmit({
-    params,
-    table: 'customers',
+    mutateUrl,
+    mutateMethod,
+    redirectUrl,
     accessToken,
     startTransition,
-    setSuccess,
-    setErrorMessage,
+    message,
   })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
@@ -56,8 +54,9 @@ export default function FormComp({
     handleSubmit,
     formState: {
       errors,
-      isLoading,
-      isSubmitting
+      isSubmitting,
+      isDirty,
+      isValid,
     }
   } = useForm<Customer>({
     defaultValues: initialValues,
@@ -127,66 +126,11 @@ export default function FormComp({
           variant="outlined"
           size="small"
           aria-label={save}
-          disabled={busy}
+          disabled={busy || !isDirty}
         >
           {save}
         </Button>
       </Grid>
     </Grid>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : "error"} elevation={6}
-        variant="filled" sx={{ width: '100%' }}>
-        {success ? message : errorMessage}
-      </Alert>
-    </Snackbar>
   </form>
 }
-
-
-        // {/*        <Controller name="city1"
-        //   control={control}
-        //   render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
-        //     onChange={(_, data) => {
-        //       setValue('city_id', data.id)
-        //       return onChange(data)
-        //     }}
-        //     id='city1'
-        //     // defaultValue={city}
-        //     autoComplete
-        //     includeInputInList
-        //     filterSelectedOptions
-        //     size='small'
-        //     isOptionEqualToValue={(option, value) =>
-        //       value.id ? option.id === value.id : true}
-        //     getOptionLabel={getOptionLabel}
-        //     renderOption={(props, city) => <li {...props} key={city?.id || -1}>
-        //       {getOptionLabel(city)}
-        //     </li>}
-        //     options={cities}
-        //     // filterOptions={(x) => x}
-        //     onInputChange={onSearch('/cities/', setCities, setLoading)}
-        //     noOptionsText={notFound}
-        //     renderInput={(params) => <TextField {...params} {...field}
-        //       inputRef={ref}
-        //       label={`${labels.city.city} *`}
-        //       disabled={busy}
-        //       error={errors?.city ? true : undefined}
-        //       helperText={errors?.city
-        //         ? errorMessages[errors.city.message as keyof Translation['errorMessages']]
-        //         : undefined}
-        //       InputProps={{
-        //         ...params.InputProps,
-        //         endAdornment: (
-        //           <>
-        //             {loading ? <CircularProgress color="inherit" size={15} /> : null}
-        //             {params.InputProps.endAdornment}
-        //           </>
-        //         ),
-        //       }}
-        //       inputProps={{
-        //         ...params.inputProps,
-        //         autoComplete: 'new-password',
-        //       }}
-        //     />}
-        //   />}
-        // />*/}

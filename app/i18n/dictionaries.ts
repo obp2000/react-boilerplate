@@ -1,5 +1,3 @@
-import 'server-only'
-
 import enTranslation from './locales/en/translation.json'
 import ruTranslation from './locales/ru/translation.json'
 

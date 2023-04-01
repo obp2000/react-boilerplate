@@ -83,7 +83,6 @@ export default function NavBar({
 							username: user.username,
 							labels: {
 								logout: dict.auth.logout,
-								successfulLogout: dict.auth.successfulLogout,
 							}
 						}} />
 						: <AuthButtonAndModal {...{

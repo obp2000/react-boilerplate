@@ -20,7 +20,7 @@ export default prisma
 
 
 
-// import { PrismaClient } from './node_modules/.prisma/client'
+// import { PrismaClient } from './node_modules/@prisma/client'
 // const prisma = new PrismaClient()
 
 // import { PrismaClient } from "@prisma/client"

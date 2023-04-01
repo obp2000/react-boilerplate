@@ -3,10 +3,9 @@
 import Button from '@/app/useClient/Button'
 import Tooltip from '@/app/useClient/Tooltip'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
-import { useState, useTransition } from 'react'
-import { useSignOut } from './hooks'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
+import { useTransition } from 'react'
+import { useAuthAction } from './hooks'
+import { useForm } from "react-hook-form"
 
 export default function SignOutButton({
   lng,
@@ -17,27 +16,36 @@ export default function SignOutButton({
   username: string
   labels: Record<string, string>
 }) {
+  const { handleSubmit } = useForm()
   const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const busy = isPending
-  return <>
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${lng}/auth/logout}`
+  const onSubmit = useAuthAction({
+    url,
+    startTransition,
+    redirectUrl: `/${lng}`,
+  })
+  return <form onSubmit={handleSubmit(onSubmit)}>
     <Tooltip title={labels?.logout}>
       <Button
+        type='submit'
         color='inherit'
         aria-label='auth'
-        onClick={useSignOut({ lng, startTransition, setSuccess, setErrorMessage })}
         disabled={busy}
       >
         {username}&nbsp;&nbsp;<LogoutOutlinedIcon />
       </Button>
     </Tooltip>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : "error"} elevation={6} variant="filled" sx={{ width: '100%' }}>
-        {success ? labels.successfulLogout : errorMessage}
-      </Alert>
-    </Snackbar>
-  </>
+  </form>
 }
 
 
+      // <Button
+      //   type='submit'
+      //   size='small'
+      //   variant='outlined'
+      //   aria-label={login}
+      //   disabled={busy}
+      // >
+      //   {login}
+      // </Button>

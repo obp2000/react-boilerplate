@@ -9,15 +9,14 @@ import { superstructResolver } from '@hookform/resolvers/superstruct'
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined'
 // import NumbersIcon from '@mui/icons-material/Numbers'
 import tables from '@/app/objectPage/tables.json'
-import type { NewOrderItem, OrderObject as Order, Values } from '@/interfaces/orders'
-import Alert from '@mui/material/Alert'
+import Chip from '@/app/useClient/Chip'
+import type { OrderObject as Order, Values } from '@/interfaces/orders'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
-import Snackbar from '@mui/material/Snackbar'
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -27,8 +26,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Unstable_Grid2'
-import { ParsedUrlQuery } from 'querystring'
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import {
   Controller,
   useFieldArray, useForm, type SubmitHandler
@@ -38,7 +36,6 @@ import CustomerField from './CustomerField'
 import { Order as ValidatonSchema } from './order'
 import OrdeItem, { cost, weight } from './orderItems/OrderItem'
 import Postals, { totalPostals } from './Postals'
-import Chip from '@/app/useClient/Chip'
 
 export function orderItemsAmount(orderItems?: Order['orderItems']) {
   return (orderItems || []).reduce(
@@ -105,7 +102,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }))
 
 export type OrderFormProps = {
-  params: ParsedUrlQuery
+  mutateUrl: string
+  mutateMethod: string
+  redirectUrl: string
   initialValues: Order
   accessToken: string
   save: string
@@ -125,7 +124,9 @@ export type OrderFormProps = {
 }
 
 export default function FormComp({
-  params,
+  mutateUrl,
+  mutateMethod,
+  redirectUrl,
   initialValues,
   accessToken,
   save,
@@ -146,15 +147,13 @@ export default function FormComp({
   // const [pindex, setPindex] = useState<string | null | undefined>(initCustomer?.city?.pindex)
   // const [currentCustomer, setCurrentCustomer] = useState(initCustomer)
   const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const onSubmit: SubmitHandler<Values> = useOnSubmit({
-    params,
-    table: 'orders',
+    mutateUrl,
+    mutateMethod,
+    redirectUrl,
     accessToken,
     startTransition,
-    setSuccess,
-    setErrorMessage,
+    message,
   })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
@@ -164,8 +163,8 @@ export default function FormComp({
     setValue,
     formState: {
       errors,
-      isLoading,
-      isSubmitting
+      isSubmitting,
+      isDirty,
     } } = useForm<Order>({
       defaultValues: initialValues,
       resolver: superstructResolver(ValidatonSchema)
@@ -356,7 +355,7 @@ export default function FormComp({
                 size='small'
                 variant='outlined'
                 aria-labelledby={save}
-                disabled={busy}
+                disabled={busy || !isDirty}
               >
                 {save}
               </Button>
@@ -375,46 +374,5 @@ export default function FormComp({
         </TableBody>
       </Table>
     </TableContainer>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : "error"} elevation={6}
-        variant="filled" sx={{ width: '100%' }}>
-        {success ? message : errorMessage}
-      </Alert>
-    </Snackbar>
   </form>
 }
-
-
-// {/*        <Controller name="customer"
-//           control={control}
-//           render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
-//             onChange={(_, data) => onChange(data)}
-//             id='customer'
-//             size='small'
-//             getOptionLabel={getCustomerOptionLabel}
-//             renderOption={(props, customer) => <li {...props} key={customer?.id || -1}>
-//               {getCustomerOptionLabel(customer)}
-//             </li>}
-//             isOptionEqualToValue={(option, value) => option.id === value.id}
-//             options={customers}
-//             // filterOptions={(x) => x}
-//             onInputChange={onSearch('/customers/', setCustomers, setLoading)}
-//             noOptionsText={notFound}
-//             renderInput={(params) => <TextField {...params} {...field}
-//               inputRef={ref}
-//               label={`${labels.customer} *`}
-//               disabled={busy}
-//               error={errors?.customer ? true : undefined}
-//               helperText={errors?.customer
-//                 ? errorMessages[errors.customer.message as keyof Translation['errorMessages']]
-//                 : undefined}
-//               InputProps={{
-//                 ...params.InputProps,
-//                 endAdornment: <>
-//                   {loading ? <CircularProgress color="inherit" size={15} /> : null}
-//                   {params.InputProps.endAdornment}
-//                 </>,
-//               }}
-//             />}
-//           />}
-//         />*/}

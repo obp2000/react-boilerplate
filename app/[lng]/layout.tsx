@@ -11,6 +11,7 @@ import type { PropsWithChildren } from 'react'
 import LocaleSwitcher from '@/app/i18n/LocaleSwitcher'
 import { getDictionary } from '@/app/i18n/dictionaries'
 import Container from '@/app/useClient/Container'
+import ToastContainer from '@/app/useClient/ToastContainer'
 
 // export async function generateStaticParams() {
 //   return languages.map((lng) => ({ lng }))
@@ -41,6 +42,7 @@ export default async function RootLayout({
           <LocaleSwitcher lng={lng} label={dict.localeSwitcher} />
         </footer>
       </Container>
+      <ToastContainer />
     </body>
   </html >
 }

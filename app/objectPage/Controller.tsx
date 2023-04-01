@@ -26,6 +26,7 @@ export default async function Controller({
 	}
 	const lng = String(params.lng || fallbackLng)
 	const table = String(params.table || 'customers')
+	const redirectUrl = `/${lng}/${table}`
 	let backLabel
 	let title
 	let created
@@ -49,6 +50,9 @@ export default async function Controller({
 		Form = FormComp
 		formProps = {
 			params,
+			mutateUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${table}`,
+			mutateMethod: 'POST',
+			redirectUrl,
 			initialValues,
 			accessToken: auth.accessToken,
 			save: dict.save,
@@ -86,6 +90,9 @@ export default async function Controller({
 			Form = FormComp
 			formProps = {
 				params,
+				mutateUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${table}/${params.id}`,
+				mutateMethod: 'PUT',
+				redirectUrl,
 				initialValues,
 				accessToken: auth.accessToken,
 				save: dict.save,

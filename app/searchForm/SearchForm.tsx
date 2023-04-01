@@ -3,10 +3,10 @@
 import SearchIcon from '@mui/icons-material/Search'
 import InputBase from '@mui/material/InputBase'
 import { alpha, styled } from '@mui/material/styles'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { ParsedUrlQuery } from 'querystring'
 import { useTransition } from 'react'
 import { Controller, useForm } from "react-hook-form"
-import { useOnSubmit } from './hooks'
 
 type Term = { term: string }
 
@@ -60,25 +60,26 @@ export default function SearchForm({
   lng: string
 }) {
   const [isPending, startTransition] = useTransition()
-  const pathname = usePathname()
-  const table = pathname?.split('/')[2] || 'customers'
-  const searchParams = useSearchParams()
-  const term = searchParams?.get('term') || ''
-  const onSubmit = useOnSubmit({
-    searchParams: new URLSearchParams(searchParams ?? ''),
-    lng,
-    table,
-    startTransition
-  })
+  const table = usePathname()?.split('/')[2] || 'customers'
+  const searchParams = new URLSearchParams(useSearchParams() ?? '')
+  const { push } = useRouter()
+  const onSubmit = ({ term }: ParsedUrlQuery) => {
+    if (term) {
+      searchParams.delete('page')
+      searchParams.set('term', String(term))
+      startTransition(() => {
+        push(`/${lng}/${table}?${searchParams}`)
+      })
+    }
+  }
   const {
     control,
     handleSubmit,
     formState: {
-      isLoading,
       isSubmitting
     }
   } = useForm<Term>({
-    defaultValues: { term },
+    defaultValues: { term: searchParams?.get('term') || '' },
   })
   const busy = isSubmitting || isPending
   return <form onSubmit={handleSubmit(onSubmit)}>

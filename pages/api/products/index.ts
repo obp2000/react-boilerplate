@@ -24,25 +24,24 @@ export async function getObjectData(req: NextApiRequest) {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  { json }: NextApiResponse
 ) {
-  switch (req.method) {
+  const { method, query } = req
+  switch (method) {
     case 'GET':
       const objects = await prisma.product.findMany({
-        where: where(req.query),
+        where: where(query),
         select: tables.products.select.objects,
       })
-      res.json(objects)
-      break
+      return json(objects)
     case 'POST':
       const newObject = await prisma.product.create({
         data: await getObjectData(req)
       })
-      res.json(newObject)
-      break
+      return json(newObject)
     default:
       throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
+        `The HTTP ${method} method is not supported at this route.`
       )
   }
 }

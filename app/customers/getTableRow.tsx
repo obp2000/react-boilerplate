@@ -2,7 +2,7 @@ import 'server-only'
 
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Customer } from '@/interfaces/customers'
-import Date from '@/app/Date'
+import Date from '@/app/date/Date'
 import TableCell from '@/app/useClient/TableCell'
 import { getGetOptionLabel as getGetCityName } from './cities/helpers'
 

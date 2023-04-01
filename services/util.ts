@@ -1,7 +1,3 @@
-// import type { CustomerObject as Customer } from "@/app/customers/db"
-// import type { OrderObject as Order } from "@/app/orders/db"
-// import type { ProductObject as Product } from "@/app/products/db"
-
 export function makeSerializable<T extends any>(o: T): T {
     return JSON.parse(JSON.stringify(o))
 }

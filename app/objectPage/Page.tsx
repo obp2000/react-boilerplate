@@ -1,6 +1,6 @@
 import BackButton from '@/app/backButton/Button'
 import type { CustomerFormProps } from '@/app/customers/Form'
-import Date from '@/app/Date'
+import Date from '@/app/date/Date'
 import type { OrderFormProps } from '@/app/orders/Form'
 import type { ProductFormProps } from '@/app/products/Form'
 import Paper from '@/app/useClient/Paper'

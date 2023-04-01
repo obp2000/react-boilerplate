@@ -1,16 +1,15 @@
 'use client'
 
-import Button from '@/app/useClient/Button'
 import type { Translation } from '@/app/i18n/dictionaries'
+import Button from '@/app/useClient/Button'
 import type { ProductTypeType } from '@/interfaces/productTypes'
 // import Image from 'next/image'
-import type { ParsedUrlQuery } from 'querystring'
-import { useState, useTransition } from 'react'
-import type { Values, ProductObject as Product } from '@/interfaces/products'
-import { filesHandler } from '@/app/form/helpers'
+import { filesHandler, unitsLabel } from '@/app/form/helpers'
 import { useOnSubmit } from '@/app/form/hooks'
+import type { ProductObject as Product, Values } from '@/interfaces/products'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import CardMedia from '@mui/material/CardMedia'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
@@ -19,16 +18,13 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
+import Grid from '@mui/material/Unstable_Grid2'
+import { useState, useTransition } from 'react'
 import {
   Controller, useForm, type SubmitHandler
 } from "react-hook-form"
-import { Product as ValidatonSchema } from './product'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
-import Grid from '@mui/material/Unstable_Grid2'
-import CardMedia from '@mui/material/CardMedia'
-import { unitsLabel } from '@/app/form/helpers'
 import priceCoeffs from './priceCoeffs.json'
+import { Product as ValidatonSchema } from './product'
 
 function densityForCount({ weightForCount, lengthForCount, width }: Partial<Product>) {
   return weightForCount && lengthForCount && width
@@ -55,7 +51,9 @@ export function prices({ density, width, dollarPrice, dollarRate }: Partial<Prod
 }
 
 export type ProductFormProps = {
-  params: ParsedUrlQuery
+  mutateUrl: string
+  mutateMethod: string
+  redirectUrl: string
   initialValues: Product
   accessToken: string
   productTypes: ProductTypeType[]
@@ -67,7 +65,9 @@ export type ProductFormProps = {
 }
 
 export default function FormComp({
-  params,
+  mutateUrl,
+  mutateMethod,
+  redirectUrl,
   initialValues,
   accessToken,
   productTypes,
@@ -78,17 +78,15 @@ export default function FormComp({
   labels,
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
-  const [success, setSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const onSubmit: SubmitHandler<Values> = useOnSubmit({
-    params,
-    table: 'products',
+    mutateUrl,
+    mutateMethod,
+    redirectUrl,
     accessToken,
-    contentType: 'multipart/form-data',
+    toFormData: true,
     startTransition,
-    setSuccess,
-    setErrorMessage,
+    message,
   })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   console.log('initialValues ', initialValues)
@@ -98,7 +96,8 @@ export default function FormComp({
     handleSubmit,
     formState: {
       errors,
-      isSubmitting
+      isSubmitting,
+      isDirty,
     } } = useForm<Product>({
       defaultValues: initialValues,
       resolver: superstructResolver(ValidatonSchema)
@@ -502,18 +501,12 @@ export default function FormComp({
           variant="outlined"
           size="small"
           aria-label={save}
-          disabled={busy}
+          disabled={busy || !isDirty}
         >
           {save}
         </Button>
       </Grid>
     </Grid>
-    <Snackbar open={success || !!errorMessage} autoHideDuration={3000}>
-      <Alert severity={success ? "success" : "error"} elevation={6}
-        variant="filled" sx={{ width: '100%' }}>
-        {success ? message : errorMessage}
-      </Alert>
-    </Snackbar>
   </form >
 }
 

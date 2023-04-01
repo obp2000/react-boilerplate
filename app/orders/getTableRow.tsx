@@ -2,7 +2,7 @@ import 'server-only'
 
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Order } from '@/interfaces/orders'
-import Date from '@/app/Date'
+import Date from '@/app/date/Date'
 import TableCell from '@/app/useClient/TableCell'
 import { getShortName } from '@/app/customers/getTableRow'
 

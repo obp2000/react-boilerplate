@@ -1,4 +1,4 @@
-import { Prisma } from ".prisma/client"
+import { Prisma } from "@prisma/client"
 import tables from '@/app/objectPage/tables.json'
 // import type { Customer } from './customers'
 

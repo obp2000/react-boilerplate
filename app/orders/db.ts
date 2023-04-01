@@ -1,5 +1,5 @@
 import prisma from '@/services/prisma'
-import { Prisma } from '.prisma/client'
+import { Prisma } from '@prisma/client'
 import { ParsedUrlQuery } from 'querystring'
 import type { Order } from '@/interfaces/orders'
 

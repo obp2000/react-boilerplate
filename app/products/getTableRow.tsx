@@ -2,7 +2,7 @@ import 'server-only'
 
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Product } from '@/interfaces/products'
-import Date from '@/app/Date'
+import Date from '@/app/date/Date'
 import TableCell from '@/app/useClient/TableCell'
 import { getGetOptionLabel as getGetProductName } from './helpers'
 
