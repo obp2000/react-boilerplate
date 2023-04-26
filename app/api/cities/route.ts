@@ -1,12 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { where } from '@/app/customers/cities/db'
-import tables from '@/app/objectPage/tables.json'
 import prisma from '@/services/prisma'
+import { findManyArgs } from '@/app/customer/cities/serverHelpers'
 
-export async function GET(request: NextRequest) {
-  const objects = await prisma.city.findMany({
-    where: where(Object.fromEntries(request.nextUrl.searchParams)),
-    select: tables.customers.select.objects.city.select,
-  })
+export async function GET({ nextUrl: { searchParams } }: NextRequest) {
+  const objects = await prisma.city.findMany(
+    findManyArgs(Object.fromEntries(searchParams)))
   return NextResponse.json(objects)
 }

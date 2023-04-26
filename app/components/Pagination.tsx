@@ -1,0 +1,23 @@
+'use client'
+
+import Pagination from '@/app/useClient/Pagination'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import type { ChangeEvent } from 'react'
+
+export default function PaginationComp({
+  totalPages: count,
+}: {
+  totalPages: number
+}) {
+  const searchParams = new URLSearchParams(useSearchParams() ?? '')
+  const page = parseInt(searchParams.get('page') || '1')
+  const { push } = useRouter()
+  const pathname = usePathname()
+  const onChange = (_: ChangeEvent<unknown>, page: number) => {
+    page === 1
+      ? searchParams.delete('page')
+      : searchParams.set('page', String(page))
+    push(`${pathname}?${searchParams}`)
+  }
+  return <Pagination {...{ count, page, onChange }} />
+}

@@ -3,7 +3,8 @@ import { expect, test } from "@/mocks/test"
 import cities from '@/mocks/cities.json'
 import dict from '@/app/i18n/locales/ru/translation.json'
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, testInfo) => {
+  // testInfo.setTimeout(testInfo.timeout + 30000)
   await page.goto('/ru/customers')
 })
 
@@ -49,15 +50,17 @@ test.describe("Customers CRUD functionality", () => {
     await expect(submitButton).toBeDisabled()
 
     const nickInput = page.getByRole('textbox', { name: dict.customer.nick })
+    const nameInput = page.getByRole('textbox', { name: dict.customer.name })
     await expect(nickInput).toHaveCount(1)
+    await nickInput.focus()
     await nickInput.fill('obp2000')
+    await nameInput.focus()
     await expect(nickInput).toHaveValue('obp2000')
     await expect(nickInput).toHaveAttribute('aria-invalid', 'false')
     await expect(submitButton).toBeEnabled()
     await nickInput.fill('')
     await expect(submitButton).toBeDisabled()
 
-    const nameInput = page.getByRole('textbox', { name: dict.customer.name })
     await nameInput.fill('Oleg')
     await expect(nameInput).toHaveValue('Oleg')
     await expect(nameInput).toHaveAttribute('aria-invalid', 'false')
@@ -117,6 +120,7 @@ test.describe("Customers CRUD functionality", () => {
     await expect(nickInput).toHaveCount(1)
     await expect(nickInput).toHaveAttribute('aria-invalid', 'false')
     await nickInput.fill('')
+    await nickInput.blur()
     await expect(submitButton).toBeEnabled()
 
     const nameInput = page.getByRole('textbox', { name: dict.customer.name })
@@ -179,39 +183,4 @@ test.describe("Customers CRUD functionality", () => {
   })
 })
 
-
-    // const invalidClass = new RegExp('text-red')
-    // const nickInput = page.getByRole('textbox', { name: dict.customer.nick })
-    // await expect(nickInput).toHaveCount(1)
-    // await expect(nickInput).not.toHaveClass(invalidClass)
-    // await expect(nickInput).toHaveAttribute('placeholder', dict.customer.nick)
-    // await expect(nickInput).toHaveAttribute('required', '')
-    // const nameInput = page.getByRole('textbox', { name: dict.customer.name })
-    // const cityCombobox = page.getByRole('combobox', { name: dict.customer.city.city })
-    // await expect(cityCombobox).toHaveCount(1)
-    // const addressInput = page.getByRole('textbox', { name: dict.customer.address })
-
-    // await nickInput.fill('')
-    // await nameInput.focus()
-    // await expect(nickInput).toHaveClass(invalidClass)
-
-    // await expect(submitButton).toBeDisabled()
-    // await nickInput.type('obp2000')
-    // await expect(nickInput).toHaveValue('obp2000')
-    // await nameInput.focus()
-    // await expect(nickInput).not.toHaveClass(invalidClass)
-    // await expect(submitButton).toBeEnabled()
-
-    // await expect(nameInput).toHaveAttribute('placeholder', dict.customer.name)
-    // // await expect(nameInput).toHaveValue(objects.results[2].name)
-    // await nameInput.fill('Oleg')
-    // await expect(nameInput).toHaveValue('Oleg')
-    // await nickInput.focus()
-    // await expect(nameInput).not.toHaveClass(invalidClass)
-
-    // await expect(addressInput).toHaveAttribute('placeholder', dict.customer.address)
-    // // await expect(addressInput).toHaveValue(objects.results[2].address)
-    // await addressInput.fill('Main street 15-17')
-    // await expect(addressInput).toHaveValue('Main street 15-17')
-    // await nameInput.focus()
-    // await expect(addressInput).not.toHaveClass(invalidClass)
+// pnpm exec playwright open localhost:3000/ru/customers

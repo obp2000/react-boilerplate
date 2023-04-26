@@ -5,11 +5,11 @@ import path from 'path'
 const PORT = process.env.PORT || 3000
 
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL = `http://localhost:${PORT}`
+const baseURL = `http://localhost:${PORT}/ru`
 
 export default defineConfig({
   // Timeout per test
-  // timeout: 30 * 1000,
+  timeout: 60 * 1000,
   // Test directory
   testDir: path.join(__dirname, 'tests'),
   /* Retry on CI only */
@@ -36,12 +36,12 @@ export default defineConfig({
   // globalSetup: require.resolve('./global-setup'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   // globalSetup: require.resolve('./global-setup'),
-  // webServer: {
-  //   command: 'npm run dev',
-  //   url: baseURL,
-  //   timeout: 120 * 1000,
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'pnpm run dev',
+    url: baseURL,
+    timeout: 120 * 1000,
+    reuseExistingServer: !process.env.CI,
+  },
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     // actionTimeout: 0,
@@ -51,7 +51,7 @@ export default defineConfig({
     // trace: 'on-first-retry',
     // Tell all tests to load signed-in state from 'storageState.json'.
     storageState: 'storageState.json',
-    locale: 'ru',
+    // locale: 'ru',
     actionTimeout: 20000,
     navigationTimeout: 20000,
   },

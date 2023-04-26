@@ -1,0 +1,189 @@
+{
+	"customers": {
+		"singular": "customer",
+		"select": {
+			"objects": {
+				"id": true,
+				"nick": true,
+				"name": true,
+				"city": {
+					"select": {
+						"id": true,
+						"city": true,
+						"pindex": true
+					}
+				},
+				"address": true,
+				"createdAt": true,
+				"updatedAt": true
+			},
+			"object": {
+				"nick": true,
+				"name": true,
+				"city": {
+					"select": {
+						"id": true,
+						"city": true,
+						"pindex": true
+					}
+				},
+				"address": true,
+				"createdAt": true
+			}
+		},
+		"initObject": {
+			"nick": "",
+			"name": "",
+			"city": null,
+			"address": ""
+		}
+	},
+	"products": {
+		"singular": "product",
+		"select": {
+			"objects": {
+				"id": true,
+				"name": true,
+				"threads": true,
+				"contents": true,
+				"fleece": true,
+				"price": true,
+				"weight": true,
+				"width": true,
+				"density": true,
+				"createdAt": true,
+				"updatedAt": true,
+				"productType": {
+					"select": {
+						"id": true,
+						"name": true
+					}
+				}
+			},
+			"object": {
+				"name": true,
+				"threads": true,
+				"contents": true,
+				"price": true,
+				"weight": true,
+				"width": true,
+				"density": true,
+				"dollarPrice": true,
+				"dollarRate": true,
+				"widthShop": true,
+				"densityShop": true,
+				"weightForCount": true,
+				"lengthForCount": true,
+				"pricePre": true,
+				"image": true,
+				"createdAt": true,
+				"productTypeId": true,
+				"fleece": true
+			}
+		},
+		"initObject": {
+			"productTypeId": "",
+			"threads": "",
+			"contents": "",
+		  	"name": "",
+		  	"price": "",
+		  	"dollarPrice": "",
+			"dollarRate": "",
+			"weight": "",
+			"width": "",
+			"density": "",
+			"widthShop": "",
+			"densityShop": "",
+			"weightForCount": "",
+			"lengthForCount": "",
+			"pricePre": ""
+		}
+	},
+	"orders": {
+		"singular": "order",
+		"select": {
+			"object": {
+			  	"postCost": true,
+			  	"packet": true,
+			  	"deliveryType": true,
+			  	"address": true,
+			  	"gift": true,
+				"createdAt": true,
+				"customer": {
+					"select": {
+						"id": true,
+						"nick": true,
+						"name": true,
+						"address": true,
+						"city": {
+							"select": {
+								"id": true,
+								"pindex": true,
+								"city": true
+							}
+						},
+						"createdAt": true,
+						"updatedAt": true
+					}
+				},
+				"orderItems": {
+					"select": {
+						"id": true,
+						"amount": true,
+						"price": true,
+						"product": {
+							"select": {
+								"id": true,
+								"name": true,
+								"threads": true,
+								"contents": true,
+								"fleece": true,
+								"price": true,
+								"weight": true,
+								"width": true,
+								"density": true,
+								"createdAt": true,
+								"updatedAt": true,
+								"productType": {
+									"select": {
+										"id": true,
+										"name": true
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"initObject": {
+			"customer": null,
+			"postCost": "",
+			"packet": "",
+			"deliveryType": "",
+			"address": "",
+			"gift": ""
+		},
+		"initOrderItem": {
+			"product": null,
+			"amount": 0,
+			"price": 0
+		}
+	},
+	"users": {
+		"initObject": {
+			"name": "",
+			"email": "",
+			"password1": "",
+			"password2": "",
+			"firstName": "",
+			"lastName": ""
+		},
+		"fields": [
+		  	"name",
+		  	"email",
+		  	"firstName",
+		  	"lastName"
+		]
+	}
+}

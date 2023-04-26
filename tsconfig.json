@@ -24,12 +24,8 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/app/*": [
-        "app/*"
-      ],
-      "@/interfaces/*": [
-        "interfaces/*"
-      ],
+      "@/app/*": [ "app/*" ],
+      "@/interfaces/*": [ "interfaces/*" ],
       "@/mocks/*": [
         "mocks/*"
       ],

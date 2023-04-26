@@ -15,6 +15,10 @@
   "count": "Count",
   "main": "Main",
   "profile": "Profile",
+  "created": "created",
+  "updated": "updated",
+  "deleted": "deleted",
+  "total": "Total",
   "customers": {
     "singular": "Customer",
     "plural": "Customers"
@@ -65,18 +69,18 @@
     "successfulLogin": "Successful login",
     "successfulRegister": "Successful register",
     "successfulLogout": "Successful logout",
-    "usernameOrPasswordNotValid": "Username or password not valid",
-    "username": "Username",
+    "nameOrPasswordNotValid": "Username or password not valid",
+    "name": "Username",
     "email": "Email",
     "password": "Password",
     "password1": "Password",
     "password2": "Password confirmation",
     "firstName": "First name",
     "lastName": "Last name",
-    "usernameHelpText": "Required field. Max 150 characters. Only letters, digits and characters @/./+/-/_.",
+    "nameHelpText": "Required field. Max 150 characters. Only letters, digits and characters @/./+/-/_.",
     "password1HelpText": "Password must not be too similar to your other personal information. Your password must be at least 8 characters. Password cannot be numbers only.",
     "password2HelpText": "Please enter your password again to confirm.",
-    "usernameAlreadyExists": "Username already exists."
+    "nameAlreadyExists": "Username already exists."
   },
   "customer": {
     "id": "Id",
@@ -231,7 +235,7 @@
   },
   "user": {
     "pk": "ID",
-    "username": "Username",
+    "name": "Username",
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name"
