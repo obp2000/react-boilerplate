@@ -1,5 +1,5 @@
 import IconButton from "@mui/material/IconButton"
-import Tooltip from "@mui/material/Tooltip/Tooltip"
+import Tooltip from "@/app/useClient/Tooltip"
 import { useState } from "react"
 import type { UseFieldArrayRemove } from "react-hook-form"
 import DeleteIcon from '@mui/icons-material/Delete'

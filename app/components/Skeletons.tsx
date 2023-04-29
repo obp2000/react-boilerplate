@@ -36,7 +36,7 @@ export function Form() {
       <Field />
     </Grid>
     <Grid>
-      <Skeleton sx={{ fontSize: '1.5rem' }} />
+      <Field />
     </Grid>
   </Grid>
 }
@@ -85,7 +85,7 @@ export function ObjectsTableBodyAndFooter() {
     <TableFooter>
       <TableRow>
         <TableCell />
-        <TableCell><Skeleton sx={{ fontSize: '1.5rem' }} /></TableCell>
+        <TableCell><Field /></TableCell>
         <TableCell />
         <TableCell colSpan={4} align='right'>
           <Skeleton sx={{ fontSize: '1.5rem' }} />

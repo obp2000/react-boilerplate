@@ -6,11 +6,29 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState, type MouseEvent, type PropsWithChildren, type ReactNode } from 'react'
+import { usePathname, useSelectedLayoutSegments } from 'next/navigation'
+import { useState, type MouseEvent, type ReactNode } from 'react'
 import Typography from '@/app/useClient/Typography'
+import type { Translation, ModelNames } from '@/app/i18n/dictionaries'
+import mainMenu from './mainMenu.json'
 
-export function NavbarXsMenu({ children }: PropsWithChildren) {
+export function NavLinkXs({
+  path,
+  table,
+  lng,
+  children
+}: { path: string, table: string, lng: string, children: string }) {
+  return <MenuItem selected={path === table}>
+    <Link
+      href={`/${lng}/${path}`}
+    // prefetch={false}
+    >
+      {children}
+    </Link>
+  </MenuItem>
+}
+
+export function NavbarXsMenu({ lng, dict }: { lng: string, dict: Translation }) {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
@@ -18,6 +36,8 @@ export function NavbarXsMenu({ children }: PropsWithChildren) {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
   }
+  const pathname = usePathname()
+  const table = pathname?.split('/')[2] || 'customers'
   return <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
     <IconButton
       size="large"
@@ -47,47 +67,25 @@ export function NavbarXsMenu({ children }: PropsWithChildren) {
         display: { xs: 'block', md: 'none' },
       }}
     >
-      {children}
+      {mainMenu.map(({ path, label }, key) => <NavLinkXs key={key} {...{ path, table, lng }}>
+        {dict[label as keyof ModelNames].plural as string ||
+          dict[label as keyof Translation] as string}
+      </NavLinkXs>)}
     </Menu>
   </Box>
 }
 
-export function NavLinkXs({
-  path,
-  lng,
-  children
-}: { path: string, lng: string, children: string }) {
-  // const segment = useSelectedLayoutSegment()
-  // const currentPath = segment === null ? '' : segment
-  const pathname = usePathname()
-  const segment = pathname?.split('/')[2] || 'customers'
-  const isActive = path === segment
-  return <MenuItem selected={isActive}>
-    <Link
-      href={`/${lng}/${path}`}
-      // prefetch={false}
-    >
-      {children}
-    </Link>
-  </MenuItem>
-}
-
 export function NavLink({
   path,
+  table,
   lng,
   children
 }: {
   path: string
+  table: string
   lng: string
   children: ReactNode
 }) {
-  // const segment = useSelectedLayoutSegment()
-  // console.log({ segment })
-  // const currentPath = segment === null ? '' : segment
-  // const isActive = path === currentPath
-  const pathname = usePathname()
-  const segment = pathname?.split('/')[2] || 'customers'
-  const isActive = path === segment
   return <Typography variant="h6" component="div" sx={{
     flexGrow: 1,
     '&:hover': {
@@ -100,10 +98,22 @@ export function NavLink({
     // prefetch={false}
     >
       <Typography variant='button' sx={{
-        color: isActive ? 'yellow' : 'white',
+        color: path === table ? 'yellow' : 'white',
       }}>
         {children}
       </Typography>
     </Link>
   </Typography>
+}
+
+export function NavbarMenu({ lng, dict }: { lng: string, dict: Translation }) {
+  const pathname = usePathname()
+  const table = pathname?.split('/')[2] || 'customers'
+  console.log('useSegm ', useSelectedLayoutSegments())
+  return <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+    {mainMenu.map(({ path, label }, key) => <NavLink key={key} {...{ path, table, lng }}>
+      {dict[label as keyof ModelNames].plural as string ||
+        dict[label as keyof Translation] as string}
+    </NavLink>)}
+  </Box>
 }

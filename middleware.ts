@@ -4,10 +4,6 @@ import { Unauthorized } from 'http-errors'
 import Negotiator from 'negotiator'
 import { type NextRequest, NextResponse } from 'next/server'
 import { withAuth } from "next-auth/middleware"
-// import getUser from '@/services/getUser'
-
-// import { getIronSession } from "iron-session/edge"
-// import { ironConfig } from "@/services/ironConfig"
 
 export const config = {
   matcher: [
@@ -24,11 +20,12 @@ function getLocale(request: NextRequest) {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  if (pathname.startsWith('/api')) {
+  if (pathname.startsWith('/api') ||
+      pathname.match(/\/(customers|products|orders)\/(\d+|new)/)) {
     withAuth(
       // `withAuth` augments your `Request` with the user's token.
       function middleware(req) {
-        console.log(req.nextauth.token)
+        // console.log(req.nextauth.token)
         return NextResponse.next(req)
       },
       {
@@ -38,14 +35,6 @@ export async function middleware(request: NextRequest) {
       }
     )
     return NextResponse.next(Unauthorized())
-
-    // const res = NextResponse.next()
-    // const { user } = await getIronSession(request, res, ironConfig)
-
-    // const user = await getUser()
-    // if (!user) {
-    //   return NextResponse.next(Unauthorized())
-    // }
 
     // if (!request.headers.has('authorization')) {
     //   return NextResponse.next(Unauthorized('Access token is required'))

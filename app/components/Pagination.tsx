@@ -9,7 +9,10 @@ export default function PaginationComp({
 }: {
   totalPages: number
 }) {
-  const searchParams = new URLSearchParams(useSearchParams() ?? '')
+  const readOnlySearchParams = useSearchParams()
+  const searchParams = new URLSearchParams(readOnlySearchParams
+    ? Object.fromEntries(readOnlySearchParams)
+    : undefined)
   const page = parseInt(searchParams.get('page') || '1')
   const { push } = useRouter()
   const pathname = usePathname()

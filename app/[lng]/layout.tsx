@@ -7,7 +7,6 @@ import type { PropsWithChildren } from 'react'
 import LocaleSwitcher from '@/app/components/LocaleSwitcher'
 import { getDictionary } from '@/app/i18n/dictionaries'
 import Container from '@/app/useClient/Container'
-import getUser from '@/services/getUser'
 import Toaster from '@/app/useClient/Toaster'
 // import ToastContainer from '@/app/useClient/ToastContainer'
 
@@ -28,12 +27,12 @@ export default async function RootLayout({
 }: PropsWithChildren<{ params: ParsedUrlQuery }>) {
   const lng = String(params.lng || fallbackLng)
   const dict = await getDictionary(lng)
-  const user = await getUser()
   return <html lang={lng} >
     <body>
       <Container>
         <header>
-          <NavBar {...{ lng, dict, user }} />
+          {/* @ts-expect-error Server Component */ }
+          <NavBar {...{ lng, dict }} />
         </header>
         <main>
           {children}

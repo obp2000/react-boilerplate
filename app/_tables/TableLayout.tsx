@@ -13,10 +13,9 @@ import TableHead from '@/app/useClient/TableHead'
 import TableRow from '@/app/useClient/TableRow'
 import Tooltip from '@/app/useClient/Tooltip'
 import Typography from '@/app/useClient/Typography'
-import type { UserObject as User } from '@/interfaces/users'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import getUser from '@/services/getUser'
+import { isLoggedIn } from '@/services/getUser'
 import { fallbackLng } from '@/app/i18n/settings'
 import { ParsedUrlQuery } from 'querystring'
 
@@ -37,7 +36,7 @@ function HeaderFields({
 }
 
 type GetHeaderRow = {
-	user: User
+	loggedIn: boolean
 	tableLabels: TableLabels
 	dict: Translation
 	lng: string
@@ -45,13 +44,13 @@ type GetHeaderRow = {
 }
 
 function getHeaderRow({
-	user,
+	loggedIn,
 	tableLabels,
 	dict,
 	lng,
 	table,
 }: GetHeaderRow) {
-	if (user) {
+	if (loggedIn) {
 		return function HeaderRow() {
 			return <>
 				<HeaderFields {...{ tableLabels, dict }} />
@@ -87,12 +86,12 @@ export async function TableLayout({
 	children?: ReactNode
 }) {
 	const lng = String(params.lng || fallbackLng)
-	const [dict, user] = await Promise.all([
+	const [dict, loggedIn] = await Promise.all([
 		getDictionary(lng),
-		getUser() as User
+		isLoggedIn()
 	])
 	const HeaderRow = getHeaderRow({
-		user,
+		loggedIn,
 		tableLabels,
 		dict,
 		lng,

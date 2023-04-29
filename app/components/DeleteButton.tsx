@@ -29,7 +29,7 @@ export default function Button({
   const [confirmOpen, setConfirmOpen] = useState(false)
   const busy = isPending
   const { refresh } = useRouter()
-  const deleteObject = async () => {
+  const deleteObject = useCallback(async () => {
     const res = await fetch(url, { method: 'DELETE' })
     const { message } = await res.json()
     if (res.ok) {
@@ -38,7 +38,7 @@ export default function Button({
     } else {
       toastError(message)
     }
-  }
+  }, [url, refresh])
   const onConfirmButtonClick = useCallback(() => {
     if (busy) {
       return

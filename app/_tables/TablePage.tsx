@@ -12,8 +12,7 @@ import Tooltip from '@/app/useClient/Tooltip'
 import type { Customer, SerializedCustomer } from '@/interfaces/customers'
 import type { Order, SerializedOrder } from '@/interfaces/orders'
 import type { Product, SerializedProduct } from '@/interfaces/products'
-import type { UserObject as User } from '@/interfaces/users'
-import getUser from '@/services/getUser'
+import { isLoggedIn } from '@/services/getUser'
 import Link from 'next/link'
 import type { PaginatedResult } from 'prisma-pagination'
 import type { ParsedUrlQuery } from 'querystring'
@@ -59,36 +58,36 @@ export function getRenderTableRow(props: {
 	lng: string
 	table: string
 	row: RowType<SerializedCustomer>
-	user: User
+	loggedIn: boolean
 }): (object: Customer) => JSX.Element
 export function getRenderTableRow(props: {
 	dict: Translation
 	lng: string
 	table: string
 	row: RowType<SerializedProduct>
-	user: User
+	loggedIn: boolean
 }): (object: Product) => JSX.Element
 export function getRenderTableRow(props: {
 	dict: Translation
 	lng: string
 	table: string
 	row: RowType<SerializedOrder>
-	user: User
+	loggedIn: boolean
 }): (object: Order) => JSX.Element
 export function getRenderTableRow({
 	dict,
 	lng,
 	table,
 	row,
-	user,
+	loggedIn,
 }: {
 	dict: Translation
 	lng: string
 	table: string
 	row: any
-	user: User
+	loggedIn: boolean
 }): (object: any) => JSX.Element {
-	if (user) {
+	if (loggedIn) {
 		const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${lng}/${table}`
 		return function RenderTableRow(object) {
 			return <TableRow aria-label={dict[table as keyof ModelNames].singular}>
@@ -165,10 +164,10 @@ export async function TablePage({
 		perPage: Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
 		searchParams
 	}
-	const [dict, { data, meta }, user] = await Promise.all([
+	const [dict, { data, meta }, loggedIn] = await Promise.all([
 		getDictionary(lng),
 		getObjects(paginatorArgs),
-		getUser() as User,
+		isLoggedIn(),
 	])
 	const row = getTableRow(dict)
 	const RenderTableRow = getRenderTableRow({
@@ -176,7 +175,7 @@ export async function TablePage({
 		lng,
 		table,
 		row,
-		user,
+		loggedIn,
 	})
 	return <>
 		<ClientOnly>

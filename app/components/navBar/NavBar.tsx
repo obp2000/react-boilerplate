@@ -1,28 +1,26 @@
 import 'server-only'
 
-import type { ModelNames, Translation } from '@/app/i18n/dictionaries'
-import AuthButton from './AuthButton'
-import UserButton from './UserButton'
+import type { Translation } from '@/app/i18n/dictionaries'
 import AppBar from '@/app/useClient/AppBar'
 import Box from '@/app/useClient/Box'
 import Container from '@/app/useClient/Container'
 import Toolbar from '@/app/useClient/Toolbar'
 import Typography from '@/app/useClient/Typography'
-import mainMenu from './mainMenu.json'
-import { NavbarXsMenu, NavLinkXs, NavLink } from './NavbarMenu'
+import { getUsername } from '@/services/getUser'
+import AuthButton from './AuthButton'
+import { NavbarMenu, NavbarXsMenu } from './NavbarMenu'
 import SearchForm from './SearchForm'
-import type { UserObject as User } from "@/interfaces/users"
+import UserButton from './UserButton'
 
-export default function NavBar({
+export default async function NavBar({
 	lng,
 	dict,
-	user
 }: {
 	lng: string
 	dict: Translation
-	user?: User | null
 }) {
 	// const menu = user ? [...mainMenu, userMenuItem] : mainMenu
+	const username = await getUsername()
 	return <AppBar position="static">
 		<Container maxWidth="xl">
 			<Toolbar disableGutters>
@@ -36,19 +34,13 @@ export default function NavBar({
 						display: { xs: 'none', md: 'flex' },
 						fontFamily: 'monospace',
 						fontWeight: 700,
-						// letterSpacing: '.3rem',
 						color: 'inherit',
 						textDecoration: 'none',
 					}}
 				>
 					{dict.brandText}
 				</Typography>
-				<NavbarXsMenu>
-					{mainMenu.map(({ path, label }, key) => <NavLinkXs key={key} {...{ path, lng }}>
-						{dict[label as keyof ModelNames].plural as string ||
-							dict[label as keyof Translation] as string}
-					</NavLinkXs>)}
-				</NavbarXsMenu>
+				<NavbarXsMenu {...{ lng, dict }} />
 				<Typography
 					variant="h5"
 					noWrap
@@ -67,17 +59,12 @@ export default function NavBar({
 				>
 					{dict.brandText}
 				</Typography>
-				<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-					{mainMenu.map(({ path, label }, key) => <NavLink key={key} {...{ path, lng }}>
-						{dict[label as keyof ModelNames].plural as string ||
-							dict[label as keyof Translation] as string}
-					</NavLink>)}
-				</Box>
+				<NavbarMenu {...{ lng, dict }} />
 				<SearchForm searchLabel={dict.search} />
 				<Box sx={{ flexGrow: 0 }}>
-					{user
+					{username
 						? <UserButton {...{
-							name: String(user.name),
+							name: username,
 							labels: {
 								profile: dict.profile,
 								logout: dict.auth.logout,

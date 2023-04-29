@@ -6,24 +6,36 @@ export async function getSession() {
   return await getServerSession(authOptions)
 }
 
-export default async function getUser() {
+export async function getUsername() {
   try {
     const session = await getSession()
-    if (!session?.user?.name) {
+    return session?.user?.name
+  } catch (error) {
+    return
+  }
+}
+
+export async function isLoggedIn() {
+  const name = await getUsername()
+  return !!name
+}
+
+export default async function getUser() {
+  try {
+    const name = await getUsername()
+    if (!name) {
       return null
     }
-    const currentUser = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        name: session.user.name,
+        name,
       }
     })
-    if (!currentUser) {
+    if (!user) {
       return null
     }
-    return {
-      ...currentUser,
-    }
-  } catch (error: any) {
+    return user
+  } catch (error) {
     return null
   }
 }

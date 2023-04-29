@@ -32,20 +32,17 @@ export default function UserButton({
   const busy = isPending
   const { refresh, replace } = useRouter()
   const segment = useSelectedLayoutSegment()
-  const onSignOut = () => {
+  const onSignOutButtonClick = useCallback(() => {
+    if (busy) {
+      return
+    }
     signOut()
     toastSuccess(successfulLogout)
     if (segment === 'user') {
       replace(`/${lng}`)
     }
     refresh()
-  }
-  const onSignOutButtonClick = useCallback(() => {
-    if (busy) {
-      return
-    }
-    onSignOut()
-  }, [onSignOut, busy])
+  }, [busy, lng, refresh, replace, segment, successfulLogout])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)

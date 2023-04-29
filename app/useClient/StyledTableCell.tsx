@@ -1,7 +1,7 @@
 'use client'
 
-import styled from '@mui/material/styles/styled'
-import tableCellClasses from '@mui/material/TableCell/tableCellClasses'
+import { styled } from '@mui/material/styles'
+import { tableCellClasses } from '@mui/material/TableCell'
 import TableCell from'./TableCell'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

@@ -67,11 +67,10 @@ export default function SearchForm({
   const onSubmit = ({ term }: ParsedUrlQuery) => {
     startTransition(() => {
       let url = `/${lng}/${table}`
-      console.log('term ', term)
+      // console.log('term ', term)
       if (term && term.length > 0) {
         url += `?${new URLSearchParams({ term: String(term) })}`
       }
-      console.log('url ', url)
       push(url)
     })
   }
