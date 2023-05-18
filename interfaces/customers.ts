@@ -26,12 +26,14 @@ export type SerializedCustomerObject = Omit<CustomerObject, 'createdAt'> &
 }
 
 export type CustomerFormProps = {
-  id?: number
-  initialValues: SerializedCustomerObject
-  save: string
-  notFound: string
-  errorMessages: Translation['errorMessages']
-  labels: Translation['customer']
+	lng: string
+	table: string
+	id?: number
+	initialValues: SerializedCustomerObject
+	save: string
+	notFound: string
+	errorMessages: Translation['errorMessages']
+	labels: Translation['customer']
 }
 
 export type CityFieldProps = {

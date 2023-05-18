@@ -44,7 +44,7 @@ export function onSearch(
       setBusy(true)
       const searchParams = new URLSearchParams()
       searchParams.set('term', term)
-      return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${searchPath}?${searchParams}`)
+      return fetch(`/api/${searchPath}?${searchParams}`)
         .then(res => res.json()
           .then((results) => {
             // console.log('results.includes(initData) ', results.map(({ id }) => id).includes(initData.id))
@@ -56,9 +56,9 @@ export function onSearch(
   }
 }
 
-export function isOptionEqualToValue(
-  option: City | Customer | Product,
-  value: City | Customer | Product) {
+type anyObject = City | Customer | Product
+
+export function isOptionEqualToValue(option: anyObject, value: anyObject) {
   return value === undefined || option.id === value.id
 }
 
@@ -80,7 +80,7 @@ export function getRenderInput({
   ref?: ControllerRenderProps['ref']
 }) {
   return function renderInput(params: JSX.IntrinsicAttributes & TextFieldProps) {
-    const helperText = !!error
+    const helperText = error
       ? errorMessages[error.message as keyof Translation['errorMessages']]
       : undefined
     const InputProps = {

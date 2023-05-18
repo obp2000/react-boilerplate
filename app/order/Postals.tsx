@@ -143,7 +143,7 @@ export default function Postals({
               >
                 <MenuItem value=""><em>------</em></MenuItem>
                 {labels.packetChoices.map(
-                  ({ value, display_name }, key) => <MenuItem key={key} value={value}>
+                  ({ value, display_name }) => <MenuItem key={value} value={value}>
                     {display_name}
                   </MenuItem>)}
               </Select>

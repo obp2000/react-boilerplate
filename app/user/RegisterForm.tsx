@@ -57,7 +57,7 @@ export default function RegisterForm({
   })
   const { refresh } = useRouter()
   const onSubmit = async (values: RegisterValues) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/register`, {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(values),
       headers: new Headers({ 'Content-Type': 'application/json' }),

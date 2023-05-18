@@ -2,7 +2,11 @@
 
 import { useMutate } from '@/app/_objects/hooks'
 import type { Translation } from '@/app/i18n/dictionaries'
-import type { SerializedCustomerObject, Values } from '@/interfaces/customers'
+import type {
+  SerializedCustomerObject,
+  Values,
+  CustomerFormProps
+} from '@/interfaces/customers'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -14,9 +18,10 @@ import {
 import CityField from './CityField'
 import { struct } from './struct'
 import { formatRu } from '@/app/components/Date'
-import type { CustomerFormProps } from'@/interfaces/customers'
 
 export default function FormComp({
+  lng,
+  table,
   id,
   initialValues,
   save,
@@ -25,7 +30,7 @@ export default function FormComp({
   labels
 }: CustomerFormProps) {
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate({ id })
+  const onSubmit: SubmitHandler<Values> = useMutate({ lng, table, id })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
     control,

@@ -5,7 +5,7 @@ import path from 'path'
 const PORT = process.env.PORT || 3000
 
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL = `http://localhost:${PORT}/ru`
+const baseURL = `http://localhost:${PORT}`
 
 export default defineConfig({
   // Timeout per test
@@ -37,9 +37,9 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   // globalSetup: require.resolve('./global-setup'),
   webServer: {
-    command: 'pnpm run dev',
+    command: 'pnpm dev',
     url: baseURL,
-    timeout: 120 * 1000,
+    timeout: 180 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   use: {

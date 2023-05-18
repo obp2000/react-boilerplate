@@ -10,15 +10,11 @@ import Container from '@/app/useClient/Container'
 import Toaster from '@/app/useClient/Toaster'
 // import ToastContainer from '@/app/useClient/ToastContainer'
 
-// export async function generateStaticParams() {
-//   // return languages.map((lng) => ({ lng }))
-//   return [{ lng: 'ru', table: 'customers' }]
-// }
-
 const name = "Best&C"
 
 export const metadata = {
   title: name,
+  description: `Site of ${name}`,
 }
 
 export default async function RootLayout({

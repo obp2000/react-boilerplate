@@ -64,38 +64,3 @@ export default function Button({
     />}
   </>
 }
-
-
-  // const onClick = async () => {
-  //   const result = await confirm(`${label}?`, { okText, cancelText })
-  //   if (result) {
-  //     deleteObject()
-  //   }
-  // }
-
-// {/*<div>
-//   <IconButton aria-label="delete" onClick={() => setConfirmOpen(true)}>
-//     <DeleteIcon />
-//   </IconButton>
-//   <ConfirmDialog
-//     title="Delete Post?"
-//     open={confirmOpen}
-//     setOpen={setConfirmOpen}
-//     onConfirm={deletePost}
-//   >
-//     Are you sure you want to delete this post?
-//   </ConfirmDialog>
-// </div>*/}
-      // const res = await fetch(deleteUrl, {
-      //   method: 'DELETE',
-      //   headers: new Headers({ authorization: `Token ${accessToken}` }),
-      // })
-      // const { message } = await res.json()
-      // if (res.ok) {
-      //   startTransition(() => {
-      //     refresh()
-      //     toastSuccess(message)
-      //   })
-      // } else {
-      //   toastError(message)
-      // }

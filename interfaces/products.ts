@@ -26,6 +26,8 @@ export type SerializedProductObject = Omit<ProductObject, 'createdAt'> &
 }
 
 export type ProductFormProps = {
+  lng: string
+  table: string
   id?: number
   initialValues: SerializedProductObject
   productTypes: ProductTypeType[]

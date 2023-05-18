@@ -1,3 +1,4 @@
+import { getDictionary } from '@/app/i18n/dictionaries'
 import type { Values as CustomerValues } from '@/interfaces/customers'
 import { rest } from 'msw'
 import cities from './cities.json'
@@ -6,7 +7,7 @@ import user from './user.json'
 const baseUrl = '/api'
 
 export default [
-  rest.post(`${baseUrl}/customers`, async (req, res, ctx) => {
+  rest.post(`${baseUrl}/ru/customers`, async (req, res, ctx) => {
     // console.log('create handler')
     const values: CustomerValues = await req.json()
     const result = {
@@ -18,9 +19,11 @@ export default [
       createdAt: new Date('16.05.2022 21:42:22'),
       updatedAt: new Date('16.05.2022 21:42:22'),
     }
-    return res(ctx.json(result))
+    const { successfully, customers, created } = await getDictionary('ru')
+    const message = `${customers.singular} ${successfully.toLowerCase()} ${created}`
+    return res(ctx.json({ message }))
   }),
-  rest.put(`${baseUrl}/customers/:id`, async (req, res, ctx) => {
+  rest.put(`${baseUrl}/ru/customers/:id`, async (req, res, ctx) => {
     const values: CustomerValues = await req.json()
     const result = {
       id: parseInt(req.params.id as string),
@@ -31,11 +34,14 @@ export default [
       createdAt: values?.createdAt,
       updatedAt: "2022-08-14T23:45:58.702044+03:00",
     }
-    return res(ctx.json(result))
+    const { successfully, customers, updated } = await getDictionary('ru')
+    const message = `${customers.singular} ${successfully.toLowerCase()} ${updated}`
+    return res(ctx.json({ message }))
   }),
-  rest.delete(`${baseUrl}/customers/:id`, (_req, res, ctx) => {
-    console.log('delete handler')
-    return res(ctx.json({}))
+  rest.delete(`${baseUrl}/ru/customers/:id`, async (_req, res, ctx) => {
+    const { successfully, customers, deleted } = await getDictionary('ru')
+    const message = `${customers.singular} ${successfully.toLowerCase()} ${deleted}`
+    return res(ctx.json({ message }))
   }),
   rest.get(`${baseUrl}/cities`, (req, res, ctx) => {
     // console.log('mock cities')

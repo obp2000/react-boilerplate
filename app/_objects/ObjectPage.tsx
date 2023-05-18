@@ -80,6 +80,8 @@ export async function ObjectPage({
 	const Form = form
 	return <ClientOnly>
 		<Form {...{
+			lng,
+			table,
 			id: Number(id),
 			initialValues,
 			save: dict.save,
@@ -135,6 +137,8 @@ export async function NewObjectPage({
 	const Form = form
 	return <ClientOnly>
 		<Form {...{
+			lng,
+			table,
 			initialValues,
 			save: dict.save,
 			errorMessages: dict.errorMessages,

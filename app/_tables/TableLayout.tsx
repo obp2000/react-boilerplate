@@ -29,7 +29,7 @@ function HeaderFields({
 	dict: Translation
 }) {
 	return <>
-		{tableLabels(dict).map((tableLabel, index) => <StyledTableCell key={index}>
+		{tableLabels(dict).map((tableLabel) => <StyledTableCell key={tableLabel}>
 			{tableLabel}
 		</StyledTableCell>)}
 	</>
@@ -86,10 +86,9 @@ export async function TableLayout({
 	children?: ReactNode
 }) {
 	const lng = String(params.lng || fallbackLng)
-	const [dict, loggedIn] = await Promise.all([
-		getDictionary(lng),
-		isLoggedIn()
-	])
+	const dictData = getDictionary(lng)
+	const loggedInData = isLoggedIn()
+	const [dict, loggedIn] = await Promise.all([dictData, loggedInData])
 	const HeaderRow = getHeaderRow({
 		loggedIn,
 		tableLabels,

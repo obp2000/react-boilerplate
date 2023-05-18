@@ -92,6 +92,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }))
 
 export default function FormComp({
+  lng,
+  table,
   id,
   initialValues,
   save,
@@ -111,7 +113,7 @@ export default function FormComp({
   // const [pindex, setPindex] = useState<string | null | undefined>(initCustomer?.city?.pindex)
   // const [currentCustomer, setCurrentCustomer] = useState(initCustomer)
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate({ id })
+  const onSubmit: SubmitHandler<Values> = useMutate({ lng, table, id })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
     control,
@@ -202,7 +204,7 @@ export default function FormComp({
             >
               <MenuItem value=""><em>------</em></MenuItem>
               {labels.deliveryTypeChoices.map(
-                ({ value, display_name }, key) => <MenuItem key={key} value={value}>
+                ({ value, display_name }) => <MenuItem key={value} value={value}>
                   {display_name}
                 </MenuItem>)}
             </Select>

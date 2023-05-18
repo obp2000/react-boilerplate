@@ -5,7 +5,7 @@ export function formatRu(dateString: string) {
   return format(parseISO(dateString), 'dd.MM.yyyy HH:mm:ss', { locale: ru })
 }
 
-export default function Date({ dateString }: { dateString?: string }) {
+export default function DateComp({ dateString }: { dateString?: string }) {
   if (!dateString) { return null }
   return <time dateTime={dateString}>
     {formatRu(dateString)}

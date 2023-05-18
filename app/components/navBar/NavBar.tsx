@@ -5,7 +5,6 @@ import AppBar from '@/app/useClient/AppBar'
 import Box from '@/app/useClient/Box'
 import Container from '@/app/useClient/Container'
 import Toolbar from '@/app/useClient/Toolbar'
-import Typography from '@/app/useClient/Typography'
 import { getUsername } from '@/services/getUser'
 import AuthButton from './AuthButton'
 import { NavbarMenu, NavbarXsMenu } from './NavbarMenu'
@@ -21,44 +20,10 @@ export default async function NavBar({
 }) {
 	// const menu = user ? [...mainMenu, userMenuItem] : mainMenu
 	const username = await getUsername()
-	return <AppBar position="static">
+	return <AppBar position="static" sx={{ mb: 1 }}>
 		<Container maxWidth="xl">
 			<Toolbar disableGutters>
-				<Typography
-					variant="h6"
-					noWrap
-					component="a"
-					href="/"
-					sx={{
-						mr: 5,
-						display: { xs: 'none', md: 'flex' },
-						fontFamily: 'monospace',
-						fontWeight: 700,
-						color: 'inherit',
-						textDecoration: 'none',
-					}}
-				>
-					{dict.brandText}
-				</Typography>
 				<NavbarXsMenu {...{ lng, dict }} />
-				<Typography
-					variant="h5"
-					noWrap
-					component="a"
-					href=""
-					sx={{
-						mr: 2,
-						display: { xs: 'flex', md: 'none' },
-						flexGrow: 1,
-						fontFamily: 'monospace',
-						fontWeight: 700,
-						// letterSpacing: '.3rem',
-						color: 'inherit',
-						textDecoration: 'none',
-					}}
-				>
-					{dict.brandText}
-				</Typography>
 				<NavbarMenu {...{ lng, dict }} />
 				<SearchForm searchLabel={dict.search} />
 				<Box sx={{ flexGrow: 0 }}>

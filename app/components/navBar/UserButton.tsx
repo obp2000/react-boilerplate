@@ -9,10 +9,13 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { signOut } from "next-auth/react"
 import Link from 'next/link'
-import { useRouter, useSelectedLayoutSegment } from 'next/navigation'
+import {
+  useRouter,
+  useSelectedLayoutSegment,
+  useParams
+} from 'next/navigation'
 import { useCallback, useState, useTransition } from 'react'
 import userMenuItem from './userMenuItem.json'
-import { useParams } from 'next/navigation'
 import { fallbackLng } from '@/app/i18n/settings'
 
 export default function UserButton({

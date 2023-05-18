@@ -18,6 +18,8 @@ import type { PaginatedResult } from 'prisma-pagination'
 import type { ParsedUrlQuery } from 'querystring'
 import ClientOnly from './ClientOnly'
 
+export const revalidate = 3600 // revalidate every hour
+
 type RowType<T> = (arg0: T) => (string | JSX.Element)[]
 
 function RenderTableFields(props: {
@@ -88,7 +90,7 @@ export function getRenderTableRow({
 	loggedIn: boolean
 }): (object: any) => JSX.Element {
 	if (loggedIn) {
-		const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${lng}/${table}`
+		const apiUrl = `/api/${lng}/${table}`
 		return function RenderTableRow(object) {
 			return <TableRow aria-label={dict[table as keyof ModelNames].singular}>
 				<RenderTableFields {...{ row, object }} />
@@ -160,14 +162,14 @@ export async function TablePage({
 	getTableRow: GetTableRow<any>
 }): Promise<JSX.Element> {
 	const lng = String(params.lng || fallbackLng)
-	const paginatorArgs = {
-		perPage: Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
-		searchParams
-	}
+	const dictData = getDictionary(lng)
+	const perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE)
+	const objectsData = getObjects({ perPage, searchParams })
+	const loggedInData = isLoggedIn()
 	const [dict, { data, meta }, loggedIn] = await Promise.all([
-		getDictionary(lng),
-		getObjects(paginatorArgs),
-		isLoggedIn(),
+		dictData,
+		objectsData,
+		loggedInData,
 	])
 	const row = getTableRow(dict)
 	const RenderTableRow = getRenderTableRow({
@@ -180,7 +182,7 @@ export async function TablePage({
 	return <>
 		<ClientOnly>
 			<TableBody>
-				{data.map((object, key) => <RenderTableRow key={key} {...object} />)}
+				{data.map((object) => <RenderTableRow key={object.id} {...object} />)}
 			</TableBody>
 		</ClientOnly>
 		<TableFooter>

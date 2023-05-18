@@ -52,6 +52,8 @@ export type SerializedOrderObject = Omit<OrderObject, 'createdAt'> &
 }
 
 export type OrderFormProps = {
+  lng: string
+  table: string
   id?: number
   initialValues: SerializedOrderObject
   save: string

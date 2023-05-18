@@ -3,21 +3,16 @@
 import { toast } from "react-hot-toast"
 
 export const toastError = (message: string) => {
-  return toast.error(message)
+  return toast.error(message,
+    {
+      ariaProps: { role: 'status', 'aria-live': 'polite' }
+    })
 }
 
 export const toastSuccess = (message: string) => {
-  return toast.success(message, { duration: 3000 })
+  return toast.success(message,
+    {
+      duration: 5000,
+      ariaProps: { role: 'status', 'aria-live': 'polite' }
+    })
 }
-
-
-// const toastConfig: ToastOptions = {
-//   position: toast.POSITION.BOTTOM_LEFT,
-//   autoClose: 2000,
-//   transition: Zoom,
-//   theme: 'colored',
-//   closeOnClick: true,
-//   draggable: true,
-//   hideProgressBar: true,
-//   // 'aria-label': 'toast',
-// }

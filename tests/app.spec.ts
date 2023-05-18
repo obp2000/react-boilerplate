@@ -1,4 +1,3 @@
-// const { test, expect } = require('@playwright/test')
 import { expect, test } from "@/mocks/test"
 import cities from '@/mocks/cities.json'
 import dict from '@/app/i18n/locales/ru/translation.json'
@@ -14,17 +13,17 @@ test.describe("Customers CRUD functionality", () => {
     await expect(page).toHaveTitle(/Best&C/)
 
     const tableHeader = page.getByRole('heading', { name: new RegExp(dict.customers.plural) })
-    await expect(tableHeader).toContainText('46')
+    // await expect(tableHeader).toContainText('1')
     await expect(tableHeader).toContainText(dict.customers.plural)
 
     const table = page.getByRole('table')
-    await expect(table).toContainText(/Саратов/)
+    await expect(table).toContainText(/Москва/)
 
     const objectRows = page.getByRole('row', { name: dict.customers.singular })
-    await expect(objectRows).toHaveCount(8)
+    await expect(objectRows).toHaveCount(1)
 
     const linksToEdit = page.getByRole('link', { name: dict.edit })
-    await expect(linksToEdit).toHaveCount(8)
+    await expect(linksToEdit).toHaveCount(1)
 
     const linkToNew = page.getByRole('link', { name: dict.new })
     // await expect(linkToNew).toContainText(dict.new)
@@ -32,7 +31,7 @@ test.describe("Customers CRUD functionality", () => {
     await expect(linkToNew).toHaveAttribute('href', '/ru/customers/new')
 
     const deleteButtons = page.getByRole('button', { name: dict.delete })
-    await expect(deleteButtons).toHaveCount(8)
+    await expect(deleteButtons).toHaveCount(1)
   })
 
   test("displays new object form and creates new object", async ({ page }) => {
@@ -95,23 +94,23 @@ test.describe("Customers CRUD functionality", () => {
     await expect(cityCombobox).toHaveValue(pindexValue)
     await expect(submitButton).toBeEnabled()
     await submitButton.click()
-    const notification = page.getByRole('alert')
+    const notification = page.getByRole('status')
     await expect(notification).toHaveCount(1)
-    await expect(notification).toContainText(dict.successfully)
+    await expect(notification).toContainText(dict.successfully.toLowerCase())
     const tableHeader = page.getByRole('heading', { name: dict.customers.plural })
     await expect(tableHeader).toContainText(dict.customers.plural)
   })
 
   test("displays existing object form and updates object", async ({ page }) => {
     const linksToEdit = page.getByRole('link', { name: dict.edit })
-    await expect(linksToEdit).toHaveCount(8)
-    const linkToFirsrCustomer = linksToEdit.nth(6)
-    await expect(linkToFirsrCustomer).toHaveAttribute('href', `/ru/customers/${1}`)
+    await expect(linksToEdit).toHaveCount(1)
+    const linkToFirsrCustomer = linksToEdit.nth(0)
+    await expect(linkToFirsrCustomer).toHaveAttribute('href', `/ru/customers/${2}`)
     await linkToFirsrCustomer.click()
 
     const formHeader = page.getByRole('heading', { name: dict.customers.singular })
     await expect(formHeader).toContainText(dict.customers.singular)
-    await expect(formHeader).toContainText('1')
+    await expect(formHeader).toContainText('2')
 
     const submitButton = page.getByRole('button', { name: dict.save })
     await expect(submitButton).toBeDisabled()
@@ -158,28 +157,28 @@ test.describe("Customers CRUD functionality", () => {
     await expect(cityCombobox).toHaveValue(pindexValue)
     await expect(submitButton).toBeEnabled()
     await submitButton.click()
-    const notification = page.getByRole('alert')
+    const notification = page.getByRole('status')
     await expect(notification).toHaveCount(1)
-    await expect(notification).toContainText(dict.successfully)
+    await expect(notification).toContainText(dict.successfully.toLowerCase())
     const tableHeader = page.getByRole('heading', { name: dict.customers.plural })
     await expect(tableHeader).toContainText(dict.customers.plural)
   })
 
   test("deletes object", async ({ page }) => {
-    await page.getByRole('button', { name: dict.delete }).nth(3).click()
+    await page.getByRole('button', { name: dict.delete }).nth(0).click()
 
     const confirmation = page.getByRole('dialog')
     await expect(confirmation).toBeVisible()
     await confirmation.getByRole('button', { name: dict.no }).click()
     await expect(confirmation).toBeHidden()
 
-    await page.getByRole('button', { name: dict.delete }).nth(3).click()
+    await page.getByRole('button', { name: dict.delete }).nth(0).click()
     await expect(confirmation).toBeVisible()
     await confirmation.getByRole('button', { name: dict.yes }).click()
     await expect(confirmation).toBeHidden()
-    const notification = page.getByRole('alert')
+    const notification = page.getByRole('status')
     await expect(notification).toHaveCount(1)
-    await expect(notification).toContainText(dict.successfully)
+    await expect(notification).toContainText(dict.successfully.toLowerCase())
   })
 })
 

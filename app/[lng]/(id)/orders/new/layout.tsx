@@ -1,4 +1,4 @@
-import { ParsedUrlQuery } from 'querystring'
+import type { ParsedUrlQuery } from 'querystring'
 import type { PropsWithChildren } from 'react'
 import { NewObjectLayout } from '@/app/_objects/ObjectLayout'
 

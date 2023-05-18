@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 // import { toastError } from '@/app/notifications/toast'
 
-export default function Error({
+export default function ErrorComp({
   error,
   reset,
 }: {

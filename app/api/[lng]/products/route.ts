@@ -30,37 +30,3 @@ export async function POST(request: NextRequest,
     return NextResponse.json({ message }, { status: statusCode })
   }
 }
-
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// }
-
-// export async function getObjectData(request: IncomingMessage) {
-//   const { fields, files: { image } } = await getData(request)
-//   let data = create(fields, struct)
-//   if (image) {
-//     data.image = await upload(image)
-//   }
-//   return data
-// }
-
-// export async function POST(request: IncomingMessage,
-//   { params: { lng } }: {
-//     params: { lng: string }
-//   }
-// ) {
-//   try {
-//     const data = await getObjectData(request)
-//     await prisma.product.create({ data })
-//     const { successfully, products, created } = await getDictionary(lng)
-//     const message = `${products.singular} ${successfully.toLowerCase()} ${created}`
-//     return NextResponse.json({ message })
-//   }
-//   catch (e) {
-//     const { statusCode, message } = e as HttpError
-//     return NextResponse.json({ message }, { status: statusCode })
-//   }
-// }

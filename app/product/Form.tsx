@@ -59,6 +59,8 @@ export function prices({
 }
 
 export default function FormComp({
+  lng,
+  table,
   id,
   initialValues,
   productTypes,
@@ -68,7 +70,7 @@ export default function FormComp({
   labels,
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate({ id })
+  const onSubmit: SubmitHandler<Values> = useMutate({ lng, table, id })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   // console.log('initialValues ', initialValues)
   const {
@@ -141,7 +143,7 @@ export default function FormComp({
               >
                 <MenuItem value=""><em>------</em></MenuItem>
                 {productTypes?.map(
-                  ({ id, name }, key) => <MenuItem key={key} value={id}>
+                  ({ id, name }) => <MenuItem key={id} value={id}>
                     {name}
                   </MenuItem>)}
               </Select>
@@ -165,7 +167,7 @@ export default function FormComp({
               >
                 <MenuItem value=''><em>------</em></MenuItem>
                 {labels.threadsChoices.map(
-                  ({ value, display_name }, key) => <MenuItem key={key} value={value}>
+                  ({ value, display_name }) => <MenuItem key={value} value={value}>
                     {display_name}
                   </MenuItem>)}
               </Select>
@@ -190,7 +192,7 @@ export default function FormComp({
               >
                 <MenuItem value=""><em>------</em></MenuItem>
                 {labels.contentsChoices.map(
-                  ({ value, display_name }, key) => <MenuItem key={key} value={value}>
+                  ({ value, display_name }) => <MenuItem key={value} value={value}>
                     {display_name}
                   </MenuItem>)}
               </Select>
@@ -476,52 +478,3 @@ export default function FormComp({
     </Grid>
 }
 
-
-        // {/*        <CardMedia
-        //   component="img"
-        //   height="200"
-        //   image={previewUrl
-        //     ? previewUrl
-        //     : initialValues.image
-        //       ? `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v${initialValues.image}`
-        //       : '/blank.png'}
-        //   alt={previewUrl ? 'File uploader preview' : labels.image}
-        // />*/}
-        // {/*        <CldImage
-        //   height="200"
-        //   width="200"
-        //   src="rdbbw0woemaaqs3hu8oo"
-        //   alt={labels.image}
-        // />*/}
-        // {/*        <IconButton color="primary" aria-label={labels.image} component="label">
-        //   <Controller name="image"
-        //     control={control}
-        //     render={({ field: { onChange, value, ...field } }) => <TextField {...field}
-        //       id="image"
-        //       type='file'
-        //       // accept='image/*'
-        //       onChange={filesHandler({ setPreviewUrl, onChange })}
-        //       size="small"
-        //       disabled={busy}
-        //       hidden
-        //       inputProps={{
-        //         accept: 'image/*',
-        //       }}
-        //     />}
-        //   />
-        //   <PhotoCamera />
-        // </IconButton>*/}
-
-        // {/*        <img
-        //   src={previewUrl
-        //     ? previewUrl
-        //     : initialValues.image
-        //       ? `https://res.cloudinary.com/du9yvygkg/image/upload/v${initialValues.image}`
-        //       : '/blank.png'}
-        //   alt={previewUrl ? 'File uploader preview' : labels.image}
-        //   width={300}
-        //   height={300}
-        //   // fill={true}
-        //   // priority={true}
-        //   // className='max-w-xs mb-1 h-auto rounded-lg shadow-xl dark:shadow-gray-800'
-        // />*/}

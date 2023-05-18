@@ -40,30 +40,3 @@ export async function DELETE(_: NextRequest,
     return NextResponse.json({ message }, { status: statusCode })
   }
 }
-
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// }
-
-// export async function PUT(request: IncomingMessage,
-//   { params: { lng, id } }: {
-//     params: { lng: string, id: string }
-//   }
-// ) {
-//   try {
-//     const data = await getObjectData(request)
-//     await prisma.product.update({ where: { id: Number(id) }, data })
-//     const { successfully, products, updated } = await getDictionary(lng)
-//     const message = `${products.singular} ${successfully.toLowerCase()} ${updated}`
-//     return NextResponse.json({ message })
-//   }
-//   catch (e) {
-//     const { statusCode, message } = e as HttpError
-//     return NextResponse.json({ message }, { status: statusCode })
-//   }
-// }
-
-
