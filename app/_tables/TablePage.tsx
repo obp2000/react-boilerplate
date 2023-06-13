@@ -1,26 +1,21 @@
-import DeleteButton from '@/app/components/DeleteButton'
 import Pagination from '@/app/components/Pagination'
-import type { ModelNames, Translation } from '@/app/i18n/dictionaries'
-import { getDictionary } from '@/app/i18n/dictionaries'
+import {
+	type ModelNames,
+	type Translation,
+	getDictionary,
+} from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import EditIcon from '@/app/useClient/EditIcon'
-import TableBody from '@/app/useClient/TableBody'
-import TableCell from '@/app/useClient/TableCell'
-import TableFooter from '@/app/useClient/TableFooter'
-import TableRow from '@/app/useClient/TableRow'
-import Tooltip from '@/app/useClient/Tooltip'
+import { Edit } from '@/app/client/icons'
+import Tooltip from '@/app/components/Tooltip'
 import type { Customer, SerializedCustomer } from '@/interfaces/customers'
 import type { Order, SerializedOrder } from '@/interfaces/orders'
 import type { Product, SerializedProduct } from '@/interfaces/products'
-import { isLoggedIn } from '@/services/getUser'
+import { getUsername } from '@/services/getUser'
 import Link from 'next/link'
 import type { PaginatedResult } from 'prisma-pagination'
-import type { ParsedUrlQuery } from 'querystring'
-import ClientOnly from './ClientOnly'
+import { Delete } from '@/app/client/icons'
 
-export const revalidate = 3600 // revalidate every hour
-
-type RowType<T> = (arg0: T) => (string | JSX.Element)[]
+type RowType<T> = (arg0: T) => (string | number | null | JSX.Element)[]
 
 function RenderTableFields(props: {
 	row: RowType<SerializedCustomer>
@@ -47,154 +42,141 @@ function RenderTableFields({
 		updatedAt: updatedAt.toISOString(),
 	})
 	return <>
-		{fields.map((
-			field: string | JSX.Element,
-			key: number) => <TableCell key={key}>
+		{fields.map((field: string | JSX.Element, key: number) => <td
+			key={key}
+			className='whitespace-nowrap px-6 py-4'>
 				{field}
-			</TableCell>)}
+			</td>)}
 	</>
 }
 
-export function getRenderTableRow(props: {
-	dict: Translation
-	lng: string
-	table: string
-	row: RowType<SerializedCustomer>
-	loggedIn: boolean
-}): (object: Customer) => JSX.Element
-export function getRenderTableRow(props: {
-	dict: Translation
-	lng: string
-	table: string
-	row: RowType<SerializedProduct>
-	loggedIn: boolean
-}): (object: Product) => JSX.Element
-export function getRenderTableRow(props: {
-	dict: Translation
-	lng: string
-	table: string
-	row: RowType<SerializedOrder>
-	loggedIn: boolean
-}): (object: Order) => JSX.Element
-export function getRenderTableRow({
-	dict,
-	lng,
-	table,
-	row,
-	loggedIn,
-}: {
-	dict: Translation
-	lng: string
-	table: string
-	row: any
-	loggedIn: boolean
-}): (object: any) => JSX.Element {
-	if (loggedIn) {
-		const apiUrl = `/api/${lng}/${table}`
-		return function RenderTableRow(object) {
-			return <TableRow aria-label={dict[table as keyof ModelNames].singular}>
-				<RenderTableFields {...{ row, object }} />
-				<TableCell>
-					<Tooltip title={dict.edit}>
-						<Link
-							aria-label={dict.edit}
-							href={`/${lng}/${table}/${object.id}`}
-						// prefetch={true}
-						>
-							<EditIcon color='primary' />
-						</Link>
-					</Tooltip>
-					<DeleteButton {...{
-						url: `${apiUrl}/${object.id}`,
-						label: dict.delete,
-						okText: dict.yes,
-						cancelText: dict.no,
-					}} />
-				</TableCell>
-			</TableRow>
-		}
-	} else {
-		return function RenderTableRow(object) {
-			return <TableRow aria-label={dict[table as keyof ModelNames].singular}>
-				<RenderTableFields {...{ row, object }} />
-			</TableRow>
-		}
-	}
-
-}
-
-type GetObjects<T> = ({ perPage, searchParams }: { perPage?: number, searchParams: ParsedUrlQuery}) => Promise<PaginatedResult<T>>
+type GetObjects<T> = ({ perPage, searchParams }: {
+	perPage: number
+	searchParams: { page?: string, term?: string }
+}) => Promise<PaginatedResult<T>>
 
 type GetTableRow<T> = (dict: Translation) => RowType<T>
 
 export async function TablePage(props: {
-	params: ParsedUrlQuery
-	searchParams: ParsedUrlQuery
+	params: { lng: string }
+	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Customer>
 	getTableRow: GetTableRow<SerializedCustomer>
 }): Promise<JSX.Element>
 export async function TablePage(props: {
-	params: ParsedUrlQuery
-	searchParams: ParsedUrlQuery
+	params: { lng: string }
+	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Product>
 	getTableRow: GetTableRow<SerializedProduct>
 }): Promise<JSX.Element>
 export async function TablePage(props: {
-	params: ParsedUrlQuery
-	searchParams: ParsedUrlQuery
+	params: { lng: string }
+	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Order>
 	getTableRow: GetTableRow<SerializedOrder>
 }): Promise<JSX.Element>
 export async function TablePage({
-	params,
+	params: {
+		lng = fallbackLng
+	},
 	searchParams,
 	table,
 	getObjects,
 	getTableRow,
 }: {
-	params: ParsedUrlQuery
-	searchParams: ParsedUrlQuery
+	params: { lng: string }
+	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<any>
 	getTableRow: GetTableRow<any>
 }): Promise<JSX.Element> {
-	const lng = String(params.lng || fallbackLng)
-	const dictData = getDictionary(lng)
 	const perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE)
-	const objectsData = getObjects({ perPage, searchParams })
-	const loggedInData = isLoggedIn()
-	const [dict, { data, meta }, loggedIn] = await Promise.all([
-		dictData,
-		objectsData,
-		loggedInData,
-	])
+	const dict = await getDictionary(lng)
+	const { edit, delete: deleteButtonLabel } = dict
+	// const [{ data, meta }] = await Promise.all([
+	// 	getObjects({ perPage, searchParams }),
+	// ])
+	console.log('render objects........')
+	// const paginate = createPaginator({ perPage })
+	const { data, meta: { lastPage, total } } = await getObjects({ perPage, searchParams })
+	// const { data, meta } = await paginate<Customer, Prisma.CustomerFindManyArgs>(
+	// 	prisma.customer,
+	// 	findManyArgs(searchParams),
+	// 	{
+	// 		page: String(searchParams.page || '1')
+	// 	})
+	// const data = await prisma.customer.findMany(findManyArgs(searchParams))
+	const modelName = dict[table as keyof ModelNames].singular
 	const row = getTableRow(dict)
-	const RenderTableRow = getRenderTableRow({
-		dict,
-		lng,
-		table,
-		row,
-		loggedIn,
-	})
+	const username = await getUsername()
 	return <>
-		<ClientOnly>
-			<TableBody>
-				{data.map((object) => <RenderTableRow key={object.id} {...object} />)}
-			</TableBody>
-		</ClientOnly>
-		<TableFooter>
-			<TableRow>
-				<TableCell />
-				<TableCell>{`${dict.total}: ${meta?.total}`}</TableCell>
-				<TableCell />
-				<TableCell colSpan={4} align='right'>
-					{meta?.lastPage > 1 &&
-						<Pagination totalPages={meta?.lastPage} />}
-				</TableCell>
-			</TableRow>
-		</TableFooter>
+		<tbody>
+			{data.map((object) => <tr key={object.id}
+				className='border-b dark:border-neutral-500' aria-label={modelName}>
+				<RenderTableFields {...{ row, object }} />
+				{username && <td className='whitespace-nowrap px-6 py-4'>
+					<Tooltip title={edit}>
+						<Link aria-label={edit}
+							href={`/${lng}/${table}/${object.id}`}
+							prefetch={false}
+						>
+							<Edit color='primary' />
+						</Link>
+					</Tooltip>
+					<Tooltip title={deleteButtonLabel}>
+						<Link
+							aria-label={deleteButtonLabel}
+							href={`/${lng}/confirm/${table}/${object.id}`}>
+							<Delete role='img' color='primary' />
+						</Link>
+					</Tooltip>
+				</td>}
+			</tr>)}
+		</tbody>
+		<tfoot>
+			<tr className='border-b dark:border-neutral-500'>
+				<td className='whitespace-nowrap px-6 py-4' />
+				<td className='whitespace-nowrap px-6 py-4' >
+					{`${dict.total}: ${total}`}
+				</td>
+				<td className='whitespace-nowrap px-6 py-4' />
+				<td colSpan={4} align='right' className='whitespace-nowrap px-6 py-4'>
+					{lastPage > 1 &&
+						<Pagination totalPages={lastPage} />}
+				</td>
+			</tr>
+		</tfoot>
 	</>
 }
+
+
+					// {/*					<DeleteButton {...{
+					// 	url: `/api${tablePath}/${object.id}`,
+					// 	label: deleteButtonLabel,
+					// 	okText: yes,
+					// 	cancelText: no,
+					// }} />*/}
+
+			// 	return <TableRow aria-label={modelName}>
+			// 		<RenderTableFields {...{ row, object }} />
+			// 		<TableCell>
+			// 			<Tooltip title={edit}>
+			// 				<Link
+			// 					aria-label={edit}
+			// 					href={`${tablePath}/${object.id}`}
+			// 				// prefetch={true}
+			// 				>
+			// 					<Edit color='primary' />
+			// 				</Link>
+			// 			</Tooltip>
+			// 			<DeleteButton {...{
+			// 				url: `/api${tablePath}/${object.id}`,
+			// 				label: deleteButtonLabel,
+			// 				okText: yes,
+			// 				cancelText: no,
+			// 			}} />
+			// 		</TableCell>
+			// 	</TableRow>

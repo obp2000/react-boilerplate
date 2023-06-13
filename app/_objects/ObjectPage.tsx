@@ -5,11 +5,9 @@ import type { CustomerFormProps, CustomerLabels } from '@/interfaces/customers'
 import type { OrderFormProps, OrderLabels } from '@/interfaces/orders'
 import type { ProductFormProps, ProductLabels } from '@/interfaces/products'
 import { ProductTypeType } from '@/interfaces/productTypes'
-import prisma from '@/services/prisma'
+import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
 import { notFound } from 'next/navigation'
-import type { ParsedUrlQuery } from 'querystring'
-import ClientOnly from './ClientOnly'
 
 export function getPrismaClient(model: string): Prisma.CustomerDelegate<Prisma.RejectOnNotFound>
 export function getPrismaClient(model: string): Prisma.ProductDelegate<Prisma.RejectOnNotFound>
@@ -36,21 +34,21 @@ export async function findObject({ table, id }: { table: string, id: string }) {
 }
 
 export async function ObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string, id: string }
 	table: string
 	labels: CustomerLabels
 	getOptions: () => Promise<{}>
 	form: (props: CustomerFormProps) => JSX.Element
 }): Promise<JSX.Element>
 export async function ObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string, id: string }
 	table: string
 	labels: ProductLabels
-	getOptions: () => Promise<ProductTypeType[]>
+	getOptions: () => Promise<Pick<ProductFormProps, 'productTypes'>>
 	form: (props: ProductFormProps) => JSX.Element
 }): Promise<JSX.Element>
 export async function ObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string, id: string }
 	table: string
 	labels: OrderLabels
 	getOptions: () => Promise<{}>
@@ -66,49 +64,47 @@ export async function ObjectPage({
 	getOptions,
 	form,
 }: {
-	params: ParsedUrlQuery
+	params: { lng: string, id: string }
 	table: string
 	labels: any
 	getOptions: () => Promise<any>
 	form: (props: any) => JSX.Element
 }): Promise<JSX.Element> {
 	const [initialValues, dict, options] = await Promise.all([
-		findObject({ table, id: String(id) }),
-		getDictionary(String(lng)),
+		findObject({ table, id }),
+		getDictionary(lng),
 		getOptions(),
 	])
 	const Form = form
-	return <ClientOnly>
-		<Form {...{
-			lng,
-			table,
-			id: Number(id),
-			initialValues,
-			save: dict.save,
-			errorMessages: dict.errorMessages,
-			units: dict.units,
-			...labels(dict),
-			...options,
-		}} />
-	</ClientOnly>
+	return <Form {...{
+		lng,
+		table,
+		id: Number(id),
+		initialValues,
+		save: dict.save,
+		errorMessages: dict.errorMessages,
+		units: dict.units,
+		...labels(dict),
+		...options,
+	}} />
 }
 
 export async function NewObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	table: string
 	labels: CustomerLabels
 	getOptions: () => Promise<{}>
 	form: (props: CustomerFormProps) => JSX.Element
 }): Promise<JSX.Element>
 export async function NewObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	table: string
 	labels: ProductLabels
-	getOptions: () => Promise<ProductTypeType[]>
+	getOptions: () => Promise<Pick<ProductFormProps, 'productTypes'>>
 	form: (props: ProductFormProps) => JSX.Element
 }): Promise<JSX.Element>
 export async function NewObjectPage(props: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	table: string
 	labels: OrderLabels
 	getOptions: () => Promise<{}>
@@ -123,7 +119,7 @@ export async function NewObjectPage({
 	getOptions,
 	form,
 }: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	table: string
 	labels: any
 	getOptions: () => Promise<any>
@@ -131,22 +127,19 @@ export async function NewObjectPage({
 }): Promise<JSX.Element> {
 	const initialValues = tables[table as keyof typeof tables].initObject
 	const [dict, options] = await Promise.all([
-		getDictionary(String(lng)),
+		getDictionary(lng),
 		getOptions(),
 	])
 	const Form = form
-	return <ClientOnly>
-		<Form {...{
-			lng,
-			table,
-			initialValues,
-			save: dict.save,
-			errorMessages: dict.errorMessages,
-			units: dict.units,
-			...labels(dict),
-			...options,
-		}} />
-	</ClientOnly>
+	return <Form {...{
+		tablePath: `/${lng}/${table}`,
+		initialValues,
+		save: dict.save,
+		errorMessages: dict.errorMessages,
+		units: dict.units,
+		...labels(dict),
+		...options,
+	}} />
 }
 
 

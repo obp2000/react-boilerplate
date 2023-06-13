@@ -1,20 +1,22 @@
+import { getGetOptionLabel } from '@/app/customer/helpers'
 import {
-    getRenderInput,
-    getRenderOption,
-    isOptionEqualToValue,
-    onSearch
+  getRenderInput,
+  getRenderOption,
+  isOptionEqualToValue,
+  onSearch
 } from '@/app/_objects/formHelpers'
 import type { CustomerFieldProps } from '@/interfaces/orders'
-import Autocomplete from '@mui/material/Autocomplete'
+import { Autocomplete } from '@mui/material'
 import { useState } from 'react'
 import { Controller, type FieldError } from "react-hook-form"
-import { getGetOptionLabel } from '@/app/customer/helpers'
 
 export default function CustomerField({
 	label,
 	labels,
 	busy,
-	errors,
+	errors: {
+		customer: customerError
+	},
 	errorMessages,
 	notFound,
 	control,
@@ -26,11 +28,11 @@ export default function CustomerField({
 	const [options, setOptions] = useState(customer ? [customer] : [])
 	const [loading, setLoading] = useState(false)
 	const getOptionLabel = getGetOptionLabel(labels)
-	const error = errors?.customer as FieldError
 	return <Controller
 		name="customer"
 		control={control}
-		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete
+			{...field}
 			id='customer'
 			onChange={(_, newValue) => {
 				if (newValue) {
@@ -49,7 +51,15 @@ export default function CustomerField({
 			// filterOptions={(x) => x}
 			onInputChange={onSearch('/customers/', setOptions, setLoading, currentValue)}
 			noOptionsText={notFound}
-			renderInput={getRenderInput({ label, error, busy, loading, errorMessages, field, ref })}
+			renderInput={getRenderInput({
+				label,
+				error: customerError as FieldError,
+				busy,
+				loading,
+				errorMessages,
+				field,
+				ref
+			})}
 		/>}
 	/>
 }

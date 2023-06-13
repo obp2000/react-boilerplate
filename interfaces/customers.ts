@@ -26,8 +26,7 @@ export type SerializedCustomerObject = Omit<CustomerObject, 'createdAt'> &
 }
 
 export type CustomerFormProps = {
-	lng: string
-	table: string
+	tablePath: string
 	id?: number
 	initialValues: SerializedCustomerObject
 	save: string

@@ -1,12 +1,10 @@
-import { ParsedUrlQuery } from 'querystring'
 import type { PropsWithChildren } from 'react'
 import { ObjectLayout } from '@/app/_objects/ObjectLayout'
 
 export default async function Layout({
 	children,
 	params,
-}: PropsWithChildren<{ params: ParsedUrlQuery }>) {
+}: PropsWithChildren<{ params: { lng: string, id: string } }>) {
 	const table = 'customers'
-	{/* @ts-expect-error Server Component */ }
 	return <ObjectLayout {...{ params, table, children }} />
 }

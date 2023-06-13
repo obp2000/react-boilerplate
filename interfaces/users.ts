@@ -9,3 +9,5 @@ export type LoginValues = Pick<Values, 'name' | 'password'>
 export type RegisterValues = Pick<Values,
 	'name' | 'email' | 'firstName' | 'lastName'> &
 { password1: string, password2: string }
+
+export type AuthValues = RegisterValues & Pick<Values, 'password'>

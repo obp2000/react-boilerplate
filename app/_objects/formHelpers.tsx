@@ -9,11 +9,10 @@ import {
 import type { City } from '@/interfaces/cities'
 import type { Customer } from '@/interfaces/customers'
 import type { Product } from '@/interfaces/products'
-import TextField, { type TextFieldProps } from '@mui/material/TextField'
+import type { TextFieldProps } from '@mui/material/TextField'
 import type { FieldError, ControllerRenderProps } from "react-hook-form"
 import { Translation } from '@/app/i18n/dictionaries'
-import CircularProgress from '@mui/material/CircularProgress'
-import InputAdornment from '@mui/material/InputAdornment'
+import { CircularProgress, TextField, InputAdornment } from '@mui/material'
 
 export function onSearch(
   searchPath: string | undefined,
@@ -131,4 +130,11 @@ export function unitsLabel(label: string) {
       {label}
     </InputAdornment>,
   }
+}
+
+export function errorText(
+  errorMessages: Translation['errorMessages'],
+  error?: FieldError,
+){
+  return error && errorMessages[error.message as keyof Translation['errorMessages']]
 }

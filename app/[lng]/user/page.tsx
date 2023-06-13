@@ -1,7 +1,7 @@
 import { UserPage } from '@/app/user/UserPage'
-import { ParsedUrlQuery } from 'querystring'
 
-export default async function Page(props: { params: ParsedUrlQuery }) {
-  {/* @ts-expect-error Server Component */ }
+export default async function Page(
+  props: { params: { lng: string } }
+) {
   return <UserPage {...props} />
 }

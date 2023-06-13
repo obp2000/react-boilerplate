@@ -1,8 +1,8 @@
-import IconButton from "@mui/material/IconButton"
-import Tooltip from "@/app/useClient/Tooltip"
+import { IconButton } from "@mui/material"
+import Tooltip from '@/app/components/Tooltip'
 import { useState } from "react"
 import type { UseFieldArrayRemove } from "react-hook-form"
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Delete } from '@mui/icons-material'
 import dynamic from "next/dynamic"
 
 const ConfirmDialog = dynamic(() => import('@/app/components/ConfirmDialog'), {
@@ -32,7 +32,7 @@ export default function Button({
 			<IconButton
 				disabled={busy}
 				onClick={() => setConfirmOpen(true)}>
-				<DeleteIcon role='img' color='primary' />
+				<Delete role='img' color='primary' />
 			</IconButton>
 		</Tooltip>
 		{confirmOpen && <ConfirmDialog

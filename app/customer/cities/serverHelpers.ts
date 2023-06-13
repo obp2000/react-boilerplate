@@ -1,12 +1,11 @@
 import 'server-only'
 
-import type { ParsedUrlQuery } from 'querystring'
 import { Prisma } from '@prisma/client'
 import tables from '@/app/_tables/tables.json'
 
-export function where({ term }: ParsedUrlQuery) {
+export function where({ term }: { term?: string }) {
   if (!term) { return {} }
-  const containsTerm = { contains: String(term) }
+  const containsTerm = { contains: term }
   return {
     OR: [
       { city: containsTerm },
@@ -15,7 +14,9 @@ export function where({ term }: ParsedUrlQuery) {
   }
 }
 
-export function findManyArgs(searchParams: ParsedUrlQuery): Prisma.CityFindManyArgs {
+export function findManyArgs(
+  searchParams: { page?: string, term?: string }
+): Prisma.CityFindManyArgs {
   return {
     where: where(searchParams),
     select: tables.customers.select.objects.city.select,

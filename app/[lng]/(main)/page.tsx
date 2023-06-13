@@ -1,10 +1,3 @@
-import TablePage from '../(table)/customers/page'
-import { ParsedUrlQuery } from 'querystring'
+import Page from '@/app/[lng]/customers/page'
 
-export default function Page(props: {
-	params: ParsedUrlQuery
-	searchParams: ParsedUrlQuery
-}) {
-	{/* @ts-expect-error Server Component */ }
-	return <TablePage {...props} />
-}
+export default Page

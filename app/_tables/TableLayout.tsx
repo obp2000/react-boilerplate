@@ -4,116 +4,66 @@ import {
 	getDictionary,
 	type ModelNames, type Translation
 } from '@/app/i18n/dictionaries'
-import AddIcon from '@/app/useClient/AddIcon'
-import Paper from '@/app/useClient/Paper'
-import StyledTableCell from '@/app/useClient/StyledTableCell'
-import Table from '@/app/useClient/Table'
-import TableContainer from '@/app/useClient/TableContainer'
-import TableHead from '@/app/useClient/TableHead'
-import TableRow from '@/app/useClient/TableRow'
-import Tooltip from '@/app/useClient/Tooltip'
-import Typography from '@/app/useClient/Typography'
+import { AddCircleOutline } from '@/app/client/icons'
+import Tooltip from '@/app/components/Tooltip'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { isLoggedIn } from '@/services/getUser'
+import { getUsername } from '@/services/getUser'
 import { fallbackLng } from '@/app/i18n/settings'
-import { ParsedUrlQuery } from 'querystring'
 
 type TableLabels = (arg0: Translation) => string[]
 
-function HeaderFields({
-	tableLabels,
-	dict
-}: {
-	tableLabels: TableLabels
-	dict: Translation
-}) {
-	return <>
-		{tableLabels(dict).map((tableLabel) => <StyledTableCell key={tableLabel}>
-			{tableLabel}
-		</StyledTableCell>)}
-	</>
-}
-
-type GetHeaderRow = {
-	loggedIn: boolean
-	tableLabels: TableLabels
-	dict: Translation
-	lng: string
-	table: string
-}
-
-function getHeaderRow({
-	loggedIn,
-	tableLabels,
-	dict,
-	lng,
-	table,
-}: GetHeaderRow) {
-	if (loggedIn) {
-		return function HeaderRow() {
-			return <>
-				<HeaderFields {...{ tableLabels, dict }} />
-				<StyledTableCell>
-					<Link
-						aria-label={dict.new}
-						href={`/${lng}/${table}/new`}
-					// prefetch={false}
-					>
-						<Tooltip title={dict.new}>
-							<AddIcon color='primary' />
-						</Tooltip>
-					</Link>
-				</StyledTableCell>
-			</>
-		}
-	} else {
-		return function HeaderRow() {
-			return <HeaderFields {...{ tableLabels, dict }} />
-		}
-	}
-}
-
 export async function TableLayout({
-	params,
+	params: {
+		lng = fallbackLng
+	},
 	tableLabels,
 	table,
 	children,
 }: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	tableLabels: TableLabels
 	table: string
 	children?: ReactNode
 }) {
-	const lng = String(params.lng || fallbackLng)
-	const dictData = getDictionary(lng)
-	const loggedInData = isLoggedIn()
-	const [dict, loggedIn] = await Promise.all([dictData, loggedInData])
-	const HeaderRow = getHeaderRow({
-		loggedIn,
-		tableLabels,
-		dict,
-		lng,
-		table,
-	})
-	return <TableContainer component={Paper}>
-		<Typography
-			component="h1"
-			variant="h5"
-			color="inherit"
-			align="center"
-			noWrap
-			sx={{ flex: 1 }}
-		>
-			{dict[table as keyof ModelNames].plural}
-		</Typography>
-		<Table sx={{ minWidth: 650 }} size="small">
-			<TableHead>
-				<TableRow>
-					<HeaderRow />
-				</TableRow>
-			</TableHead>
-			{children}
-		</Table>
-	</TableContainer>
+	const [dict, username] = await Promise.all([
+		getDictionary(lng),
+		getUsername()])
+	return <div className="flex flex-col">
+		<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+			<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+				<div className="overflow-hidden">
+					<div className='text-xl text-center my-1'>
+						{dict[table as keyof ModelNames].plural}
+					</div>
+					<table className="min-w-full text-center text-sm font-light">
+						<thead className="border-b bg-neutral-800 font-medium text-white dark:border-neutral-500 dark:bg-neutral-900">
+							<tr>
+								{tableLabels(dict).map((tableLabel) => <th
+									key={tableLabel}
+									scope='col'
+									className='px-6 py-4'>
+									{tableLabel}
+								</th>)}
+								{username && <th
+									scope='col'
+									className='px-6 py-4'>
+									<Link
+										aria-label={dict.new}
+										href={`/${lng}/${table}/new`}
+										prefetch={false}
+									>
+										<Tooltip title={dict.new}>
+											<AddCircleOutline color='primary' />
+										</Tooltip>
+									</Link>
+								</th>}
+							</tr>
+						</thead>
+						{children}
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 }

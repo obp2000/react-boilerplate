@@ -1,52 +1,30 @@
-import Paper from '@/app/useClient/Paper'
-import Skeleton from '@/app/useClient/Skeleton'
-import Table from '@/app/useClient/Table'
-import TableBody from '@/app/useClient/TableBody'
-import TableCell from '@/app/useClient/TableCell'
-import TableContainer from '@/app/useClient/TableContainer'
-import TableFooter from '@/app/useClient/TableFooter'
-import TableHead from '@/app/useClient/TableHead'
-import TableRow from '@/app/useClient/TableRow'
-import Typography from '@/app/useClient/Typography'
-import Grid from '@/app/useClient/Unstable_Grid2'
-import Container from '@/app/useClient/Container'
-import AppBar from '@/app/useClient/AppBar'
-import Toolbar from '@/app/useClient/Toolbar'
-import Box from '@/app/useClient/Box'
-import { Search, SearchIconWrapper } from '@/app/components/navBar/SearchForm'
-import SearchIcon from '@/app/useClient/SearchIcon'
-import Chip from '@/app/useClient/Chip'
+import SearchButton from "@/app/[lng]/_components/SearchButton"
 
 function Field() {
-  return <Skeleton sx={{ fontSize: '1.5rem' }} />
+  // return <Skeleton sx={{ fontSize: '1.5rem' }} />
+  return <div className="flex animate-pulse">
+    <span className='w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700' />
+  </div>
 }
 
 export function Form() {
-  return <Grid container spacing={2} sx={{ p: 2 }}>
-    <Grid xs={4}>
-      <Field />
-    </Grid>
-    <Grid xs={8}>
-      <Field />
-    </Grid>
-    <Grid xs={5}>
-      <Field />
-    </Grid>
-    <Grid xs={7}>
-      <Field />
-    </Grid>
-    <Grid>
-      <Field />
-    </Grid>
-  </Grid>
+  return <div className='flex flex-col'>
+    <Field />
+    <Field />
+    <Field />
+    <Field />
+    <Field />
+  </div>
 }
 
 function Cell() {
-  return <TableCell><Field /></TableCell>
+  return <td className="whitespace-nowrap px-6 py-4">
+    <Field />
+  </td>
 }
 
 function Row() {
-  return <TableRow>
+  return <tr className="border-b dark:border-neutral-500">
     <Cell />
     <Cell />
     <Cell />
@@ -54,11 +32,11 @@ function Row() {
     <Cell />
     <Cell />
     <Cell />
-  </TableRow>
+  </tr>
 }
 
 export function ObjectsTableBody() {
-  return <TableBody>
+  return <tbody>
     <Row />
     <Row />
     <Row />
@@ -67,12 +45,12 @@ export function ObjectsTableBody() {
     <Row />
     <Row />
     <Row />
-  </TableBody>
+  </tbody>
 }
 
 export function ObjectsTableBodyAndFooter() {
   return <>
-    <TableBody>
+    <tbody>
       <Row />
       <Row />
       <Row />
@@ -81,118 +59,121 @@ export function ObjectsTableBodyAndFooter() {
       <Row />
       <Row />
       <Row />
-    </TableBody>
-    <TableFooter>
-      <TableRow>
-        <TableCell />
-        <TableCell><Field /></TableCell>
-        <TableCell />
-        <TableCell colSpan={4} align='right'>
-          <Skeleton sx={{ fontSize: '1.5rem' }} />
-        </TableCell>
-      </TableRow>
-    </TableFooter>
+    </tbody>
+    <tfoot>
+      <tr className="border-b dark:border-neutral-500">
+        <td className="whitespace-nowrap  px-6 py-4" />
+        <td className="whitespace-nowrap  px-6 py-4"><Field /></td>
+        <td className="whitespace-nowrap  px-6 py-4" />
+        <td colSpan={4} align='right' className='whitespace-nowrap  px-6 py-4'>
+          <Field />
+        </td>
+      </tr>
+    </tfoot>
   </>
 }
 
 export function ObjectsTable() {
-  return <TableContainer component={Paper}>
-    <Typography
-      component="h1"
-      variant="h5"
-      color="inherit"
-      align="center"
-      noWrap
-      sx={{ flex: 1 }}
-    >
-      <Field />
-    </Typography>
-    <Table sx={{ minWidth: 650 }} size="small">
-      <TableHead>
-        <Row />
-      </TableHead>
-      <TableBody>
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-      </TableBody>
-    </Table>
-  </TableContainer>
+  // return <TableContainer component={Paper}>
+  //   <Typography
+  //     component="h1"
+  //     variant="h5"
+  //     color="inherit"
+  //     align="center"
+  //     noWrap
+  //     sx={{ flex: 1 }}
+  //   >
+  //     <Field />
+  //   </Typography>
+  //   <Table sx={{ minWidth: 650 }} size="small">
+  //     <TableHead>
+  //       <Row />
+  //     </TableHead>
+  //     <TableBody>
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //       <Row />
+  //     </TableBody>
+  //   </Table>
+  // </TableContainer>
+  return <div className="flex flex-col">
+    <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+        <div className="overflow-hidden">
+          <div className='text-xl'><Field /></div>
+          <table className="min-w-full text-center text-sm font-light">
+            <thead
+              className="border-b bg-neutral-800 font-medium text-white dark:border-neutral-500 dark:bg-neutral-900">
+              <Row />
+            </thead>
+            <tbody>
+              <Row />
+              <Row />
+              <Row />
+              <Row />
+              <Row />
+              <Row />
+              <Row />
+              <Row />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 }
 
 function NavLink() {
-  return <Typography variant="h6" component="div" sx={{
-    flexGrow: 1,
-  }}>
-    <Typography variant='button' sx={{
-      color: 'white',
-    }}>
-      <Field />
-    </Typography>
-  </Typography>
-}
-
-function SearchForm() {
-  return <Search>
-    <SearchIconWrapper>
-      <SearchIcon />
-    </SearchIconWrapper>
+  return <div className='text-xl'>
     <Field />
-  </Search>
+  </div>
 }
 
-function NavBar() {
-  return <AppBar position="static">
-    <Container maxWidth="xl">
-      <Toolbar disableGutters>
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          href="/"
-          sx={{
-            mr: 5,
-            display: { xs: 'none', md: 'flex' },
-            fontFamily: 'monospace',
-            fontWeight: 700,
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          <Field />
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          <NavLink />
-          <NavLink />
-          <NavLink />
-          <NavLink />
-          <NavLink />
-        </Box>
-        <SearchForm />
-        <Box sx={{ flexGrow: 0 }}>
-          <Field />
-        </Box>
-      </Toolbar>
-    </Container>
-  </AppBar>
+export function SearchForm() {
+  return <div>
+    <Field />
+    <SearchButton />
+  </div>
+}
+
+export function NavBar() {
+  return <div className="flex w-full flex-wrap items-center justify-between px-3">
+    <div className='md:flex hidden mr-5 font-mono text-neutral-700'>
+      <Field />
+    </div>
+    <div className='md:flex hidden'>
+      <NavLink />
+      <NavLink />
+      <NavLink />
+      <NavLink />
+      <NavLink />
+    </div>
+    <div className='relative'>
+      <SearchForm />
+      <div className='flex'>
+        <Field />
+      </div>
+    </div>
+  </div>
 }
 
 function LocaleSwitcher() {
-  return <Box sx={{ mt: 2 }}>
+  return <div className='mt-2'>
     <Field />:
-    <span>
-      <Chip label='' />
-    </span>
-  </Box>
+    <div className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-blue-700 bg-blue-100 border border-blue-300 ">
+      <div className="text-xs font-normal leading-none max-w-full flex-initial">
+      </div>
+    </div>
+  </div>
 }
 
 export function RootLayout() {
-  return <Container>
+  return <div className='container'>
     <header>
       <NavBar />
     </header>
@@ -202,5 +183,25 @@ export function RootLayout() {
     <footer>
       <LocaleSwitcher />
     </footer>
-  </Container>
+  </div>
+}
+
+function UserRow() {
+  return <div className='grid grid-cols-6'>
+    <div>
+      <Field />
+    </div>
+    <div>
+      <Field />
+    </div>
+  </div>
+}
+
+export function User() {
+  return <>
+    <UserRow />
+    <UserRow />
+    <UserRow />
+    <UserRow />
+  </>
 }

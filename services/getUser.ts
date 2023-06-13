@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/pages/api/auth/[...nextauth]"
-import prisma from '@/services/prisma'
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { prisma } from '@/services/prisma'
 
 export async function getSession() {
   return await getServerSession(authOptions)
@@ -15,10 +15,10 @@ export async function getUsername() {
   }
 }
 
-export async function isLoggedIn() {
-  const name = await getUsername()
-  return !!name
-}
+// export async function isLoggedIn() {
+//   const name = await getUsername()
+//   return !!name
+// }
 
 export default async function getUser() {
   try {
@@ -39,19 +39,3 @@ export default async function getUser() {
     return null
   }
 }
-
-
-// import { cookies } from "next/headers"
-// import { unsealData } from "iron-session"
-// import { ironConfig } from "./ironConfig"
-// import type { UserObject as User } from '@/interfaces/users'
-
-// export default async function useUser() {
-//   const cookie = cookies().get(ironConfig.cookieName)
-//   if (cookie) {
-//     const { user } = await unsealData(cookie.value, { password: ironConfig.password })
-//     if (user)
-//       return user as User
-//   }
-//   return undefined
-// }

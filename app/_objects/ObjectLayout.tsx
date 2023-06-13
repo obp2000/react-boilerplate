@@ -1,7 +1,5 @@
 import { getDictionary, type ModelNames } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import Paper from '@/app/useClient/Paper'
-import type { ParsedUrlQuery } from 'querystring'
 import type { ReactNode } from 'react'
 import Header from './Header'
 
@@ -14,13 +12,13 @@ function Layout({
 	title: string
 	children?: ReactNode
 }) {
-	return <Paper elevation={3}>
+	return <div className='shadow-md p-2'>
 		<Header {...{
 			title,
 			backLabel
 		}} />
 		{children}
-	</Paper>
+	</div>
 }
 
 export async function ObjectLayout({
@@ -31,11 +29,11 @@ export async function ObjectLayout({
 	table,
 	children,
 }: {
-	params: ParsedUrlQuery
+	params: { lng: string, id: string } 
 	table: string
 	children?: ReactNode
 }) {
-	const dict = await getDictionary(String(lng))
+	const dict = await getDictionary(lng)
 	const modelName = dict[table as keyof ModelNames].singular
 	return <Layout {...{
 		title: `${modelName} № ${id}`,
@@ -52,11 +50,11 @@ export async function NewObjectLayout({
 	table,
 	children,
 }: {
-	params: ParsedUrlQuery
+	params: { lng: string }
 	table: string
 	children?: ReactNode
 }) {
-	const dict = await getDictionary(String(lng))
+	const dict = await getDictionary(lng)
 	const modelName = dict[table as keyof ModelNames].singular
 	return <Layout {...{
 		title: `${dict.new} ${modelName.toLowerCase()}`,

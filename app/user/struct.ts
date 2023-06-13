@@ -1,5 +1,5 @@
 import { validate as validateEmail } from 'isemail'
-import { object, refine, string, nonempty, optional, any } from 'superstruct'
+import { object, refine, string, nonempty, optional, any, boolean, define } from 'superstruct'
 
 const registerBase = object({
 	name: nonempty(string()),
@@ -21,7 +21,6 @@ export const struct = refine(registerBase, 'PasswordsEqual',
 			return true
 		}
 		return 'password_mismatch'
-
 })
 
 export const loginStruct = object({
@@ -32,3 +31,17 @@ export const loginStruct = object({
 	callbackUrl: any(),
 	json: any(),
 })
+
+export const Verified = define('Verified', (value) => !!value)
+
+// const verifiedStruct = object({
+// 	verified: boolean(),
+// })
+
+// export const login = refine(verifiedStruct, 'PasswordsVerified',
+// 	({ verified }) => {
+// 		if (verified) {
+// 			return true
+// 		}
+// 		return 'user_or_password_not_valid'
+// })

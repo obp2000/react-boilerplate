@@ -6,7 +6,7 @@ import user from './user.json'
 
 const baseUrl = '/api'
 
-export default [
+const handlers = [
   rest.post(`${baseUrl}/ru/customers`, async (req, res, ctx) => {
     // console.log('create handler')
     const values: CustomerValues = await req.json()
@@ -68,3 +68,5 @@ export default [
   //   return res(ctx.json(objects))
   // }),
 ]
+
+export default handlers

@@ -1,20 +1,26 @@
 import {
-    getRenderInput,
-    getRenderOption,
-    isOptionEqualToValue,
-    onSearch
+  getRenderInput,
+  getRenderOption,
+  isOptionEqualToValue,
+  onSearch
 } from '@/app/_objects/formHelpers'
 import type { ProductFieldProps } from '@/interfaces/orders'
-import Autocomplete from '@mui/material/Autocomplete'
+import { Autocomplete } from '@mui/material'
 import { useState } from 'react'
-import { Controller, type FieldError, type FieldErrors } from "react-hook-form"
+import {
+  Controller,
+  type FieldError,
+  type FieldErrors
+} from "react-hook-form"
 
 export default function ProductField({
 	index,
 	product,
 	getProductOptionLabel,
 	busy,
-	errors,
+	errors: {
+		orderItems: orderItemsError
+	},
 	errorMessages,
 	setValue,
 	notFound,
@@ -23,11 +29,10 @@ export default function ProductField({
 	const [currentValue, setCurrentValue] = useState(product)
 	const [options, setOptions] = useState(product ? [product] : [])
 	const [loading, setLoading] = useState(false)
-	const error = (errors?.orderItems?.[index as
-		keyof FieldErrors['root']])?.product as FieldError
 	return <Controller name={`orderItems.${index}.product`}
 		control={control}
-		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete
+			{...field}
 			id={`orderItems.${index}.product`}
 			onChange={(_, newValue) => {
 				if (newValue) {
@@ -47,7 +52,16 @@ export default function ProductField({
 			// filterOptions={(x) => x}
 			onInputChange={onSearch('/products/', setOptions, setLoading, currentValue)}
 			noOptionsText={notFound}
-			renderInput={getRenderInput({ label: '', error, busy, loading, errorMessages, field, ref })}
+			renderInput={getRenderInput({
+				label: '',
+				error: orderItemsError?.[index as
+					keyof FieldErrors['root']]?.product as FieldError,
+				busy,
+				loading,
+				errorMessages,
+				field,
+				ref
+			})}
 		/>}
 	/>
 }

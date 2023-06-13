@@ -1,19 +1,21 @@
-import { getGetOptionLabel } from './cities/helpers'
 import {
-    getRenderInput,
-    getRenderOption,
-    isOptionEqualToValue,
-    onSearch
+  getRenderInput,
+  getRenderOption,
+  isOptionEqualToValue,
+  onSearch
 } from '@/app/_objects/formHelpers'
 import type { CityFieldProps } from '@/interfaces/customers'
-import Autocomplete from '@mui/material/Autocomplete'
+import { Autocomplete } from '@mui/material'
 import { useState } from 'react'
 import { Controller, type FieldError } from "react-hook-form"
+import { getGetOptionLabel } from './cities/helpers'
 
 export default function CityField({
 	labels,
 	busy,
-	errors,
+	errors: {
+		city: cityError
+	},
 	errorMessages,
 	notFound,
 	control,
@@ -26,12 +28,11 @@ export default function CityField({
 	const [loading, setLoading] = useState(false)
 	const getOptionLabel = getGetOptionLabel(labels)
 	// const idFieldName = 'cityId'
-	const error = errors?.city as FieldError
-	const label = `${labels.city} *`
 	return <Controller
 		name="city"
 		control={control}
-		render={({ field: { ref, onChange, ...field } }) => <Autocomplete {...field}
+		render={({ field: { ref, onChange, ...field } }) => <Autocomplete
+			{...field}
 			id="city"
 			onChange={(_, newValue) => {
 				if (newValue) {
@@ -51,7 +52,15 @@ export default function CityField({
 			// filterOptions={(x) => x}
 			onInputChange={onSearch('/cities/', setOptions, setLoading, currentValue)}
 			noOptionsText={notFound}
-			renderInput={getRenderInput({ label, error, busy, loading, errorMessages, field, ref })}
+			renderInput={getRenderInput({
+				label: `${labels.city} *`,
+				error: cityError as FieldError,
+				busy,
+				loading,
+				errorMessages,
+				field,
+				ref
+			})}
 		/>}
 	/>
 }

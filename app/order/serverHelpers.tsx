@@ -4,43 +4,42 @@ import type { Translation } from "@/app/i18n/dictionaries"
 import type { Order, SerializedOrder } from '@/interfaces/orders'
 import Date from '@/app/components/Date'
 import { getShortName } from '@/app/customer/serverHelpers'
-import prisma from '@/services/prisma'
+import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
-import { ParsedUrlQuery } from 'querystring'
 
 export function getTableRow(dict: Translation) {
-	const shortName = getShortName(dict.customer)
-	return function tableRow({
-		id,
-		nick,
-		name,
-		orderItemsCost,
-		createdAt,
-		updatedAt
-	}: SerializedOrder) {
-		return [
-			id,
-			shortName({ nick, name }),
-			orderItemsCost,
-			<Date key={id} dateString={createdAt} />,
-			<Date key={id+1} dateString={updatedAt} />,
-		]
-	}
+  const shortName = getShortName(dict.customer)
+  return function tableRow({
+    id,
+    nick,
+    name,
+    orderItemsCost,
+    createdAt,
+    updatedAt
+  }: SerializedOrder) {
+    return [
+      id,
+      shortName({ nick, name }),
+      orderItemsCost,
+      <Date key={id} dateString={createdAt} />,
+      <Date key={id + 1} dateString={updatedAt} />,
+    ]
+  }
 }
 
 export function tableLabels({ order }: Translation) {
-	return [
-		order.id,
-		order.customer,
-		order.orderItemsCost,
-		order.createdAt,
-		order.updatedAt,
-	]
+  return [
+    order.id,
+    order.customer,
+    order.orderItemsCost,
+    order.createdAt,
+    order.updatedAt,
+  ]
 }
 
-export function where({ term }: ParsedUrlQuery) {
+export function where({ term }: { term?: string }) {
   if (!term) { return {} }
-  const containsTerm = { contains: String(term) }
+  const containsTerm = { contains: term }
   return {
     customer: {
       OR: [
@@ -59,8 +58,11 @@ export async function getObjects({
     page = '1',
     term
   }
-}: { perPage?: number } & { searchParams: ParsedUrlQuery }) {
-  const currentPage = parseInt(String(page))
+}: {
+  perPage: number
+  searchParams: { page?: string, term?: string }
+}) {
+  const currentPage = parseInt(page)
   const skip = currentPage > 0 ? perPage * (currentPage - 1) : 0
   let whereSql = Prisma.sql``
   if (term) {

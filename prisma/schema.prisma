@@ -17,15 +17,10 @@ datasource db {
 model User {
   id                          Int        @id @default(autoincrement())
   password                    String     @db.VarChar(128)
-  lastLogin                   DateTime?  @db.Timestamptz(6) @map("last_login")
-  isSuperuser                 Boolean    @map("is_superuser")
   name                        String     @unique @db.VarChar(150) @map("username")
   firstName                   String     @default("") @db.VarChar(150) @map("first_name")
   lastName                    String     @default("") @db.VarChar(150) @map("last_name")
   email                       String     @db.VarChar(254)
-  isStaff                     Boolean    @map("is_staff")
-  isActive                    Boolean    @map("is_active")
-  dateJoined                  DateTime   @db.Timestamptz(6) @map("date_joined")
 
   @@index([name], map: "auth_user_username_6821ab7c_like")
 

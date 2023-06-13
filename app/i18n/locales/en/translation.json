@@ -14,7 +14,6 @@
   "not_found": "Not found",
   "count": "Count",
   "main": "Main",
-  "profile": "Profile",
   "created": "created",
   "updated": "updated",
   "deleted": "deleted",
@@ -80,7 +79,8 @@
     "nameHelpText": "Required field. Max 150 characters. Only letters, digits and characters @/./+/-/_.",
     "password1HelpText": "Password must not be too similar to your other personal information. Your password must be at least 8 characters. Password cannot be numbers only.",
     "password2HelpText": "Please enter your password again to confirm.",
-    "nameAlreadyExists": "Username already exists."
+    "nameAlreadyExists": "Username already exists.",
+    "profile": "Profile"
   },
   "customer": {
     "id": "Id",

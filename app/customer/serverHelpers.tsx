@@ -1,16 +1,16 @@
 import 'server-only'
 
 import type { Translation } from "@/app/i18n/dictionaries"
-import type { Customer,	SerializedCustomer } from '@/interfaces/customers'
+import type { Customer, SerializedCustomer } from '@/interfaces/customers'
 import Date from '@/app/components/Date'
 import { getGetOptionLabel as getGetCityName } from './cities/helpers'
-import prisma from '@/services/prisma'
+import { prisma } from '@/services/prisma'
 import { createPaginator } from 'prisma-pagination'
-import type { ParsedUrlQuery } from 'querystring'
 import tables from '@/app/_tables/tables.json'
 import { Prisma } from "@prisma/client"
+import { cache } from 'react'
 
-export function getShortName(labels: Translation['customer']) {
+function getShortName(labels: Translation['customer']) {
 	return (customer: Partial<Customer>) => {
 		if (!customer) { return '' }
 		const label = []
@@ -22,7 +22,7 @@ export function getShortName(labels: Translation['customer']) {
 	}
 }
 
-export function getTableRow(dict: Translation) {
+function getTableRow(dict: Translation) {
 	const cityName = getGetCityName(dict.customer.city)
 	const shortName = getShortName(dict.customer)
 	return function tableRow({
@@ -39,12 +39,12 @@ export function getTableRow(dict: Translation) {
 			city ? cityName(city) : '',
 			address,
 			<Date key={id} dateString={createdAt} />,
-			<Date key={id+1} dateString={updatedAt} />,
+			<Date key={id + 1} dateString={updatedAt} />,
 		]
 	}
 }
 
-export function tableLabels({ customer }: Translation) {
+function tableLabels({ customer }: Translation) {
 	return [
 		customer.id,
 		customer.name,
@@ -55,9 +55,9 @@ export function tableLabels({ customer }: Translation) {
 	]
 }
 
-export function where({ term }: ParsedUrlQuery) {
+function where({ term }: { term?: string }) {
 	if (!term) { return {} }
-	const containsTerm = { contains: String(term) }
+	const containsTerm = { contains: term }
 	return {
 		OR: [
 			{ nick: containsTerm },
@@ -68,7 +68,9 @@ export function where({ term }: ParsedUrlQuery) {
 	}
 }
 
-export function findManyArgs(searchParams: ParsedUrlQuery): Prisma.CustomerFindManyArgs {
+function findManyArgs(
+	searchParams: { page?: string, term?: string }
+): Prisma.CustomerFindManyArgs {
 	return {
 		where: where(searchParams),
 		select: tables.customers.select.objects,
@@ -80,26 +82,40 @@ export function findManyArgs(searchParams: ParsedUrlQuery): Prisma.CustomerFindM
 	}
 }
 
-export async function getObjects({
+const getObjects = cache(async function({
 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
 	searchParams
-}: { perPage?: number, searchParams: ParsedUrlQuery }) {
+}: {
+	perPage: number
+	searchParams: { page?: string, term?: string }
+}) {
 	const paginate = createPaginator({ perPage })
 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
 		prisma.customer,
 		findManyArgs(searchParams),
 		{
-			page: String(searchParams.page || '1')
+			page: searchParams.page || '1'
 		})
-}
+})
 
-export function labels({ not_found: notFound, customer: labels }: Translation) {
+function labels({ not_found: notFound, customer: labels }: Translation) {
 	return {
 		notFound,
 		labels,
 	}
 }
 
-export async function getOptions() {
+async function getOptions() {
 	return {}
+}
+
+export {
+	getShortName,
+	getTableRow,
+	tableLabels,
+	where,
+	findManyArgs,
+	getObjects,
+	labels,
+	getOptions
 }

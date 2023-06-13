@@ -1,11 +1,11 @@
 import Form from '@/app/product/Form'
 import { getOptions, labels } from '@/app/product/serverHelpers'
-import type { ParsedUrlQuery } from 'querystring'
 import { ObjectPage } from '@/app/_objects/ObjectPage'
 
-export default async function Page({ params }: { params: ParsedUrlQuery }) {
+export default async function Page({
+	params
+}: { params: { lng: string, id: string } }) {
 	const table = 'products'
-	{/* @ts-expect-error Server Component */ }
 	return <ObjectPage {...{
 		params,
 		table,

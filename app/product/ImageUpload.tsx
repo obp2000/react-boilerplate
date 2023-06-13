@@ -1,9 +1,8 @@
 import { CldUploadWidget, CldImage } from "next-cloudinary"
 // import Image from "next/image"
 import { useCallback } from "react"
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import IconButton from "@mui/material/IconButton"
-import CardMedia from "@mui/material/CardMedia"
+import { PhotoCamera } from '@mui/icons-material'
+import { IconButton, CardMedia } from "@mui/material"
 
 declare global {
   var cloudinary: any

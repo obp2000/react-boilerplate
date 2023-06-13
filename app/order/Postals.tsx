@@ -1,20 +1,20 @@
-import CalculateIcon from '@mui/icons-material/Calculate'
-import Tooltip from '@/app/useClient/Tooltip'
+import { Calculate } from '@mui/icons-material'
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  IconButton,
+  Unstable_Grid2 as Grid
+} from '@mui/material'
+import Tooltip from '@/app/components/Tooltip'
 import type { Translation } from '@/app/i18n/dictionaries'
 import { type Control, Controller, type UseFormSetValue } from "react-hook-form"
-import TextField from '@mui/material/TextField'
 import consts from './consts.json'
 import type { SerializedOrderObject } from '@/interfaces/orders'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import IconButton from '@mui/material/IconButton'
-import TableCell from '@mui/material/TableCell'
-import TableRow from '@mui/material/TableRow'
 import { unitsLabel } from '@/app/_objects/formHelpers'
 import { orderItemsCost, totalWeight } from './Form'
-import Grid from '@mui/material/Unstable_Grid2'
 
 export function postCostWithPacket({
   postCost,
@@ -93,9 +93,8 @@ export default function Postals({
   setValue: UseFormSetValue<SerializedOrderObject>
   // defaultValues: Omit<Values, 'customer'>
 }) {
-  // const [packetValue, setPacketValue] = useState(String(defaultValues.packet || ''))
-  return <TableRow sx={{ mt: 1 }} >
-    <TableCell align='right'>
+  return <tr className='border-b dark:border-neutral-500 mt-1'>
+    <td className='whitespace-nowrap px-6 py-4' align='right'>
       {pindex && <Tooltip title={count} >
         <IconButton aria-labelledby={count} disabled={busy}
           onClick={() => countPostCost({
@@ -103,79 +102,71 @@ export default function Postals({
             weight: totalWeight(orderItemsValues),
             setValue
           })}>
-          <CalculateIcon />
+          <Calculate />
         </IconButton>
       </Tooltip>}
-    </TableCell>
-    <TableCell>
-      <Grid container spacing={1}>
-        <Grid xs={3}>
-          <Controller name="postCost"
-            control={control}
-            render={({ field: { value, ...field } }) => <TextField {...field}
-              id="postCost"
+    </td>
+    <td className='whitespace-nowrap px-6 py-4'>
+      <div className={`grid grid-cols-4 gap-1 ${busy ? 'opacity-70' : ''}`}>
+        <Controller name="postCost"
+          control={control}
+          render={({ field: { value, ...field } }) => <TextField {...field}
+            id="postCost"
+            value={value || ''}
+            label={labels.postCost}
+            type="number"
+            variant="outlined"
+            size="small"
+            disabled={busy}
+            InputProps={unitsLabel('₽')}
+            inputProps={{
+              inputMode: 'decimal',
+              step: '0.1',
+            }}
+          />}
+        />
+        <Controller name="packet"
+          control={control}
+          render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
+            <InputLabel id="packet-label">{labels.packet}</InputLabel>
+            <Select
+              {...field}
               value={value || ''}
-              label={labels.postCost}
-              type="number"
-              variant="outlined"
-              size="small"
+              labelId="packet-label"
+              id="packet"
+              label={labels.packet}
               disabled={busy}
-              InputProps={unitsLabel('₽')}
-              inputProps={{
-                inputMode: 'decimal',
-                step: '0.1',
-              }}
-            />}
-          />
-        </Grid>
-        <Grid xs={3}>
-          <Controller name="packet"
-            control={control}
-            render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
-              <InputLabel id="packet-label">{labels.packet}</InputLabel>
-              <Select
-                {...field}
-                value={value || ''}
-                labelId="packet-label"
-                id="packet"
-                label={labels.packet}
-                disabled={busy}
-              >
-                <MenuItem value=""><em>------</em></MenuItem>
-                {labels.packetChoices.map(
-                  ({ value, display_name }) => <MenuItem key={value} value={value}>
-                    {display_name}
-                  </MenuItem>)}
-              </Select>
-            </FormControl>}
-          />
-        </Grid>
-        <Grid xs={3}>
-          <TextField
-            label={labels.postCostWithPacket}
-            size="small"
-            value={postCostWithPacket({ postCost, packet })}
-            disabled
-            InputProps={unitsLabel('₽')}
-          />
-        </Grid>
-        <Grid xs={3}>
-          <TextField
-            label={labels.postDiscount}
-            size="small"
-            value={postDiscount({ orderItemsValues, postCost, packet }).toFixed(2)}
-            disabled
-            InputProps={unitsLabel('₽')}
-          />
-        </Grid>
-      </Grid>
-    </TableCell>
-    <TableCell colSpan={2} />
-    <TableCell align='right'>
+            >
+              <MenuItem value=""><em>------</em></MenuItem>
+              {labels.packetChoices.map(
+                ({ value, display_name }) => <MenuItem key={value} value={value}>
+                  {display_name}
+                </MenuItem>)}
+            </Select>
+          </FormControl>}
+        />
+        <TextField
+          label={labels.postCostWithPacket}
+          size="small"
+          value={postCostWithPacket({ postCost, packet })}
+          disabled
+          InputProps={unitsLabel('₽')}
+        />
+        <TextField
+          label={labels.postDiscount}
+          size="small"
+          value={postDiscount({ orderItemsValues, postCost, packet }).toFixed(2)}
+          disabled
+          InputProps={unitsLabel('₽')}
+        />
+      </div>
+    </td>
+    <td className='whitespace-nowrap px-6 py-4' colSpan={2} />
+    <td className='whitespace-nowrap px-6 py-4' align='right'>
       {totalPostals({ orderItemsValues, postCost, packet }).toFixed(2)}₽
-    </TableCell>
-    <TableCell align='right' colSpan={2}>
+    </td>
+    <td className='whitespace-nowrap px-6 py-4' align='right' colSpan={2}>
       {consts.PACKET_WEIGHT}({labels.packet}) + {consts.SAMPLES_WEIGHT}({labels.samples})
-    </TableCell>
-  </TableRow>
+    </td>
+  </tr>
 }

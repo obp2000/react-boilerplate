@@ -1,6 +1,6 @@
 'use client'
 
-import Pagination from '@/app/useClient/Pagination'
+import { Pagination } from '@mui/material'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { ChangeEvent } from 'react'
 

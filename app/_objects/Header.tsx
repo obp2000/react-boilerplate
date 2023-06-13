@@ -1,6 +1,4 @@
 import BackButton from '@/app/components/BackButton'
-import Stack from '@/app/useClient/Stack'
-import Typography from '@/app/useClient/Typography'
 
 export default function Header({
 	backLabel,
@@ -9,18 +7,10 @@ export default function Header({
 	backLabel: string
 	title: string
 }) {
-	return <Stack direction="row" spacing={2}>
+	return <div className='grid grid-cols-3 mt-1'>
 		<BackButton label={backLabel} />
-		<Typography
-			component="h1"
-			variant="h6"
-			color="inherit"
-			align="center"
-			noWrap
-			aria-label={title}
-			sx={{ flex: 1 }}
-		>
+		<div aria-label={title} className='text-xl'>
 			{title}
-		</Typography>
-	</Stack>
+		</div>
+	</div>
 }

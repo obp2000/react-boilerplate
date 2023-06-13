@@ -1,28 +1,26 @@
 'use client'
 
 import { useMutate } from '@/app/_objects/hooks'
-import { getGetOptionLabel as getGetProductOptionLabel } from '@/app/product/helpers'
-import Button from '@/app/useClient/Button'
-import Tooltip from '@/app/useClient/Tooltip'
+import {
+  getGetOptionLabel as getGetProductOptionLabel
+} from '@/app/product/helpers'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
-import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined'
+import { AddCircleOutlined } from '@mui/icons-material'
 import tables from '@/app/_tables/tables.json'
-import type { OrderFormProps, SerializedOrderObject, Values } from '@/interfaces/orders'
-import FormControl from '@mui/material/FormControl'
-import IconButton from '@mui/material/IconButton'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Paper from '@mui/material/Paper'
-import Select from '@mui/material/Select'
-import { styled } from '@mui/material/styles'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Unstable_Grid2'
+import type {
+  OrderFormProps,
+  SerializedOrderObject,
+  Values
+} from '@/interfaces/orders'
+import {
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material'
+import Tooltip from '@/app/components/Tooltip'
 import { useCallback, useTransition } from 'react'
 import {
   Controller,
@@ -35,6 +33,7 @@ import CustomerField from './CustomerField'
 import { struct } from './struct'
 import OrdeItem, { cost, weight } from './orderItems/OrderItem'
 import Postals, { totalPostals } from './Postals'
+import Button from '@/app/components/Button'
 
 type OrderItems = SerializedOrderObject['orderItems']
 
@@ -84,16 +83,15 @@ export function totalWeight(orderItemsValues?: OrderItems) {
     (needGift(orderItemsValues) ? consts.GIFT_WEIGHT : 0)
 }
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-}))
+// const StyledTableCell = styled(TableCell)(({ theme }) => ({
+//   [`&.${tableCellClasses.head}`]: {
+//     backgroundColor: theme.palette.common.black,
+//     color: theme.palette.common.white,
+//   },
+// }))
 
 export default function FormComp({
-  lng,
-  table,
+  tablePath,
   id,
   initialValues,
   save,
@@ -113,7 +111,7 @@ export default function FormComp({
   // const [pindex, setPindex] = useState<string | null | undefined>(initCustomer?.city?.pindex)
   // const [currentCustomer, setCurrentCustomer] = useState(initCustomer)
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate({ lng, table, id })
+  const onSubmit: SubmitHandler<Values> = useMutate({ tablePath, id })
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
     control,
@@ -128,7 +126,6 @@ export default function FormComp({
       defaultValues: initialValues,
       resolver: superstructResolver(struct)
     })
-  const busy = isSubmitting || isPending
   const getProductOptionLabel = getGetProductOptionLabel(productLabels)
   const { fields, append, remove } = useFieldArray({
     control,
@@ -148,12 +145,12 @@ export default function FormComp({
   const giftNeeded = needGift(orderItemsValues)
   console.log('errors ', errors)
   // console.log('fields ', fields)
-  function toValues({
+  const toValues = useCallback(({
     customer,
     orderItems,
     createdAt,
     ...values
-  }: SerializedOrderObject) {
+  }: SerializedOrderObject) => {
     const orderItemsUnchecked = orderItems.map(({
       product,
       ...orderItemValues
@@ -167,17 +164,14 @@ export default function FormComp({
       orderItems: orderItemsUnchecked,
       ...values
     })
-  }
-  const submitHandler = handleSubmit(toValues)
+  }, [onSubmit])
   const onSubmitButtonClick = useCallback(() => {
-    if (busy) {
-      return
-    }
-    submitHandler()
-  }, [submitHandler, busy])
+    handleSubmit(toValues)()
+  }, [handleSubmit, toValues])
+  const busy = isSubmitting || isPending
   return <>
-    <Grid container spacing={2} sx={{ p: 2, opacity: busy ? 0.7 : 'inherit' }}>
-      <Grid xs={12}>
+    <div className={`grid grid-cols-3 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
+      <div className='col-span-3'>
         <CustomerField {...{
           label: labels.customer,
           labels: customerLabels,
@@ -188,8 +182,8 @@ export default function FormComp({
           control,
           initialValues
         }} />
-      </Grid>
-      <Grid xs={3}>
+      </div>
+      <div>
         <Controller name="deliveryType"
           control={control}
           render={({ field: { value, ...field } }) => <FormControl size='small' fullWidth>
@@ -210,8 +204,8 @@ export default function FormComp({
             </Select>
           </FormControl>}
         />
-      </Grid>
-      <Grid xs={8}>
+      </div>
+      <div className='col-span-2'>
         <Controller name="address"
           control={control}
           render={({ field }) => <TextField {...field}
@@ -222,119 +216,137 @@ export default function FormComp({
             disabled={busy}
           />}
         />
-      </Grid>
-    </Grid>
-    <TableContainer component={Paper} sx={{ mt: 2 }}>
-      <Table sx={{ minWidth: 650 }} size="small">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>#</StyledTableCell>
-            <StyledTableCell>{labels.orderItem.product}</StyledTableCell>
-            <StyledTableCell>{labels.orderItem.price}</StyledTableCell>
-            <StyledTableCell>{labels.orderItem.amount}</StyledTableCell>
-            <StyledTableCell align='right'>{labels.orderItem.cost}, ₽</StyledTableCell>
-            <StyledTableCell align='right'>{labels.orderItem.weight}, {units.gram_short}</StyledTableCell>
-            <StyledTableCell>
-              <Tooltip title={add}>
-                <IconButton color='inherit' disabled={busy} onClick={() =>
-                  append(tables.orders.initOrderItem as unknown as OrderItems[number])
-                }>
-                  <AddCircleOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {fields.map(({ id, product }, index) => <OrdeItem
-            key={id}
-            {...{
-              index,
-              product,
-              getProductOptionLabel,
-              control,
-              errors,
-              errorMessages,
-              labels,
-              units,
-              productLabels,
-              busy,
-              orderItemsValues,
-              label,
-              okText,
-              cancelText,
-              textDelete,
-              notFound,
-              remove,
-              setValue,
-            }}
-          />)}
-          {((Number(fields?.length) > 1) || giftNeeded) && <TableRow>
-            <TableCell>
-              {labels.orderItemsCost}
-            </TableCell>
-            <TableCell>
-              {giftNeeded && <Controller name="gift"
-                control={control}
-                render={({ field }) => <TextField {...field}
-                  id="gift"
-                  label={`${labels.needGift}!`}
-                  size="small"
-                  fullWidth
-                  disabled={busy}
-                />}
-              />}
-            </TableCell>
-            <TableCell />
-            <TableCell align='center'>
-              {orderItemsAmount(orderItemsValues).toFixed(2)}{units.meter_short}
-            </TableCell>
-            <TableCell align='right'>
-              {orderItemsCost(orderItemsValues).toFixed(2)}
-            </TableCell>
-            <TableCell align='right' colSpan={giftNeeded ? 2 : 1}>
-              {orderItemsWeight(orderItemsValues).toFixed(0)}{giftNeeded &&
-                ` + ${consts.GIFT_WEIGHT}(${labels.gift})`}
-            </TableCell>
-          </TableRow>}
-          <Postals {...{
-            count,
-            labels,
-            units,
-            busy,
-            control,
-            pindex: customer?.city?.pindex,
-            orderItemsValues,
-            postCost,
-            packet,
-            setValue,
-          }} />
-          <TableRow>
-            <TableCell />
-            <TableCell>
-              <Button
-                size='small'
-                variant='outlined'
-                aria-labelledby={save}
-                disabled={busy || !isDirty}
-                onClick={() => startTransition(onSubmitButtonClick)}
-              >
-                {save}
-              </Button>
-            </TableCell>
-            <TableCell />
-            <TableCell align="right">
-              {labels.totalSum}
-            </TableCell>
-            <TableCell align='right'>
-              {totalSum({ orderItemsValues, postCost, packet }).toFixed(2)}₽
-            </TableCell>
-            <TableCell align='right'>
-              {totalWeight(orderItemsValues).toFixed(0)}{units.gram_short}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+      </div>
+    </div>
+    <div className='shadow-md mt-2'>
+      <div className="flex flex-col">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+            <div className="overflow-hidden">
+              <table className="min-w-full text-center text-sm font-light">
+                <thead className="border-b bg-neutral-800 font-medium text-white dark:border-neutral-500 dark:bg-neutral-900">
+                  <tr>
+                    <th scope='col' className='px-6 py-4'>
+                      #
+                    </th>
+                    <th scope='col' className='px-6 py-4'>
+                      {labels.orderItem.product}
+                    </th>
+                    <th scope='col' className='px-6 py-4'>
+                      {labels.orderItem.price}
+                    </th>
+                    <th scope='col' className='px-6 py-4'>
+                      {labels.orderItem.amount}
+                    </th>
+                    <th scope='col' className='px-6 py-4' align='right'>
+                      {labels.orderItem.cost}, ₽
+                    </th>
+                    <th scope='col' className='px-6 py-4' align='right'>
+                      {labels.orderItem.weight}, {units.gram_short}
+                    </th>
+                    <th scope='col' className='px-6 py-4'>
+                      <Tooltip title={add}>
+                        <IconButton color='inherit' disabled={busy} onClick={() =>
+                          append(tables.orders.initOrderItem as unknown as OrderItems[number])
+                        }>
+                          <AddCircleOutlined />
+                        </IconButton>
+                      </Tooltip>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map(({ id, product }, index) => <OrdeItem
+                    key={id}
+                    {...{
+                      index,
+                      product,
+                      getProductOptionLabel,
+                      control,
+                      errors,
+                      errorMessages,
+                      labels,
+                      units,
+                      productLabels,
+                      busy,
+                      orderItemsValues,
+                      label,
+                      okText,
+                      cancelText,
+                      textDelete,
+                      notFound,
+                      remove,
+                      setValue,
+                    }}
+                  />)}
+                  {((Number(fields?.length) > 1) || giftNeeded) && <tr className='border-b dark:border-neutral-500'>
+                    <td className='whitespace-nowrap px-6 py-4'>
+                      {labels.orderItemsCost}
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4'>
+                      {giftNeeded && <Controller name="gift"
+                        control={control}
+                        render={({ field }) => <TextField {...field}
+                          id="gift"
+                          label={`${labels.needGift}!`}
+                          size="small"
+                          fullWidth
+                          disabled={busy}
+                        />}
+                      />}
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' />
+                    <td className='whitespace-nowrap px-6 py-4' align='center'>
+                      {orderItemsAmount(orderItemsValues).toFixed(2)}{units.meter_short}
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' align='right'>
+                      {orderItemsCost(orderItemsValues).toFixed(2)}
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' align='right' colSpan={giftNeeded ? 2 : 1}>
+                      {orderItemsWeight(orderItemsValues).toFixed(0)}{giftNeeded &&
+                        ` + ${consts.GIFT_WEIGHT}(${labels.gift})`}
+                    </td>
+                  </tr>}
+                  <Postals {...{
+                    count,
+                    labels,
+                    units,
+                    busy,
+                    control,
+                    pindex: customer?.city?.pindex,
+                    orderItemsValues,
+                    postCost,
+                    packet,
+                    setValue,
+                  }} />
+                  <tr className='border-b dark:border-neutral-500'>
+                    <td className='whitespace-nowrap px-6 py-4' />
+                    <td className='whitespace-nowrap px-6 py-4'>
+                      <Button
+                        aria-labelledby={save}
+                        disabled={busy || !isDirty}
+                        onClick={() => startTransition(onSubmitButtonClick)}
+                      >
+                        {save}
+                      </Button>
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' />
+                    <td className='whitespace-nowrap px-6 py-4' align="right">
+                      {labels.totalSum}
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' align='right'>
+                      {totalSum({ orderItemsValues, postCost, packet }).toFixed(2)}₽
+                    </td>
+                    <td className='whitespace-nowrap px-6 py-4' align='right'>
+                      {totalWeight(orderItemsValues).toFixed(0)}{units.gram_short}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </>
 }

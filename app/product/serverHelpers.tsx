@@ -4,9 +4,8 @@ import type { Translation } from "@/app/i18n/dictionaries"
 import type { Product, SerializedProduct } from '@/interfaces/products'
 import Date from '@/app/components/Date'
 import { getGetOptionLabel as getGetProductName } from '@/app/product/helpers'
-import prisma from '@/services/prisma'
+import { prisma } from '@/services/prisma'
 import { createPaginator } from 'prisma-pagination'
-import { ParsedUrlQuery } from "querystring"
 import tables from '@/app/_tables/tables.json'
 import { Prisma } from "@prisma/client"
 
@@ -45,9 +44,9 @@ export function tableLabels({ product }: Translation) {
 	]
 }
 
-export function where({ term }: ParsedUrlQuery) {
+export function where({ term }: { term?: string }) {
 	if (!term) { return {} }
-	const containsTerm = { contains: String(term) }
+	const containsTerm = { contains: term }
 	return {
 		OR: [
 			{ name: containsTerm },
@@ -56,7 +55,9 @@ export function where({ term }: ParsedUrlQuery) {
 	}
 }
 
-export function findManyArgs(searchParams: ParsedUrlQuery): Prisma.ProductFindManyArgs {
+export function findManyArgs(
+	searchParams: { page?: string, term?: string }
+): Prisma.ProductFindManyArgs {
 	return {
 		where: where(searchParams),
 		select: tables.products.select.objects,
@@ -72,15 +73,15 @@ export async function getObjects({
 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
 	searchParams
 }: {
-	perPage?: number
-	searchParams: ParsedUrlQuery
+	perPage: number
+	searchParams: { page?: string, term?: string }
 }) {
 	const paginate = createPaginator({ perPage })
 	return paginate<Product, Prisma.ProductFindManyArgs>(
 		prisma.product,
 		findManyArgs(searchParams),
 		{
-			page: String(searchParams.page || '1')
+			page: searchParams.page || '1'
 		})
 }
 

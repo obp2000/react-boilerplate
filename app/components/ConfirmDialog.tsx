@@ -1,12 +1,14 @@
 'use client'
 
-import Button from '@/app/useClient/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
+} from '@mui/material'
+import { WarningAmber } from '@mui/icons-material'
 import type { ReactNode, Dispatch, SetStateAction } from 'react'
+import Button from '@/app/components/Button'
 
 type Props = {
   title: string
@@ -35,7 +37,7 @@ export default function ConfirmDialog({
       arial-label='confirmation'
     >
       <DialogTitle id="confirm-dialog">
-        <WarningAmberIcon color='warning' />
+        <WarningAmber color='warning' />
         {title}
       </DialogTitle>
       <DialogContent>
@@ -43,13 +45,11 @@ export default function ConfirmDialog({
       </DialogContent>
       <DialogActions>
         <Button
-          variant="outlined"
           onClick={handleClose}
         >
           {cancelText}
         </Button>
         <Button
-          variant="outlined"
           onClick={() => {
             handleClose()
             onConfirm()
