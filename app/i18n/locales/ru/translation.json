@@ -189,39 +189,39 @@
     ],
     "deliveryTypeChoices": [
       {
-        "value": 0,
+        "value": 1,
         "display_name": "Почта России"
       },
       {
-        "value": 1,
+        "value": 2,
         "display_name": "Деловые линии"
       },
       {
-        "value": 2,
+        "value": 3,
         "display_name": "ПЭК"
       },
       {
-        "value": 3,
+        "value": 4,
         "display_name": "GTD (Кит)"
       },
       {
-        "value": 4,
+        "value": 5,
         "display_name": "Энергия"
       },
       {
-        "value": 5,
+        "value": 6,
         "display_name": "ЖелДор Экспедиция"
       },
       {
-        "value": 6,
+        "value": 7,
         "display_name": "Ратек"
       },
       {
-        "value": 7,
+        "value": 8,
         "display_name": "Байкал Сервис"
       },
       {
-        "value": 8,
+        "value": 9,
         "display_name": "СДЭК Посылочка"
       }
     ],

@@ -18,7 +18,7 @@ export const FloatPattern = define<string>('FloatPattern', (value) =>
 export const IntegerOrPattern = union([integer(), IntegerPattern, literal('')])
 
 export const ToInteger = coerce(integer(), union([IntegerPattern, literal('')]),
-  (value) => value === '' ? undefined : parseInt(value))
+  (value) => value === '' || value === undefined ? null : parseInt(value))
 
 export const Option = union([integer(), literal('')])
 

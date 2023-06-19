@@ -135,6 +135,6 @@ export function unitsLabel(label: string) {
 export function errorText(
   errorMessages: Translation['errorMessages'],
   error?: FieldError,
-){
+) {
   return error && errorMessages[error.message as keyof Translation['errorMessages']]
 }

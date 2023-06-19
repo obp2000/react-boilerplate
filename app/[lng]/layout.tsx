@@ -2,12 +2,11 @@ import '@/styles/globals.css'
 
 import { fallbackLng } from '@/app/i18n/settings'
 import type { ReactNode } from 'react'
-import {
-	getDictionary
-} from '@/app/i18n/dictionaries'
+import { getDictionary } from '@/app/i18n/dictionaries'
 import { Toaster } from 'react-hot-toast'
 import NavBar from './_components/NavBar'
 import LocaleSwitcher from './_components/LocaleSwitcher'
+// import '@/scripts/wdyr'
 
 const name = "Best&C"
 
@@ -29,13 +28,15 @@ export default async function RootLayout({
   confirm,
   children,
 }: {
-  params: { lng: string }
+  params: {
+    lng: string
+  }
   authButton: ReactNode
   userButton: ReactNode
   confirm: ReactNode
   children: ReactNode
 }) {
-  console.log('RootLayout', lng)
+  // console.log('RootLayout', lng)
   const dict = await getDictionary(lng)
   return <html lang={lng}>
     <body>

@@ -1,6 +1,13 @@
-import Form from '@/app/customer/Form'
-import { getOptions, labels } from '@/app/customer/serverHelpers'
+import Form from './_components/Form'
 import { ObjectPage } from '@/app/_objects/ObjectPage'
+import type { Translation } from '@/app/i18n/dictionaries'
+
+function labels({ not_found: notFound, customer: labels }: Translation) {
+	return {
+		notFound,
+		labels,
+	}
+}
 
 export default async function Page({
 	params
@@ -10,7 +17,6 @@ export default async function Page({
 		params,
 		table,
 		labels,
-		getOptions,
 		form: Form,
 	}} />
 }

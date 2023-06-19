@@ -1,5 +1,58 @@
-import { getObjects, getTableRow } from '@/app/product/serverHelpers'
 import { TablePage } from '@/app/_tables/TablePage'
+import type { Translation } from '@/app/i18n/dictionaries'
+import {
+	getGetOptionLabel as getGetProductName
+} from '@/app/product/helpers'
+import type { Product, SerializedProduct } from '@/interfaces/products'
+import Date from '@/app/components/Date'
+import { prisma } from '@/services/prisma'
+import { createPaginator } from 'prisma-pagination'
+import { Prisma } from "@prisma/client"
+import { findManyArgs } from '@/app/api/products/route'
+import { cache } from 'react'
+
+const getObjects = cache(async function ({
+	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+	searchParams: {
+		page = '1',
+		term,
+	}
+}: {
+	perPage: number
+	searchParams: {
+		page?: string
+		term?: string
+	}
+}) {
+	const paginate = createPaginator({ perPage })
+	return paginate<Product, Prisma.ProductFindManyArgs>(
+		prisma.product,
+		findManyArgs(term),
+		{ page })
+})
+
+export function getTableRow({ product }: Translation) {
+	const productName = getGetProductName(product)
+	return function tableRow({
+		id,
+		price,
+		width,
+		density,
+		createdAt,
+		updatedAt,
+		...rest
+	}: SerializedProduct) {
+		return [
+			id,
+			productName(rest),
+			price,
+			width,
+			density,
+			<Date key={id} dateString={createdAt} />,
+			<Date key={id + 1} dateString={updatedAt} />,
+		]
+	}
+}
 
 export default async function Page(props: {
 	params: { lng: string }

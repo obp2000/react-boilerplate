@@ -189,39 +189,39 @@
     ],
     "deliveryTypeChoices": [
       {
-        "value": 0,
+        "value": 1,
         "display_name": "Russian Post"
       },
       {
-        "value": 1,
+        "value": 2,
         "display_name": "Business Lines"
       },
       {
-        "value": 2,
+        "value": 3,
         "display_name": "PEK"
       },
       {
-        "value": 3,
+        "value": 4,
         "display_name": "GTD (Whale)"
       },
       {
-        "value": 4,
+        "value": 5,
         "display_name": "Energy"
       },
       {
-        "value": 5,
+        "value": 6,
         "display_name": "Railway Expedition"
       },
       {
-        "value": 6,
+        "value": 7,
         "display_name": "Ratek"
       },
       {
-        "value": 7,
+        "value": 8,
         "display_name": "Baikal Service"
       },
       {
-        "value": 8,
+        "value": 9,
         "display_name": "SDEK Parcel"
       }
     ],

@@ -4,30 +4,34 @@ import type { ProductTypeType } from "./productTypes"
 import type { Translation } from "@/app/i18n/dictionaries"
 
 export type Values = Prisma.ProductUncheckedCreateWithoutOrderItemsInput |
-	Prisma.ProductUncheckedUpdateWithoutOrderItemsInput
+  Prisma.ProductUncheckedUpdateWithoutOrderItemsInput
 
 export type Product = Prisma.ProductGetPayload<{
-	select: typeof tables.products.select.objects
+  select: typeof tables.products.select.objects
 }>
 
 export type ProductObject = Prisma.ProductGetPayload<{
-	select: typeof tables.products.select.object
+  select: typeof tables.products.select.object
 }>
 
 export type SerializedProduct = Omit<Product, 'createdAt' | 'updatedAt'> &
 {
-	createdAt: string
-	updatedAt: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type SerializedProductObject = Omit<ProductObject, 'createdAt'> &
 {
-	createdAt?: string
+  createdAt?: string
 }
 
 export type ProductFormProps = {
-  tablePath: string
-  id?: number
+  mutateArgs: {
+    lng: string
+    table: string
+    id?: number
+    message: string
+  }
   initialValues: SerializedProductObject
   productTypes: ProductTypeType[]
   save: string

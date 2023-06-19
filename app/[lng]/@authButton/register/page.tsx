@@ -1,6 +1,6 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import Modal from './Modal'
+import Modal from './_components/Modal'
 
 export default async function Page({
   params: {

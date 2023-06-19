@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
+// const path = require('path')
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: true,
   images: {
@@ -12,10 +13,6 @@ const nextConfig = {
       },
     ],
   },
-  // reactStrictMode: false,
-  // typescript: {
-  //   ignoreBuildErrors: true,
-  // },
   swcMinify: true,
   transpilePackages: ["@mui/system", "@mui/material", "@mui/icons-material"],
   modularizeImports: {
@@ -29,6 +26,22 @@ const nextConfig = {
   // sassOptions: {
   //   includePaths: [path.join(__dirname, 'styles')],
   // },
+  // webpack(config, { dev, isServer }) {
+  //   if (dev && !isServer) {
+  //     const originalEntry = config.entry
+  //     config.entry = async () => {
+  //       const wdrPath = path.resolve(__dirname, './scripts/wdyr.ts')
+  //       const entries = await originalEntry()
+
+  //       if (entries['main.js'] && !entries['main.js'].includes(wdrPath)) {
+  //         entries['main.js'].push(wdrPath)
+  //       }
+  //       return entries
+  //     }
+  //   }
+
+  //   return config
+  // },
 }
 
 module.exports = nextConfig
@@ -38,26 +51,3 @@ module.exports = nextConfig
 // })
 
 // module.exports = withBundleAnalyzer(nextConfig)
-
-// module.exports = {
-//   webpack(config) {
-//     config.module.rules.push({
-//       test: /\.js$/,
-//       use: {
-//         loader: '@swc/loader',
-//         options: {
-//           jsc: {
-//             parser: {
-//               syntax: 'ecmascript',
-//               jsx: true
-//             },
-//             transform: {
-//               react: true
-//             }
-//           }
-//         }
-//       }
-//     });
-//     return config;
-//   }
-// }

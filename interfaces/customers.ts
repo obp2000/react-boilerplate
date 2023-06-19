@@ -26,8 +26,12 @@ export type SerializedCustomerObject = Omit<CustomerObject, 'createdAt'> &
 }
 
 export type CustomerFormProps = {
-	tablePath: string
-	id?: number
+	mutateArgs: {
+		lng: string
+		table: string
+		id?: number
+		message: string
+	}
 	initialValues: SerializedCustomerObject
 	save: string
 	notFound: string
@@ -36,12 +40,12 @@ export type CustomerFormProps = {
 }
 
 export type CityFieldProps = {
-	labels: Translation['customer']['city']
+	labels: Translation['customer']
 	busy: boolean
 	errors: FieldErrors<SerializedCustomerObject>
 	errorMessages: Translation['errorMessages']
 	notFound: string
-	control: Control<SerializedCustomerObject>
+	control: Control<SerializedCustomerObject, any>
 	initialValues: SerializedCustomerObject
 }
 

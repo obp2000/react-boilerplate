@@ -13,14 +13,21 @@ export default async function Page({
     table: string
     id: string
      } }) {
-  const dict = await getDictionary(lng)
+  const {
+    delete: textDelete,
+    yes: okText,
+    no: cancelText,
+    [table as 'customers' | 'products' | 'orders']: {
+      singular
+    },
+    successfully,
+    deleted,
+  } = await getDictionary(lng)
   return <Modal {...{
-    title: `${dict.delete}?`,
-    okText: dict.yes,
-    cancelText: dict.no,
-    url: `/api/${lng}/${table}/${id}`,
-    // labels: dict.auth,
-    // errorMessages: dict.errorMessages,
-    // lng
+    title: `${textDelete}?`,
+    okText,
+    cancelText,
+    message: `${singular} ${successfully.toLowerCase()} ${deleted}`,
+    url: `/api/${table}/${id}`,
   }} />
 }

@@ -4,8 +4,6 @@ import {
   usePathname,
   useRouter,
   useSearchParams,
-  useSelectedLayoutSegment,
-  useSelectedLayoutSegments
 } from 'next/navigation'
 import { useCallback, useTransition } from 'react'
 import { Controller, useForm } from "react-hook-form"
@@ -21,8 +19,8 @@ export default function SearchForm({
   const [isPending, startTransition] = useTransition()
   const pathname = usePathname()
   const table = pathname?.split('/')[2] || 'customers'
-  console.log('segm in search form ', useSelectedLayoutSegment(),
-    useSelectedLayoutSegments())
+  // console.log('segm in search form ', useSelectedLayoutSegment(),
+  //   useSelectedLayoutSegments())
   const { push } = useRouter()
   const onSubmit = useCallback(({ term }: { term?: string }) => {
     startTransition(() => {

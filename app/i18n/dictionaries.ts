@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import enTranslation from './locales/en/translation.json'
 import ruTranslation from './locales/ru/translation.json'
 
@@ -10,6 +11,6 @@ const dictionaries: Dict = {
   ru: () => import('./locales/ru/translation.json').then((module) => module.default),
 }
 
-export async function getDictionary(lng: string) {
+export const getDictionary = cache(async (lng: string) => {
   return dictionaries[lng]()
-}
+})

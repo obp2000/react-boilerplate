@@ -8,7 +8,7 @@ function Field() {
 }
 
 export function Form() {
-  return <div className='flex flex-col'>
+  return <div className='grid grid-cols-2 gap-4 p-2'>
     <Field />
     <Field />
     <Field />

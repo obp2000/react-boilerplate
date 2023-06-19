@@ -2,7 +2,8 @@ import 'server-only'
 
 import {
 	getDictionary,
-	type ModelNames, type Translation
+	type ModelNames,
+	type Translation
 } from '@/app/i18n/dictionaries'
 import { AddCircleOutline } from '@/app/client/icons'
 import Tooltip from '@/app/components/Tooltip'

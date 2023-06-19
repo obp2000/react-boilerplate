@@ -10,13 +10,14 @@ import {
 import { useRouter } from 'next/navigation'
 import { type ReactNode, useTransition, useCallback } from 'react'
 import Button from '@/app/components/Button'
-import { toastError, toastSuccess } from '@/app/components/toast'
+import { toastSuccess } from '@/app/components/toast'
 
 type Props = {
   title: string
   okText: string
   cancelText: string
   url: string
+  message: string
   children?: ReactNode
 }
 
@@ -25,6 +26,7 @@ export default function Modal({
   okText,
   cancelText,
   url,
+  message,
   children,
 }: Props) {
   const { back, refresh } = useRouter()
@@ -32,14 +34,11 @@ export default function Modal({
   const busy = isPending
   const deleteObject = useCallback(async () => {
     const res = await fetch(url, { method: 'DELETE' })
-    const { message } = await res.json()
     if (res.ok) {
       toastSuccess(message)
       refresh()
-    } else {
-      toastError(message)
     }
-  }, [url, refresh])
+  }, [url, refresh, message])
   const onConfirmButtonClick = useCallback(() => {
     back()
     deleteObject()

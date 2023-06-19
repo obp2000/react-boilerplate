@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from '@mui/material'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { useSelectedLayoutSegment } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import {
   type Dispatch,
   type SetStateAction,
@@ -30,15 +30,15 @@ export default function UserButtonMenu({
 }) {
   const [isPending, startTransition] = useTransition()
   const busy = isPending
-  // console.log('segms ', useSelectedLayoutSegments(), segment)
-  const segment = useSelectedLayoutSegment()
+  const pathname = usePathname()
+  // console.log('pathname in user button ', usePathname())
   const onSignOutButtonClick = useCallback(() => {
     handleClose()
-    const signOutOptions = segment === 'user'
-      ? { callbackUrl: (new URL(`/${lng}`, window.location.href)).href}
+    const signOutOptions = pathname.split('/')[2] === 'user'
+      ? { callbackUrl: `/${lng}` }
       : undefined
     signOut(signOutOptions)
-  }, [lng, segment])
+  }, [lng, pathname])
   const handleClose = () => {
     setAnchorEl(null)
   }

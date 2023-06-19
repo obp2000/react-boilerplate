@@ -3,6 +3,7 @@ import tables from '@/app/_tables/tables.json'
 import { Translation } from "@/app/i18n/dictionaries"
 import type {
   Control,
+  FieldArrayWithId,
   FieldErrors,
   UseFieldArrayRemove,
   UseFormSetValue
@@ -52,8 +53,12 @@ export type SerializedOrderObject = Omit<OrderObject, 'createdAt'> &
 }
 
 export type OrderFormProps = {
-  tablePath: string
-  id?: number
+  mutateArgs: {
+    lng: string
+    table: string
+    id?: number
+    message: string
+  }
   initialValues: SerializedOrderObject
   save: string
   add: string
@@ -71,28 +76,28 @@ export type OrderFormProps = {
 }
 
 export type CustomerFieldProps = {
-  label: string
-  labels: Translation['customer']
+  labels: Translation['order']
+  customerLabels: Translation['customer']
   busy: boolean
   errors: FieldErrors<SerializedOrderObject>
   errorMessages: Translation['errorMessages']
   notFound: string,
-  control: Control<SerializedOrderObject>
+  control: Control<SerializedOrderObject, any>
   initialValues: SerializedOrderObject
 }
 
 export type OrderItemProps = {
   index: number
-  product: SerializedOrderObject['orderItems'][number]['product']
   getProductOptionLabel:
     (product: SerializedOrderObject['orderItems'][number]['product']) => string
-  control: Control<SerializedOrderObject>
-  errors: FieldErrors<SerializedOrderObject>
+  control: Control<SerializedOrderObject, any>
+  errors: FieldErrors['root']
   errorMessages: Translation['errorMessages']
   labels: Translation['order']
   units: Translation['units']
   busy: boolean
-  orderItemsValues: SerializedOrderObject['orderItems']
+  initOrderItem: FieldArrayWithId<SerializedOrderObject, 'orderItems', 'id'>
+  orderItem: SerializedOrderObject['orderItems'][number]
   label: string
   okText: string
   cancelText: string
@@ -104,15 +109,15 @@ export type OrderItemProps = {
 
 export type ProductFieldProps = {
   index: number
-  product: SerializedOrderObject['orderItems'][number]['product']
+  initialValues: FieldArrayWithId<SerializedOrderObject, 'orderItems', 'id'>
   getProductOptionLabel:
     (product: SerializedOrderObject['orderItems'][number]['product']) => string
   busy: boolean
-  errors: FieldErrors<SerializedOrderObject>
+  errors?: FieldErrors['root']
   errorMessages: Translation['errorMessages']
   setValue: UseFormSetValue<SerializedOrderObject>
   notFound: string
-  control: Control<SerializedOrderObject>
+  control: Control<SerializedOrderObject, any>
 }
 
 export type OrderRowType = (arg0: Order) => (string | JSX.Element)[]
