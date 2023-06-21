@@ -43,16 +43,18 @@ function FormComp({
     defaultValues: initialValues,
     resolver: superstructResolver(struct)
   })
-  const toValues = useCallback(
-    ({ city, createdAt, ...values }: SerializedCustomerObject) =>
-      onSubmit({ cityId: city?.id, ...values })
-    , [onSubmit])
   const onSubmitButtonClick = useCallback(() => {
-    handleSubmit(toValues)()
-  }, [handleSubmit, toValues])
+    handleSubmit(
+      ({ city, createdAt, ...values }: SerializedCustomerObject) =>
+        onSubmit({ cityId: city?.id, ...values })
+    )()
+  },
+    [handleSubmit, onSubmit]
+  )
   // console.log('errors ', errors)
   const busy = isSubmitting || isPending
-  return <div className={`grid grid-cols-2 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
+  return <div
+    className={`grid grid-cols-2 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
     <Nick {...{ control, labels, busy, errorMessages, errors }} />
     <Name {...{ control, labels, busy }} />
     <CityField {...{

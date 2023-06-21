@@ -6,30 +6,51 @@ import { findManyArgs } from '@/app/api/customers/route'
 import type { SerializedCustomer } from '@/interfaces/customers'
 import Date from '@/app/components/Date'
 import { cache } from 'react'
-import { createPaginator } from 'prisma-pagination'
+import { type PaginateFunction, createPaginator } from 'prisma-pagination'
 import type { Customer } from '@/interfaces/customers'
 import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
 
+// const getObjects = cache(async function ({
+// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+// 	searchParams: {
+// 		page = '1',
+// 		term,
+// 	}
+// }: {
+// 	perPage: number
+// 	searchParams: {
+// 		page?: string
+// 		term?: string
+// 	}
+// }) {
+// 	const paginate = createPaginator({ perPage })
+// 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
+// 		prisma.customer,
+// 		findManyArgs(term),
+// 		{ page })
+// })
+
 const getObjects = cache(async function ({
-	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+	paginate,
 	searchParams: {
 		page = '1',
 		term,
 	}
 }: {
-	perPage: number
+	paginate: PaginateFunction
 	searchParams: {
 		page?: string
 		term?: string
 	}
 }) {
-	const paginate = createPaginator({ perPage })
 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
 		prisma.customer,
 		findManyArgs(term),
 		{ page })
 })
+
+
 
 function getTableRow({ customer }: Translation) {
 	const cityName = getGetCityName(customer.city?.pindex)
@@ -62,6 +83,7 @@ export default async function Page(props: {
 		...props,
 		table,
 		getObjects,
+		createPaginator,
 		getTableRow,
 	}} />
 }

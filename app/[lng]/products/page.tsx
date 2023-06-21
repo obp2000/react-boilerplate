@@ -6,25 +6,44 @@ import {
 import type { Product, SerializedProduct } from '@/interfaces/products'
 import Date from '@/app/components/Date'
 import { prisma } from '@/services/prisma'
-import { createPaginator } from 'prisma-pagination'
+import { type PaginateFunction, createPaginator } from 'prisma-pagination'
 import { Prisma } from "@prisma/client"
 import { findManyArgs } from '@/app/api/products/route'
 import { cache } from 'react'
 
+// const getObjects = cache(async function ({
+// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+// 	searchParams: {
+// 		page = '1',
+// 		term,
+// 	}
+// }: {
+// 	perPage: number
+// 	searchParams: {
+// 		page?: string
+// 		term?: string
+// 	}
+// }) {
+// 	const paginate = createPaginator({ perPage })
+// 	return paginate<Product, Prisma.ProductFindManyArgs>(
+// 		prisma.product,
+// 		findManyArgs(term),
+// 		{ page })
+// })
+
 const getObjects = cache(async function ({
-	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+	paginate,
 	searchParams: {
 		page = '1',
 		term,
 	}
 }: {
-	perPage: number
+	paginate: PaginateFunction
 	searchParams: {
 		page?: string
 		term?: string
 	}
 }) {
-	const paginate = createPaginator({ perPage })
 	return paginate<Product, Prisma.ProductFindManyArgs>(
 		prisma.product,
 		findManyArgs(term),
@@ -63,6 +82,7 @@ export default async function Page(props: {
 		...props,
 		table,
 		getObjects,
+		createPaginator,
 		getTableRow,
 	}} />
 }

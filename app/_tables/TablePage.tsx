@@ -12,7 +12,7 @@ import type { Order, SerializedOrder } from '@/interfaces/orders'
 import type { Product, SerializedProduct } from '@/interfaces/products'
 import { getUsername } from '@/services/getUser'
 import Link from 'next/link'
-import type { PaginatedResult } from 'prisma-pagination'
+import { type PaginateFunction, type PaginatedResult, type PaginateOptions } from 'prisma-pagination'
 import { Delete } from '@/app/client/icons'
 
 type RowType<T> = (arg0: T) => (string | number | null | JSX.Element)[]
@@ -45,23 +45,37 @@ function RenderTableFields({
 		{fields.map((field: string | JSX.Element, key: number) => <td
 			key={key}
 			className='whitespace-nowrap px-6 py-4'>
-				{field}
-			</td>)}
+			{field}
+		</td>)}
 	</>
 }
 
-type GetObjects<T> = ({ perPage, searchParams }: {
-	perPage: number
-	searchParams: { page?: string, term?: string }
+// type GetObjects1<T> = ({ perPage, searchParams }: {
+// 	perPage: number
+// 	searchParams: { page?: string, term?: string }
+// }) => Promise<PaginatedResult<T>>
+
+type GetObjects<T> = ({
+	paginate,
+	searchParams: { page, term }
+}: {
+	paginate: PaginateFunction
+	searchParams: {
+		page?: string
+		term?: string
+	}
 }) => Promise<PaginatedResult<T>>
 
 type GetTableRow<T> = (dict: Translation) => RowType<T>
+
+type CreatePaginator = (defaultOptions: PaginateOptions) => PaginateFunction
 
 export async function TablePage(props: {
 	params: { lng: string }
 	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Customer>
+	createPaginator: CreatePaginator
 	getTableRow: GetTableRow<SerializedCustomer>
 }): Promise<JSX.Element>
 export async function TablePage(props: {
@@ -69,6 +83,7 @@ export async function TablePage(props: {
 	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Product>
+	createPaginator: CreatePaginator
 	getTableRow: GetTableRow<SerializedProduct>
 }): Promise<JSX.Element>
 export async function TablePage(props: {
@@ -76,6 +91,7 @@ export async function TablePage(props: {
 	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<Order>
+	createPaginator: CreatePaginator
 	getTableRow: GetTableRow<SerializedOrder>
 }): Promise<JSX.Element>
 export async function TablePage({
@@ -85,37 +101,36 @@ export async function TablePage({
 	searchParams,
 	table,
 	getObjects,
+	createPaginator,
 	getTableRow,
 }: {
 	params: { lng: string }
 	searchParams: { page?: string, term?: string }
 	table: string
 	getObjects: GetObjects<any>
+	createPaginator: CreatePaginator
 	getTableRow: GetTableRow<any>
 }): Promise<JSX.Element> {
 	const perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE)
-	const dict = await getDictionary(lng)
+	const paginate = createPaginator({ perPage })
+	const [
+		{ data, meta: { lastPage, total } },
+		dict,
+		username
+	] = await Promise.all([
+		getObjects({ paginate, searchParams }),
+		getDictionary(lng),
+		await getUsername()
+	]) 
 	const { edit, delete: deleteButtonLabel } = dict
-	// const [{ data, meta }] = await Promise.all([
-	// 	getObjects({ perPage, searchParams }),
-	// ])
 	console.log('render objects........')
-	// const paginate = createPaginator({ perPage })
-	const { data, meta: { lastPage, total } } = await getObjects({ perPage, searchParams })
-	// const { data, meta } = await paginate<Customer, Prisma.CustomerFindManyArgs>(
-	// 	prisma.customer,
-	// 	findManyArgs(searchParams),
-	// 	{
-	// 		page: String(searchParams.page || '1')
-	// 	})
-	// const data = await prisma.customer.findMany(findManyArgs(searchParams))
 	const modelName = dict[table as keyof ModelNames].singular
 	const row = getTableRow(dict)
-	const username = await getUsername()
 	return <>
 		<tbody>
 			{data.map((object) => <tr key={object.id}
-				className='border-b dark:border-neutral-500' aria-label={modelName}>
+				className='border-b dark:border-neutral-500'
+				aria-label={modelName}>
 				<RenderTableFields {...{ row, object }} />
 				{username && <td className='whitespace-nowrap px-6 py-4'>
 					<Tooltip title={edit}>
@@ -151,32 +166,3 @@ export async function TablePage({
 		</tfoot>
 	</>
 }
-
-
-					// {/*					<DeleteButton {...{
-					// 	url: `/api${tablePath}/${object.id}`,
-					// 	label: deleteButtonLabel,
-					// 	okText: yes,
-					// 	cancelText: no,
-					// }} />*/}
-
-			// 	return <TableRow aria-label={modelName}>
-			// 		<RenderTableFields {...{ row, object }} />
-			// 		<TableCell>
-			// 			<Tooltip title={edit}>
-			// 				<Link
-			// 					aria-label={edit}
-			// 					href={`${tablePath}/${object.id}`}
-			// 				// prefetch={true}
-			// 				>
-			// 					<Edit color='primary' />
-			// 				</Link>
-			// 			</Tooltip>
-			// 			<DeleteButton {...{
-			// 				url: `/api${tablePath}/${object.id}`,
-			// 				label: deleteButtonLabel,
-			// 				okText: yes,
-			// 				cancelText: no,
-			// 			}} />
-			// 		</TableCell>
-			// 	</TableRow>

@@ -12,10 +12,11 @@ export function getDisplayName(
   return currentChoice?.display_name
 }
 
-export function getGetOptionLabel(labels: Translation['product']) {
-  const threadsChoices = labels.threadsChoices
-  const contentsChoices = labels.contentsChoices
-  const fleeceLabel = labels.fleece.toLowerCase()
+export function getGetOptionLabel({
+  threadsChoices,
+  contentsChoices,
+  fleece
+}: Translation['product']) {
   return (product: Partial<Product> | null) => {
     if (!product) { return '' }
     const label = []
@@ -23,7 +24,7 @@ export function getGetOptionLabel(labels: Translation['product']) {
     label.push(getDisplayName(threadsChoices, product.threads))
     label.push(getDisplayName(contentsChoices, product.contents))
     if (product.fleece) {
-      label.push(fleeceLabel)
+      label.push(fleece.toLowerCase())
     }
     label.push(product.name)
     return label.filter((name) => name !== null && name !== undefined).join(' ')
