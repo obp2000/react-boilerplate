@@ -1,17 +1,14 @@
 import consts from './consts.json'
-import type { Translation } from "@/app/i18n/dictionaries"
 
 export default function GiftWeight({
-	labels: {
-		gift
-	},
+	label,
 	giftNeeded,
 }: {
-	labels: Translation['order']
+	label: string
 	giftNeeded: boolean
 }) {
 	if (!giftNeeded) { return null }
 	return <>
-		{` + ${consts.GIFT_WEIGHT}(${gift})`}
+		{` + ${consts.GIFT_WEIGHT}(${label})`}
 	</>
 }

@@ -1,4 +1,4 @@
-import { TablePage } from '@/app/_tables/TablePage'
+import { TablePage } from '../_components/TablePage'
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Order, SerializedOrder } from '@/interfaces/orders'
 import Date from '@/app/components/Date'
@@ -8,7 +8,7 @@ import { Prisma } from '@prisma/client'
 import { cache } from 'react'
 import type { PaginateFunction, PaginateOptions } from 'prisma-pagination'
 
-export function where(term?: string | null) {
+function where(term?: string | null) {
   if (!term) { return {} }
   const containsTerm = { contains: term }
   return {
@@ -99,7 +99,7 @@ const createPaginator = (defaultOptions: PaginateOptions): PaginateFunction => {
   }
 }
 
-export function findManyArgs(term?: string | null):
+function findManyArgs(term?: string | null):
   Prisma.OrderFindManyArgs {
   return {
     where: where(term),
@@ -125,7 +125,7 @@ const getObjects = cache(async function ({
     { page })
 })
 
-export function getTableRow({ customer }: Translation) {
+function getTableRow({ customer }: Translation) {
   const shortName = getShortName(customer)
   return function tableRow({
     id,

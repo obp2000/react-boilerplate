@@ -16,14 +16,14 @@ function metersInRoll({
 
 export default function MetersInRoll({
 	watch,
-	labels,
+	label,
 	units: {
 		meter_short: meterShort
 	},
 }: {
 	watch: UseFormWatch<SerializedProductObject>
-	labels: Translation['product']
-	units: Translation['units']
+	label: string
+	units: Partial<Translation['units']>
 }) {
   const [
     width,
@@ -36,11 +36,11 @@ export default function MetersInRoll({
   ])
 	return <TextField
 		id="metersInRoll"
-		label={labels.metersInRoll}
+		label={label}
 		type="number"
 		size="small"
 		disabled
 		value={metersInRoll({ weight, density, width }).toFixed(2)}
-		InputProps={unitsLabel(meterShort)}
+		InputProps={unitsLabel(String(meterShort))}
 	/>
 }

@@ -1,4 +1,4 @@
-import { TablePage } from '@/app/_tables/TablePage'
+import { TablePage } from '../_components/TablePage'
 import type { Translation } from '@/app/i18n/dictionaries'
 import { getGetOptionLabel as getGetCityName } from '@/app/customer/cities/helpers'
 import { getShortName } from '@/app/customer/serverHelpers'
@@ -10,26 +10,6 @@ import { type PaginateFunction, createPaginator } from 'prisma-pagination'
 import type { Customer } from '@/interfaces/customers'
 import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
-
-// const getObjects = cache(async function ({
-// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
-// 	searchParams: {
-// 		page = '1',
-// 		term,
-// 	}
-// }: {
-// 	perPage: number
-// 	searchParams: {
-// 		page?: string
-// 		term?: string
-// 	}
-// }) {
-// 	const paginate = createPaginator({ perPage })
-// 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
-// 		prisma.customer,
-// 		findManyArgs(term),
-// 		{ page })
-// })
 
 const getObjects = cache(async function ({
 	paginate,
@@ -49,8 +29,6 @@ const getObjects = cache(async function ({
 		findManyArgs(term),
 		{ page })
 })
-
-
 
 function getTableRow({ customer }: Translation) {
 	const cityName = getGetCityName(customer.city?.pindex)
@@ -87,3 +65,24 @@ export default async function Page(props: {
 		getTableRow,
 	}} />
 }
+
+
+// const getObjects = cache(async function ({
+// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+// 	searchParams: {
+// 		page = '1',
+// 		term,
+// 	}
+// }: {
+// 	perPage: number
+// 	searchParams: {
+// 		page?: string
+// 		term?: string
+// 	}
+// }) {
+// 	const paginate = createPaginator({ perPage })
+// 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
+// 		prisma.customer,
+// 		findManyArgs(term),
+// 		{ page })
+// })

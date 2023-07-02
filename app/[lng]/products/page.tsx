@@ -1,4 +1,4 @@
-import { TablePage } from '@/app/_tables/TablePage'
+import { TablePage } from '../_components/TablePage'
 import type { Translation } from '@/app/i18n/dictionaries'
 import {
 	getGetOptionLabel as getGetProductName
@@ -10,26 +10,6 @@ import { type PaginateFunction, createPaginator } from 'prisma-pagination'
 import { Prisma } from "@prisma/client"
 import { findManyArgs } from '@/app/api/products/route'
 import { cache } from 'react'
-
-// const getObjects = cache(async function ({
-// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
-// 	searchParams: {
-// 		page = '1',
-// 		term,
-// 	}
-// }: {
-// 	perPage: number
-// 	searchParams: {
-// 		page?: string
-// 		term?: string
-// 	}
-// }) {
-// 	const paginate = createPaginator({ perPage })
-// 	return paginate<Product, Prisma.ProductFindManyArgs>(
-// 		prisma.product,
-// 		findManyArgs(term),
-// 		{ page })
-// })
 
 const getObjects = cache(async function ({
 	paginate,
@@ -50,7 +30,7 @@ const getObjects = cache(async function ({
 		{ page })
 })
 
-export function getTableRow({ product }: Translation) {
+function getTableRow({ product }: Translation) {
 	const productName = getGetProductName(product)
 	return function tableRow({
 		id,
@@ -86,3 +66,24 @@ export default async function Page(props: {
 		getTableRow,
 	}} />
 }
+
+
+// const getObjects = cache(async function ({
+// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
+// 	searchParams: {
+// 		page = '1',
+// 		term,
+// 	}
+// }: {
+// 	perPage: number
+// 	searchParams: {
+// 		page?: string
+// 		term?: string
+// 	}
+// }) {
+// 	const paginate = createPaginator({ perPage })
+// 	return paginate<Product, Prisma.ProductFindManyArgs>(
+// 		prisma.product,
+// 		findManyArgs(term),
+// 		{ page })
+// })

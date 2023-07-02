@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Russian Post"
+  },
+  {
+    "id": 2,
+    "name": "Business Lines"
+  },
+  {
+    "id": 3,
+    "name": "PEK"
+  },
+  {
+    "id": 4,
+    "name": "GTD (Whale)"
+  },
+  {
+    "id": 5,
+    "name": "Energy"
+  },
+  {
+    "id": 6,
+    "name": "Railway Expedition"
+  },
+  {
+    "id": 7,
+    "name": "Ratek"
+  },
+  {
+    "id": 8,
+    "name": "Baikal Service"
+  },
+  {
+    "id": 9,
+    "name": "SDEK Parcel"
+  }
+]

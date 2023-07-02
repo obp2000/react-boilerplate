@@ -23,8 +23,8 @@ export default async function NavBar({
 }) {
 	const dict = await getDictionary(lng)
 	const username = await getUsername()
-	return <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-blue-600 py-2 shadow-md shadow-black/5 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4">
-		<div className="flex flex-wrap w-full items-center justify-between px-3">
+	return <nav className="flex flex-no-wrap justify-between items-center relative w-full bg-blue-600 py-2 shadow-md shadow-black/5 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4">
+		<div className="flex flex-wrap justify-between items-center w-full px-3">
 			<div className='flex md:hidden'>
 				<NavbarXsMenu {...{ lng, dict }} />
 			</div>

@@ -1,4 +1,4 @@
-import { TableLayout } from '@/app/_tables/TableLayout'
+import { TableLayout } from '../_components/TableLayout'
 import type { Translation } from '@/app/i18n/dictionaries'
 
 function tableLabels({ product: {

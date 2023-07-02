@@ -3,15 +3,14 @@ import type { Translation } from "@/app/i18n/dictionaries"
 import type { RegisterValues } from "@/interfaces/users"
 import { TextField } from '@mui/material'
 import { useMemo } from 'react'
-import {
-	Controller,
-	type Control,
-	type FieldError,
-	type FieldErrors
+import type {
+	FieldError,
+	FieldErrors,
+	UseFormRegister
 } from "react-hook-form"
 
 export default function Password2({
-	control,
+	register,
 	labels: {
 		password2,
 		password2HelpText
@@ -20,8 +19,8 @@ export default function Password2({
 	errorMessages,
 	errors
 }: {
-	control: Control<RegisterValues, any>
-	labels: Translation['auth']
+	register: UseFormRegister<RegisterValues>
+	labels: Partial<Translation['auth']>
 	busy: boolean
 	errorMessages: Translation['errorMessages']
 	errors: FieldErrors<RegisterValues>
@@ -31,19 +30,15 @@ export default function Password2({
 			({ type }) => type === 'object')
 			: undefined,
 		[errors]) as FieldError
-	return <Controller name="password2"
-		control={control}
-		render={({ field }) => <TextField {...field}
-			type="password"
-			id="password2"
-			label={password2}
-			autoComplete="new-password"
-			variant="outlined"
-			size="small"
-			disabled={busy}
-			error={!!objectError}
-			helperText={errorText(errorMessages, objectError) ||
-				password2HelpText}
-		/>}
+	return <TextField {...register('password2')}
+		type="password"
+		label={password2}
+		autoComplete="new-password"
+		variant="outlined"
+		size="small"
+		disabled={busy}
+		error={!!objectError}
+		helperText={errorText(errorMessages, objectError) ||
+			password2HelpText}
 	/>
 }

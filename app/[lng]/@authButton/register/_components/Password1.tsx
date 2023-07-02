@@ -2,15 +2,10 @@ import { errorText } from '@/app/_objects/formHelpers'
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { RegisterValues } from "@/interfaces/users"
 import { TextField } from '@mui/material'
-import {
-	Controller,
-	type Control,
-	type FieldError,
-	type FieldErrors
-} from "react-hook-form"
+import type { FieldErrors, UseFormRegister } from "react-hook-form"
 
 export default function Password1({
-	control,
+	register,
 	labels: {
 		password1,
 		password1HelpText
@@ -21,26 +16,22 @@ export default function Password1({
 		password1: error
 	},
 }: {
-	control: Control<RegisterValues, any>
-	labels: Translation['auth']
+	register: UseFormRegister<RegisterValues>
+	labels: Partial<Translation['auth']>
 	busy: boolean
 	errorMessages: Translation['errorMessages']
 	errors: FieldErrors<RegisterValues>
 }) {
-	return <Controller name="password1"
-		control={control}
-		render={({ field }) => <TextField {...field}
-			type="password"
-			id="password1"
-			required
-			label={password1}
-			autoComplete="new-password"
-			variant="outlined"
-			size="small"
-			disabled={busy}
-			error={!!error}
-			helperText={errorText(errorMessages, error as FieldError) ||
-				password1HelpText}
-		/>}
+	return <TextField {...register('password1')}
+		type="password"
+		required
+		label={password1}
+		autoComplete="new-password"
+		variant="outlined"
+		size="small"
+		disabled={busy}
+		error={!!error}
+		helperText={errorText(errorMessages, error) ||
+			password1HelpText}
 	/>
 }

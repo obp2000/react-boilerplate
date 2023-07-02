@@ -121,26 +121,14 @@
     "densityShop": "Shop density",
     "createdAt": "Created",
     "updatedAt": "Updated",
-    "threadsChoices": [
-      {
-        "value": 0,
-        "display_name": "two threads"
-      },
-      {
-        "value": 1,
-        "display_name": "three threads"
-      }
-    ],
-    "contentsChoices": [
-      {
-        "value": 0,
-        "display_name": "with lycra"
-      },
-      {
-        "value": 1,
-        "display_name": "100% cotton"
-      }
-    ]
+    "threadsLabels": {
+      "two threads": "two threads",
+      "three threads": "three threads"
+    },
+    "contentsLabels": {
+      "with lycra": "with lycra",
+      "100% cotton": "100% cotton"
+    }
   },
   "order": {
     "id": "Id",
@@ -161,70 +149,25 @@
     "samples": "Samples",
     "createdAt": "Created",
     "updatedAt": "Updated",
-    "packetChoices": [
-      {
-        "value": 25,
-        "display_name": "25"
-      },
-      {
-        "value": 27,
-        "display_name": "27"
-      },
-      {
-        "value": 50,
-        "display_name": "50"
-      },
-      {
-        "value": 55,
-        "display_name": "55"
-      },
-      {
-        "value": 72,
-        "display_name": "72"
-      },
-      {
-        "value": 85,
-        "display_name": "85"
-      }
-    ],
-    "deliveryTypeChoices": [
-      {
-        "value": 1,
-        "display_name": "Russian Post"
-      },
-      {
-        "value": 2,
-        "display_name": "Business Lines"
-      },
-      {
-        "value": 3,
-        "display_name": "PEK"
-      },
-      {
-        "value": 4,
-        "display_name": "GTD (Whale)"
-      },
-      {
-        "value": 5,
-        "display_name": "Energy"
-      },
-      {
-        "value": 6,
-        "display_name": "Railway Expedition"
-      },
-      {
-        "value": 7,
-        "display_name": "Ratek"
-      },
-      {
-        "value": 8,
-        "display_name": "Baikal Service"
-      },
-      {
-        "value": 9,
-        "display_name": "SDEK Parcel"
-      }
-    ],
+    "packetLabels": {
+      "25": "25",
+      "27": "27",
+      "50": "50",
+      "55": "55",
+      "72": "72",
+      "85": "85"
+    },
+    "deliveryTypeLabels": {
+      "Russian Post": "Russian Post",
+      "Business Lines": "Business Lines",
+      "PEK": "PEK",
+      "GTD (Whale)": "GTD (Whale)",
+      "Energy": "Energy",
+      "Railway Expedition": "Railway Expedition",
+      "Ratek": "Ratek",
+      "Baikal Service": "Baikal Service",
+      "SDEK Parcel": "SDEK Parcel"
+    },
     "orderItem": {
       "product": "Product",
       "amount": "Amount",

@@ -12,42 +12,52 @@ import type { Product } from '@/interfaces/products'
 import type { TextFieldProps } from '@mui/material/TextField'
 import type { FieldError, ControllerRenderProps } from "react-hook-form"
 import { Translation } from '@/app/i18n/dictionaries'
-import { CircularProgress, TextField, InputAdornment } from '@mui/material'
+import {
+  CircularProgress,
+  TextField,
+  InputAdornment,
+  type AutocompleteInputChangeReason,
+  type InputBaseComponentProps
+} from '@mui/material'
+
+type Result = (
+  _event: SyntheticEvent,
+  term: string,
+  reason: AutocompleteInputChangeReason
+) => Promise<void | Response> | undefined
 
 export function onSearch(
-  searchPath: string | undefined,
+  searchPath: string,
   setData: Dispatch<SetStateAction<Product[]>>,
   setBusy: Dispatch<SetStateAction<boolean>>,
   currentValue: Product | null
-): (_event: SyntheticEvent, term: string) => Promise<void | Response> | undefined
+): Result
 export function onSearch(
-  searchPath: string | undefined,
+  searchPath: string,
   setData: Dispatch<SetStateAction<City[]>>,
   setBusy: Dispatch<SetStateAction<boolean>>,
   currentValue: City | null
-): (_event: SyntheticEvent, term: string) => Promise<void | Response> | undefined
+): Result
 export function onSearch(
-  searchPath: string | undefined,
+  searchPath: string,
   setData: Dispatch<SetStateAction<Customer[]>>,
   setBusy: Dispatch<SetStateAction<boolean>>,
   currentValue: Customer | null
-): (_event: SyntheticEvent, term: string) => Promise<void | Response> | undefined
+): Result
 export function onSearch(
-  searchPath: string | undefined,
+  searchPath: string,
   setData: Dispatch<SetStateAction<any>>,
   setBusy: Dispatch<SetStateAction<boolean>>,
   currentValue: any
-): (_event: SyntheticEvent, term: string) => Promise<void | Response> | undefined {
-  return (_event: SyntheticEvent, term: string) => {
-    if (typeof term === 'string' && term.length === 2) {
+): Result {
+  return (_, term, reason) => {
+    if (reason === 'input' && typeof term === 'string' && term.length > 1) {
       setBusy(true)
       const searchParams = new URLSearchParams()
       searchParams.set('term', term)
       return fetch(`/api/${searchPath}?${searchParams}`)
         .then(res => res.json()
           .then((results) => {
-            // console.log('results.includes(initData) ', results.map(({ id }) => id).includes(initData.id))
-            // results.
             setData(currentValue ? [currentValue, ...results] : results)
             setBusy(false)
           }))
@@ -64,49 +74,40 @@ export function isOptionEqualToValue(option: anyObject, value: anyObject) {
 export function getRenderInput({
   label,
   error,
-  busy,
+  busy: disabled,
   loading,
   errorMessages,
-  field,
-  ref,
+  field: {
+    ref,
+    ...field
+  },
 }: {
   label: string
   error?: FieldError
   busy: boolean
   loading: boolean
   errorMessages: Translation['errorMessages']
-  field?: Omit<ControllerRenderProps, 'onChange' | 'ref'>
-  ref?: ControllerRenderProps['ref']
+  field: Omit<ControllerRenderProps, 'onChange'>
 }) {
-  return function renderInput(params: JSX.IntrinsicAttributes & TextFieldProps) {
-    const helperText = error
-      ? errorMessages[error.message as keyof Translation['errorMessages']]
-      : undefined
-    const InputProps = {
-      ...params.InputProps,
-      endAdornment: <Fragment>
-        {loading ? <CircularProgress color="inherit" size={15} /> : null}
-        {params.InputProps?.endAdornment}
-      </Fragment>
-    }
-    const inputProps = {
-      ...params.inputProps,
-      autoComplete: 'new-password',
-    }
-    let fieldProps = {} as TextFieldProps
-    if (field) {
-      fieldProps = field
-    }
-    if (ref) {
-      fieldProps.inputRef = ref
-    }
-    return <TextField {...params} {...fieldProps}
-      label={label}
-      disabled={busy}
-      error={!!error}
-      helperText={helperText}
-      InputProps={InputProps}
-      inputProps={inputProps}
+  return ({
+    InputProps,
+    inputProps,
+    ...params
+  }: JSX.IntrinsicAttributes & TextFieldProps) => {
+    const endAdornment = <>
+      {loading ? <CircularProgress color="inherit" size={15} /> : null}
+      {InputProps?.endAdornment}
+    </>
+    return <TextField {...params} {...field}
+      {...{
+        inputRef: ref,
+        label,
+        disabled,
+        error: !!error,
+        helperText: errorText(errorMessages, error),
+        InputProps: { ...InputProps, endAdornment },
+        inputProps: { ...inputProps, autoComplete: 'new-password' },
+      }}
     />
   }
 }
@@ -133,8 +134,21 @@ export function unitsLabel(label: string) {
 }
 
 export function errorText(
-  errorMessages: Translation['errorMessages'],
+  errorMessages?: Translation['errorMessages'],
   error?: FieldError,
 ) {
-  return error && errorMessages[error.message as keyof Translation['errorMessages']]
+  return error && errorMessages?.[error.message as keyof Translation['errorMessages']]
 }
+
+export const inputNumeric = {
+  inputMode: 'numeric',
+  pattern: '[0-9]*',
+  step: '1',
+  min: 0,
+} as InputBaseComponentProps
+
+export const inputDecimal = {
+  inputMode: 'decimal',
+  step: '0.1',
+  min: 0,
+} as InputBaseComponentProps

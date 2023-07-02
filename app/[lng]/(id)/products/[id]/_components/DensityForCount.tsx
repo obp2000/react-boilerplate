@@ -17,15 +17,15 @@ function densityForCount({
 
 export default function DensityForCount({
 	watch,
-	labels,
+	label,
 	units: {
 		gram_short: gramShort,
 		meter_short: meterShort
 	},
 }: {
 	watch: UseFormWatch<SerializedProductObject>
-	labels: Translation['product']
-	units: Translation['units']
+	label: string
+	units: Partial<Translation['units']>
 }) {
 	const [
 		weightForCount,
@@ -37,8 +37,7 @@ export default function DensityForCount({
 		'width',
 	])
 	return <TextField
-		id="densityForCount"
-		label={labels.densityForCount}
+		label={label}
 		type="number"
 		size="small"
 		disabled

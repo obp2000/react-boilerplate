@@ -121,26 +121,14 @@
     "densityShop": "Плотность для витрины",
     "createdAt": "Создан",
     "updatedAt": "Обновлен",
-    "threadsChoices": [
-      {
-        "value": 0,
-        "display_name": "двухнитка"
-      },
-      {
-        "value": 1,
-        "display_name": "трёхнитка"
-      }
-    ],
-    "contentsChoices": [
-      {
-        "value": 0,
-        "display_name": "с лайкрой"
-      },
-      {
-        "value": 1,
-        "display_name": "100% хлопок"
-      }
-    ]
+    "threadsLabels": {
+      "two threads": "двухнитка",
+      "three threads": "трёхнитка"
+    },
+    "contentsLabels": {
+      "with lycra": "с лайкрой",
+      "100% cotton": "100% хлопок"
+    }
   },
   "order": {
     "id": "Id",
@@ -161,70 +149,25 @@
     "samples": "Образцы",
     "createdAt": "Создан",
     "updatedAt": "Обновлен",
-    "packetChoices": [
-      {
-        "value": 25,
-        "display_name": "25"
-      },
-      {
-        "value": 27,
-        "display_name": "27"
-      },
-      {
-        "value": 50,
-        "display_name": "50"
-      },
-      {
-        "value": 55,
-        "display_name": "55"
-      },
-      {
-        "value": 72,
-        "display_name": "72"
-      },
-      {
-        "value": 85,
-        "display_name": "85"
-      }
-    ],
-    "deliveryTypeChoices": [
-      {
-        "value": 1,
-        "display_name": "Почта России"
-      },
-      {
-        "value": 2,
-        "display_name": "Деловые линии"
-      },
-      {
-        "value": 3,
-        "display_name": "ПЭК"
-      },
-      {
-        "value": 4,
-        "display_name": "GTD (Кит)"
-      },
-      {
-        "value": 5,
-        "display_name": "Энергия"
-      },
-      {
-        "value": 6,
-        "display_name": "ЖелДор Экспедиция"
-      },
-      {
-        "value": 7,
-        "display_name": "Ратек"
-      },
-      {
-        "value": 8,
-        "display_name": "Байкал Сервис"
-      },
-      {
-        "value": 9,
-        "display_name": "СДЭК Посылочка"
-      }
-    ],
+    "packetLabels": {
+      "25": "25",
+      "27": "27",
+      "50": "50",
+      "55": "55",
+      "72": "72",
+      "85": "85"
+    },
+    "deliveryTypeLabels": {
+      "Russian Post": "Почта России",
+      "Business Lines":  "Деловые линии",
+      "PEK": "ПЭК",
+      "GTD (Whale)": "GTD (Кит)",
+      "Energy": "Энергия",
+      "Railway Expedition": "ЖелДор Экспедиция",
+      "Ratek": "Ратек",
+      "Baikal Service": "Байкал Сервис",
+      "SDEK Parcel": "СДЭК Посылочка"
+    },
     "orderItem": {
       "product": "Ткань",
       "amount": "Колич",

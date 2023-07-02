@@ -44,7 +44,7 @@ function RenderTableFields({
 	return <>
 		{fields.map((field: string | JSX.Element, key: number) => <td
 			key={key}
-			className='whitespace-nowrap px-6 py-4'>
+			className='border whitespace-nowrap px-6 py-4'>
 			{field}
 		</td>)}
 	</>
@@ -129,10 +129,10 @@ export async function TablePage({
 	return <>
 		<tbody>
 			{data.map((object) => <tr key={object.id}
-				className='border-b dark:border-neutral-500'
+				className='hover:bg-slate-200 dark:border-neutral-500'
 				aria-label={modelName}>
 				<RenderTableFields {...{ row, object }} />
-				{username && <td className='whitespace-nowrap px-6 py-4'>
+				{username && <td className='border whitespace-nowrap px-2 py-4'>
 					<Tooltip title={edit}>
 						<Link aria-label={edit}
 							href={`/${lng}/${table}/${object.id}`}
@@ -152,7 +152,7 @@ export async function TablePage({
 			</tr>)}
 		</tbody>
 		<tfoot>
-			<tr className='border-b dark:border-neutral-500'>
+			<tr className='dark:border-neutral-500'>
 				<td className='whitespace-nowrap px-6 py-4' />
 				<td className='whitespace-nowrap px-6 py-4' >
 					{`${dict.total}: ${total}`}

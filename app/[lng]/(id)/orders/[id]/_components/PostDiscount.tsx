@@ -1,11 +1,10 @@
 import { unitsLabel } from '@/app/_objects/formHelpers'
-import type { Translation } from "@/app/i18n/dictionaries"
 import type { SerializedOrderObject } from "@/interfaces/orders"
 import { TextField } from '@mui/material'
 import type { UseFormWatch } from "react-hook-form"
 import { postCostWithPacket } from './PostCostWithPacket'
 import consts from './consts.json'
-import { orderItemsCost } from './OrderItemsCost'
+import { orderItemsCost } from './OrderItemsTotals'
 
 export function postDiscount({
 	orderItems,
@@ -24,10 +23,10 @@ export function postDiscount({
 
 export default function PostDiscount({
 	watch,
-	labels,
+	label,
 }: {
 	watch: UseFormWatch<SerializedOrderObject>
-	labels: Translation['order']
+	label: string
 }) {
 	const [
 		orderItems,
@@ -39,7 +38,7 @@ export default function PostDiscount({
 		'packet'
 	])
 	return <TextField
-		label={labels.postDiscount}
+		label={label}
 		size="small"
 		value={postDiscount({ orderItems, postCost, packet }).toFixed(2)}
 		disabled

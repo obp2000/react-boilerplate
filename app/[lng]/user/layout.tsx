@@ -2,7 +2,7 @@ import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
 import type { PropsWithChildren } from 'react'
 
-export async function UserLayout({
+async function UserLayout({
   children,
   params: {
     lng = fallbackLng

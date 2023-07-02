@@ -1,16 +1,15 @@
+import { errorText } from '@/app/_objects/formHelpers'
 import type { Translation } from "@/app/i18n/dictionaries"
 import { TextField } from '@mui/material'
 import type { SignInOptions } from "next-auth/react"
 import {
-	Controller,
-	type Control,
+	type FieldError,
 	type FieldErrors,
-	type FieldError
+	type UseFormRegister
 } from "react-hook-form"
-import { errorText } from '@/app/_objects/formHelpers'
 
 export default function Password({
-	control,
+	register,
 	labels: {
 		password,
 	},
@@ -20,7 +19,7 @@ export default function Password({
 		password: error
 	},
 }: {
-	control: Control<SignInOptions, any>
+	register: UseFormRegister<SignInOptions>
 	labels: {
 		name: string
 		password: string
@@ -29,18 +28,14 @@ export default function Password({
 	errorMessages: Translation['errorMessages']
 	errors: FieldErrors<SignInOptions>
 }) {
-	return <Controller name="password"
-		control={control}
-		render={({ field }) => <TextField {...field}
-			type='password'
-			id="password"
-			label={`${password} *`}
-			autoComplete="current-password"
-			variant="outlined"
-			size="small"
-			disabled={busy}
-			error={!!error}
-			helperText={errorText(errorMessages, error as FieldError)}
-		/>}
+	return <TextField {...register('password')}
+		type='password'
+		label={`${password} *`}
+		autoComplete="current-password"
+		variant="outlined"
+		size="small"
+		disabled={busy}
+		error={!!error}
+		helperText={errorText(errorMessages, error as FieldError)}
 	/>
 }

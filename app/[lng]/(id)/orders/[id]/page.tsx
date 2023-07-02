@@ -2,7 +2,7 @@ import Form from './_components/Form'
 import { ObjectPage } from '@/app/_objects/ObjectPage'
 import type { Translation } from '@/app/i18n/dictionaries'
 
-export function labels({
+function labels({
   add,
   delete: textDelete,
   not_found: notFound,

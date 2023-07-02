@@ -34,10 +34,12 @@ export default function Form({
 	lng: string
 }) {
 	const {
-		control,
+		register,
 		handleSubmit,
 		formState: {
 			errors,
+			isDirty,
+			isValid,
 		}
 	} = useForm<SignInOptions>({
 		resolver: superstructResolver(loginStruct)
@@ -55,20 +57,20 @@ export default function Form({
 			back()
 			refresh()
 		}
-	}, [refresh])
+	}, [refresh, back, lng])
 	const onSubmit = useCallback(() => {
 		handleSubmit(onSubmitLogin)()
 	}, [handleSubmit, onSubmitLogin])
 	return <>
 		<Name {...{
-			control,
+			register,
 			labels,
 			busy,
 			errorMessages,
 			errors,
 		}} />
 		<Password {...{
-			control,
+			register,
 			labels,
 			busy,
 			errorMessages,
@@ -76,7 +78,7 @@ export default function Form({
 		}} />
 		<Button
 			aria-label={login}
-			disabled={busy}
+			disabled={busy || !isDirty || !isValid}
 			onClick={() => startTransition(onSubmit)}
 		>
 			{login}

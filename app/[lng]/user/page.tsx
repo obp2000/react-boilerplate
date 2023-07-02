@@ -5,7 +5,7 @@ import getUser from '@/services/getUser'
 import type { UserObject as User } from '@/interfaces/users'
 import { notFound } from 'next/navigation'
 
-export async function UserPage({
+async function UserPage({
   params: {
     lng = fallbackLng
   }

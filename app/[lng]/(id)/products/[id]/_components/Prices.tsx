@@ -1,4 +1,3 @@
-import type { Translation } from "@/app/i18n/dictionaries"
 import type { SerializedProductObject } from "@/interfaces/products"
 import { TextField } from '@mui/material'
 import type { UseFormWatch } from "react-hook-form"
@@ -24,10 +23,10 @@ function prices({
 
 export default function Prices({
 	watch,
-	labels,
+	label,
 }: {
 	watch: UseFormWatch<SerializedProductObject>
-	labels: Translation['product']
+	label: string
 }) {
 	const [
 		width,
@@ -43,7 +42,7 @@ export default function Prices({
 	return <TextField
 		id="prices"
 		className='col-span-4'
-		label={labels.prices}
+		label={label}
 		fullWidth
 		size="small"
 		disabled

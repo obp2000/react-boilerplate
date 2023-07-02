@@ -1,4 +1,3 @@
-import type { Translation } from "@/app/i18n/dictionaries"
 import type { SerializedOrderObject } from "@/interfaces/orders"
 import { Calculate } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/material'
@@ -29,14 +28,12 @@ function countPostCost({
 
 export default function PostCostButton({
 	watch,
-	labels,
 	busy,
 	setValue,
 	count,
 	giftNeeded,
 }: {
 	watch: UseFormWatch<SerializedOrderObject>
-	labels: Translation['order']
 	busy: boolean
 	setValue: UseFormSetValue<SerializedOrderObject>
 	count: string

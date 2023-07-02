@@ -7,7 +7,7 @@ import type { RegisterValues } from '@/interfaces/users'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { useRouter } from 'next/navigation'
 import {
-	useCallback, type TransitionStartFunction
+  useCallback, type TransitionStartFunction
 } from 'react'
 import { useForm } from "react-hook-form"
 import Email from './Email'
@@ -18,7 +18,10 @@ import Password1 from './Password1'
 import Password2 from './Password2'
 
 export default function RegisterForm({
-  labels,
+  labels: {
+    successfulRegister,
+    ...labels
+  },
   errorMessages,
   busy,
   startTransition,
@@ -31,11 +34,12 @@ export default function RegisterForm({
   lng: string
 }) {
   const {
-    control,
+    register,
     handleSubmit,
     formState: {
       isDirty,
       errors,
+      isValid,
     }
   } = useForm<RegisterValues>({
     defaultValues: tables.users.initObject,
@@ -49,50 +53,50 @@ export default function RegisterForm({
       headers: new Headers({ 'Content-Type': 'application/json' }),
     })
     if (res.status === 200) {
-      toastSuccess(labels.successfulRegister)
+      toastSuccess(successfulRegister)
       back()
     } else {
       const { error } = await res.json()
       toastError(error)
     }
-  }, [lng])
+  }, [lng, back, successfulRegister])
   const onSubmit = useCallback(() => {
     handleSubmit(onSubmitRegister)()
   }, [handleSubmit, onSubmitRegister])
   return <>
     <Name {...{
-      control,
+      register,
       labels,
       busy,
       errorMessages,
       errors,
     }} />
     <Email {...{
-      control,
+      register,
       labels,
       busy,
       errorMessages,
       errors,
     }} />
     <FirstName {...{
-      control,
+      register,
       labels,
       busy,
     }} />
     <LastName {...{
-      control,
+      register,
       labels,
       busy,
     }} />
     <Password1 {...{
-      control,
+      register,
       labels,
       busy,
       errorMessages,
       errors,
     }} />
     <Password2 {...{
-      control,
+      register,
       labels,
       busy,
       errorMessages,
@@ -100,7 +104,7 @@ export default function RegisterForm({
     }} />
     <Button
       aria-label={labels.register}
-      disabled={busy || !isDirty}
+      disabled={busy || !isDirty || !isValid}
       onClick={() => startTransition(onSubmit)}
     >
       {labels.register}

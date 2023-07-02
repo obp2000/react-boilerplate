@@ -32,16 +32,16 @@ export default function UserButtonMenu({
   const busy = isPending
   const pathname = usePathname()
   // console.log('pathname in user button ', usePathname())
+  const handleClose = useCallback(() => {
+    setAnchorEl(null)
+  }, [setAnchorEl])
   const onSignOutButtonClick = useCallback(() => {
     handleClose()
     const signOutOptions = pathname.split('/')[2] === 'user'
       ? { callbackUrl: `/${lng}` }
       : undefined
     signOut(signOutOptions)
-  }, [lng, pathname])
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  }, [lng, pathname, handleClose])
   return <Menu
     id="menu-appbar"
     anchorEl={anchorEl}

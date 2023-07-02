@@ -12,13 +12,16 @@ import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { useCallback, useTransition } from 'react'
 import {
   useForm,
-  type SubmitHandler
+  type SubmitHandler,
+  Controller
 } from "react-hook-form"
-import Address from './Address'
-import CityField from './CityField'
-import CreatedAt from './CreatedAt'
-import Name from './Name'
-import Nick from './Nick'
+import renderCity from './City'
+// import TextField from './TextField'
+import { errorText } from '@/app/_objects/formHelpers'
+import { formatRu } from '@/app/components/Date'
+import { DevTool } from '@hookform/devtools'
+import { TextField } from '@mui/material'
+import { getGetOptionLabel } from '@/app/customer/cities/helpers'
 
 function FormComp({
   mutateArgs,
@@ -26,7 +29,13 @@ function FormComp({
   save,
   notFound,
   errorMessages,
-  labels,
+  labels: {
+    nick,
+    name,
+    address,
+    createdAt,
+    ...labels
+  },
 }: CustomerFormProps) {
   const [isPending, startTransition] = useTransition()
   const onSubmit: SubmitHandler<Values> = useMutate(mutateArgs)
@@ -34,8 +43,12 @@ function FormComp({
   const {
     control,
     handleSubmit,
+    register,
     formState: {
-      errors,
+      errors: {
+        nick: nickError,
+        ...errors
+      },
       isSubmitting,
       isDirty,
     }
@@ -53,28 +66,51 @@ function FormComp({
   )
   // console.log('errors ', errors)
   const busy = isSubmitting || isPending
-  return <div
-    className={`grid grid-cols-2 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
-    <Nick {...{ control, labels, busy, errorMessages, errors }} />
-    <Name {...{ control, labels, busy }} />
-    <CityField {...{
-      labels,
-      busy,
-      errors,
-      errorMessages,
-      notFound,
-      control,
-      initialValues,
-    }} />
-    <Address {...{ control, labels, busy }} />
-    <CreatedAt {...{ initialValues, labels }} />
-    <Button
-      aria-label={save}
-      disabled={busy || !isDirty}
-      onClick={() => startTransition(onSubmitButtonClick)}>
-      {save}
-    </Button>
-  </div>
+  return <>
+    <div
+      className={`grid grid-cols-3 gap-4 p-2${busy ? ' opacity-70' : ''}`}>
+      <TextField {...register('nick')}
+        label={`${nick} *`}
+        size="small"
+        disabled={busy}
+        error={!!nickError}
+        helperText={errorText(errorMessages, nickError)}
+      />
+      <TextField {...register('name')}
+        label={name}
+        size="small"
+        disabled={busy}
+      />
+      <Controller
+        name="city"
+        control={control}
+        render={renderCity({
+          label: labels.city.city,
+          getOptionLabel: getGetOptionLabel(labels.city.pindex),
+          busy,
+          errorMessages,
+          notFound,
+        })} />
+      <TextField {...register('address')}
+        label={address}
+        size="small"
+        disabled={busy}
+      />
+      {initialValues.createdAt && <TextField
+        label={createdAt}
+        size="small"
+        disabled
+        value={formatRu(initialValues.createdAt)}
+      />}
+      <Button
+        aria-label={save}
+        disabled={busy || !isDirty}
+        onClick={() => startTransition(onSubmitButtonClick)}>
+        {save}
+      </Button>
+    </div>
+    <DevTool control={control} />
+  </>
 }
 
 export default FormComp

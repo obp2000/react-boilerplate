@@ -1,5 +1,4 @@
 import { unitsLabel } from '@/app/_objects/formHelpers'
-import type { Translation } from "@/app/i18n/dictionaries"
 import type { SerializedOrderObject } from "@/interfaces/orders"
 import { TextField } from '@mui/material'
 import type { UseFormWatch } from "react-hook-form"
@@ -16,10 +15,10 @@ export function postCostWithPacket({
 
 export default function PostCostWithPacket({
 	watch,
-	labels,
+	label,
 }: {
 	watch: UseFormWatch<SerializedOrderObject>
-	labels: Translation['order']
+	label: string
 }) {
   const [
     postCost,
@@ -29,7 +28,7 @@ export default function PostCostWithPacket({
     'packet'
   ])
 	return <TextField
-		label={labels.postCostWithPacket}
+		label={label}
 		size="small"
 		value={postCostWithPacket({ postCost, packet })}
 		disabled

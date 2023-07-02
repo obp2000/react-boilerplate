@@ -3,7 +3,6 @@ import { CldUploadWidget, CldImage } from "next-cloudinary"
 import { useCallback } from "react"
 import { PhotoCamera } from '@mui/icons-material'
 import { IconButton, CardMedia } from "@mui/material"
-import type { Translation } from "@/app/i18n/dictionaries"
 import type { UseFormSetValue, UseFormWatch } from "react-hook-form"
 import type { SerializedProductObject } from "@/interfaces/products"
 
@@ -15,13 +14,13 @@ const uploadPreset = "unsigned_preset"
 
 type Props = {
   watch: UseFormWatch<SerializedProductObject>
-  labels: Translation['product']
+  label: string
   setValue: UseFormSetValue<SerializedProductObject>
 }
 
 export default function ImageUpload({
   watch,
-  labels,
+  label,
   setValue,
 }: Props) {
   const [image] = watch(['image'])
@@ -46,22 +45,21 @@ export default function ImageUpload({
     {({ open }) => <>
       {image
         ? <CldImage
-          height="200"
-          width="200"
+          fill={true}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           src={image}
-          alt={labels.image}
+          alt={label}
+          priority
         />
         : <CardMedia
           component="img"
-          height="200"
-          width="200"
           image='/blank.png'
-          alt={labels.image}
+          alt={label}
         />
       }
       <IconButton
         color="primary"
-        aria-label={labels.image}
+        aria-label={label}
         component="label"
         onClick={() => open?.()}>
         <PhotoCamera />

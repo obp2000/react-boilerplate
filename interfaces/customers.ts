@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client"
 import tables from '@/app/_tables/tables.json'
 import type { Translation } from "@/app/i18n/dictionaries"
-import type { Control, FieldErrors } from "react-hook-form"
 
 export type Values = Prisma.CustomerUncheckedCreateWithoutOrdersInput |
 	Prisma.CustomerUncheckedUpdateWithoutOrdersInput
@@ -37,16 +36,6 @@ export type CustomerFormProps = {
 	notFound: string
 	errorMessages: Translation['errorMessages']
 	labels: Translation['customer']
-}
-
-export type CityFieldProps = {
-	labels: Translation['customer']
-	busy: boolean
-	errors: FieldErrors<SerializedCustomerObject>
-	errorMessages: Translation['errorMessages']
-	notFound: string
-	control: Control<SerializedCustomerObject, any>
-	initialValues: SerializedCustomerObject
 }
 
 export type CustomerRowType = (arg0: SerializedCustomer) => (string | JSX.Element)[]
