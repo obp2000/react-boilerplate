@@ -3,7 +3,7 @@ import type { Product } from '@/interfaces/products'
 import contentsChoices from './contents.json'
 import threadsChoices from './threads.json'
 
-export function getDisplayName(
+function getDisplayName(
   choices: typeof threadsChoices | typeof contentsChoices,
   labels: Translation['product']['threadsLabels'] |
     Translation['product']['contentsLabels'],
@@ -15,7 +15,7 @@ export function getDisplayName(
   return labels[currentChoice?.name as keyof typeof labels]
 }
 
-export function getGetOptionLabel({
+export function getGetProductFullName({
   threadsLabels,
   contentsLabels,
   fleece

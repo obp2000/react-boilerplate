@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
-import type { Values as CustomerValues } from '@/interfaces/customers'
+// import type { Values as CustomerValues } from '@/interfaces/customers'
 import type { Values as OrderValues } from '@/interfaces/orders'
-import type { Values as ProductValues } from '@/interfaces/products'
+// import type { Values as ProductValues } from '@/interfaces/products'
 import { toastSuccess } from '@/app/components/toast'
 import { useCallback } from 'react'
 
@@ -12,7 +12,7 @@ export function useMutate({	lng, table, id, message }: {
 	message: string
 }) {
 	const { refresh, push } = useRouter()
-	return useCallback(async (values: CustomerValues | ProductValues | OrderValues) => {
+	return useCallback(async (values: OrderValues) => {
 		let url = `/api/${table}`
 		if (id) {
 			url += `/${id}`
@@ -27,5 +27,5 @@ export function useMutate({	lng, table, id, message }: {
 			refresh()
 			push(`/${lng}/${table}`)
 		}
-	}, [id, push, refresh, lng, table, message])
+	}, [table, id, message, refresh, push, lng])
 }

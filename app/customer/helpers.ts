@@ -1,8 +1,8 @@
-import { getGetOptionLabel as getGetCityOptionLabel } from './cities/helpers'
+import { getGetCityName } from './cities/helpers'
 import type { Translation } from '@/app/i18n/dictionaries'
 import type { Customer } from '@/interfaces/customers'
 
-export function getGetOptionLabel({
+export function getGetCustomerFullName({
   name,
   city: {
     pindex,
@@ -17,7 +17,7 @@ export function getGetOptionLabel({
       label.push(`${name}: ${customer.name}`)
     }
     if (customer.city) {
-      label.push(getGetCityOptionLabel(pindex)(customer.city))
+      label.push(getGetCityName(pindex)(customer.city))
     }
     if (customer.address) {
       label.push(`${address}: ${customer.address}`)

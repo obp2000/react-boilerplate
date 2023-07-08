@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/services/prisma'
-import { Prisma } from '@prisma/client'
 import tables from '@/app/_tables/tables.json'
 
 function where(term?: string | null) {
@@ -14,8 +13,7 @@ function where(term?: string | null) {
   }
 }
 
-function findManyArgs(term?: string | null):
-  Prisma.CityFindManyArgs {
+function findManyArgs(term?: string | null) {
   return {
     where: where(term),
     select: tables.customers.select.objects.city.select,

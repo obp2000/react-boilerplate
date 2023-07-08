@@ -1,16 +1,15 @@
 import 'server-only'
 
-import {
-	getDictionary,
-	type ModelNames,
-	type Translation
-} from '@/app/i18n/dictionaries'
-import { AddCircleOutline } from '@/app/client/icons'
-import Tooltip from '@/app/components/Tooltip'
 import Link from 'next/link'
-import type { ReactNode } from 'react'
-import { getUsername } from '@/services/getUser'
+
+import { Tooltip } from "@/app/client/components"
+import { AddCircleOutline } from '@/app/client/icons'
+import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
+import { getUsername } from '@/services/getUser'
+
+import type { ModelNames } from '@/app/i18n/dictionaries'
+import type { LayoutProps } from '@/interfaces/tables'
 
 export async function TableLayout({
 	params: {
@@ -19,12 +18,7 @@ export async function TableLayout({
 	tableLabels,
 	table,
 	children,
-}: {
-	params: { lng: string }
-	tableLabels: (arg0: Translation) => string[]
-	table: string
-	children?: ReactNode
-}) {
+}: LayoutProps) {
 	const [dict, username] = await Promise.all([
 		getDictionary(lng),
 		getUsername()])

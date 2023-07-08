@@ -2,7 +2,6 @@ import { errorText } from '@/app/_objects/formHelpers'
 import type { Translation } from "@/app/i18n/dictionaries"
 // import type { SerializedCustomerObject } from "@/interfaces/customers"
 import type {
-	FieldError,
 	FieldErrors,
 	UseFormRegisterReturn
 } from "react-hook-form"
@@ -43,7 +42,7 @@ export default function TextField({
 			placeholder=" " />
 		{error && <p className='mt-2 text-xs text-red-600 dark:text-red-400'>
 			<span className='font-medium'>
-				{errorText(errorMessages, error as FieldError)}
+				{errorText(errorMessages, error)}
 			</span>
 		</p>}
 		<label

@@ -1,8 +1,9 @@
 import type { SerializedOrderObject } from "@/interfaces/orders"
 import { Calculate } from '@mui/icons-material'
-import { IconButton, Tooltip } from '@mui/material'
+import { IconButton } from '@mui/material'
 import type { UseFormSetValue, UseFormWatch } from "react-hook-form"
 import { totalWeight } from './TotalWeight'
+import { Tooltip } from "@/app/client/components"
 
 function countPostCost({
 	pindex,

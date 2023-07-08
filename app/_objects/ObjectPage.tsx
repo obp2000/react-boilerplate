@@ -1,17 +1,22 @@
-import { getDictionary } from '@/app/i18n/dictionaries'
-import { fallbackLng } from '@/app/i18n/settings'
-import tables from '@/app/_tables/tables.json'
-import type { CustomerFormProps, CustomerLabels } from '@/interfaces/customers'
-import type { OrderFormProps, OrderLabels } from '@/interfaces/orders'
-import type { ProductFormProps, ProductLabels } from '@/interfaces/products'
-import { prisma } from '@/services/prisma'
-import { Prisma } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { cache } from 'react'
 
-export function getPrismaClient(model: string): Prisma.CustomerDelegate<Prisma.RejectOnNotFound>
-export function getPrismaClient(model: string): Prisma.ProductDelegate<Prisma.RejectOnNotFound>
-export function getPrismaClient(model: string): Prisma.OrderDelegate<Prisma.RejectOnNotFound>
+import tables from '@/app/_tables/tables.json'
+import { getDictionary } from '@/app/i18n/dictionaries'
+import { fallbackLng } from '@/app/i18n/settings'
+import { prisma } from '@/services/prisma'
+
+import type { CustomerPageProps } from '@/interfaces/customers'
+import type { OrderPageProps } from '@/interfaces/orders'
+import type { ProductPageProps } from '@/interfaces/products'
+import { Prisma } from '@prisma/client'
+
+export function getPrismaClient(model: string):
+	Prisma.CustomerDelegate<Prisma.RejectOnNotFound>
+export function getPrismaClient(model: string):
+	Prisma.ProductDelegate<Prisma.RejectOnNotFound>
+export function getPrismaClient(model: string):
+	Prisma.OrderDelegate<Prisma.RejectOnNotFound>
 export function getPrismaClient(model: string): any {
 	return prisma[model as keyof typeof prisma]
 }
@@ -39,25 +44,9 @@ export const findObject = cache(async function ({
 	}
 })
 
-export async function ObjectPage(props: {
-	params: { lng: string, id: string }
-	table: string
-	labels: CustomerLabels
-	form: (props: CustomerFormProps) => JSX.Element
-}): Promise<JSX.Element>
-export async function ObjectPage(props: {
-	params: { lng: string, id: string }
-	table: string
-	labels: ProductLabels
-	getOptions: () => Promise<Pick<ProductFormProps, 'productTypes'>>
-	form: (props: ProductFormProps) => JSX.Element
-}): Promise<JSX.Element>
-export async function ObjectPage(props: {
-	params: { lng: string, id: string }
-	table: string
-	labels: OrderLabels
-	form: (props: OrderFormProps) => JSX.Element
-}): Promise<JSX.Element>
+export async function ObjectPage(props: CustomerPageProps): Promise<JSX.Element>
+export async function ObjectPage(props: ProductPageProps): Promise<JSX.Element>
+export async function ObjectPage(props: OrderPageProps): Promise<JSX.Element>
 export async function ObjectPage({
 	params: {
 		lng = fallbackLng,
@@ -67,12 +56,14 @@ export async function ObjectPage({
 	labels,
 	getOptions,
 	form,
+	handleSubmit,
 }: {
 	params: { lng: string, id: string }
 	table: string
 	labels: any
 	getOptions?: () => Promise<any>
 	form: (props: any) => JSX.Element
+	handleSubmit?: (formData: FormData) => Promise<void>
 }): Promise<JSX.Element> {
 	const [initialValues, dict, options] = await Promise.all([
 		id === 'new'
@@ -93,7 +84,8 @@ export async function ObjectPage({
 		errorMessages,
 		units,
 	} = dict
-	const message = `${singular} ${successfully.toLowerCase()} ${id === 'new' ? created : updated}`
+	const message =
+		`${singular} ${successfully.toLowerCase()} ${id === 'new' ? created : updated}`
 	const mutateArgs = {
 		lng,
 		table,
@@ -108,6 +100,7 @@ export async function ObjectPage({
 		units,
 		...labels(dict),
 		...options,
+		handleSubmit,
 	}} />
 }
 

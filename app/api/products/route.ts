@@ -1,6 +1,6 @@
 import { prisma } from '@/services/prisma'
 import { NextResponse, type NextRequest } from 'next/server'
-import { create as coerce } from 'superstruct'
+import { assert } from 'superstruct'
 import { struct } from './struct'
 import tables from '@/app/_tables/tables.json'
 import { Prisma } from "@prisma/client"
@@ -16,14 +16,13 @@ function where(term?: string | null) {
   }
 }
 
-export function findManyArgs(term?: string | null):
-  Prisma.ProductFindManyArgs {
+export function findManyArgs(term?: string | null) {
   return {
     where: where(term),
     select: tables.products.select.objects,
     orderBy: [
       {
-        updatedAt: 'desc',
+        updatedAt: 'desc' as Prisma.SortOrder,
       },
     ],
   }
@@ -36,8 +35,10 @@ export async function GET({ nextUrl: { searchParams } }: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json()
-  const data = coerce(body, struct)
+  const data = await request.json()
+  assert(data, struct)
+  console.log('body ', data)
   const object = await prisma.product.create({ data })
+  // const object = {}
   return NextResponse.json(object)
 }

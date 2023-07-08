@@ -1,22 +1,23 @@
-import Button from '@/app/components/Button'
-import { toastError } from '@/app/components/toast'
-import type { Translation } from '@/app/i18n/dictionaries'
-import { loginStruct } from '@/app/user/struct'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
+import { TextField } from '@mui/material'
 import { signIn, SignInOptions } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import {
-	useCallback,
-	type TransitionStartFunction
-} from 'react'
+import { useCallback } from 'react'
 import { useForm } from "react-hook-form"
-import Name from './Name'
-import Password from './Password'
+
+import { errorText } from '@/app/_objects/formHelpers'
+import Button from '@/app/components/Button'
+import { toastError } from '@/app/components/toast'
+import { loginStruct } from '@/app/user/struct'
+
+import type { Translation } from '@/app/i18n/dictionaries'
+import type { TransitionStartFunction } from 'react'
 
 export default function Form({
 	labels: {
 		login,
-		...labels
+		name,
+		password,
 	},
 	errorMessages,
 	busy,
@@ -37,7 +38,10 @@ export default function Form({
 		register,
 		handleSubmit,
 		formState: {
-			errors,
+			errors: {
+				name: nameError,
+				password: passwordError,
+			},
 			isDirty,
 			isValid,
 		}
@@ -50,7 +54,7 @@ export default function Form({
 			...values,
 			redirect: false,
 		}, { lng })
-		console.log('auth res ', res)
+		// console.log('auth res ', res)
 		if (res?.error) {
 			toastError(res.error)
 		} else {
@@ -62,20 +66,27 @@ export default function Form({
 		handleSubmit(onSubmitLogin)()
 	}, [handleSubmit, onSubmitLogin])
 	return <>
-		<Name {...{
-			register,
-			labels,
-			busy,
-			errorMessages,
-			errors,
-		}} />
-		<Password {...{
-			register,
-			labels,
-			busy,
-			errorMessages,
-			errors,
-		}} />
+		<TextField {...register('name')}
+			label={`${name} *`}
+			autoComplete="name"
+			variant="outlined"
+			size="small"
+			disabled={busy}
+			error={!!nameError}
+			helperText={errorText(errorMessages, nameError)}
+			aria-invalid={nameError ? "true" : "false"}
+		/>
+		<TextField {...register('password')}
+			type='password'
+			label={`${password} *`}
+			autoComplete="current-password"
+			variant="outlined"
+			size="small"
+			disabled={busy}
+			error={!!passwordError}
+			helperText={errorText(errorMessages, passwordError)}
+			aria-invalid={passwordError ? "true" : "false"}
+		/>
 		<Button
 			aria-label={login}
 			disabled={busy || !isDirty || !isValid}

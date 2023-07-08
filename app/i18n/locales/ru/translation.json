@@ -47,6 +47,7 @@
     "Expected an object, but received: null": "Это поле не может быть пустым",
     "Expected an object, but received: undefined": "Это поле не может быть пустым",
     "Expected an integer, but received: \"\"": "Это поле не может быть пустым",
+    "Expected an integer, but received: NaN": "Это поле не может быть пустым",
     "Expected a string matching `/\\d+/` but received \"\"": "Это поле не может быть пустым",
     "Expected an integer, but received: undefined": "Это поле не может быть пустым",
     "Expected a value of type `IntegerPattern`, but received: `\"\"`": "Это поле не может быть пустым",

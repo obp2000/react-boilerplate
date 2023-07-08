@@ -1,116 +1,161 @@
 'use client'
 
-import { useMutate } from '@/app/_objects/hooks'
+import { DevTool } from '@hookform/devtools'
+import { superstructResolver } from '@hookform/resolvers/superstruct'
+import { TextField } from '@mui/material'
+import { useCallback, useTransition } from 'react'
+import { Form, useForm } from "react-hook-form"
+import { experimental_useFormStatus as useFormStatus } from 'react-dom'
+import { experimental_useOptimistic as useOptimistic } from 'react'
+
+import { errorText } from '@/app/_objects/formHelpers'
 import Button from '@/app/components/Button'
-import { struct } from '@/app/customer/struct'
+import { formatRu } from '@/app/components/Date'
+import { getGetCityName } from '@/app/customer/cities/helpers'
+import { struct } from '@/app/api/customers/struct'
+
+import Autocomplete from '@/app/_objects/Autocomplete'
+import { toastError, toastSuccess } from '@/app/components/toast'
 import type {
   CustomerFormProps,
   SerializedCustomerObject,
-  Values
 } from '@/interfaces/customers'
-import { superstructResolver } from '@hookform/resolvers/superstruct'
-import { useCallback, useTransition } from 'react'
-import {
-  useForm,
-  type SubmitHandler,
-  Controller
-} from "react-hook-form"
-import renderCity from './City'
-// import TextField from './TextField'
-import { errorText } from '@/app/_objects/formHelpers'
-import { formatRu } from '@/app/components/Date'
-import { DevTool } from '@hookform/devtools'
-import { TextField } from '@mui/material'
-import { getGetOptionLabel } from '@/app/customer/cities/helpers'
+import { useRouter } from 'next/navigation'
 
 function FormComp({
   mutateArgs,
-  initialValues,
+  initialValues: {
+    createdAt,
+    ...initialValues
+  },
   save,
   notFound,
   errorMessages,
   labels: {
     nick,
     name,
+    city: {
+      city,
+      pindex,
+    },
     address,
-    createdAt,
     ...labels
   },
+  handleSubmit,
 }: CustomerFormProps) {
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate(mutateArgs)
-  // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
     control,
-    handleSubmit,
     register,
+    setValue,
     formState: {
       errors: {
         nick: nickError,
+        root,
         ...errors
       },
       isSubmitting,
       isDirty,
+      isValid,
     }
-  } = useForm({
+  } = useForm<SerializedCustomerObject>({
     defaultValues: initialValues,
     resolver: superstructResolver(struct)
   })
-  const onSubmitButtonClick = useCallback(() => {
-    handleSubmit(
-      ({ city, createdAt, ...values }: SerializedCustomerObject) =>
-        onSubmit({ cityId: city?.id, ...values })
-    )()
-  },
-    [handleSubmit, onSubmit]
-  )
-  // console.log('errors ', errors)
-  const busy = isSubmitting || isPending
-  return <>
+  console.log('root errors ', root, errors)
+  const { refresh, push } = useRouter()
+  const onSuccess = useCallback(({ response: { ok, status, statusText } }:
+    { response: Response }) => {
+    // console.log('res ', response)
+    if (ok) {
+      toastSuccess(mutateArgs.message)
+      startTransition(() => {
+        refresh()
+        push(`/${mutateArgs.lng}/${mutateArgs.table}`)
+      })
+    } else {
+      toastError(`${status}: ${statusText}`)
+    }
+  }, [mutateArgs.lng, mutateArgs.message, mutateArgs.table, push, refresh])
+  // async function handleSubmit(data) {
+  //   'use server'
+ 
+  //   // const cartId = cookies().get('cartId')?.value
+  //   // await saveToDb({ cartId, data })
+  //   console.log('data ', data)
+  // }
+  // const handleSubmit = getHandleSubmit({ id: mutateArgs.id })
+  // string | (formData: FormData) => void
+  const { pending } = useFormStatus()
+  const busy = pending
+  // const [optimisticMessages, addOptimisticMessage] = useOptimistic(
+  //   messages,
+  //   (state, newMessage) => [...state, { message: newMessage, sending: true }]
+  // )
+  return <form action={handleSubmit}
+  // control={control}
+  // action={`/api/${mutateArgs.table}${mutateArgs.id ? `/${mutateArgs.id}` : ''}`}
+  // method={mutateArgs.id ? 'put' : 'post'}
+  // headers={{ 'Content-Type': 'application/json' }}
+  // onSuccess={onSuccess}
+  >
     <div
       className={`grid grid-cols-3 gap-4 p-2${busy ? ' opacity-70' : ''}`}>
+      {busy && <div>busy</div>}
+      {/*{root?.server && <p>Form submit failed.</p>}*/}
+{/*      <input
+        type='number'
+        hidden
+        {...register('id')}
+        defaultValue={mutateArgs.id}
+      />*/}
       <TextField {...register('nick')}
         label={`${nick} *`}
         size="small"
         disabled={busy}
         error={!!nickError}
         helperText={errorText(errorMessages, nickError)}
+        aria-invalid={nickError ? "true" : "false"}
       />
       <TextField {...register('name')}
         label={name}
         size="small"
         disabled={busy}
       />
-      <Controller
-        name="city"
-        control={control}
-        render={renderCity({
-          label: labels.city.city,
-          getOptionLabel: getGetOptionLabel(labels.city.pindex),
-          busy,
-          errorMessages,
-          notFound,
-        })} />
+      <Autocomplete {...{
+        name: 'city',
+        control,
+        searchPath: '/cities',
+        label: `${city} *`,
+        init: initialValues.city,
+        getOptionLabel: getGetCityName(pindex),
+        busy,
+        errorMessages,
+        notFound,
+        register,
+        setValue,
+      }} />
       <TextField {...register('address')}
         label={address}
         size="small"
         disabled={busy}
       />
-      {initialValues.createdAt && <TextField
-        label={createdAt}
+      {createdAt && <TextField
+        label={labels.createdAt}
         size="small"
         disabled
-        value={formatRu(initialValues.createdAt)}
+        defaultValue={formatRu(createdAt)}
       />}
       <Button
+        type='submit'
         aria-label={save}
         disabled={busy || !isDirty}
-        onClick={() => startTransition(onSubmitButtonClick)}>
+      >
         {save}
       </Button>
     </div>
     <DevTool control={control} />
-  </>
+  </form>
 }
 
 export default FormComp

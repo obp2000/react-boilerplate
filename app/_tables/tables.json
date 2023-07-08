@@ -32,10 +32,7 @@
 			}
 		},
 		"initObject": {
-			"nick": "",
-			"name": "",
-			"city": null,
-			"address": ""
+			"city": null
 		}
 	},
 	"products": {
@@ -82,21 +79,23 @@
 			}
 		},
 		"initObject": {
-			"productTypeId": "",
-			"threads": "",
-			"contents": "",
-		  	"name": "",
-		  	"price": "",
-		  	"dollarPrice": "",
-			"dollarRate": "",
-			"weight": "",
-			"width": "",
-			"density": "",
-			"widthShop": "",
-			"densityShop": "",
-			"weightForCount": "",
-			"lengthForCount": "",
-			"pricePre": ""
+			"productTypeId": null,
+			"threads": null,
+			"contents": null,
+			"fleece": false,
+		  	"name": null,
+		  	"price": null,
+		  	"dollarPrice": null,
+			"dollarRate": null,
+			"weight": null,
+			"width": null,
+			"density": null,
+			"widthShop": null,
+			"densityShop": null,
+			"weightForCount": null,
+			"lengthForCount": null,
+			"pricePre": null,
+			"image": ""
 		}
 	},
 	"orders": {
@@ -158,15 +157,13 @@
 		},
 		"initObject": {
 			"customer": null,
-			"postCost": "",
-			"packet": "",
-			"deliveryType": "",
-			"address": "",
-			"gift": ""
+			"postCost": null,
+			"packet": null,
+			"deliveryType": null
 		},
 		"initOrderItem": {
 			"product": null,
-			"amount": 0,
+			"amount": "",
 			"price": 0
 		}
 	},

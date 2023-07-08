@@ -4,26 +4,89 @@ import {
   optional,
   string,
   integer,
-  any,
-  nullable
+  nullable,
+  number,
+  union
 } from 'superstruct'
-import { ToInteger, ToFloat } from '@/app/_objects/structFields'
+import {
+  struct as customer,
+} from '@/app/api/customers/struct'
+import {
+  struct as product,
+} from '@/app/api/products/struct'
 
-const orderItem = object({
+export const orderItem = object({
     id: optional(integer()),
-    productId: optional(nullable(integer())),
-    amount: ToFloat,
-    price: ToFloat,
-    cost: any(),
-    weight: any(),
+    product: nullable(product),
+    amount: union([number(), string()]),
+    price: number(),
+    // cost: any(),
+    // weight: any(),
 })
 
 export const struct = object({
-  postCost: optional(nullable(ToFloat)),
-  packet: nullable(ToInteger),
-  deliveryType: nullable(ToInteger),
+  customer,
+  address: optional(string()),
+  gift: optional(string()),
+  postCost: nullable(number()),
+  packet: nullable(integer()),
+  deliveryType: nullable(integer()),
+  orderItems: optional(array(orderItem)),
+})
+
+const orderItemApi = object({
+    id: optional(integer()),
+    productId: nullable(integer()),
+    amount: union([number(), string()]),
+    price: number(),
+    // cost: any(),
+    // weight: any(),
+})
+
+export const structApi = object({
+  postCost: nullable(number()),
+  packet: nullable(integer()),
+  deliveryType: nullable(integer()),
   address: optional(string()),
   gift: optional(string()),
   customerId: integer(),
-  orderItems: optional(array(orderItem)),
+  orderItems: optional(array(orderItemApi)),
 })
+
+
+
+
+
+
+// const customer = object({
+//   id: integer(),
+//   nick: any(),
+//   name: any(),
+//   city: any(),
+//   address: any(),
+//   createdAt: any(),
+//   updatedAt: any(),
+// })
+
+// const product = object({
+//   id: integer(),
+//   productType: any(),
+//   threads: any(),
+//   contents: any(),
+//   fleece: any(),
+//   name: any(),
+//   price: any(),
+//   dollarPrice: any(),
+//   dollarRate: any(),
+//   weight: any(),
+//   width: any(),
+//   density: any(),
+//   widthShop: any(),
+//   densityShop: any(),
+//   weightForCount: any(),
+//   lengthForCount: any(),
+//   pricePre: any(),
+//   image: any(),
+//   createdAt: any(),
+//   updatedAt: any(),
+// })

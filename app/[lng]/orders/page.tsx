@@ -2,7 +2,7 @@ import { TablePage } from '../_components/TablePage'
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Order, SerializedOrder } from '@/interfaces/orders'
 import Date from '@/app/components/Date'
-import { getShortName } from '@/app/customer/serverHelpers'
+import { getGetCustomerShortName } from '@/app/customer/serverHelpers'
 import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
 import { cache } from 'react'
@@ -27,7 +27,7 @@ function findMany({
   where,
   take,
   skip,
-}:{
+}: {
   where: any
   take: number
   skip: number
@@ -65,7 +65,7 @@ function findMany({
     ORDER BY "updatedAt" DESC
     OFFSET ${skip}
     LIMIT ${take}`
-    return prisma.$queryRaw(ordersSql) as Promise<[]>
+  return prisma.$queryRaw(ordersSql) as Promise<[]>
 }
 
 const createPaginator = (defaultOptions: PaginateOptions): PaginateFunction => {
@@ -99,8 +99,7 @@ const createPaginator = (defaultOptions: PaginateOptions): PaginateFunction => {
   }
 }
 
-function findManyArgs(term?: string | null):
-  Prisma.OrderFindManyArgs {
+function findManyArgs(term?: string | null) {
   return {
     where: where(term),
   }
@@ -126,18 +125,19 @@ const getObjects = cache(async function ({
 })
 
 function getTableRow({ customer }: Translation) {
-  const shortName = getShortName(customer)
+  const getCustomerShortName = getGetCustomerShortName(customer)
   return function tableRow({
     id,
     nick,
     name,
     orderItemsCost,
     createdAt,
-    updatedAt
+    updatedAt,
+    ...rest
   }: SerializedOrder) {
     return [
       id,
-      shortName({ nick, name }),
+      getCustomerShortName({ nick, name }),
       orderItemsCost,
       <Date key={id} dateString={createdAt} />,
       <Date key={id + 1} dateString={updatedAt} />,

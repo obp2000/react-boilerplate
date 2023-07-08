@@ -47,6 +47,7 @@
     "Expected an object, but received: null": "This field cannot be blank",
     "Expected an object, but received: undefined": "This field cannot be blank",
     "Expected an integer, but received: \"\"": "This field cannot be blank",
+    "Expected an integer, but received: NaN": "This field cannot be blank",
     "Expected a string matching `/\\d+/` but received \"\"": "This field cannot be blank",
     "Expected an integer, but received: undefined": "This field cannot be blank",
     "Expected a value of type `IntegerPattern`, but received: `\"\"`": "This field cannot be blank",

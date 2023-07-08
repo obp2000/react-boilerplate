@@ -1,10 +1,16 @@
-import { Prisma } from "@prisma/client"
 import tables from '@/app/_tables/tables.json'
-import type { ProductTypeType } from "./productTypes"
 import type { Translation } from "@/app/i18n/dictionaries"
+import { Prisma } from "@prisma/client"
+import type {
+    UseControllerProps,
+    UseFormRegister,
+    UseFormSetValue
+} from "react-hook-form"
+import type { SerializedOrderObject } from "./orders"
+import type { ProductTypeType } from "./productTypes"
 
-export type Values = Prisma.ProductUncheckedCreateWithoutOrderItemsInput |
-  Prisma.ProductUncheckedUpdateWithoutOrderItemsInput
+// export type Values = Prisma.ProductUncheckedCreateWithoutOrderItemsInput |
+//   Prisma.ProductUncheckedUpdateWithoutOrderItemsInput
 
 export type Product = Prisma.ProductGetPayload<{
   select: typeof tables.products.select.objects
@@ -43,3 +49,26 @@ export type ProductFormProps = {
 export type ProductRowType = (arg0: Product) => (string | JSX.Element)[]
 
 export type ProductLabels = (dict: Translation) => { labels: Translation['product'] }
+
+export type ProductAutocompleteProps = {
+  searchPath: string
+  label?: string
+  init?: Product | null
+  getOptionLabel: (arg0: Product) => string
+  busy: boolean
+  errorMessages: Translation['errorMessages']
+  notFound: string
+  onChangeAction?: (arg0: Product) => void
+  className?: string
+  register: UseFormRegister<any>
+  setValue: UseFormSetValue<any>
+} & UseControllerProps<SerializedOrderObject, `orderItems.${number}.product`>
+
+export type ProductPageProps = {
+  params: { lng: string, id: string }
+  table: string
+  labels: ProductLabels
+  getOptions: () => Promise<Pick<ProductFormProps, 'productTypes'>>
+  form: (props: ProductFormProps) => JSX.Element
+  handleSubmit?: (formData: FormData) => Promise<void>
+}

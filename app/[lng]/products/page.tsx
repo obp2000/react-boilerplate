@@ -1,8 +1,6 @@
 import { TablePage } from '../_components/TablePage'
 import type { Translation } from '@/app/i18n/dictionaries'
-import {
-	getGetOptionLabel as getGetProductName
-} from '@/app/product/helpers'
+import { getGetProductFullName } from '@/app/product/helpers'
 import type { Product, SerializedProduct } from '@/interfaces/products'
 import Date from '@/app/components/Date'
 import { prisma } from '@/services/prisma'
@@ -31,7 +29,7 @@ const getObjects = cache(async function ({
 })
 
 function getTableRow({ product }: Translation) {
-	const productName = getGetProductName(product)
+	const getProductFullName = getGetProductFullName(product)
 	return function tableRow({
 		id,
 		price,
@@ -43,7 +41,7 @@ function getTableRow({ product }: Translation) {
 	}: SerializedProduct) {
 		return [
 			id,
-			productName(rest),
+			getProductFullName(rest),
 			price,
 			width,
 			density,

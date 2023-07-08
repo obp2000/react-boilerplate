@@ -1,8 +1,9 @@
 import tables from '@/app/_tables/tables.json'
 import type { SerializedOrderObject } from "@/interfaces/orders"
 import { AddCircleOutlined } from "@mui/icons-material"
-import { IconButton, Tooltip } from "@mui/material"
+import { IconButton } from "@mui/material"
 import { UseFieldArrayAppend } from "react-hook-form"
+import { Tooltip } from "@/app/client/components"
 
 export default function AddButton({
 	add,

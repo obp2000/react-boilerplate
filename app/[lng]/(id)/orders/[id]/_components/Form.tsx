@@ -1,31 +1,21 @@
 'use client'
 
-import Select from '@/app/_objects/Select'
-import { useMutate } from '@/app/_objects/hooks'
-import Button from '@/app/components/Button'
-import { getGetOptionLabel } from '@/app/customer/helpers'
-import deliveryTypeChoices from '@/app/order/deliveryType.json'
-import packetChoices from '@/app/order/packet.json'
-import { struct } from '@/app/order/struct'
-import {
-  getGetOptionLabel as getGetProductOptionLabel
-} from '@/app/product/helpers'
-import type {
-  OrderFormProps,
-  SerializedOrderObject,
-  Values
-} from '@/interfaces/orders'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { TextField } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { useCallback, useTransition } from 'react'
+import { useFieldArray, useForm } from "react-hook-form"
+
+import Select from '@/app/_objects/Select'
 import {
-  Controller,
-  useFieldArray,
-  useForm,
-  type SubmitHandler
-} from "react-hook-form"
-import renderCustomer from './Customer'
+  floatValue, inputDecimal
+} from '@/app/_objects/formHelpers'
+import { useMutate } from '@/app/_objects/hooks'
+import Button from '@/app/components/Button'
+import { getGetCustomerFullName } from '@/app/customer/helpers'
+import deliveryTypeChoices from './deliveryType.json'
+import packetChoices from './packet.json'
+import { getGetProductFullName } from '@/app/product/helpers'
 import { orderItemsCost } from "./OrderItemsTotals"
 import PostCostButton from './PostCostButton'
 import PostCostWithPacket from './PostCostWithPacket'
@@ -36,7 +26,15 @@ import TotalWeight from './TotalWeight'
 import consts from './consts.json'
 import AddButton from './orderItems/AddButton'
 import OrdeItem from './orderItems/OrderItem'
-import { inputDecimal } from '@/app/_objects/formHelpers'
+import Autocomplete from '@/app/_objects/Autocomplete'
+import { struct } from '@/app/api/orders/struct'
+
+import type {
+  OrderFormProps,
+  SerializedOrderObject,
+  Values
+} from '@/interfaces/orders'
+import type { SubmitHandler } from "react-hook-form"
 
 const OrderItemsTotals = dynamic(() => import('./OrderItemsTotals'), {
   ssr: false,
@@ -100,7 +98,7 @@ export default function FormComp({
       defaultValues: initialValues,
       resolver: superstructResolver(struct)
     })
-  const getProductOptionLabel = getGetProductOptionLabel(productLabels)
+  const getProductFullName = getGetProductFullName(productLabels)
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'orderItems',
@@ -137,27 +135,32 @@ export default function FormComp({
     handleSubmit(toValues)()
   }, [handleSubmit, toValues])
   const busy = isPending
-  // const getCustomerOptionLabel = getGetOptionLabel(customerLabels)
   return <>
     <div className={`grid grid-cols-3 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
-      <Controller
-        name="customer"
-        control={control}
-        render={renderCustomer({
+      <Autocomplete
+        {...{
+          name: "customer",
+          control,
+          searchPath: '/customers',
           label: customer,
-          getOptionLabel: getGetOptionLabel(customerLabels),
+          init: initialValues.customer,
+          getOptionLabel: getGetCustomerFullName(customerLabels),
           busy,
           errorMessages,
           notFound,
-        })} />
+          className: 'col-span-3',
+          register,
+          setValue,
+        }} />
       <Select
         {...{
           name: 'deliveryType',
-          control,
+          register,
           label: deliveryType,
           choices: deliveryTypeChoices,
-          busy,
+          disabled: busy,
           choiceLabels: deliveryTypeLabels,
+          defaultValue: initialValues.deliveryType,
         }} />
       <TextField {...register('address')}
         className='col-span-2'
@@ -197,7 +200,8 @@ export default function FormComp({
           key={initOrderItem.id}
           {...{
             index,
-            getProductOptionLabel,
+            initOrderItem,
+            getProductOptionLabel: getProductFullName,
             control,
             register,
             errorMessages,
@@ -228,7 +232,7 @@ export default function FormComp({
           <td className='whitespace-nowrap px-6 py-4'>
             <div className={`grid grid-cols-4 gap-1 ${busy ? 'opacity-70' : ''}`}>
               <TextField
-                {...register('postCost')}
+                {...register('postCost'), { setValueAs: floatValue }}
                 label={postCost}
                 type="number"
                 variant="outlined"
@@ -239,11 +243,12 @@ export default function FormComp({
               <Select
                 {...{
                   name: 'packet',
-                  control,
+                  register,
                   label: packet,
                   choices: packetChoices,
-                  busy,
+                  disabled: busy,
                   choiceLabels: packetLabels,
+                  defaultValue: initialValues.packet,
                 }} />
               <PostCostWithPacket {...{ watch, label: postCostWithPacket }} />
               <PostDiscount {...{ watch, label: postDiscount }} />

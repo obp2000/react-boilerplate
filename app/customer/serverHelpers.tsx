@@ -3,7 +3,7 @@ import 'server-only'
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { Customer } from '@/interfaces/customers'
 
-export function getShortName(labels: Translation['customer']) {
+export function getGetCustomerShortName(labels: Translation['customer']) {
 	return (customer: Partial<Customer>) => {
 		if (!customer) { return '' }
 		const label = []

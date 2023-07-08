@@ -1,9 +1,11 @@
-import type { Translation } from "@/app/i18n/dictionaries"
-import type { SerializedOrderObject } from "@/interfaces/orders"
 import { TextField } from "@mui/material"
-import type { UseFormRegister, UseFormWatch } from "react-hook-form"
+
 import consts from './consts.json'
 import { cost, weight } from './orderItems/OrderItem'
+
+import type { Translation } from "@/app/i18n/dictionaries"
+import type { SerializedOrderObject } from "@/interfaces/orders"
+import type { UseFormRegister, UseFormWatch } from "react-hook-form"
 
 export function orderItemsAmount(
 	orderItems?: SerializedOrderObject['orderItems']) {

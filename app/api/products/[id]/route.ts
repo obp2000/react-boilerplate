@@ -1,16 +1,19 @@
+import { struct } from '../struct'
 import { prisma } from '@/services/prisma'
 import { NextResponse, type NextRequest } from 'next/server'
-import { create as coerce } from 'superstruct'
-import { struct } from '../struct'
+import { assert } from 'superstruct'
 
 export async function PUT(request: NextRequest,
   { params: { id } }: {
     params: { id: string }
   }
 ) {
-  const body = await request.json()
-  const data = coerce(body, struct)
-  const object = await prisma.product.update({ where: { id: Number(id) }, data })
+  const data = await request.json()
+  assert(data, struct)
+  const object = await prisma.product.update({
+    where: { id: Number(id) },
+    data
+  })
   return NextResponse.json(object)
 }
 

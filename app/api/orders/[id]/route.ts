@@ -1,14 +1,16 @@
 import type { NewOrderItem, OrderItemUpdate } from '@/interfaces/orders'
 import { prisma } from '@/services/prisma'
 import { NextResponse, type NextRequest } from 'next/server'
-import { create as coerce } from 'superstruct'
-import { struct } from '../struct'
+import { assert } from 'superstruct'
+import { structApi } from '../struct'
 
 export async function PUT(request: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
   const body = await request.json()
-  const { postCost, orderItems = [], ...data } = coerce(body, struct)
+  // const { postCost, orderItems = [], ...data } = coerce(body, struct)
+  assert(body, structApi)
+  const { postCost, orderItems = [], ...data } = body
   console.log('data ', data)
   const object = await prisma.order.findUnique({
     where: { id: Number(id) },

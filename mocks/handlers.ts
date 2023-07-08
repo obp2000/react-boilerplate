@@ -1,5 +1,4 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
-import type { Values as CustomerValues } from '@/interfaces/customers'
 import { rest } from 'msw'
 import cities from './cities.json'
 import user from './user.json'
@@ -9,7 +8,7 @@ const baseUrl = '/api'
 const handlers = [
   rest.post(`${baseUrl}/ru/customers`, async (req, res, ctx) => {
     // console.log('create handler')
-    const values: CustomerValues = await req.json()
+    const values = await req.json()
     const result = {
       id: 100,
       nick: values?.nick,
@@ -24,7 +23,7 @@ const handlers = [
     return res(ctx.json({ message }))
   }),
   rest.put(`${baseUrl}/ru/customers/:id`, async (req, res, ctx) => {
-    const values: CustomerValues = await req.json()
+    const values = await req.json()
     const result = {
       id: parseInt(req.params.id as string),
       nick: values?.nick,

@@ -7,15 +7,23 @@ export default async function Page({
     lng = fallbackLng
   },
 }: { params: { lng: string } }) {
-  const dict = await getDictionary(lng)
+  const {
+    auth: {
+      name,
+      password,
+      login,
+      register
+    },
+    errorMessages,
+  } = await getDictionary(lng)
   return <Modal {...{
     labels: {
-      name: dict.auth.name,
-      password: dict.auth.password,
-      login: dict.auth.login,
-      register: dict.auth.register,
+      name,
+      password,
+      login,
+      register,
     },
-    errorMessages: dict.errorMessages,
+    errorMessages,
     lng
   }} />
 }

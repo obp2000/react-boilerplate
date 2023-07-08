@@ -1,20 +1,20 @@
+import { TextField } from '@mui/material'
+
 import {
+	floatValue,
 	inputDecimal,
 	inputNumeric,
+	integerValue,
 	unitsLabel
 } from '@/app/_objects/formHelpers'
-import type { Translation } from '@/app/i18n/dictionaries'
-import type { SerializedOrderObject } from '@/interfaces/orders'
-import { TextField } from '@mui/material'
-import {
-	Controller,
-	type Control,
-	type UseFieldArrayRemove,
-	type UseFormRegister,
-	type UseFormSetValue
-} from 'react-hook-form'
 import DeleteButton from './DeleteButton'
-import renderProduct from './Product'
+import Autocomplete from '@/app/_objects/Autocomplete'
+
+import type {
+	OrderItemProps,
+	SerializedOrderObject
+} from '@/interfaces/orders'
+import type { Product } from '@/interfaces/products'
 
 export function cost({ amount, price }:
 	SerializedOrderObject['orderItems'][number]) {
@@ -32,29 +32,9 @@ export function weight({ amount, product }:
 		: 0
 }
 
-type Props = {
-	index: number
-	getProductOptionLabel:
-	(product: SerializedOrderObject['orderItems'][number]['product']) => string
-	control: Control<SerializedOrderObject, any>
-	register: UseFormRegister<SerializedOrderObject>
-	// errors: FieldErrors['root']
-	errorMessages: Translation['errorMessages']
-	// labels: Translation['order']
-	units: Translation['units']
-	busy: boolean
-	orderItem: SerializedOrderObject['orderItems'][number]
-	label: string
-	okText: string
-	cancelText: string
-	textDelete: string
-	notFound: string
-	remove: UseFieldArrayRemove
-	setValue: UseFormSetValue<SerializedOrderObject>
-}
-
 export default function OrderItemComp({
 	index,
+	initOrderItem,
 	getProductOptionLabel,
 	control,
 	register,
@@ -70,7 +50,7 @@ export default function OrderItemComp({
 	notFound,
 	remove,
 	setValue,
-}: Props) {
+}: OrderItemProps) {
 	// console.log('orderItemsValues[index] ', orderItemsValues[index])
 	// const [currentProduct, setCurrentProduct] = useState(product)
 	return <tr className='border-b dark:border-neutral-500'>
@@ -78,19 +58,25 @@ export default function OrderItemComp({
 			{index + 1}
 		</td>
 		<td className='whitespace-nowrap px-6 py-4'>
-			<Controller name={`orderItems.${index}.product`}
-				control={control} 
-				render={renderProduct({
-					index,
+			<Autocomplete 
+				{...{
+					name: `orderItems.${index}.product`,
+					control,
+					searchPath: '/products',
+					init: initOrderItem?.product,
 					getOptionLabel: getProductOptionLabel,
 					busy,
 					errorMessages,
-					setValue,
 					notFound,
-				})} />
+					onChangeAction: (newValue: Product) =>
+						setValue(`orderItems.${index}.price`, newValue?.price || 0),
+					register,
+					setValue,
+				}} />
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			<TextField {...register(`orderItems.${index}.price`)}
+			<TextField {...register(`orderItems.${index}.price`,
+				{ setValueAs: integerValue })}
 				type="number"
 				size="small"
 				disabled={busy}
@@ -99,7 +85,8 @@ export default function OrderItemComp({
 			/>
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			<TextField {...register(`orderItems.${index}.amount`)}
+			<TextField {...register(`orderItems.${index}.amount`),
+				{ setValueAs: floatValue }}
 				type="number"
 				size="small"
 				disabled={busy}

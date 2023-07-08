@@ -1,4 +1,5 @@
-import '@/app/globals.css'
+// import '@/app/globals.css'
+import './globals.css'
 
 import type { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'

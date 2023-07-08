@@ -23,6 +23,9 @@ const nextConfig = {
       transform: "@mui/icons-material/{{ matches.[1] }}/{{member}}",
     },
   },
+  experimental: {
+    serverActions: true,
+  },
   // sassOptions: {
   //   includePaths: [path.join(__dirname, 'styles')],
   // },

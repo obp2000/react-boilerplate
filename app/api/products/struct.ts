@@ -1,34 +1,31 @@
 import {
-    ToBoolean,
-    ToFloat,
-    ToInteger,
-    ToPositiveInteger
-} from "@/app/_objects/structFields"
-import {
-    defaulted,
-    nullable,
-    object,
-    optional,
-    size,
-    string
-} from "superstruct"
+  object,
+  string,
+  boolean,
+  nullable,
+  integer,
+  number,
+  nonempty,
+  optional,
+} from 'superstruct'
 
 export const struct = object({
-    productTypeId: nullable(ToInteger),
-    threads: nullable(ToInteger),
-    contents: nullable(ToInteger),
-    fleece: optional(nullable(ToBoolean)),
-    name: size(string(), 1, 255),
-    price: ToPositiveInteger,
-    dollarPrice: optional(nullable(ToFloat)),
-    dollarRate: optional(nullable(ToFloat)),
-    weight: optional(nullable(ToFloat)),
-    width: optional(nullable(ToInteger)),
-    density: optional(nullable(ToInteger)),
-    widthShop: optional(nullable(ToInteger)),
-    densityShop: optional(nullable(ToInteger)),
-    weightForCount: optional(nullable(ToInteger)),
-    lengthForCount: optional(nullable(ToFloat)),
-    pricePre: optional(nullable(ToInteger)),
-    image: defaulted(string(), ''),
-  })
+  id: optional(integer()),
+  productTypeId: nullable(integer()),
+  threads: nullable(integer()),
+  contents: nullable(integer()),
+  fleece: nullable(boolean()),
+  name: nonempty(string()),
+  price: integer(),
+  dollarPrice: nullable(number()),
+  dollarRate: nullable(number()),
+  weight: nullable(number()),
+  width: nullable(integer()),
+  density: nullable(integer()),
+  widthShop: nullable(integer()),
+  densityShop: nullable(integer()),
+  weightForCount: nullable(integer()),
+  lengthForCount: nullable(number()),
+  pricePre: nullable(integer()),
+  image: string(),
+})

@@ -1,7 +1,7 @@
 import { TablePage } from '../_components/TablePage'
 import type { Translation } from '@/app/i18n/dictionaries'
-import { getGetOptionLabel as getGetCityName } from '@/app/customer/cities/helpers'
-import { getShortName } from '@/app/customer/serverHelpers'
+import { getGetCityName } from '@/app/customer/cities/helpers'
+import { getGetCustomerShortName } from '@/app/customer/serverHelpers'
 import { findManyArgs } from '@/app/api/customers/route'
 import type { SerializedCustomer } from '@/interfaces/customers'
 import Date from '@/app/components/Date'
@@ -31,8 +31,8 @@ const getObjects = cache(async function ({
 })
 
 function getTableRow({ customer }: Translation) {
-	const cityName = getGetCityName(customer.city?.pindex)
-	const shortName = getShortName(customer)
+	const getCityName = getGetCityName(customer.city?.pindex)
+	const getCustomerShortName = getGetCustomerShortName(customer)
 	return function tableRow({
 		id,
 		city,
@@ -43,8 +43,8 @@ function getTableRow({ customer }: Translation) {
 	}: SerializedCustomer) {
 		return [
 			id,
-			shortName(rest),
-			city ? cityName(city) : '',
+			getCustomerShortName(rest),
+			city ? getCityName(city) : '',
 			address,
 			<Date key={id} dateString={createdAt} />,
 			<Date key={id + 1} dateString={updatedAt} />,
@@ -65,24 +65,3 @@ export default async function Page(props: {
 		getTableRow,
 	}} />
 }
-
-
-// const getObjects = cache(async function ({
-// 	perPage = Number(process.env.NEXT_PUBLIC_OBJECTS_PER_PAGE),
-// 	searchParams: {
-// 		page = '1',
-// 		term,
-// 	}
-// }: {
-// 	perPage: number
-// 	searchParams: {
-// 		page?: string
-// 		term?: string
-// 	}
-// }) {
-// 	const paginate = createPaginator({ perPage })
-// 	return paginate<Customer, Prisma.CustomerFindManyArgs>(
-// 		prisma.customer,
-// 		findManyArgs(term),
-// 		{ page })
-// })

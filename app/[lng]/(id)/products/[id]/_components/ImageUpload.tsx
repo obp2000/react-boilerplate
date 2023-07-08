@@ -26,21 +26,19 @@ export default function ImageUpload({
   const [image] = watch(['image'])
   const handleUpload = useCallback(({
     info: {
-      secure_url
+      secure_url: secureUrl
     }
   }: {
     info: {
       secure_url: string
     }
   }) => {
-    setValue('image', secure_url, { shouldDirty: true })
+    setValue('image', secureUrl, { shouldDirty: true })
   }, [setValue])
   return <CldUploadWidget
     onUpload={handleUpload}
     uploadPreset={uploadPreset}
-    options={{
-      maxFiles: 1
-    }}
+    options={{ maxFiles: 1 }}
   >
     {({ open }) => <>
       {image

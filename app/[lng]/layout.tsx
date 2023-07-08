@@ -1,7 +1,7 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
-import { fallbackLng } from '@/app/i18n/settings'
+import { fallbackLng, languages } from '@/app/i18n/settings'
 import type { ReactNode } from 'react'
-import LocaleSwitcher from './_components/LocaleSwitcher'
+import { LocaleLink } from './_components/LocaleSwitcher'
 import NavBar from './_components/NavBar'
 
 export default async function Layout({
@@ -11,6 +11,7 @@ export default async function Layout({
   authButton,
   userButton,
   confirm,
+  success,
   children,
 }: {
   params: {
@@ -19,17 +20,29 @@ export default async function Layout({
   authButton: ReactNode
   userButton: ReactNode
   confirm: ReactNode
+  success: ReactNode
   children: ReactNode
 }) {
-  const dict = await getDictionary(lng)
+  const { localeSwitcher } = await getDictionary(lng)
   return <div className='container'>
     <NavBar {...{ lng, userButton, authButton }} />
     <main>
       {confirm}
+      {success}
       {children}
     </main>
     <footer>
-      <LocaleSwitcher {...{ lng, label: dict.localeSwitcher }} />
+      <div className="flex mt-2">
+        <div>{localeSwitcher}:</div>
+        {languages.map((locale) => <LocaleLink key={locale}
+          {...{ locale, lng }}>
+          <div className="flex justify-center items-center mx-1 font-medium py-1 px-2 rounded-full text-blue-700 bg-blue-100 border border-blue-300 ">
+            <div className="text-xs font-normal leading-none max-w-full flex-initial">
+              {locale}
+            </div>
+          </div>
+        </LocaleLink>)}
+      </div>
     </footer>
   </div>
 }

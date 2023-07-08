@@ -1,11 +1,9 @@
-import { Prisma } from "@prisma/client"
 import tables from '@/app/_tables/tables.json'
-import { Translation } from "@/app/i18n/dictionaries"
+import { Prisma } from "@prisma/client"
+
+import type { Translation } from "@/app/i18n/dictionaries"
 import type {
-  Control,
-  FieldArrayWithId,
-  FieldErrors,
-  UseFieldArrayRemove,
+  Control, UseFieldArrayRemove,
   UseFormRegister,
   UseFormSetValue
 } from "react-hook-form"
@@ -90,3 +88,48 @@ export type OrderLabels = (dict: Translation) => {
   customerLabels: Translation['customer'],
   productLabels: Translation['product'],
 }
+
+export type OrderItemProps = {
+  index: number
+  initOrderItem: OrderItem
+  getProductOptionLabel:
+  (product: SerializedOrderObject['orderItems'][number]['product']) => string
+  control: Control<SerializedOrderObject, any>
+  register: UseFormRegister<SerializedOrderObject>
+  // errors: FieldErrors['root']
+  errorMessages: Translation['errorMessages']
+  // labels: Translation['order']
+  units: Translation['units']
+  busy: boolean
+  orderItem: SerializedOrderObject['orderItems'][number]
+  label: string
+  okText: string
+  cancelText: string
+  textDelete: string
+  notFound: string
+  remove: UseFieldArrayRemove
+  setValue: UseFormSetValue<SerializedOrderObject>
+}
+
+export type OrderPageProps = {
+  params: { lng: string, id: string }
+  table: string
+  labels: OrderLabels
+  form: (props: OrderFormProps) => JSX.Element
+  handleSubmit?: (formData: FormData) => Promise<void>
+}
+
+
+// export type DeliveryTypeSelect = {
+//   label: string
+//   choices: typeof deliveryTypeChoices
+//   busy: boolean
+//   choiceLabels: Translation['order']['deliveryTypeLabels']
+// } & UseControllerProps<SerializedOrderObject, 'deliveryType'>
+
+// export type PacketSelect = {
+//   label: string
+//   choices: typeof packetChoices
+//   busy: boolean
+//   choiceLabels: Translation['order']['packetLabels']
+// } & UseControllerProps<SerializedOrderObject, 'packet'>

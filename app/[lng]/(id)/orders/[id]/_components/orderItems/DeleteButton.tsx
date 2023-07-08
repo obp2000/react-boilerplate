@@ -1,13 +1,14 @@
-import { IconButton } from "@mui/material"
-import Tooltip from '@/app/components/Tooltip'
-import { useState } from "react"
-import type { UseFieldArrayRemove } from "react-hook-form"
 import { Delete } from '@mui/icons-material'
+import { IconButton } from "@mui/material"
 import dynamic from "next/dynamic"
+import { useState } from "react"
 
-const ConfirmDialog = dynamic(() => import('@/app/components/ConfirmDialog'), {
-	ssr: false,
-})
+import { Tooltip } from "@/app/client/components"
+
+import type { UseFieldArrayRemove } from "react-hook-form"
+
+const ConfirmDialog = dynamic(() =>
+	import('@/app/components/ConfirmDialog'), {	ssr: false })
 
 type Props = {
 	index: number

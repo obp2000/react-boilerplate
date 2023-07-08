@@ -1,32 +1,33 @@
 'use client'
 
-import {
-  errorText,
-  inputDecimal,
-  inputNumeric,
-  unitsLabel
-} from '@/app/_objects/formHelpers'
-import { useMutate } from '@/app/_objects/hooks'
-import Button from '@/app/components/Button'
-import { struct } from '@/app/product/struct'
-import type {
-  ProductFormProps,
-  SerializedProductObject,
-  Values
-} from '@/interfaces/products'
 import { DevTool } from '@hookform/devtools'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { TextField } from '@mui/material'
 import { useCallback, useTransition } from 'react'
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { useForm, Form } from "react-hook-form"
+import { useRouter } from 'next/navigation'
+
+import Select from '@/app/_objects/Select'
+import Switch from '@/app/_objects/Switch'
+import {
+  errorText,
+  inputDecimal,
+  inputNumeric,
+  unitsLabel,
+  integerValue,
+  floatValue 
+} from '@/app/_objects/formHelpers'
+import Button from '@/app/components/Button'
+import contentsChoices from '@/app/product/contents.json'
+import { struct } from '@/app/api/products/struct'
+import threadsChoices from '@/app/product/threads.json'
 import DensityForCount from './DensityForCount'
 import ImageUpload from './ImageUpload'
 import MetersInRoll from './MetersInRoll'
 import Prices from './Prices'
-import threadsChoices from '@/app/product/threads.json'
-import contentsChoices from '@/app/product/contents.json'
-import Select from '@/app/_objects/Select'
-import Switch from '@/app/_objects/Switch'
+import { toastError, toastSuccess } from '@/app/components/toast'
+
+import type { ProductFormProps } from '@/interfaces/products'
 
 export default function FormComp({
   mutateArgs,
@@ -65,14 +66,13 @@ export default function FormComp({
   },
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate(mutateArgs)
+  // const onSubmit: SubmitHandler<Values> = useMutate(mutateArgs)
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   // console.log('initialValues ', initialValues)
   const {
     control,
     register,
     watch,
-    handleSubmit,
     setValue,
     formState: {
       errors: {
@@ -80,22 +80,39 @@ export default function FormComp({
         price: priceError,
       },
       isDirty,
-      isValid
+      isValid,
+      isSubmitting,
     } } = useForm({
       defaultValues: initialValues,
       resolver: superstructResolver(struct)
     })
-  // console.log('errors ', errors)
-  const toValues = useCallback(
-    ({ createdAt, ...values }: SerializedProductObject) => onSubmit(values)
-    , [onSubmit])
-  const onSubmitButtonClick = useCallback(() => {
-    handleSubmit(toValues)()
-  }, [handleSubmit, toValues])
-  const busy = isPending
+  const busy = isPending || isSubmitting
   const densityUnits = `${units.gram_short}./${units.meter_short}2`
   const priceUnits = `₽/${units.meter_short}`
-  return <>
+  const { refresh, push } = useRouter()
+  const onSuccess = useCallback(({ response: { ok, status, statusText } }:
+    { response: Response }) => {
+    // console.log('res ', response)
+    if (ok) {
+      toastSuccess(mutateArgs.message)
+      startTransition(() => {
+        refresh()
+        push(`/${mutateArgs.lng}/${mutateArgs.table}`)
+      })
+    } else {
+      toastError(`${status}: ${statusText}`)
+    }
+  }, [mutateArgs.lng, mutateArgs.message, mutateArgs.table, push, refresh])
+  return <Form
+    control={control}
+    action={`/api/${mutateArgs.table}${mutateArgs.id ? `/${mutateArgs.id}` : ''}`}
+    method={mutateArgs.id ? 'put' : 'post'}
+    headers={{ 'Content-Type': 'application/json' }}
+    onSuccess={onSuccess}
+    onError={({ response, error }) => {
+      console.log('res ', response)
+    }} 
+  >
     <div className={`grid grid-cols-5 gap-2 p-2 ${busy ? 'opacity-70' : ''}`}>
       <div className='relative' >
         <ImageUpload {...{ watch, label: image, setValue }} />
@@ -104,28 +121,31 @@ export default function FormComp({
         <Select
           {...{
             name: 'productTypeId',
-            control,
+            register,
             label: productTypeId,
             choices: productTypes,
-            busy
+            disabled: busy,
+            defaultValue: initialValues.productTypeId,
           }} />
         <Select
           {...{
             name: 'threads',
-            control,
+            register,
             label: threads,
             choices: threadsChoices,
-            busy,
+            disabled: busy,
             choiceLabels: threadsLabels,
+            defaultValue: initialValues.threads,
           }} />
         <Select
           {...{
             name: 'contents',
-            control,
+            register,
             label: contents,
             choices: contentsChoices,
-            busy,
+            disabled: busy,
             choiceLabels: contentsLabels,
+            defaultValue: initialValues.contents,
           }} />
         <div className='pl-2'>
           <Switch
@@ -143,8 +163,9 @@ export default function FormComp({
           disabled={busy}
           error={!!nameError}
           helperText={errorText(errorMessages, nameError)}
+          aria-invalid={nameError ? "true" : "false"}
         />
-        <TextField {...register('price')}
+        <TextField {...register('price', { valueAsNumber: true })}
           type='number'
           label={`${price} *`}
           size="small"
@@ -153,9 +174,10 @@ export default function FormComp({
           inputProps={inputNumeric}
           error={!!priceError}
           helperText={errorText(errorMessages, priceError)}
+          aria-invalid={priceError ? "true" : "false"}
         />
         <TextField
-          {...register('dollarPrice')}
+          {...register('dollarPrice', { setValueAs: floatValue })}
           type='number'
           label={dollarPrice}
           size="small"
@@ -164,7 +186,7 @@ export default function FormComp({
           inputProps={inputDecimal}
         />
         <TextField
-          {...register('dollarRate')}
+          {...register('dollarRate', { setValueAs: floatValue })}
           type='number'
           label={dollarRate}
           size="small"
@@ -172,7 +194,7 @@ export default function FormComp({
           InputProps={unitsLabel('₽/$')}
           inputProps={inputDecimal}
         />
-        <TextField {...register('width')}
+        <TextField {...register('width', { setValueAs: integerValue })}
           type='number'
           label={width}
           size="small"
@@ -180,7 +202,7 @@ export default function FormComp({
           InputProps={unitsLabel(centimeterShort)}
           inputProps={inputNumeric}
         />
-        <TextField {...register('density')}
+        <TextField {...register('density', { setValueAs: integerValue })}
           type='number'
           label={density}
           size="small"
@@ -192,7 +214,7 @@ export default function FormComp({
       </div>
     </div>
     <div className='grid grid-cols-6 gap-2'>
-      <TextField {...register('weightForCount')}
+      <TextField {...register('weightForCount', { setValueAs: integerValue })}
         label={weightForCount}
         type="number"
         size="small"
@@ -201,7 +223,7 @@ export default function FormComp({
         inputProps={inputNumeric}
       />
       <TextField
-        {...register('lengthForCount')}
+        {...register('lengthForCount', { setValueAs: floatValue })}
         label={lengthForCount}
         type="number"
         size="small"
@@ -210,7 +232,7 @@ export default function FormComp({
         inputProps={inputDecimal}
       />
       <DensityForCount {...{ watch, label: densityForCount, units }} />
-      <TextField {...register('weight')}
+      <TextField {...register('weight', { setValueAs: floatValue })}
         label={weight}
         type="number"
         size="small"
@@ -222,7 +244,7 @@ export default function FormComp({
     </div>
     <div className='grid grid-cols-6 gap-2 mt-6'>
       <TextField
-        {...register('pricePre')}
+        {...register('pricePre', { setValueAs: integerValue })}
         label={pricePre}
         type="number"
         size="small"
@@ -232,7 +254,7 @@ export default function FormComp({
         inputProps={inputNumeric}
       />
       <TextField
-        {...register('widthShop')}
+        {...register('widthShop', { setValueAs: integerValue })}
         label={widthShop}
         type="number"
         size="small"
@@ -242,7 +264,7 @@ export default function FormComp({
         inputProps={inputNumeric}
       />
       <TextField
-        {...register('densityShop')}
+        {...register('densityShop', { setValueAs: integerValue })}
         label={densityShop}
         type="number"
         size="small"
@@ -252,13 +274,13 @@ export default function FormComp({
         inputProps={inputNumeric}
       />
       <Button
+        type='submit'
         aria-label={save}
         disabled={busy || !isDirty || !isValid}
-        onClick={() => startTransition(onSubmitButtonClick)}
       >
         {save}
       </Button>
     </div>
     <DevTool control={control} />
-  </>
+  </Form>
 }

@@ -8,13 +8,17 @@ export default async function Page({
     lng = fallbackLng
   },
 }: { params: { lng: string } }) {
-  const dict = await getDictionary(lng)
+  const {
+    auth: {
+      profile,
+      logout
+    } } = await getDictionary(lng)
   return <UserButton {...{
     name: await getUsername(),
     lng,
     labels: {
-      profile: dict.auth.profile,
-      logout: dict.auth.logout
+      profile,
+      logout
     }
   }} />
 }

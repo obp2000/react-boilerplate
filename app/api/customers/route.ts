@@ -1,9 +1,13 @@
-import tables from '@/app/_tables/tables.json'
-import { prisma } from '@/services/prisma'
-import { Prisma } from "@prisma/client"
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { assert } from 'superstruct'
+
+
+import tables from '@/app/_tables/tables.json'
 import { struct } from './struct'
+import { prisma } from '@/services/prisma'
+
+import { Prisma } from "@prisma/client"
+import type { NextRequest } from 'next/server'
 
 function where(term?: string | null) {
   if (!term) { return {} }
@@ -18,28 +22,34 @@ function where(term?: string | null) {
   }
 }
 
-export function findManyArgs(term?: string | null):
-  Prisma.CustomerFindManyArgs {
+export function findManyArgs(term?: string | null) {
   return {
-    where: where(term),
     select: tables.customers.select.objects,
+    where: where(term),
     orderBy: [
       {
-        updatedAt: 'desc',
+        updatedAt: 'desc' as Prisma.SortOrder,
       },
     ],
   }
 }
 
-export async function GET({ nextUrl: { searchParams } }: NextRequest) {
+export async function GET({ nextUrl: { searchParams } }:
+  NextRequest) {
   const objects = await prisma.customer.findMany(
     findManyArgs(searchParams.get('term')))
   return NextResponse.json(objects)
 }
 
 export async function POST(request: NextRequest) {
-  const data = await request.json()
-  assert(data, struct)
-  const object = await prisma.customer.create({ data })
+  const body = await request.json()
+  assert(body, struct)
+  const { city, ...data } = body
+  const object = await prisma.customer.create({
+    data: {
+      cityId: city.id,
+      ...data
+    }
+  })
   return NextResponse.json(object)
 }
