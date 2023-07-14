@@ -1,5 +1,6 @@
-import type { PropsWithChildren } from 'react'
 import { TableLayout } from '../_components/TableLayout'
+
+import type { PropsWithChildren } from 'react'
 import type { Translation } from '@/app/i18n/dictionaries'
 
 function tableLabels({ customer: {

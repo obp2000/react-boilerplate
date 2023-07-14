@@ -3,13 +3,16 @@ import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  type Dispatch,
-  type SetStateAction,
   useCallback,
   useTransition
 } from 'react'
+
 import userMenuItem from './userMenuItem.json'
-// import Button from '@/app/components/Button'
+
+import type {
+  Dispatch,
+  SetStateAction,
+} from 'react'
 
 export default function UserButtonMenu({
   lng,

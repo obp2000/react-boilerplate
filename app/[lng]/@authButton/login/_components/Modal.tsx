@@ -1,11 +1,13 @@
 'use client'
 
-import type { Translation } from '@/app/i18n/dictionaries'
 import { useTransition } from 'react'
-import ModalComp from '../../Modal'
+
+import Modal from '../../_components/Modal'
 import Form from './Form'
 
-export default function Modal({
+import type { Translation } from '@/app/i18n/dictionaries'
+
+export default function ModalComp({
   labels: {
     register,
     ...labels
@@ -31,12 +33,12 @@ export default function Modal({
     startTransition,
     lng,
   }
-  return <ModalComp {...{
+  return <Modal {...{
     label: labels.login,
     busy,
     path: `/${lng}/register`,
     actionLabel: register
   }} >
     <Form {...formProps} />
-  </ModalComp>
+  </Modal>
 }

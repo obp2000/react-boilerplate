@@ -1,7 +1,9 @@
-import type { SerializedProductObject } from "@/interfaces/products"
 import { TextField } from '@mui/material'
-import type { UseFormWatch } from "react-hook-form"
+
 import priceCoeffs from './priceCoeffs.json'
+
+import type { SerializedProductObject } from "@/interfaces/products"
+import type { UseFormWatch } from "react-hook-form"
 
 function prices({
 	density,

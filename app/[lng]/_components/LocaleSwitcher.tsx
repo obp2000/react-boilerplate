@@ -16,8 +16,8 @@ export function LocaleLink({ locale, lng, children }: {
   lng: string
   children: ReactNode
 }) {
-  if (locale === lng) return null
   const pathname = usePathname()
+  if (locale === lng) return null
   return <Link href={redirectedPathName(locale, pathname)}>
       {children}
     </Link>

@@ -1,15 +1,22 @@
-import { TablePage } from '../_components/TablePage'
-import type { Translation } from '@/app/i18n/dictionaries'
-import { getGetCityName } from '@/app/customer/cities/helpers'
-import { getGetCustomerShortName } from '@/app/customer/serverHelpers'
-import { findManyArgs } from '@/app/api/customers/route'
-import type { SerializedCustomer } from '@/interfaces/customers'
-import Date from '@/app/components/Date'
+import { createPaginator } from 'prisma-pagination'
 import { cache } from 'react'
-import { type PaginateFunction, createPaginator } from 'prisma-pagination'
-import type { Customer } from '@/interfaces/customers'
+
+import Date from '@/app/components/Date'
 import { prisma } from '@/services/prisma'
 import { Prisma } from '@prisma/client'
+import { TablePage } from '../_components/TablePage'
+import { getGetCityName } from './_components/cities/helpers'
+import {
+    findManyArgs,
+    getGetCustomerShortName
+} from './_components/helpers'
+
+import type { Translation } from '@/app/i18n/dictionaries'
+import type {
+	Customer,
+	SerializedCustomer
+} from '@/interfaces/customers'
+import type { PaginateFunction } from 'prisma-pagination'
 
 const getObjects = cache(async function ({
 	paginate,

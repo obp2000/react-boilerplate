@@ -1,9 +1,11 @@
-import type { SerializedOrderObject } from "@/interfaces/orders"
 import { Calculate } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
-import type { UseFormSetValue, UseFormWatch } from "react-hook-form"
+
 import { totalWeight } from './TotalWeight'
 import { Tooltip } from "@/app/client/components"
+
+import type { SerializedOrderObject } from "@/interfaces/orders"
+import type { UseFormSetValue, UseFormWatch } from "react-hook-form"
 
 function countPostCost({
 	pindex,
@@ -22,7 +24,8 @@ function countPostCost({
 	fetch(`${process.env.NEXT_PUBLIC_POST_BASE_URL}?${searchParams}`)
 		.then((response) => response.json())
 		.then(({ posilka_nds: posilkaNds }) => {
-			return setValue('postCost', posilkaNds ?? 0, { shouldDirty: true })
+			return setValue('postCost', posilkaNds ?? 0,
+				{ shouldDirty: true })
 		})
 		.catch((e) => console.error(e))
 }

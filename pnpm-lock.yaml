@@ -11,9 +11,6 @@ dependencies:
   '@emotion/styled':
     specifier: ^11.10.6
     version: 11.10.6(@emotion/react@11.10.6)(@types/react@18.2.14)(react@18.2.0)
-  '@fontsource/roboto':
-    specifier: ^4.5.8
-    version: 4.5.8
   '@formatjs/intl-localematcher':
     specifier: ^0.2.32
     version: 0.2.32
@@ -51,8 +48,8 @@ dependencies:
     specifier: ^4.22.1
     version: 4.22.1(next@13.4.9)(react-dom@18.2.0)(react@18.2.0)
   next-cloudinary:
-    specifier: ^4.4.0
-    version: 4.10.0(next@13.4.9)(react@18.2.0)
+    specifier: ^4.13.1
+    version: 4.13.1(next@13.4.9)(react@18.2.0)
   prisma-pagination:
     specifier: ^0.2.3
     version: 0.2.3
@@ -179,25 +176,25 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@cloudinary-util/url-loader@3.5.1:
-    resolution: {integrity: sha512-Czh9/afEDtLBNuGoSPTvNSgUILCFMDd9pTwwLdonuTI+F5vJhGHYSLLmQF2ddDHVMd2c3S4RkcEC1Hhfm6x4Ow==}
+  /@cloudinary-util/url-loader@3.8.2:
+    resolution: {integrity: sha512-f/U2be4EfYb58fN1U8W4DqXvwB3XftfKQqaAvp3NBz6G/Y4rYDVNP9ac4vvcD4+mR/6N4NDtqAE7lRoCODnycg==}
     dependencies:
-      '@cloudinary-util/util': 2.0.1
-      '@cloudinary/url-gen': 1.10.0
+      '@cloudinary-util/util': 2.1.0
+      '@cloudinary/url-gen': 1.10.1
     dev: false
 
-  /@cloudinary-util/util@2.0.1:
-    resolution: {integrity: sha512-d2imgUjYTLjv8ZhZPMAts/uPbMvIE71X4I/5hwdY/7vM4BuFQoJMSyq+h2pW1z1MyGG9BOWBm70vp082lSrbEQ==}
+  /@cloudinary-util/util@2.1.0:
+    resolution: {integrity: sha512-PGjVxyhhOP8IaD6uawXzfDnI8ArPqpiLfIXc8TEjhv3CGhDFBAM3dCT3xeAgg+92sQsx/AN74j+qckdWPfoO6w==}
     dev: false
 
   /@cloudinary/transformation-builder-sdk@1.2.8:
     resolution: {integrity: sha512-Rxvt/tjzTNzHDvH2l5ZLky/ahp60pHf51uLfzkFA/Mrh6Uj8aMHne0TRbYvpaH4t8l9wLGcdK6SbBqKVzlN16A==}
     dependencies:
-      '@cloudinary/url-gen': 1.10.0
+      '@cloudinary/url-gen': 1.10.1
     dev: false
 
-  /@cloudinary/url-gen@1.10.0:
-    resolution: {integrity: sha512-J3V+gzT6Tepw9bMrR3prWVbW22cIFJtPS8Wkt1WFSZVHWpZx8/vv9ACHaxUmRqaSkjhX8ErsuzDY5YxdWnaCbw==}
+  /@cloudinary/url-gen@1.10.1:
+    resolution: {integrity: sha512-6pBmapnL7G231NbNWhKbi+08HcpNASci7M3OmZWaUCQWUfdmo3au27HT3Zqg9NMsisfyer3t7o0RXzPQ4XlmMg==}
     dependencies:
       '@cloudinary/transformation-builder-sdk': 1.2.8
     dev: false
@@ -357,10 +354,6 @@ packages:
     resolution: {integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
-
-  /@fontsource/roboto@4.5.8:
-    resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
-    dev: false
 
   /@formatjs/intl-localematcher@0.2.32:
     resolution: {integrity: sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==}
@@ -2837,15 +2830,15 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /next-cloudinary@4.10.0(next@13.4.9)(react@18.2.0):
-    resolution: {integrity: sha512-yOoG0jFO4y8+hLR+07W2QkTvFKKe6padKVpemEnkaOV/HxBnoHhB4gjXoHIUEVc9aKjEsji+3ViwwFzWR4ukMA==}
+  /next-cloudinary@4.13.1(next@13.4.9)(react@18.2.0):
+    resolution: {integrity: sha512-EHsNldknsEGBugzXAARXEPadtm8GBZzPyzPof5/Kyzl5aIThoZ9SY7a+iAbSaGev89K20GVvIi7+ou194KXy4Q==}
     peerDependencies:
       next: ^12 || ^13
       react: ^17 || ^18
     dependencies:
-      '@cloudinary-util/url-loader': 3.5.1
-      '@cloudinary-util/util': 2.0.1
-      '@cloudinary/url-gen': 1.10.0
+      '@cloudinary-util/url-loader': 3.8.2
+      '@cloudinary-util/util': 2.1.0
+      '@cloudinary/url-gen': 1.10.1
       next: 13.4.9(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
     dev: false

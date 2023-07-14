@@ -1,7 +1,10 @@
-import type { Translation } from "@/app/i18n/dictionaries"
-import type { Product } from '@/interfaces/products'
 import contentsChoices from './contents.json'
 import threadsChoices from './threads.json'
+import { Prisma } from "@prisma/client"
+import tables from '@/app/_tables/tables.json'
+
+import type { Translation } from "@/app/i18n/dictionaries"
+import type { Product } from '@/interfaces/products'
 
 function getDisplayName(
   choices: typeof threadsChoices | typeof contentsChoices,
@@ -31,5 +34,28 @@ export function getGetProductFullName({
     }
     label.push(product.name)
     return label.filter((name) => name !== null && name !== undefined).join(' ')
+  }
+}
+
+function where(term?: string | null) {
+  if (!term) { return {} }
+  const containsTerm = { contains: term }
+  return {
+    OR: [
+      { name: containsTerm },
+      { productType: { name: containsTerm } },
+    ]
+  }
+}
+
+export function findManyArgs(term?: string | null) {
+  return {
+    where: where(term),
+    select: tables.products.select.objects,
+    orderBy: [
+      {
+        updatedAt: 'desc' as Prisma.SortOrder,
+      },
+    ],
   }
 }

@@ -3,10 +3,13 @@
 import { Menu, MenuItem } from '@mui/material'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, type MouseEvent } from 'react'
+import { useState } from 'react'
+
 import type { Translation } from '@/app/i18n/dictionaries'
 import mainMenu from './mainMenu.json'
 import { isActiveLink, navLinkLabel } from './navBarLib'
+
+import type { MouseEvent } from 'react'
 
 export function NavbarXsLink({
 	lng,

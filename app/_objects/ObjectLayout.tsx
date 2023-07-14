@@ -1,7 +1,8 @@
 import { getDictionary, type ModelNames } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import type { ReactNode } from 'react'
 import BackButton from '@/app/components/BackButton'
+
+import type { ReactNode } from 'react'
 
 export async function ObjectLayout({
 	params: {

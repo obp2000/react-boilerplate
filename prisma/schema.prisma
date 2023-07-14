@@ -56,8 +56,8 @@ model Customer {
 
 model OrderItem {
   id              Int              @id @default(autoincrement())
-  amount          Decimal          @db.Decimal(5, 2)
-  price           Int
+  amount          Decimal?         @db.Decimal(5, 2)
+  price           Int?
   createdAt       DateTime         @default(now()) @db.Timestamptz(6) @map("created_at")
   updatedAt       DateTime         @updatedAt @db.Timestamptz(6) @map("updated_at")
   orderId         Int?             @map("order_id")

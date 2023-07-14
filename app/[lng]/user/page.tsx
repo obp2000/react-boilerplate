@@ -1,9 +1,12 @@
-import { getDictionary, type Translation } from '@/app/i18n/dictionaries'
+import { notFound } from 'next/navigation'
+
+import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
 import tables from '@/app/_tables/tables.json'
 import getUser from '@/services/getUser'
+
+import type { Translation } from '@/app/i18n/dictionaries'
 import type { UserObject as User } from '@/interfaces/users'
-import { notFound } from 'next/navigation'
 
 async function UserPage({
   params: {

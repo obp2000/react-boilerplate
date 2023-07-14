@@ -23,7 +23,7 @@ export const createPaginator = (defaultOptions: PaginateOptions): PaginateFuncti
   return async (model, args: any = { where: undefined }, options) => {
     const page = Number(options?.page || defaultOptions?.page) || 1
     const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10
-    const skip = page > 0 ? perPage * (page - 1) : 0
+    const skip = page ? perPage * (page - 1) : 0
     const data = await model.findMany({
       ...args,
       take: perPage,

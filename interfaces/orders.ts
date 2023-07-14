@@ -1,12 +1,12 @@
 import tables from '@/app/_tables/tables.json'
 import { Prisma } from "@prisma/client"
-
 import type { Translation } from "@/app/i18n/dictionaries"
 import type {
   Control, UseFieldArrayRemove,
   UseFormRegister,
   UseFormSetValue
 } from "react-hook-form"
+import type { ServerActionResult } from './form'
 
 export type OrderItem = Prisma.OrderItemGetPayload<{
   select: typeof tables.orders.select.object.orderItems.select
@@ -56,22 +56,23 @@ export type OrderFormProps = {
     lng: string
     table: string
     id?: number
-    message: string
   }
   initialValues: SerializedOrderObject
-  save: string
-  add: string
-  textDelete: string
-  notFound: string
-  count: string
-  errorMessages: Translation['errorMessages']
-  label: string
-  okText: string
-  cancelText: string
-  units: Translation['units']
-  labels: Translation['order']
-  customerLabels: Translation['customer']
-  productLabels: Translation['product']
+  labels: {
+    save: string
+    errorMessages: Translation['errorMessages']
+    units: Translation['units']
+    add: string
+    textDelete: string
+    notFound: string
+    count: string
+    label: string
+    okText: string
+    cancelText: string
+    labels: Translation['order']
+    customer: Translation['customer']
+    product: Translation['product']
+  }
 }
 
 export type OrderRowType = (arg0: Order) => (string | JSX.Element)[]
@@ -85,8 +86,8 @@ export type OrderLabels = (dict: Translation) => {
   label: Translation['delete'],
   okText: Translation['yes'],
   cancelText: Translation['no'],
-  customerLabels: Translation['customer'],
-  productLabels: Translation['product'],
+  customer: Translation['customer'],
+  product: Translation['product'],
 }
 
 export type OrderItemProps = {
@@ -116,7 +117,7 @@ export type OrderPageProps = {
   table: string
   labels: OrderLabels
   form: (props: OrderFormProps) => JSX.Element
-  handleSubmit?: (formData: FormData) => Promise<void>
+  handleSubmit?: (formData: FormData) => Promise<ServerActionResult>
 }
 
 

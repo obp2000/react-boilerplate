@@ -1,8 +1,9 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng, languages } from '@/app/i18n/settings'
-import type { ReactNode } from 'react'
 import { LocaleLink } from './_components/LocaleSwitcher'
 import NavBar from './_components/NavBar'
+
+import type { ReactNode } from 'react'
 
 export default async function Layout({
   params: {
@@ -11,7 +12,6 @@ export default async function Layout({
   authButton,
   userButton,
   confirm,
-  success,
   children,
 }: {
   params: {
@@ -20,7 +20,6 @@ export default async function Layout({
   authButton: ReactNode
   userButton: ReactNode
   confirm: ReactNode
-  success: ReactNode
   children: ReactNode
 }) {
   const { localeSwitcher } = await getDictionary(lng)
@@ -28,7 +27,6 @@ export default async function Layout({
     <NavBar {...{ lng, userButton, authButton }} />
     <main>
       {confirm}
-      {success}
       {children}
     </main>
     <footer>

@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { ArrowBack } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
-import { Tooltip } from "@/app/client/components"
+import { IconButton, Tooltip } from '@mui/material'
 
 export default function Button({ label }: { label: string }) {
   const { back } = useRouter()

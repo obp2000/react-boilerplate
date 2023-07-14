@@ -1,7 +1,8 @@
-import type { SerializedOrderObject } from "@/interfaces/orders"
-import type { UseFormWatch } from "react-hook-form"
 import { orderItemsCost } from "./OrderItemsTotals"
 import { totalPostals } from "./TotalPostals"
+
+import type { SerializedOrderObject } from "@/interfaces/orders"
+import type { UseFormWatch } from "react-hook-form"
 
 export function totalSum({
 	orderItems,

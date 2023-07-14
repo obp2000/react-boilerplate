@@ -2,28 +2,26 @@
 
 import 'server-only'
 
-import { structApi } from '@/app/api/customers/struct'
-// import { toastSuccess } from '@/app/components/toast'
-import { prisma } from '@/services/prisma'
 import { assert } from 'superstruct'
-import { fallbackLng } from '@/app/i18n/settings'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+
+import { structApi } from './struct'
+import { prisma } from '@/services/prisma'
+import { getDictionary } from '@/app/i18n/dictionaries'
+
+import type { ServerActionResult } from '@/interfaces/form'
 
 export async function mutate({
 	formData,
-	params: {
-		lng = fallbackLng,
-		id,
-	},
+	lng,
+	id,
 	table,
 }: {
 	formData: FormData
-	params: {
-		lng: string
-		id: string
-	},
+	lng: string
+	id?: number
 	table: string
-}) {
+}): Promise<ServerActionResult> {
 	const data = {
 		nick: formData.get('nick'),
 		name: formData.get('name'),
@@ -32,40 +30,26 @@ export async function mutate({
 	}
 	console.log('data ', data)
 	assert(data, structApi)
-	if (id === 'new') {
-		await prisma.customer.create({
+	if (id) {
+		await prisma.customer.update({
+			where: { id },
 			data
 		})
 	} else {
-		await prisma.customer.update({
-			where: { id: Number(id) },
+		await prisma.customer.create({
 			data
 		})
 	}
-	redirect(`/${lng}/success/${table}/${id}`)
+	const {
+		[table as 'customers' | 'products' | 'orders']: {
+			singular
+		},
+		successfully,
+		created,
+		updated,
+	} = await getDictionary(lng)
+	const message =
+		`${singular} ${successfully.toLowerCase()} ${id ? updated : created}`
+	revalidatePath(`/[lng]/${table}`)
+	return { success: true, message }
 }
-
-// export async function handleSubmit(formData: FormData) {
-// 	const id = formData.get('id')
-// 		? Number(formData.get('id'))
-// 		: undefined
-// 	const data = {
-// 		nick: formData.get('nick'),
-// 		name: formData.get('name'),
-// 		cityId: Number(formData.get('cityId')),
-// 		address: formData.get('address'),
-// 	}
-// 	console.log('data ', data)
-// 	assert(data, structApi)
-// 	if (id) {
-// 		await prisma.customer.update({
-// 			where: { id },
-// 			data
-// 		})
-// 	} else {
-// 		await prisma.customer.create({
-// 			data
-// 		})
-// 	}
-// 	// toastSuccess('success')
-// }

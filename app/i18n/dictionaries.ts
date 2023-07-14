@@ -1,4 +1,5 @@
 import { cache } from 'react'
+
 import enTranslation from './locales/en/translation.json'
 import ruTranslation from './locales/ru/translation.json'
 

@@ -33,7 +33,7 @@ export const inputNumeric = {
 
 export const inputDecimal = {
   inputMode: 'decimal',
-  step: '0.1',
+  step: '0.01',
   min: 0,
 } as InputBaseComponentProps
 

@@ -1,10 +1,13 @@
 import Form from './_components/Form'
 import { ObjectPage } from '@/app/_objects/ObjectPage'
-import type { Translation } from '@/app/i18n/dictionaries'
 import { prisma } from '@/services/prisma'
 import tables from '@/app/_tables/tables.json'
 
-function labels({ product: labels }: Translation) {
+import type { Translation } from '@/app/i18n/dictionaries'
+
+function labels({
+	product: labels
+}: Translation) {
 	return {
 		labels,
 	}

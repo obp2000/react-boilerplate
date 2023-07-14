@@ -1,6 +1,6 @@
 import { getDictionary } from '@/app/i18n/dictionaries'
 import { fallbackLng } from '@/app/i18n/settings'
-import Modal from '../../Modal'
+import Modal from './Modal'
 
 export default async function Page({
   params: {
@@ -17,17 +17,13 @@ export default async function Page({
     delete: textDelete,
     yes: okText,
     no: cancelText,
-    [table as 'customers' | 'products' | 'orders']: {
-      singular
-    },
-    successfully,
-    deleted,
   } = await getDictionary(lng)
   return <Modal {...{
     title: `${textDelete}?`,
     okText,
     cancelText,
-    message: `${singular} ${successfully.toLowerCase()} ${deleted}`,
-    url: `/api/${table}/${id}`,
+    lng,
+    table,
+    id,
   }} />
 }

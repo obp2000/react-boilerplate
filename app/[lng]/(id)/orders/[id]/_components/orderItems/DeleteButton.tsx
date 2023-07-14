@@ -1,9 +1,7 @@
 import { Delete } from '@mui/icons-material'
-import { IconButton } from "@mui/material"
+import { IconButton, Tooltip } from "@mui/material"
 import dynamic from "next/dynamic"
 import { useState } from "react"
-
-import { Tooltip } from "@/app/client/components"
 
 import type { UseFieldArrayRemove } from "react-hook-form"
 

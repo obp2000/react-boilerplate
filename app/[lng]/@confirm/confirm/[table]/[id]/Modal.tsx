@@ -8,16 +8,21 @@ import {
   DialogTitle
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import { type ReactNode, useTransition, useCallback } from 'react'
+import { useTransition, useCallback } from 'react'
+
 import Button from '@/app/components/Button'
 import { toastSuccess } from '@/app/components/toast'
+import { remove } from './actions'
+
+import type { ReactNode } from 'react'
 
 type Props = {
   title: string
   okText: string
   cancelText: string
-  url: string
-  message: string
+  lng: string
+  table: string
+  id: string
   children?: ReactNode
 }
 
@@ -25,24 +30,23 @@ export default function Modal({
   title,
   okText,
   cancelText,
-  url,
-  message,
+  lng,
+  table,
+  id,
   children,
 }: Props) {
-  const { back, refresh } = useRouter()
+  const { back } = useRouter()
   const [isPending, startTransition] = useTransition()
   const busy = isPending
-  const deleteObject = useCallback(async () => {
-    const res = await fetch(url, { method: 'DELETE' })
-    if (res.ok) {
-      toastSuccess(message)
-      refresh()
-    }
-  }, [url, refresh, message])
   const onConfirmButtonClick = useCallback(() => {
-    back()
-    deleteObject()
-  }, [back, deleteObject])
+    startTransition(async () => {
+      const res = await remove({ lng, table, id: Number(id) })
+      back()
+      if (res.success) {
+        toastSuccess(String(res.message))
+      }
+    })
+  }, [back, id, lng, table])
   return <Dialog
     open={true}
     onClose={back}
@@ -56,13 +60,13 @@ export default function Modal({
     </DialogContent>
     <DialogActions>
       <Button 
-      disabled={busy}
-      onClick={back}>
+        disabled={busy}
+        onClick={back}>
         {cancelText}
       </Button>
       <Button
         disabled={busy}
-        onClick={() => startTransition(onConfirmButtonClick)}
+        onClick={onConfirmButtonClick}
       >
         {okText}
       </Button>

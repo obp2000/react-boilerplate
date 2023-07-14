@@ -2,9 +2,9 @@ import tables from '@/app/_tables/tables.json'
 import type { Translation } from "@/app/i18n/dictionaries"
 import { Prisma } from "@prisma/client"
 import type {
-    UseControllerProps,
-    UseFormRegister,
-    UseFormSetValue
+	UseControllerProps,
+	UseFormRegister,
+	UseFormSetValue
 } from "react-hook-form"
 import type { SerializedOrderObject } from "./orders"
 
@@ -36,14 +36,14 @@ export type CustomerFormProps = {
 		lng: string
 		table: string
 		id?: number
-		message: string
 	}
 	initialValues: SerializedCustomerObject
-	save: string
-	notFound: string
-	errorMessages: Translation['errorMessages']
-	labels: Translation['customer']
-	handleSubmit: (formData: FormData) => Promise<void>
+	labels: {
+		save: string
+		errorMessages: Translation['errorMessages']
+		notFound: string
+		labels: Translation['customer']
+	}
 }
 
 export type CustomerRowType = (arg0: SerializedCustomer) => (string | JSX.Element)[]
@@ -54,7 +54,7 @@ export type CustomerLabels = (dict: Translation) => {
 }
 
 export type CustomerAutocompleteProps = {
-	searchPath: string
+	table: string
 	label?: string
 	init?: Customer | null
 	getOptionLabel: (arg0: Customer) => string
@@ -72,5 +72,4 @@ export type CustomerPageProps = {
 	table: string
 	labels: CustomerLabels
 	form: (props: CustomerFormProps) => JSX.Element
-	handleSubmit: (formData: FormData) => Promise<void>
 }

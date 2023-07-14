@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+
 import { ObjectLayout } from '@/app/_objects/ObjectLayout'
 
 export default async function Layout({

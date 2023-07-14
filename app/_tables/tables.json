@@ -1,4 +1,6 @@
-{
+{	"cities": {
+		"singular": "city"
+	},
 	"customers": {
 		"singular": "customer",
 		"select": {

@@ -8,7 +8,8 @@ import { errorText } from '@/app/_objects/formHelpers'
 import tables from '@/app/_tables/tables.json'
 import Button from '@/app/components/Button'
 import { toastError, toastSuccess } from '@/app/components/toast'
-import { struct } from '@/app/user/struct'
+import { struct } from './struct'
+import { create } from './actions'
 
 import type { Translation } from '@/app/i18n/dictionaries'
 import type { RegisterValues } from '@/interfaces/users'
@@ -26,7 +27,6 @@ export default function RegisterForm({
     password1HelpText,
     password2,
     password2HelpText,
-    successfulRegister,
     ...labels
   },
   errorMessages,
@@ -42,7 +42,7 @@ export default function RegisterForm({
 }) {
   const {
     register,
-    handleSubmit,
+    control,
     formState: {
       isDirty,
       errors: {
@@ -58,29 +58,29 @@ export default function RegisterForm({
     resolver: superstructResolver(struct)
   })
   const { back } = useRouter()
-  const onSubmitRegister = useCallback(async (values: RegisterValues) => {
-    const res = await fetch(`/api/auth/${lng}/register`, {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
+  const action = useCallback((formData: FormData) => {
+    startTransition(async () => {
+      const res = await create({
+        formData,
+        lng,
+      })
+      if (res.success) {
+        toastSuccess(res.message as string)
+        back()
+      } else {
+        toastError(res.error)
+      }
     })
-    if (res.status === 200) {
-      toastSuccess(successfulRegister)
-      back()
-    } else {
-      const { error } = await res.json()
-      toastError(error)
-    }
-  }, [lng, back, successfulRegister])
-  const onSubmit = useCallback(() => {
-    handleSubmit(onSubmitRegister)()
-  }, [handleSubmit, onSubmitRegister])
+  }, [back, lng, startTransition])
   const objectError = useMemo(
     () => errors ? Object.values(errors).find(
       ({ type }) => type === 'object')
       : undefined,
     [errors]) as FieldError
-  return <>
+  return <form
+    action={action}
+    className='flex flex-col mt-1 gap-2'
+  >
     <TextField {...register('name')}
       required
       label={name}
@@ -143,11 +143,11 @@ export default function RegisterForm({
       aria-invalid={objectError ? "true" : "false"}
     />
     <Button
+      type='submit'
       aria-label={labels.register}
       disabled={busy || !isDirty || !isValid}
-      onClick={() => startTransition(onSubmit)}
     >
       {labels.register}
     </Button>
-  </>
+  </form>
 }

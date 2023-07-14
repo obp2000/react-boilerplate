@@ -1,7 +1,9 @@
+import { TextField } from '@mui/material'
+
 import { unitsLabel } from '@/app/_objects/formHelpers'
+
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { SerializedProductObject } from "@/interfaces/products"
-import { TextField } from '@mui/material'
 import type { UseFormWatch } from "react-hook-form"
 
 function densityForCount({

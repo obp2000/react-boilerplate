@@ -1,5 +1,6 @@
-import { getDictionary } from '@/app/i18n/dictionaries'
 import { rest } from 'msw'
+
+import { getDictionary } from '@/app/i18n/dictionaries'
 import cities from './cities.json'
 import user from './user.json'
 

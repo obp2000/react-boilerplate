@@ -3,17 +3,17 @@ import { TextField } from '@mui/material'
 import { signIn, SignInOptions } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
-import { useForm } from "react-hook-form"
+import { useForm, Form } from "react-hook-form"
 
 import { errorText } from '@/app/_objects/formHelpers'
 import Button from '@/app/components/Button'
 import { toastError } from '@/app/components/toast'
-import { loginStruct } from '@/app/user/struct'
+import { struct } from './struct'
 
 import type { Translation } from '@/app/i18n/dictionaries'
 import type { TransitionStartFunction } from 'react'
 
-export default function Form({
+export default function FormComp({
 	labels: {
 		login,
 		name,
@@ -36,7 +36,7 @@ export default function Form({
 }) {
 	const {
 		register,
-		handleSubmit,
+		control,
 		formState: {
 			errors: {
 				name: nameError,
@@ -46,26 +46,31 @@ export default function Form({
 			isValid,
 		}
 	} = useForm<SignInOptions>({
-		resolver: superstructResolver(loginStruct)
+		resolver: superstructResolver(struct)
 	})
 	const { refresh, back } = useRouter()
-	const onSubmitLogin = useCallback(async (values: SignInOptions) => {
-		const res = await signIn('credentials', {
-			...values,
-			redirect: false,
-		}, { lng })
-		// console.log('auth res ', res)
-		if (res?.error) {
-			toastError(res.error)
-		} else {
-			back()
-			refresh()
-		}
-	}, [refresh, back, lng])
-	const onSubmit = useCallback(() => {
-		handleSubmit(onSubmitLogin)()
-	}, [handleSubmit, onSubmitLogin])
-	return <>
+	const onSubmit = useCallback(({ data }:
+		{ data: SignInOptions }) => {
+		startTransition(async () => {
+			const { error } = await signIn('credentials',
+				{
+					...data,
+					redirect: false,
+				},
+				{ lng }) || {}
+			if (error) {
+				toastError(error)
+			} else {
+				back()
+				refresh()
+			}
+		})
+	}, [startTransition, lng, back, refresh])
+	return <Form
+		control={control}
+		onSubmit={onSubmit}
+		className='flex flex-col mt-1 gap-2'
+	>
 		<TextField {...register('name')}
 			label={`${name} *`}
 			autoComplete="name"
@@ -88,11 +93,11 @@ export default function Form({
 			aria-invalid={passwordError ? "true" : "false"}
 		/>
 		<Button
+			type='submit'
 			aria-label={login}
 			disabled={busy || !isDirty || !isValid}
-			onClick={() => startTransition(onSubmit)}
 		>
 			{login}
 		</Button>
-	</>
+	</Form>
 }

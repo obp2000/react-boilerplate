@@ -4,7 +4,7 @@ import { DevTool } from '@hookform/devtools'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { TextField } from '@mui/material'
 import { useCallback, useTransition } from 'react'
-import { useForm, Form } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useRouter } from 'next/navigation'
 
 import Select from '@/app/_objects/Select'
@@ -18,51 +18,31 @@ import {
   floatValue 
 } from '@/app/_objects/formHelpers'
 import Button from '@/app/components/Button'
-import contentsChoices from '@/app/product/contents.json'
-import { struct } from '@/app/api/products/struct'
-import threadsChoices from '@/app/product/threads.json'
+import contentsChoices from '@/app/[lng]/products/_components/contents.json'
+import { struct } from './struct'
+import threadsChoices from '@/app/[lng]/products/_components/threads.json'
 import DensityForCount from './DensityForCount'
 import ImageUpload from './ImageUpload'
 import MetersInRoll from './MetersInRoll'
 import Prices from './Prices'
-import { toastError, toastSuccess } from '@/app/components/toast'
+import { toastSuccess } from '@/app/components/toast'
+import { mutate } from './actions'
 
 import type { ProductFormProps } from '@/interfaces/products'
 
 export default function FormComp({
-  mutateArgs,
+  mutateArgs: {
+    lng,
+    table,
+    id,
+  },
   initialValues,
   productTypes,
-  save,
-  errorMessages,
-  units: {
-    kilogram_short: kilogramShort,
-    centimeter_short: centimeterShort,
-    ...units
-  },
   labels: {
-    productTypeId,
-    threads,
-    threadsLabels,
-    contents,
-    contentsLabels,
-    fleece,
-    name,
-    price,
-    dollarPrice,
-    dollarRate,
-    width,
-    density,
-    prices,
-    weightForCount,
-    lengthForCount,
-    densityForCount,
-    weight,
-    metersInRoll,
-    pricePre,
-    widthShop,
-    densityShop,
-    image,
+    save,
+    errorMessages,
+    units,
+    labels,
   },
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
@@ -74,55 +54,42 @@ export default function FormComp({
     register,
     watch,
     setValue,
-    formState: {
-      errors: {
-        name: nameError,
-        price: priceError,
-      },
-      isDirty,
-      isValid,
-      isSubmitting,
-    } } = useForm({
-      defaultValues: initialValues,
-      resolver: superstructResolver(struct)
-    })
-  const busy = isPending || isSubmitting
+    formState,
+  } = useForm({
+    defaultValues: initialValues,
+    resolver: superstructResolver(struct)
+  })
+  const busy = isPending
   const densityUnits = `${units.gram_short}./${units.meter_short}2`
   const priceUnits = `₽/${units.meter_short}`
-  const { refresh, push } = useRouter()
-  const onSuccess = useCallback(({ response: { ok, status, statusText } }:
-    { response: Response }) => {
-    // console.log('res ', response)
-    if (ok) {
-      toastSuccess(mutateArgs.message)
-      startTransition(() => {
-        refresh()
-        push(`/${mutateArgs.lng}/${mutateArgs.table}`)
-      })
-    } else {
-      toastError(`${status}: ${statusText}`)
-    }
-  }, [mutateArgs.lng, mutateArgs.message, mutateArgs.table, push, refresh])
-  return <Form
-    control={control}
-    action={`/api/${mutateArgs.table}${mutateArgs.id ? `/${mutateArgs.id}` : ''}`}
-    method={mutateArgs.id ? 'put' : 'post'}
-    headers={{ 'Content-Type': 'application/json' }}
-    onSuccess={onSuccess}
-    onError={({ response, error }) => {
-      console.log('res ', response)
-    }} 
-  >
+  const { push } = useRouter()
+  const action = useCallback((formData: FormData) => {
+    startTransition(async () => {
+      const res = await mutate({ formData, lng, table, id })
+      if (res.success) {
+        toastSuccess(String(res.message))
+        push(`/${lng}/${table}`)
+      }
+    })
+  }, [id, lng, push, table])
+  console.log('errors ', formState.errors, formState.isValid)
+  return <form action={action}>
     <div className={`grid grid-cols-5 gap-2 p-2 ${busy ? 'opacity-70' : ''}`}>
       <div className='relative' >
-        <ImageUpload {...{ watch, label: image, setValue }} />
+        <ImageUpload {...{
+          watch,
+          label: labels.image,
+          setValue,
+          register,
+          init: initialValues.image,
+        }} />
       </div>
       <div className='col-span-4 grid grid-cols-4 gap-2'>
         <Select
           {...{
             name: 'productTypeId',
             register,
-            label: productTypeId,
+            label: labels.productTypeId,
             choices: productTypes,
             disabled: busy,
             defaultValue: initialValues.productTypeId,
@@ -131,20 +98,20 @@ export default function FormComp({
           {...{
             name: 'threads',
             register,
-            label: threads,
+            label: labels.threads,
             choices: threadsChoices,
             disabled: busy,
-            choiceLabels: threadsLabels,
+            choiceLabels: labels.threadsLabels,
             defaultValue: initialValues.threads,
           }} />
         <Select
           {...{
             name: 'contents',
             register,
-            label: contents,
+            label: labels.contents,
             choices: contentsChoices,
             disabled: busy,
-            choiceLabels: contentsLabels,
+            choiceLabels: labels.contentsLabels,
             defaultValue: initialValues.contents,
           }} />
         <div className='pl-2'>
@@ -152,43 +119,43 @@ export default function FormComp({
             {...{
               name: 'fleece',
               control,
-              label: fleece,
+              label: labels.fleece,
               busy
             }} />
         </div>
         <TextField {...register('name')}
           className='col-span-3'
-          label={`${name} *`}
+          label={`${labels.name} *`}
           size="small"
           disabled={busy}
-          error={!!nameError}
-          helperText={errorText(errorMessages, nameError)}
-          aria-invalid={nameError ? "true" : "false"}
+          error={!!formState.errors.name}
+          helperText={errorText(errorMessages, formState.errors.name)}
+          aria-invalid={formState.errors.name ? "true" : "false"}
         />
         <TextField {...register('price', { valueAsNumber: true })}
           type='number'
-          label={`${price} *`}
+          label={`${labels.price} *`}
           size="small"
           disabled={busy}
           InputProps={unitsLabel(priceUnits)}
           inputProps={inputNumeric}
-          error={!!priceError}
-          helperText={errorText(errorMessages, priceError)}
-          aria-invalid={priceError ? "true" : "false"}
+          error={!!formState.errors.price}
+          helperText={errorText(errorMessages, formState.errors.price)}
+          aria-invalid={formState.errors.price ? "true" : "false"}
         />
         <TextField
           {...register('dollarPrice', { setValueAs: floatValue })}
           type='number'
-          label={dollarPrice}
+          label={labels.dollarPrice}
           size="small"
           disabled={busy}
-          InputProps={unitsLabel(`$/${kilogramShort}`)}
+          InputProps={unitsLabel(`$/${units.kilogram_short}`)}
           inputProps={inputDecimal}
         />
         <TextField
           {...register('dollarRate', { setValueAs: floatValue })}
           type='number'
-          label={dollarRate}
+          label={labels.dollarRate}
           size="small"
           disabled={busy}
           InputProps={unitsLabel('₽/$')}
@@ -196,26 +163,27 @@ export default function FormComp({
         />
         <TextField {...register('width', { setValueAs: integerValue })}
           type='number'
-          label={width}
+          label={labels.width}
           size="small"
           disabled={busy}
-          InputProps={unitsLabel(centimeterShort)}
+          InputProps={unitsLabel(units.centimeter_short)}
           inputProps={inputNumeric}
         />
         <TextField {...register('density', { setValueAs: integerValue })}
           type='number'
-          label={density}
+          label={labels.density}
           size="small"
           disabled={busy}
           InputProps={unitsLabel(densityUnits)}
           inputProps={inputNumeric}
         />
-        <Prices {...{ watch, label: prices }} />
+        <Prices {...{ watch, label: labels.prices }} />
       </div>
     </div>
     <div className='grid grid-cols-6 gap-2'>
-      <TextField {...register('weightForCount', { setValueAs: integerValue })}
-        label={weightForCount}
+      <TextField {...register('weightForCount',
+        { setValueAs: integerValue })}
+        label={labels.weightForCount}
         type="number"
         size="small"
         disabled={busy}
@@ -224,28 +192,28 @@ export default function FormComp({
       />
       <TextField
         {...register('lengthForCount', { setValueAs: floatValue })}
-        label={lengthForCount}
+        label={labels.lengthForCount}
         type="number"
         size="small"
         disabled={busy}
         InputProps={unitsLabel(units.meter_short)}
         inputProps={inputDecimal}
       />
-      <DensityForCount {...{ watch, label: densityForCount, units }} />
+      <DensityForCount {...{ watch, label: labels.densityForCount, units }} />
       <TextField {...register('weight', { setValueAs: floatValue })}
-        label={weight}
+        label={labels.weight}
         type="number"
         size="small"
         disabled={busy}
-        InputProps={unitsLabel(kilogramShort)}
+        InputProps={unitsLabel(units.kilogram_short)}
         inputProps={inputDecimal}
       />
-      <MetersInRoll {...{ watch, label: metersInRoll, units }} />
+      <MetersInRoll {...{ watch, label: labels.metersInRoll, units }} />
     </div>
     <div className='grid grid-cols-6 gap-2 mt-6'>
       <TextField
         {...register('pricePre', { setValueAs: integerValue })}
-        label={pricePre}
+        label={labels.pricePre}
         type="number"
         size="small"
         disabled={busy}
@@ -255,17 +223,17 @@ export default function FormComp({
       />
       <TextField
         {...register('widthShop', { setValueAs: integerValue })}
-        label={widthShop}
+        label={labels.widthShop}
         type="number"
         size="small"
         disabled={busy}
         InputLabelProps={{ shrink: true }}
-        InputProps={unitsLabel(centimeterShort)}
+        InputProps={unitsLabel(units.centimeter_short)}
         inputProps={inputNumeric}
       />
       <TextField
         {...register('densityShop', { setValueAs: integerValue })}
-        label={densityShop}
+        label={labels.densityShop}
         type="number"
         size="small"
         disabled={busy}
@@ -276,11 +244,11 @@ export default function FormComp({
       <Button
         type='submit'
         aria-label={save}
-        disabled={busy || !isDirty || !isValid}
+        disabled={busy || !formState.isDirty}
       >
         {save}
       </Button>
     </div>
-    <DevTool control={control} />
-  </Form>
+    {/*<DevTool control={control} />*/}
+  </form>
 }

@@ -1,7 +1,8 @@
-import type { SerializedOrderObject } from "@/interfaces/orders"
-import type { UseFormWatch } from "react-hook-form"
 import consts from './consts.json'
 import { orderItemsWeight } from "./OrderItemsTotals"
+
+import type { SerializedOrderObject } from "@/interfaces/orders"
+import type { UseFormWatch } from "react-hook-form"
 
 export function totalWeight(
 	giftNeeded: boolean,

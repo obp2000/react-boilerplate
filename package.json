@@ -19,7 +19,6 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@fontsource/roboto": "^4.5.8",
     "@formatjs/intl-localematcher": "^0.2.32",
     "@hookform/resolvers": "^3.1.1",
     "@mui/icons-material": "^5.11.16",
@@ -32,7 +31,7 @@
     "negotiator": "^0.6.3",
     "next": "13.4.9",
     "next-auth": "^4.22.1",
-    "next-cloudinary": "^4.4.0",
+    "next-cloudinary": "^4.13.1",
     "prisma-pagination": "^0.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

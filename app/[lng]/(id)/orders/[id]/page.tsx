@@ -1,5 +1,6 @@
 import Form from './_components/Form'
 import { ObjectPage } from '@/app/_objects/ObjectPage'
+
 import type { Translation } from '@/app/i18n/dictionaries'
 
 function labels({
@@ -10,8 +11,8 @@ function labels({
   order: labels,
   yes: okText,
   no: cancelText,
-  customer: customerLabels,
-  product: productLabels,
+  customer,
+  product,
 }: Translation) {
   return {
     add,
@@ -22,8 +23,8 @@ function labels({
     label: textDelete,
     okText,
     cancelText,
-    customerLabels,
-    productLabels,
+    customer,
+    product,
   }
 }
 

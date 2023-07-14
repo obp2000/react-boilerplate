@@ -6,20 +6,20 @@ import {
   integer,
   nullable,
   number,
-  union
 } from 'superstruct'
+
 import {
   struct as customer,
-} from '@/app/api/customers/struct'
+} from '@/app/[lng]/(id)/customers/[id]/_components/struct'
 import {
   struct as product,
-} from '@/app/api/products/struct'
+} from '@/app/[lng]/(id)/products/[id]/_components/struct'
 
 export const orderItem = object({
     id: optional(integer()),
     product: nullable(product),
-    amount: union([number(), string()]),
-    price: number(),
+    amount: nullable(number()),
+    price: nullable(number()),
     // cost: any(),
     // weight: any(),
 })
@@ -28,7 +28,7 @@ export const struct = object({
   customer,
   address: optional(string()),
   gift: optional(string()),
-  postCost: nullable(number()),
+  postCost: optional(number()),
   packet: nullable(integer()),
   deliveryType: nullable(integer()),
   orderItems: optional(array(orderItem)),
@@ -37,14 +37,14 @@ export const struct = object({
 const orderItemApi = object({
     id: optional(integer()),
     productId: nullable(integer()),
-    amount: union([number(), string()]),
-    price: number(),
+    amount: nullable(number()),
+    price: nullable(number()),
     // cost: any(),
     // weight: any(),
 })
 
 export const structApi = object({
-  postCost: nullable(number()),
+  postCost: optional(number()),
   packet: nullable(integer()),
   deliveryType: nullable(integer()),
   address: optional(string()),

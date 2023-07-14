@@ -1,16 +1,19 @@
 import 'server-only'
 
-import { getDictionary } from '@/app/i18n/dictionaries'
-import NavbarLink from "./NavbarLink"
-import mainMenu from './mainMenu.json'
-import { getUsername } from '@/services/getUser'
-import { type ReactNode, Suspense } from 'react'
-import SearchForm from './SearchForm'
-import NavbarXsMenu from './NavbarXsMenu'
-import { navLinkLabel } from './navBarLib'
+import { Suspense } from 'react'
+
 import {
-	SearchForm as SearchFormSkeleton
+    SearchForm as SearchFormSkeleton
 } from '@/app/components/Skeletons'
+import { getDictionary } from '@/app/i18n/dictionaries'
+import { getUsername } from '@/services/getUser'
+import NavbarLink from "./NavbarLink"
+import NavbarXsMenu from './NavbarXsMenu'
+import SearchForm from './SearchForm'
+import mainMenu from './mainMenu.json'
+import { navLinkLabel } from './navBarLib'
+
+import type { ReactNode } from 'react'
 
 export default async function NavBar({
 	lng,

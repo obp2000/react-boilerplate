@@ -1,13 +1,15 @@
+import { cache } from 'react'
+import { createPaginator } from 'prisma-pagination'
+
 import { TablePage } from '../_components/TablePage'
-import type { Translation } from '@/app/i18n/dictionaries'
-import { getGetProductFullName } from '@/app/product/helpers'
-import type { Product, SerializedProduct } from '@/interfaces/products'
+import { findManyArgs, getGetProductFullName } from './_components/helpers'
 import Date from '@/app/components/Date'
 import { prisma } from '@/services/prisma'
-import { type PaginateFunction, createPaginator } from 'prisma-pagination'
 import { Prisma } from "@prisma/client"
-import { findManyArgs } from '@/app/api/products/route'
-import { cache } from 'react'
+
+import type { PaginateFunction } from 'prisma-pagination'
+import type { Translation } from '@/app/i18n/dictionaries'
+import type { Product, SerializedProduct } from '@/interfaces/products'
 
 const getObjects = cache(async function ({
 	paginate,

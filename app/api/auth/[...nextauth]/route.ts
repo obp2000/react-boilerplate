@@ -1,12 +1,17 @@
-import { getDictionary } from '@/app/i18n/dictionaries'
-import { fallbackLng } from '@/app/i18n/settings'
-import { loginStruct, Verified } from '@/app/user/struct'
-import { prisma } from '@/services/prisma'
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { verify } from "argon2"
 import NextAuth, { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+// import { revalidatePath } from 'next/cache'
 import { assert } from 'superstruct'
+
+import {
+  Verified,
+  struct
+} from '@/app/[lng]/@authButton/login/_components/struct'
+import { getDictionary } from '@/app/i18n/dictionaries'
+import { fallbackLng } from '@/app/i18n/settings'
+import { prisma } from '@/services/prisma'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -18,7 +23,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' }
       },
       async authorize(credentials, { query }) {
-        assert(credentials, loginStruct)
+        assert(credentials, struct)
         const { name, password } = credentials
         const user = await prisma.user.findUnique({
           where: { name }

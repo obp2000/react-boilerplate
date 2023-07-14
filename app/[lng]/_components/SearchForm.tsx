@@ -19,10 +19,6 @@ export default function SearchForm({
 }) {
   const {
     register,
-    handleSubmit,
-    formState: {
-      isSubmitting
-    }
   } = useForm<{ term: string }>({
     defaultValues: { term: useSearchParams()?.get('term') ?? '' },
   })
@@ -30,19 +26,20 @@ export default function SearchForm({
   const pathname = usePathname()
   const table = pathname?.split('/')[2] || 'customers'
   const { push } = useRouter()
-  const onSubmit = useCallback(({ term }: { term?: string }) => {
-    let url = `/${lng}/${table}`
-    // console.log('term ', term)
-    if (term && term?.length > 0) {
-      url += `?${new URLSearchParams({ term })}`
-    }
-    push(url)
+  const busy = isPending
+  const action = useCallback((formData: FormData) => {
+    startTransition(async () => {
+      const term = formData.get('term') as string
+      let url = `/${lng}/${table}`
+      if (term?.length) {
+        url += `?${new URLSearchParams({ term })}`
+      }
+      push(url)
+    })
   }, [lng, push, table])
-  const onSubmitButtonClick = useCallback(() => {
-    handleSubmit(onSubmit)()
-  }, [handleSubmit, onSubmit])
-  const busy = isSubmitting || isPending
-  return <form onSubmit={() => startTransition(onSubmitButtonClick)} className='mt-1'>
+  return <form
+    action={action}
+    className='mt-1'>
     <div className="flex justify-center">
       <div className="mb-3 xl:w-96">
         <div className="flex relative items-stretch">

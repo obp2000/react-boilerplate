@@ -2,12 +2,13 @@ import tables from '@/app/_tables/tables.json'
 import type { Translation } from "@/app/i18n/dictionaries"
 import { Prisma } from "@prisma/client"
 import type {
-    UseControllerProps,
-    UseFormRegister,
-    UseFormSetValue
+  UseControllerProps,
+  UseFormRegister,
+  UseFormSetValue
 } from "react-hook-form"
 import type { SerializedOrderObject } from "./orders"
 import type { ProductTypeType } from "./productTypes"
+import type { ServerActionResult } from './form'
 
 // export type Values = Prisma.ProductUncheckedCreateWithoutOrderItemsInput |
 //   Prisma.ProductUncheckedUpdateWithoutOrderItemsInput
@@ -36,14 +37,15 @@ export type ProductFormProps = {
     lng: string
     table: string
     id?: number
-    message: string
   }
   initialValues: SerializedProductObject
   productTypes: ProductTypeType[]
-  save: string
-  errorMessages: Translation['errorMessages']
-  units: Translation['units']
-  labels: Translation['product']
+  labels: {
+    save: string
+    errorMessages: Translation['errorMessages']
+    units: Translation['units']
+    labels: Translation['product']
+  }
 }
 
 export type ProductRowType = (arg0: Product) => (string | JSX.Element)[]
@@ -51,7 +53,7 @@ export type ProductRowType = (arg0: Product) => (string | JSX.Element)[]
 export type ProductLabels = (dict: Translation) => { labels: Translation['product'] }
 
 export type ProductAutocompleteProps = {
-  searchPath: string
+  table: string
   label?: string
   init?: Product | null
   getOptionLabel: (arg0: Product) => string
@@ -70,5 +72,5 @@ export type ProductPageProps = {
   labels: ProductLabels
   getOptions: () => Promise<Pick<ProductFormProps, 'productTypes'>>
   form: (props: ProductFormProps) => JSX.Element
-  handleSubmit?: (formData: FormData) => Promise<void>
+  handleSubmit?: (formData: FormData) => Promise<ServerActionResult>
 }

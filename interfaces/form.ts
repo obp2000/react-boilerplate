@@ -1,5 +1,8 @@
 import type { Translation } from "@/app/i18n/dictionaries"
 import type { UseControllerProps, UseFormRegister, UseFormSetValue } from "react-hook-form"
+import { City } from "./cities"
+import { Customer } from "./customers"
+import { Product } from "./products"
 
 export type SelectProps = {
 	name: string
@@ -12,7 +15,7 @@ export type SelectProps = {
 }
 
 export type AutocompleteProps = {
-	searchPath: string
+	table: string
 	label?: string
 	init?: any
 	getOptionLabel: (arg0: any) => string
@@ -24,3 +27,16 @@ export type AutocompleteProps = {
 	register: UseFormRegister<any>
 	setValue: UseFormSetValue<any>
 } & UseControllerProps<any>
+
+export type ServerActionResult =
+	| {
+		success: true
+		message?: string
+		objects?: any
+	}
+	| {
+		success: false
+		error: string
+	}
+
+export type anyObject = City | Customer | Product

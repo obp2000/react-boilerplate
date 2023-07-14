@@ -13,7 +13,7 @@ export type City = Prisma.CityGetPayload<{
 }>
 
 export type CityAutocompleteProps = {
-	searchPath: string
+	table: string
 	label?: string
 	init?: City | null
 	getOptionLabel: (arg0: City) => string

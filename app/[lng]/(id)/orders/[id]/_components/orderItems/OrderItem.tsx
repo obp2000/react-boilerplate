@@ -32,82 +32,63 @@ export function weight({ amount, product }:
 		: 0
 }
 
-export default function OrderItemComp({
-	index,
-	initOrderItem,
-	getProductOptionLabel,
-	control,
-	register,
-	errorMessages,
-	units: {
-		meter_short: meterShort
-	},
-	busy,
-	orderItem,
-	label,
-	okText,
-	cancelText,
-	notFound,
-	remove,
-	setValue,
-}: OrderItemProps) {
-	// console.log('orderItemsValues[index] ', orderItemsValues[index])
-	// const [currentProduct, setCurrentProduct] = useState(product)
+export default function OrderItemComp(props: OrderItemProps) {
 	return <tr className='border-b dark:border-neutral-500'>
 		<td className='whitespace-nowrap px-6 py-4' scope='row'>
-			{index + 1}
+			{props.index + 1}
 		</td>
 		<td className='whitespace-nowrap px-6 py-4'>
 			<Autocomplete 
 				{...{
-					name: `orderItems.${index}.product`,
-					control,
-					searchPath: '/products',
-					init: initOrderItem?.product,
-					getOptionLabel: getProductOptionLabel,
-					busy,
-					errorMessages,
-					notFound,
+					name: `orderItems.${props.index}.product`,
+					control: props.control,
+					table: 'products',
+					init: props.initOrderItem?.product,
+					getOptionLabel: props.getProductOptionLabel,
+					busy: props.busy,
+					errorMessages: props.errorMessages,
+					notFound: props.notFound,
 					onChangeAction: (newValue: Product) =>
-						setValue(`orderItems.${index}.price`, newValue?.price || 0),
-					register,
-					setValue,
+						props.setValue(`orderItems.${props.index}.price`,
+							newValue?.price || 0),
+					register: props.register,
+					setValue: props.setValue,
 				}} />
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			<TextField {...register(`orderItems.${index}.price`,
+			<TextField {...props.register(`orderItems.${props.index}.price`,
 				{ setValueAs: integerValue })}
 				type="number"
 				size="small"
-				disabled={busy}
-				InputProps={unitsLabel(`₽/${meterShort}`)}
+				disabled={props.busy}
+				InputProps={unitsLabel(`₽/${props.units.meter_short}`)}
 				inputProps={inputNumeric}
 			/>
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			<TextField {...register(`orderItems.${index}.amount`),
-				{ setValueAs: floatValue }}
+			<TextField {...props.register(`orderItems.${props.index}.amount`,
+				{ setValueAs: floatValue })}
 				type="number"
 				size="small"
-				disabled={busy}
-				InputProps={unitsLabel(meterShort)}
+				disabled={props.busy}
+				InputProps={unitsLabel(props.units.meter_short)}
 				inputProps={inputDecimal}
 			/>
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			{cost(orderItem).toFixed(2)}
+			{cost(props.orderItem).toFixed(2)}
 		</td>
 		<td className='whitespace-nowrap px-6 py-4' align="right">
-			{weight(orderItem).toFixed(0)}
+			{weight(props.orderItem).toFixed(0)}
 		</td>
 		<td className='whitespace-nowrap px-6 py-4'>
 			<DeleteButton {...{
-				index,
-				remove,
-				label,
-				okText,
-				cancelText,
-				busy,
+				index: props.index,
+				remove: props.remove,
+				label: props.label,
+				okText: props.okText,
+				cancelText: props.cancelText,
+				busy: props.busy,
 			}} />
 		</td>
 	</tr>

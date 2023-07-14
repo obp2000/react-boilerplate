@@ -3,19 +3,20 @@
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { TextField } from '@mui/material'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useCallback, useTransition } from 'react'
 import { useFieldArray, useForm } from "react-hook-form"
 
+import Autocomplete from '@/app/_objects/Autocomplete'
 import Select from '@/app/_objects/Select'
 import {
   floatValue, inputDecimal
 } from '@/app/_objects/formHelpers'
-import { useMutate } from '@/app/_objects/hooks'
+import { struct } from './struct'
 import Button from '@/app/components/Button'
-import { getGetCustomerFullName } from '@/app/customer/helpers'
-import deliveryTypeChoices from './deliveryType.json'
-import packetChoices from './packet.json'
-import { getGetProductFullName } from '@/app/product/helpers'
+import { toastSuccess } from '@/app/components/toast'
+import { getGetCustomerFullName } from '@/app/[lng]/customers/_components/helpers'
+import { getGetProductFullName } from '@/app/[lng]/products/_components/helpers'
 import { orderItemsCost } from "./OrderItemsTotals"
 import PostCostButton from './PostCostButton'
 import PostCostWithPacket from './PostCostWithPacket'
@@ -24,17 +25,16 @@ import TotalPostals from './TotalPostals'
 import TotalSum from './TotalSum'
 import TotalWeight from './TotalWeight'
 import consts from './consts.json'
+import deliveryTypeChoices from './deliveryType.json'
 import AddButton from './orderItems/AddButton'
 import OrdeItem from './orderItems/OrderItem'
-import Autocomplete from '@/app/_objects/Autocomplete'
-import { struct } from '@/app/api/orders/struct'
+import packetChoices from './packet.json'
 
 import type {
   OrderFormProps,
   SerializedOrderObject,
-  Values
 } from '@/interfaces/orders'
-import type { SubmitHandler } from "react-hook-form"
+import { mutate } from './actions'
 
 const OrderItemsTotals = dynamic(() => import('./OrderItemsTotals'), {
   ssr: false,
@@ -46,60 +46,46 @@ function needGift(orderItems?:
 }
 
 export default function FormComp({
-  mutateArgs,
-  initialValues,
-  save,
-  add,
-  textDelete,
-  notFound,
-  count,
-  errorMessages,
-  label,
-  okText,
-  cancelText,
-  units,
-  labels: {
-    customer,
-    deliveryType,
-    deliveryTypeLabels,
-    address,
-    postCost,
-    packet,
-    packetLabels,
-    postCostWithPacket,
-    postDiscount,
-    samples,
-    orderItem: {
-      product,
-      price,
-      amount,
-      cost,
-      weight,
-    },
-    ...labels
+  mutateArgs: {
+    lng,
+    table,
+    id,
   },
-  customerLabels,
-  productLabels,
+  initialValues,
+  labels: {
+    save,
+    errorMessages,
+    units,
+    add,
+    textDelete,
+    notFound,
+    count,
+    label,
+    okText,
+    cancelText,
+    labels,
+    customer,
+    product,
+  }
 }: OrderFormProps) {
   const [isPending, startTransition] = useTransition()
-  const onSubmit: SubmitHandler<Values> = useMutate(mutateArgs)
   // const onSubmit: SubmitHandler<Values> = data => console.log(data)
   const {
     control,
     register,
-    handleSubmit,
     watch,
     setValue,
-    formState: {
-      errors,
-      isDirty,
-      isValid
-    } } = useForm({
-      defaultValues: initialValues,
-      resolver: superstructResolver(struct)
-    })
-  const getProductFullName = getGetProductFullName(productLabels)
-  const { fields, append, remove } = useFieldArray({
+    formState,
+  } = useForm({
+    defaultValues: initialValues,
+    resolver: superstructResolver(struct)
+  })
+  const getProductFullName = getGetProductFullName(product)
+  const {
+    fields,
+    append,
+    remove
+  } = useFieldArray({
     control,
     name: 'orderItems',
   })
@@ -109,42 +95,37 @@ export default function FormComp({
     'orderItems',
   ])
   const giftNeeded = needGift(orderItems)
-  console.log('errors ', errors)
-  // console.log('fields ', fields)
-  const toValues = useCallback(({
-    customer,
-    orderItems,
-    createdAt,
-    ...values
-  }: SerializedOrderObject) => {
-    const orderItemsUnchecked = orderItems.map(({
-      product,
-      ...orderItemValues
-    }) => ({
-      productId: product?.id,
-      ...orderItemValues
-    })
-    )
-    return onSubmit({
-      customerId: customer?.id,
-      orderItems: orderItemsUnchecked,
-      ...values
-    })
-  }, [onSubmit])
-  const onSubmitButtonClick = useCallback(() => {
-    handleSubmit(toValues)()
-  }, [handleSubmit, toValues])
+  console.log('errors ', formState.errors)
   const busy = isPending
-  return <>
+  const { push } = useRouter()
+  const action = useCallback((formData: FormData) => {
+    startTransition(async () => {
+      // console.log('prev formData ', formData.getAll)
+      // formData.set('cityId', formData.get('city') ? formData.get('city'). : null)
+      formData.delete('customer')
+      console.log('prev formData ', formData)
+      const res = await mutate({
+        formData,
+        lng,
+        table,
+        id,
+      })
+      if (res.success) {
+        toastSuccess(String(res.message))
+        push(`/${lng}/${table}`)
+      }
+    })
+  }, [id, lng, table, push])
+  return <form action={action}>
     <div className={`grid grid-cols-3 gap-4 p-2 ${busy ? 'opacity-70' : ''}`}>
       <Autocomplete
         {...{
           name: "customer",
           control,
-          searchPath: '/customers',
-          label: customer,
+          table: 'customers',
+          label: `${labels.customer} *`,
           init: initialValues.customer,
-          getOptionLabel: getGetCustomerFullName(customerLabels),
+          getOptionLabel: getGetCustomerFullName(customer),
           busy,
           errorMessages,
           notFound,
@@ -156,15 +137,15 @@ export default function FormComp({
         {...{
           name: 'deliveryType',
           register,
-          label: deliveryType,
+          label: labels.deliveryType,
           choices: deliveryTypeChoices,
           disabled: busy,
-          choiceLabels: deliveryTypeLabels,
+          choiceLabels: labels.deliveryTypeLabels,
           defaultValue: initialValues.deliveryType,
         }} />
       <TextField {...register('address')}
         className='col-span-2'
-        label={address}
+        label={labels.address}
         size="small"
         disabled={busy}
       />
@@ -176,19 +157,19 @@ export default function FormComp({
             #
           </th>
           <th scope='col' className='px-6 py-4'>
-            {product}
+            {labels.orderItem.product}
           </th>
           <th scope='col' className='px-6 py-4'>
-            {price}
+            {labels.orderItem.price}
           </th>
           <th scope='col' className='px-6 py-4'>
-            {amount}
+            {labels.orderItem.amount}
           </th>
           <th scope='col' className='px-6 py-4' align='right'>
-            {cost}, ₽
+            {labels.orderItem.cost}, ₽
           </th>
           <th scope='col' className='px-6 py-4' align='right'>
-            {weight}, {units.gram_short}
+            {labels.orderItem.weight}, {units.gram_short}
           </th>
           <th scope='col' className='px-6 py-4'>
             <AddButton {...{ add, append, busy }} />
@@ -206,7 +187,6 @@ export default function FormComp({
             register,
             errorMessages,
             units,
-            productLabels,
             busy,
             orderItem: orderItems[index],
             label,
@@ -232,8 +212,8 @@ export default function FormComp({
           <td className='whitespace-nowrap px-6 py-4'>
             <div className={`grid grid-cols-4 gap-1 ${busy ? 'opacity-70' : ''}`}>
               <TextField
-                {...register('postCost'), { setValueAs: floatValue }}
-                label={postCost}
+                {...register('postCost', { setValueAs: floatValue })}
+                label={labels.postCost}
                 type="number"
                 variant="outlined"
                 size="small"
@@ -244,14 +224,14 @@ export default function FormComp({
                 {...{
                   name: 'packet',
                   register,
-                  label: packet,
+                  label: labels.packet,
                   choices: packetChoices,
                   disabled: busy,
-                  choiceLabels: packetLabels,
+                  choiceLabels: labels.packetLabels,
                   defaultValue: initialValues.packet,
                 }} />
-              <PostCostWithPacket {...{ watch, label: postCostWithPacket }} />
-              <PostDiscount {...{ watch, label: postDiscount }} />
+              <PostCostWithPacket {...{ watch, label: labels.postCostWithPacket }} />
+              <PostDiscount {...{ watch, label: labels.postDiscount }} />
             </div>
           </td>
           <td className='whitespace-nowrap py-4' align='left'>
@@ -268,16 +248,16 @@ export default function FormComp({
             <TotalPostals {...{ watch }} />
           </td>
           <td className='whitespace-nowrap px-6 py-4' align='left' colSpan={2}>
-            {consts.PACKET_WEIGHT}({packet}) + {consts.SAMPLES_WEIGHT}({samples})
+            {consts.PACKET_WEIGHT}({labels.packet}) + {consts.SAMPLES_WEIGHT}({labels.samples})
           </td>
         </tr>
         <tr className='border-b dark:border-neutral-500'>
           <td className='whitespace-nowrap px-6 py-4' />
           <td className='whitespace-nowrap px-6 py-4'>
             <Button
+              type='submit'
               aria-labelledby={save}
-              disabled={busy || !isDirty || !isValid}
-              onClick={() => startTransition(onSubmitButtonClick)}
+              disabled={busy || !formState.isDirty}
             >
               {save}
             </Button>
@@ -295,5 +275,5 @@ export default function FormComp({
         </tr>
       </tbody>
     </table>
-  </>
+  </form>
 }
