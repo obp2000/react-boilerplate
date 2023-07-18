@@ -124,7 +124,6 @@ export default function FormComp({
           control,
           table: 'customers',
           label: `${labels.customer} *`,
-          init: initialValues.customer,
           getOptionLabel: getGetCustomerFullName(customer),
           busy,
           errorMessages,

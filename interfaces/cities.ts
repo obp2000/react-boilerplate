@@ -15,7 +15,6 @@ export type City = Prisma.CityGetPayload<{
 export type CityAutocompleteProps = {
 	table: string
 	label?: string
-	init?: City | null
 	getOptionLabel: (arg0: City) => string
 	busy: boolean
 	errorMessages: Translation['errorMessages']

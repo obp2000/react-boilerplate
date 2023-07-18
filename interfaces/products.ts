@@ -55,7 +55,6 @@ export type ProductLabels = (dict: Translation) => { labels: Translation['produc
 export type ProductAutocompleteProps = {
   table: string
   label?: string
-  init?: Product | null
   getOptionLabel: (arg0: Product) => string
   busy: boolean
   errorMessages: Translation['errorMessages']

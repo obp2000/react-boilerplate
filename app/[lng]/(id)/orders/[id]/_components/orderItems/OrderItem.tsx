@@ -43,7 +43,7 @@ export default function OrderItemComp(props: OrderItemProps) {
 					name: `orderItems.${props.index}.product`,
 					control: props.control,
 					table: 'products',
-					init: props.initOrderItem?.product,
+					// init: props.initOrderItem?.product,
 					getOptionLabel: props.getProductOptionLabel,
 					busy: props.busy,
 					errorMessages: props.errorMessages,

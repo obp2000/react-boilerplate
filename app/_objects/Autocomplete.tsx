@@ -1,31 +1,30 @@
+import { Autocomplete, TextField } from '@mui/material'
+import { debounce } from '@mui/material/utils'
 import {
-	Autocomplete,
-	CircularProgress,
-	TextField,
-} from '@mui/material'
-import { useCallback, useState, useTransition } from 'react'
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+	useDeferredValue
+} from 'react'
 import { useController } from 'react-hook-form'
 
 import { errorText, integerValue } from '@/app/_objects/formHelpers'
 import { search } from './actions'
+import { Field } from '@/app/components/Skeletons'
 
 import type { Translation } from '@/app/i18n/dictionaries'
 import type { CityAutocompleteProps } from '@/interfaces/cities'
 import type { CustomerAutocompleteProps } from '@/interfaces/customers'
-import type { AutocompleteProps, anyObject } from '@/interfaces/form'
+import type { AutocompleteProps, AnyObject } from '@/interfaces/form'
 import type { ProductAutocompleteProps } from '@/interfaces/products'
-import type {
-	AutocompleteInputChangeReason,
-	TextFieldProps
-} from '@mui/material'
-import type {
-	SyntheticEvent
-} from 'react'
-import type { ControllerRenderProps, FieldError } from 'react-hook-form'
+import type { TextFieldProps } from '@mui/material'
+import type { SyntheticEvent } from 'react'
+import type { FieldError, RefCallBack } from 'react-hook-form'
 
 export function isOptionEqualToValue(
-	option: anyObject,
-	value: anyObject | null
+	option: AnyObject,
+	value: AnyObject | null
 ) {
 	return value === null || option.id === value.id
 }
@@ -34,30 +33,27 @@ export function getRenderInput({
 	label,
 	error,
 	busy: disabled,
-	loading,
+	// loading,
 	errorMessages,
-	field: {
-		ref,
-		...field
-	},
+	ref,
 }: {
 	label?: string
 	error?: FieldError
 	busy: boolean
-	loading: boolean
+	// loading: boolean
 	errorMessages: Translation['errorMessages']
-	field: Omit<ControllerRenderProps, 'onChange'>
+	ref: RefCallBack
+	// field: Omit<ControllerRenderProps, 'value' | 'onChange'>
 }) {
 	return function RenderInput({
-		InputProps,
 		inputProps,
 		...params
 	}: JSX.IntrinsicAttributes & TextFieldProps) {
-		const endAdornment = <>
-			{loading ? <CircularProgress color="inherit" size={15} /> : null}
-			{InputProps?.endAdornment}
-		</>
-		return <TextField {...params} {...field}
+		// const endAdornment = <>
+		// 	{loading ? <CircularProgress color="inherit" size={15} /> : null}
+		// 	{InputProps?.endAdornment}
+		// </>
+		return <TextField {...params}
 			{...{
 				inputRef: ref,
 				label,
@@ -65,7 +61,6 @@ export function getRenderInput({
 				error: !!error,
 				helperText: errorText(errorMessages, error),
 				'aria-invalid': error ? "true" : "false",
-				InputProps: { ...InputProps, endAdornment },
 				inputProps: { ...inputProps, autoComplete: 'new-password' },
 			}}
 		/>
@@ -78,7 +73,7 @@ export default function AutocompleteComp(props: ProductAutocompleteProps): JSX.E
 export default function AutocompleteComp({
 	table,
 	label,
-	init,
+	// init,
 	getOptionLabel,
 	busy,
 	errorMessages,
@@ -90,75 +85,107 @@ export default function AutocompleteComp({
 	...props
 }: AutocompleteProps): JSX.Element {
 	const {
-		field: { onChange, ...field },
+		field: { onChange, value, name, ref, ...field },
 		fieldState: { error },
 		// formState: { defaultValues },
 	} = useController(props)
-	// const { city: init } = defaultValues as SerializedCustomerObject
-	const [options, setOptions] = useState(init ? [init] : [])
-	const idName = `${field.name}Id`
-	const [isPending, startTransition] = useTransition()
+	const [inputValue, setInputValue] = useState('')
+	const deferredInputValue = useDeferredValue(inputValue)
+	const isStale = inputValue !== deferredInputValue
+	const [options, setOptions] = useState<AnyObject[]>([])
+	const idName = `${name}Id`
 	const onAutocompleteChange = useCallback((
 		_: SyntheticEvent,
-		newValue: anyObject
+		newValue: AnyObject
 	) => {
+		setOptions(newValue ? [newValue, ...options] : options)
 		if (onChangeAction) {
 			onChangeAction(newValue)
 		}
 		setValue(idName, newValue?.id)
 		return onChange(newValue)
-	}, [idName, onChange, onChangeAction, setValue])
-	const onInputChange = useCallback((
-		_: SyntheticEvent,
-		term: string,
-		reason: AutocompleteInputChangeReason
-	) => {
-		if (reason === 'input' &&
-			typeof term === 'string' &&
-			term.length > 1) {
-			startTransition(async () => {
-				const res =
-					await search({ term, table })
-				if (res.success) {
-					setOptions(field.value
-						? [field.value, ...res.objects]
-						: res.objects)
-				}
-			})
+	}, [idName, onChange, onChangeAction, options, setValue])
+	const fetch = useMemo(
+		() =>
+			debounce(
+				async (
+					term: string,
+					callback: (objects?: readonly AnyObject[]) => void,
+				) => {
+					const res = await search({ term, table })
+					if (res.success) {
+						callback(res.objects)
+					}
+				},
+				400,
+			),
+		[table],
+	)
+	useEffect(() => {
+		let active = true
+		if (deferredInputValue.length < 2) {
+			setOptions(value ? [value] : [])
+			return undefined
 		}
-	}, [field.value, table])
+		// startTransition(() => {
+		fetch(deferredInputValue, (objects) => {
+			if (active) {
+				let newOptions: AnyObject[] = []
+				if (value) {
+					newOptions = [value]
+				}
+				if (objects) {
+					newOptions = [...newOptions, ...objects]
+				}
+				setOptions(newOptions)
+			}
+		})
+		return () => {
+			active = false
+		}
+	}, [deferredInputValue, fetch, value])
 	return <>
 		<input
 			type='number'
 			hidden
 			{...register(idName, { setValueAs: integerValue })}
-			defaultValue={field.value?.id}
+			defaultValue={value?.id}
 		/>
 		<Autocomplete
 			{...field}
-			onChange={onAutocompleteChange}
+			getOptionLabel={getOptionLabel}
+			filterOptions={(x) => x}
+			options={options}
 			autoComplete
 			includeInputInList
-			loading={isPending}
-			loadingText={<CircularProgress color="inherit" size={15} />}
-			size='small'
-			isOptionEqualToValue={isOptionEqualToValue}
-			getOptionLabel={getOptionLabel}
-			renderOption={(props, option) => <li key={option.id} {...props}>
-				{getOptionLabel(option)}
-			</li>}
-			options={options}
-			onInputChange={onInputChange}
+			filterSelectedOptions
+			value={value}
 			noOptionsText={notFound}
-			className={className}
+			onChange={onAutocompleteChange}
+			onInputChange={(_, newInputValue) => {
+				setInputValue(newInputValue)
+			}}
 			renderInput={getRenderInput({
 				label,
 				error,
 				busy,
-				loading: isPending,
+				// loading: isPending,
 				errorMessages,
-				field,
+				ref,
 			})}
+			renderOption={(props, option) => <li
+				key={option.id}
+				{...props}
+				className={`${props.className}${isStale ? ' transition-opacity opacity-70' : ''}`}
+			>
+				{getOptionLabel(option)}
+			</li>}
+			loading={isStale}
+			// loadingText={<CircularProgress color="inherit" size={15} />}
+			loadingText={<Field />}
+			size='small'
+			isOptionEqualToValue={isOptionEqualToValue}
+			className={className}
 		/>
 	</>
 }

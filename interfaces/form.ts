@@ -17,7 +17,6 @@ export type SelectProps = {
 export type AutocompleteProps = {
 	table: string
 	label?: string
-	init?: any
 	getOptionLabel: (arg0: any) => string
 	busy: boolean
 	errorMessages: Translation['errorMessages']
@@ -39,4 +38,4 @@ export type ServerActionResult =
 		error: string
 	}
 
-export type anyObject = City | Customer | Product
+export type AnyObject = City | Customer | Product

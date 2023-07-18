@@ -82,7 +82,6 @@ function FormComp({
         control,
         table: 'cities',
         label: `${labels.city.city} *`,
-        init: initialValues.city,
         getOptionLabel: getGetCityName(labels.city.pindex),
         busy,
         errorMessages,

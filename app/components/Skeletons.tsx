@@ -1,6 +1,6 @@
 import SearchButton from "@/app/[lng]/_components/SearchButton"
 
-function Field() {
+export function Field() {
   // return <Skeleton sx={{ fontSize: '1.5rem' }} />
   return <div className="flex animate-pulse">
     <span className='w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700' />

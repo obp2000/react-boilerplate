@@ -56,7 +56,6 @@ export type CustomerLabels = (dict: Translation) => {
 export type CustomerAutocompleteProps = {
 	table: string
 	label?: string
-	init?: Customer | null
 	getOptionLabel: (arg0: Customer) => string
 	busy: boolean
 	errorMessages: Translation['errorMessages']
